@@ -2,7 +2,7 @@
 // lights.json, and visibility through a full sweep must match them.
 
 import { describe, expect, it } from 'vitest';
-import { bearingInArc } from '../src/placement';
+import { bearingInArc } from '../src/placement.js';
 
 // Inline fixture: the exam-faithful arcs (verbatim from colregs' lights.json)
 // this suite exercises. placement.ts no longer imports app data, so the
