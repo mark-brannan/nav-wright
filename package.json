@@ -36,13 +36,13 @@
     "colregs-engine": "github:mark-brannan/colregs-engine#153d1e1726bd02947cb6321309a46e3024bec4e5"
   },
   "peerDependencies": {
-    "react": "^18.3.1"
+    "react": "^19.2.8"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "typescript": "^5.7.2",
     "vitest": "^5.0.0"
   }
