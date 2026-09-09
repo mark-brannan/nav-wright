@@ -2,7 +2,7 @@
   "name": "nav-wright",
   "version": "0.1.1",
   "type": "module",
-  "description": "SVG renderer for vessels, navigation lights, and rules-of-the-road scenes — profile, bearing and plan views",
+  "description": "Renderer for vessels, navigation lights, and rules-of-the-road scenes — SVG profile, bearing and plan views, and an optional 3D view",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -19,11 +19,18 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./benchy": {
+      "types": "./dist/benchy.d.ts",
+      "import": "./dist/benchy.js"
+    },
     "./style.css": "./dist/style.css",
+    "./models/3dbenchy-lowpoly.glb": "./models/3dbenchy-lowpoly.glb",
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "models",
+    "MODELS.md"
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -36,14 +43,33 @@
     "colregs-engine": "github:mark-brannan/colregs-engine#153d1e1726bd02947cb6321309a46e3024bec4e5"
   },
   "peerDependencies": {
-    "react": "^19.2.8"
+    "react": "^19.2.8",
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
+    "three": ">=0.159"
   },
   "devDependencies": {
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
+    "@types/node": "^22.10.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "@types/three": "^0.185.4",
+    "react": "~19.2.8",
+    "react-dom": "~19.2.8",
+    "three": "^0.186.0",
     "typescript": "^5.7.2",
     "vitest": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/drei": {
+      "optional": true
+    },
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
   }
 }

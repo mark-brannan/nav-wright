@@ -17,7 +17,16 @@ export type { PlacedLight } from './placement.js';
 export { defaultSceneLabels } from './labels.js';
 export type { Aspect, SceneLabels } from './labels.js';
 
+// Naming a relative bearing
+export { bearingLabel } from './bearing.js';
+
 // Scene views
-export { BearingView, bearingLabel } from './BearingView.js';
+export { BearingView } from './BearingView.js';
 export { PlanView } from './PlanView.js';
 export { ProfileView } from './ProfileView.js';
+
+// The relative-bearing slider, shared by BearingView and the 3D view
+export { ThetaControl } from './ThetaControl.js';
+
+// The 3D scene view ships from its own entry point, `nav-wright/benchy`,
+// so three.js stays out of this one.
