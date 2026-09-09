@@ -6,11 +6,11 @@
 
 import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { BearingView } from '../src/BearingView';
-import { PlanView } from '../src/PlanView';
-import { ProfileView } from '../src/ProfileView';
-import { selectHull } from '../src/hulls';
-import { defaultSceneLabels } from '../src/labels';
+import { BearingView } from '../src/BearingView.js';
+import { PlanView } from '../src/PlanView.js';
+import { ProfileView } from '../src/ProfileView.js';
+import { selectHull } from '../src/hulls.js';
+import { defaultSceneLabels } from '../src/labels.js';
 import type { FactRecord } from 'colregs-engine';
 
 const facts: FactRecord = {};
