@@ -3,13 +3,13 @@
 // theta sweeps — arcs come straight from lights.json via placement.
 
 import type { ReactElement } from 'react';
-import type { Hull } from './hulls';
-import type { PlacedLight } from './placement';
-import { bearingInArc } from './placement';
-import type { SceneLabels } from './labels';
-import { defaultSceneLabels } from './labels';
-import type { Aspect } from './labels';
-import { Glow } from './svg';
+import type { Hull } from './hulls.js';
+import type { PlacedLight } from './placement.js';
+import { bearingInArc } from './placement.js';
+import type { SceneLabels } from './labels.js';
+import { defaultSceneLabels } from './labels.js';
+import type { Aspect } from './labels.js';
+import { Glow } from './svg.js';
 
 const CX = 220;
 const HORIZON = 150;

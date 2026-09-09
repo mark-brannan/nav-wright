@@ -2,11 +2,11 @@
 // hull — the view that explains why the bearing view changes.
 
 import type { ReactElement } from 'react';
-import type { Hull } from './hulls';
-import type { PlacedLight } from './placement';
-import type { SceneLabels } from './labels';
-import { defaultSceneLabels } from './labels';
-import { Glow, lightFill, polar, sectorPath } from './svg';
+import type { Hull } from './hulls.js';
+import type { PlacedLight } from './placement.js';
+import type { SceneLabels } from './labels.js';
+import { defaultSceneLabels } from './labels.js';
+import { Glow, lightFill, polar, sectorPath } from './svg.js';
 
 const C = 220;
 const HULL_SCALE = 62;

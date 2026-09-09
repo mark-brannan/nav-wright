@@ -2,12 +2,12 @@
 
 import type { ReactElement } from 'react';
 import type { FactRecord } from 'colregs-engine';
-import type { Hull } from './hulls';
-import { PX, PZ } from './hulls';
-import type { PlacedLight } from './placement';
-import type { SceneLabels } from './labels';
-import { defaultSceneLabels } from './labels';
-import { Glow } from './svg';
+import type { Hull } from './hulls.js';
+import { PX, PZ } from './hulls.js';
+import type { PlacedLight } from './placement.js';
+import type { SceneLabels } from './labels.js';
+import { defaultSceneLabels } from './labels.js';
+import { Glow } from './svg.js';
 
 export function ProfileView({
   hull,
