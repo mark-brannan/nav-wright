@@ -1,0 +1,87 @@
+/* nav-wright — default stylesheet.
+   Optional. The renderer's class names and custom properties are also a
+   supported contract on their own — a consumer may skip this file entirely
+   and supply the seven classes and eight --hull-fill/--sea-night-style
+   properties from their own stylesheet instead. Import this only for a
+   ready-made look; see docs/decisions.md for why it ships. */
+
+:root {
+  --sea-night: #0b1526;
+  --sea-below: #08101d;
+  --waterline: #2a3d58;
+  --hull-fill: #101c30;
+  --hull-stroke: #3d5273;
+  --rig-stroke: #33465f;
+  --grid-line: #33465f;
+  --accent-soft: #9fc7bd;
+}
+
+.scene-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--grid-line);
+  touch-action: none;
+}
+
+.scene-svg-black {
+  border-color: #1a2436;
+}
+
+.plan-svg {
+  max-width: 440px;
+  margin: 0 auto;
+  cursor: crosshair;
+}
+
+.bearing-empty {
+  fill: var(--accent-soft);
+  font-size: 14px;
+}
+
+.theta-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.theta-control label {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.theta-control input {
+  flex: 1;
+}
+
+.theta-readout {
+  font-variant-numeric: tabular-nums;
+  font-size: 13.5px;
+  min-width: 11em;
+}
+
+@keyframes light-flash {
+  0%,
+  40% {
+    opacity: 1;
+  }
+  50%,
+  90% {
+    opacity: 0.08;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.light-flash {
+  animation: light-flash 0.5s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .light-flash {
+    animation: none;
+  }
+}
