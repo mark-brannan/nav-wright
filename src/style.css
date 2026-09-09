@@ -1,7 +1,7 @@
 /* nav-wright — default stylesheet.
    Optional. The renderer's class names and custom properties are also a
    supported contract on their own — a consumer may skip this file entirely
-   and supply the seven classes and eight --hull-fill/--sea-night-style
+   and supply the class names and the --hull-fill/--sea-night-style custom
    properties from their own stylesheet instead. Import this only for a
    ready-made look; see docs/decisions.md for why it ships. */
 
@@ -27,6 +27,44 @@
 
 .scene-svg-black {
   border-color: #1a2436;
+}
+
+/* The 3D scene's frame: one box, one border, the canvas filling it. The
+   canvas stays in flow — react-three-fiber sets position/width/height on
+   its container inline, so it can't be absolutely positioned from here.
+   Only nav-wright/benchy renders these. */
+.scene-3d {
+  width: 100%;
+  aspect-ratio: 440 / 240;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--grid-line);
+}
+
+.scene-3d-stack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 440 / 240;
+  border-radius: 10px;
+  border: 1px solid var(--grid-line);
+  overflow: hidden;
+}
+
+.scene-3d-stack > .scene-3d {
+  height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+}
+
+.scene-3d-stack canvas {
+  /* The view orbits on drag, so the canvas takes the pointer. */
+  touch-action: none;
+  cursor: grab;
+}
+
+.scene-3d-stack canvas:active {
+  cursor: grabbing;
 }
 
 .plan-svg {
