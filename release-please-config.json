@@ -5,6 +5,7 @@
       "release-type": "node",
       "package-name": "nav-wright",
       "changelog-path": "CHANGELOG.md",
+      "versioning": "always-bump-patch",
       "include-v-in-tag": true,
       "include-component-in-tag": false,
       "draft": false,
