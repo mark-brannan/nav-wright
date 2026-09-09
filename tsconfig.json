@@ -2,8 +2,13 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    // nodenext, not bundler: this package ships ESM to Node, so tsc must
+    // hold relative imports to the '.js' extensions Node's resolver
+    // requires. Under "bundler" tsc accepted extensionless specifiers and
+    // emitted them verbatim, and the published 0.1.0 was unloadable
+    // outside a bundler as a result.
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "jsx": "react-jsx",
     "strict": true,
