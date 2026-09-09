@@ -1,6 +1,6 @@
 {
   "name": "nav-wright",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "SVG renderer for vessels, navigation lights, and rules-of-the-road scenes — profile, bearing and plan views",
   "license": "AGPL-3.0",
@@ -40,9 +40,9 @@
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
-    "@types/react-dom": "^19.2.7",
+    "@types/react-dom": "^18.3.1",
     "react": "^18.3.1",
-    "react-dom": "^19.2.8",
+    "react-dom": "^18.3.1",
     "typescript": "^5.7.2",
     "vitest": "^5.0.0"
   }

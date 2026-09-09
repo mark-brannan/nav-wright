@@ -6,7 +6,7 @@
 
 import type { DisplayLight, FactRecord } from 'colregs-engine';
 import type { Arc, LightsData } from 'colregs-engine/schema';
-import type { HullSpec } from './hulls';
+import type { HullSpec } from './hulls.js';
 
 export interface PlacedLight {
   key: string;
