@@ -1,8 +1,15 @@
-# No package.json here, so github-actions is the only ecosystem to bump.
 version: 2
 
 updates:
   - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+
+  # colregs-engine is pinned by git SHA, not a range, so dependabot won't
+  # move it; bumping that pin stays a deliberate PR.
+  - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
