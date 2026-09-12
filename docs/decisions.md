@@ -1,3 +1,4 @@
 # Decisions
 
+- 2026-09-09 — `always-bump-patch` stays in `release-please-config.json`. Removing it to make this repo's releases follow semver is not a call an agent makes as a side effect of shipping a feature; the version this repo cuts is Solace's, and it drops near 1.0 or at the end of a major epic, tracked in [colregs-engine#48](https://github.com/mark-brannan/colregs-engine/issues/48). Ruled by Solace, 2026-09-09. Agents: leave alone. ([nav-wright#30](https://github.com/mark-brannan/nav-wright/pull/30))
 - 2026-09-09 — nav-wright's CSS contract: nav-wright ships a default stylesheet (`nav-wright/style.css`) alongside the bare class/custom-property contract, rather than requiring every consumer to supply it. Deprioritized; not a live decision. Revisit trigger and status: [nav-wright#7](https://github.com/mark-brannan/nav-wright/issues/7). Agents: leave alone. ([nav-wright#6](https://github.com/mark-brannan/nav-wright/pull/6))
