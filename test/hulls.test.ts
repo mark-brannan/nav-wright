@@ -37,8 +37,8 @@ describe('hull roster', () => {
     const pys = hull.plan.map(([, py]) => py);
     expect(Math.max(...fxs)).toBeCloseTo(1, 1);
     expect(Math.min(...fxs)).toBeLessThan(-0.85);
-    expect(Math.max(...pys)).toBeCloseTo(hull.spec.beam, 0);
-    expect(Math.min(...pys)).toBeCloseTo(-hull.spec.beam, 0);
+    expect(Math.max(...pys)).toBeCloseTo(hull.spec.beam, 1);
+    expect(Math.min(...pys)).toBeCloseTo(-hull.spec.beam, 1);
   });
 
   // Rule 23(a)(ii): a second masthead light is abaft of and higher than the
@@ -49,6 +49,19 @@ describe('hull roster', () => {
       const s = allHulls[name].spec;
       expect(s.aftMastX).toBeLessThan(s.mastX);
       expect(s.aftMastTopZ).toBeGreaterThan(s.mastTopZ);
+    },
+  );
+
+  // Annex I 3(a): with two masthead lights, the forward one sits within a
+  // quarter of the length from the stem and the two are at least half a
+  // length apart. The warship is left out: Rule 1(e) exempts vessels of
+  // special construction, and a real one carries its foremast on the bridge.
+  it.each(['containerShip', 'tanker', 'bulker', 'cruiseShip', 'ferry', 'dredger'] as const)(
+    '%s spaces its masthead lights as Annex I 3(a) asks',
+    (name) => {
+      const s = allHulls[name].spec;
+      expect(1 - s.mastX).toBeLessThanOrEqual(0.5);
+      expect(s.mastX - s.aftMastX).toBeGreaterThanOrEqual(1.0);
     },
   );
 });

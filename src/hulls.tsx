@@ -618,9 +618,9 @@ const ferry: Hull = {
   spec: {
     id: 'ferry',
     beam: 0.24,
-    mastX: 0.42,
+    mastX: 0.5,
     mastTopZ: 0.9,
-    aftMastX: -0.3,
+    aftMastX: -0.65,
     aftMastTopZ: 1.0,
     sideLightX: 0.4,
     sideLightZ: 0.6,
@@ -682,8 +682,8 @@ const ferry: Hull = {
         stroke={hullStroke}
         strokeWidth={1}
       />
-      {mast(0.42, 0.9, 0.7)}
-      {mast(-0.3, 1.0, 0.56)}
+      {mast(0.5, 0.9, 0.7)}
+      {mast(-0.65, 1.0, 0.56)}
     </g>
   ),
 };
@@ -778,7 +778,7 @@ const bulker: Hull = {
     beam: 0.26,
     mastX: 0.78,
     mastTopZ: 0.68,
-    aftMastX: -0.55,
+    aftMastX: -0.64,
     aftMastTopZ: 1.0,
     sideLightX: -0.6,
     sideLightZ: 0.64,
@@ -862,7 +862,7 @@ const bulker: Hull = {
         strokeWidth={1}
       />
       {mast(0.78, 0.68, 0.38)}
-      {mast(-0.55, 1.0, 0.36)}
+      {mast(-0.64, 1.0, 0.76)}
     </g>
   ),
 };
@@ -873,7 +873,7 @@ const cruiseShip: Hull = {
     beam: 0.24,
     mastX: 0.5,
     mastTopZ: 1.0,
-    aftMastX: -0.1,
+    aftMastX: -0.55,
     aftMastTopZ: 1.1,
     sideLightX: 0.55,
     sideLightZ: 0.7,
@@ -947,7 +947,7 @@ const cruiseShip: Hull = {
         strokeWidth={1}
       />
       {mast(0.5, 1.0, 0.76)}
-      {mast(-0.1, 1.1, 0.9)}
+      {mast(-0.55, 1.1, 0.9)}
     </g>
   ),
 };
