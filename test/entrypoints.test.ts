@@ -77,6 +77,15 @@ describe('entry points', () => {
     expect(leaked).toEqual([]);
   });
 
+  it('reaches three but no React from the profile entry, so a consumer\'s '
+    + 'registration test can load it under plain Node', () => {
+    const imports = staticImports(resolve(SRC, 'profile.ts'));
+    expect(imports.has('three')).toBe(true);
+    const reactDeps = ['react', '@react-three/fiber', '@react-three/drei'];
+    const leaked = reactDeps.filter((dep) => imports.has(dep));
+    expect(leaked).toEqual([]);
+  });
+
   it('actually resolves the modules it walks', () => {
     // Guards the walker itself: a typo in the resolution above would make
     // both assertions above vacuously true.

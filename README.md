@@ -79,6 +79,26 @@ A failed model load — offline, a blocked CDN, no WebGL context — falls back
 to `ProfileView`, on the reasoning that the lights are the subject and
 losing them is worse than losing the hull rendering.
 
+## The station-profile API
+
+`nav-wright/profile` is a third entry point: the pure geometry that seats a
+hull model and reads its shape back, for a consumer that needs the same
+`StationProfile` the 3D view builds from — a registration test comparing
+`anchorLights`'s seats against a `HullSpec`, say. `three` is a peer
+dependency of `profileHullModel`, but nothing here touches React, so it
+loads under a plain Node test runner.
+
+```js
+import { profileHullModel, stationProfile } from 'nav-wright/profile';
+```
+
+| Export | What it is |
+| --- | --- |
+| `profileHullModel(scene, lengthMeters)` | the scene → `StationProfile` pipeline `Hull` runs, as one function |
+| `placeHullModel`, `stationProfile`, `stationAt`, `bowShoulder`, `sampleEdges`, `anchorLights`, `lightPosition` | the pure functions that pipeline is built from |
+| `PROFILE_STATIONS`, `LIGHT_Z_TO_X` | the constants those functions are tuned against |
+| `StationProfile`, `HullStations` | their types |
+
 ## Labels
 
 The scene components carry no i18n framework. Each takes an optional

@@ -23,6 +23,10 @@
       "types": "./dist/benchy.d.ts",
       "import": "./dist/benchy.js"
     },
+    "./profile": {
+      "types": "./dist/profile.d.ts",
+      "import": "./dist/profile.js"
+    },
     "./style.css": "./dist/style.css",
     "./models/3dbenchy-lowpoly.glb": "./models/3dbenchy-lowpoly.glb",
     "./package.json": "./package.json"
