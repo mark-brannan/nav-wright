@@ -185,6 +185,21 @@ describe('stationProfile', () => {
     expect(profile.mast.foreX).toBeCloseTo(-2.75, 6);
   });
 
+  it('uses a 0.95 band so a deckhouse just under the masthead is excluded', () => {
+    // maxY = 10. A wide deckhouse at y = 9.4 (94% of max) would have
+    // counted as "the mast" under the old MAST_BAND = 0.9 threshold;
+    // tightening to 0.95 excludes it, leaving only the narrow mast at
+    // the very top (nav-wright#36).
+    const xyz = [
+      -8, 0, 0, 8, 0, 0,
+      -3, 9.4, 0, 3, 9.4, 0,
+      -0.25, 10, 0, 0.25, 10, 0,
+    ];
+    const tightMast = stationProfile(xyz, 16)!;
+    expect(tightMast.mast.aftX).toBeCloseTo(-0.25, 6);
+    expect(tightMast.mast.foreX).toBeCloseTo(0.25, 6);
+  });
+
   it('narrows toward the bow', () => {
     expect(stationAt(profile, 9).halfBeam).toBeLessThan(
       stationAt(profile, 0).halfBeam,

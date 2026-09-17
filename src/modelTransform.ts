@@ -145,8 +145,14 @@ export const PROFILE_STATIONS = 24;
  */
 export const DECK_EDGE_BAND = 0.9;
 
-/** Points at least this fraction of the mesh's height up are "the mast". */
-export const MAST_BAND = 0.9;
+/**
+ * Points at least this fraction of the mesh's height up are "the mast".
+ * 0.9 read a long flat-topped deckhouse (a bridge, not a mast) as the mast
+ * on more than half of a 33-hull sample; 0.95 recovers most of them
+ * without losing a genuine mast or funnel, which sits well clear of the
+ * next-tallest structure on every hull checked (nav-wright#36).
+ */
+export const MAST_BAND = 0.95;
 
 /**
  * Densify a triangle mesh for profiling: the vertices plus points along
