@@ -2,7 +2,10 @@
 // lights.json, and visibility through a full sweep must match them.
 
 import { describe, expect, it } from 'vitest';
-import { bearingInArc } from '../src/placement.js';
+import type { DisplayLight, FactRecord } from 'colregs-engine';
+import type { LightsData, Modality } from 'colregs-engine/schema';
+import { bearingInArc, placeLights } from '../src/placement.js';
+import { allHulls } from '../src/hulls.js';
 
 // Inline fixture: the exam-faithful arcs (verbatim from colregs' lights.json)
 // this suite exercises. placement.ts no longer imports app data, so the
@@ -65,5 +68,44 @@ describe('bearing arcs (lights.json, verbatim)', () => {
         bearingInArc(t, arc('light:sternlight'));
       expect(any).toBe(true);
     }
+  });
+});
+
+describe('shall-if-practicable lights', () => {
+  const lightsData = {
+    jurisdiction: 'test',
+    lights: {},
+  } as unknown as LightsData;
+  const hull = allHulls.powerSmall.spec;
+
+  const displayLight = (modality: Modality): DisplayLight =>
+    ({
+      spec: { light: 'light:sternlight' },
+      source_entry: 'test',
+      sourceEntry: 'test',
+      modality,
+    }) as DisplayLight;
+
+  // the modality vocabulary is namespaced (`modality:shall`, not `shall`);
+  // an unprefixed literal here compares false against every real value and
+  // silently drops the dashed rendering from every if-practicable light.
+  it('flags a light the rules only require where practicable', () => {
+    const [light] = placeLights(
+      [displayLight('modality:shall-if-practicable')],
+      hull,
+      {} as FactRecord,
+      lightsData,
+    );
+    expect(light?.ifPracticable).toBe(true);
+  });
+
+  it('leaves a mandatory light unflagged', () => {
+    const [light] = placeLights(
+      [displayLight('modality:shall')],
+      hull,
+      {} as FactRecord,
+      lightsData,
+    );
+    expect(light?.ifPracticable).toBeUndefined();
   });
 });

@@ -63,7 +63,7 @@ export function placeLights(
     }
   }
   const ifPract = (dl: DisplayLight) =>
-    dl.modality === 'shall-if-practicable' || undefined;
+    dl.modality === 'modality:shall-if-practicable' || undefined;
 
   // sort: identity stacks (upper/middle/lower) first so they take the
   // masthead region top-down in their declared order.

@@ -44,12 +44,12 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "colregs-engine": "github:mark-brannan/colregs-engine#153d1e1726bd02947cb6321309a46e3024bec4e5"
+    "colregs-engine": "^0.1.7"
   },
   "peerDependencies": {
-    "react": "^19.2.8",
     "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
+    "react": "^19.2.8",
     "three": ">=0.159"
   },
   "devDependencies": {
