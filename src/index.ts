@@ -29,4 +29,6 @@ export { ProfileView } from './ProfileView.js';
 export { ThetaControl } from './ThetaControl.js';
 
 // The 3D scene view ships from its own entry point, `nav-wright/benchy`,
-// so three.js stays out of this one.
+// so three.js stays out of this one. The station-profile math it's built
+// on, plus the scene-to-profile pipeline, ships from `nav-wright/profile`
+// instead — no React or @react-three/fiber there, only three.js.
