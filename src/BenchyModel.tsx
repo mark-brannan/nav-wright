@@ -27,15 +27,9 @@ import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
-import {
-  PROFILE_STATIONS,
-  anchorLights,
-  lightPosition,
-  placeHullModel,
-  sampleEdges,
-  stationProfile,
-} from './modelTransform.js';
+import { anchorLights, lightPosition } from './modelTransform.js';
 import type { HullStations } from './modelTransform.js';
+import { placeScene, profileHullModel } from './sceneProfile.js';
 import { DEFAULT_TILT, MAX_TILT } from './tilt.js';
 
 const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN };
@@ -46,43 +40,6 @@ const ORBIT_DISTANCE = 1.6;
 /** Bead radius for a light, and how far off the surface it is seated. */
 function lightRadius(lengthMeters: number): number {
   return Math.max(lengthMeters * 0.012, 0.12);
-}
-
-/** Every mesh under `root` as one world-space triangle list: flat xyz
- * vertices and a merged index. */
-function worldMesh(root: THREE.Object3D): { xyz: Float32Array; index: number[] } {
-  const chunks: Float32Array[] = [];
-  const index: number[] = [];
-  let total = 0;
-  const v = new THREE.Vector3();
-  root.traverse((o) => {
-    if (!(o instanceof THREE.Mesh)) return;
-    const geom = o.geometry as THREE.BufferGeometry;
-    const pos = geom.getAttribute('position');
-    if (!pos) return;
-    const out = new Float32Array(pos.count * 3);
-    for (let i = 0; i < pos.count; i++) {
-      v.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld);
-      out[i * 3] = v.x;
-      out[i * 3 + 1] = v.y;
-      out[i * 3 + 2] = v.z;
-    }
-    const base = total / 3;
-    if (geom.index) {
-      for (let i = 0; i < geom.index.count; i++) index.push(base + geom.index.getX(i));
-    } else {
-      for (let i = 0; i < pos.count; i++) index.push(base + i);
-    }
-    chunks.push(out);
-    total += out.length;
-  });
-  const xyz = new Float32Array(total);
-  let at = 0;
-  for (const c of chunks) {
-    xyz.set(c, at);
-    at += c.length;
-  }
-  return { xyz, index };
 }
 
 /** The placed hull and her lights, seated on it. One component because
@@ -102,25 +59,8 @@ function Hull({
 }): ReactElement {
   const { scene } = useGLTF(modelUrl);
 
-  const { group, profile } = useMemo(() => {
-    const g = scene.clone(true);
-    const raw = new THREE.Box3().setFromObject(scene);
-    const { scale, rotationX, position } = placeHullModel(
-      { min: { ...raw.min }, max: { ...raw.max } },
-      lengthMeters,
-    );
-
-    g.rotation.x = rotationX;
-    g.scale.setScalar(scale);
-    g.position.set(...position);
-    g.updateMatrixWorld(true);
-
-    // Sample the edges at half a station so a flat roof spanning several
-    // stations still registers in each of them.
-    const { xyz, index } = worldMesh(g);
-    const spacing = lengthMeters / PROFILE_STATIONS / 2;
-    return { group: g, profile: stationProfile(sampleEdges(xyz, index, spacing)) };
-  }, [scene, lengthMeters]);
+  const group = useMemo(() => placeScene(scene, lengthMeters), [scene, lengthMeters]);
+  const profile = useMemo(() => profileHullModel(scene, lengthMeters), [scene, lengthMeters]);
 
   const positions = useMemo(
     () =>
