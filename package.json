@@ -44,7 +44,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "colregs-engine": "^0.1.7"
+    "colregs-engine": "github:mark-brannan/colregs-engine#main"
   },
   "peerDependencies": {
     "@react-three/drei": "^10.7.8",
