@@ -352,9 +352,9 @@ const trawler: Hull = {
     id: 'trawler',
     beam: 0.22,
     mastX: 0.15,
-    mastTopZ: 0.9,
+    mastTopZ: 0.72,
     aftMastX: -0.55,
-    aftMastTopZ: 0.72,
+    aftMastTopZ: 0.9,
     sideLightX: 0.2,
     sideLightZ: 0.35,
     bowX: 0.92,
@@ -389,16 +389,16 @@ const trawler: Hull = {
         stroke={hullStroke}
         strokeWidth={1}
       />
-      {mast(0.15, 0.9, 0.56)}
+      {mast(0.15, 0.72, 0.56)}
       {/* aft gantry */}
       <path
-        d={`M${PX(-0.45)},${PZ(0.22)} L${PX(-0.55)},${PZ(0.72)} L${PX(-0.65)},${PZ(0.22)}`}
+        d={`M${PX(-0.45)},${PZ(0.22)} L${PX(-0.55)},${PZ(0.9)} L${PX(-0.65)},${PZ(0.22)}`}
         fill="none"
         stroke={rigStroke}
         strokeWidth={2}
       />
       {/* trawl warp */}
-      <line x1={PX(-0.55)} y1={PZ(0.7)} x2={PX(-0.95)} y2={PZ(0.02)} stroke={rigStroke} strokeWidth={0.75} />
+      <line x1={PX(-0.55)} y1={PZ(0.88)} x2={PX(-0.95)} y2={PZ(0.02)} stroke={rigStroke} strokeWidth={0.75} />
     </g>
   ),
 };
@@ -408,9 +408,9 @@ const tug: Hull = {
     id: 'tug',
     beam: 0.24,
     mastX: 0.1,
-    mastTopZ: 0.95,
+    mastTopZ: 0.6,
     aftMastX: -0.5,
-    aftMastTopZ: 0.6,
+    aftMastTopZ: 0.95,
     sideLightX: 0.25,
     sideLightZ: 0.38,
     bowX: 0.88,
@@ -454,7 +454,7 @@ const tug: Hull = {
         stroke={hullStroke}
         strokeWidth={1}
       />
-      {mast(0.1, 0.95, 0.68)}
+      {mast(0.1, 0.6, 0.68)}
       {/* towing bitts + fender bow */}
       <line x1={PX(-0.4)} y1={PZ(0.26)} x2={PX(-0.4)} y2={PZ(0.36)} stroke={rigStroke} strokeWidth={2.5} />
       <path

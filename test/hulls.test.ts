@@ -43,7 +43,7 @@ describe('hull roster', () => {
 
   // Rule 23(a)(ii): a second masthead light is abaft of and higher than the
   // forward one; every hull a 50 m+ vessel can select must draw it that way.
-  it.each(['containerShip', 'tanker', 'bulker', 'cruiseShip', 'ferry', 'warship', 'dredger', 'squareRigger'] as const)(
+  it.each(['containerShip', 'tanker', 'bulker', 'cruiseShip', 'ferry', 'warship', 'dredger', 'squareRigger', 'trawler', 'tug'] as const)(
     '%s carries the after masthead higher than the forward one',
     (name) => {
       const s = allHulls[name].spec;
