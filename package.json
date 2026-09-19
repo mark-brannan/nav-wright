@@ -1,6 +1,6 @@
 {
   "name": "nav-wright",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "description": "Renderer for vessels, navigation lights, and rules-of-the-road scenes — SVG profile, bearing and plan views, and an optional 3D view",
   "license": "AGPL-3.0",
