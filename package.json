@@ -48,12 +48,12 @@
   },
   "peerDependencies": {
     "react": "^19.2.8",
-    "@react-three/drei": "^10.7.8",
+    "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.0",
     "three": ">=0.159"
   },
   "devDependencies": {
-    "@react-three/drei": "^10.7.8",
+    "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.0",
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
