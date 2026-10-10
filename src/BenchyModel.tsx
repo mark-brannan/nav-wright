@@ -32,7 +32,7 @@ import type { HullStations } from './modelTransform.js';
 import { placeScene, profileHullModel } from './sceneProfile.js';
 import { DEFAULT_TILT, MAX_TILT } from './tilt.js';
 
-const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN };
+const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN, bowX: NaN };
 
 /** Camera distance as a multiple of the vessel's length. */
 const ORBIT_DISTANCE = 1.6;
@@ -59,8 +59,18 @@ function Hull({
 }): ReactElement {
   const { scene } = useGLTF(modelUrl);
 
-  const group = useMemo(() => placeScene(scene, lengthMeters), [scene, lengthMeters]);
-  const profile = useMemo(() => profileHullModel(scene, lengthMeters), [scene, lengthMeters]);
+  // The mesh is fitted to the spec's own bow-to-stern span, not the full
+  // length, so it lands in the frame the spec's stations are drawn in. A
+  // missing spec (NO_HULL's NaNs) falls back to the full-length fit.
+  const { sternX, bowX } = hull;
+  const group = useMemo(
+    () => placeScene(scene, lengthMeters, { sternX, bowX }),
+    [scene, lengthMeters, sternX, bowX],
+  );
+  const profile = useMemo(
+    () => profileHullModel(scene, lengthMeters, { sternX, bowX }),
+    [scene, lengthMeters, sternX, bowX],
+  );
 
   const positions = useMemo(
     () =>
@@ -275,9 +285,11 @@ export function BenchyModel({
   /** Camera elevation above the waterline, degrees. */
   tilt?: number;
   onTilt?: (t: number) => void;
-  /** The hull spec's stations (half-beam, masts, stern) in fx/py units,
-   * so each light can be seated on the mesh's counterpart of where the 2D
-   * profile put it. The default seats everything on the centreline. */
+  /** The hull spec's stations (half-beam, masts, stern and bow) in fx/py
+   * units, so each light can be seated on the mesh's counterpart of where
+   * the 2D profile put it, and the mesh fitted to the spec's own
+   * bow-to-stern span. The default seats everything on the centreline and
+   * fits the mesh to the full length. */
   hull?: HullStations;
   /** Accessible name for the canvas. Comes from the caller's SceneLabels —
    * these views render without an IntlProvider, by design (searoom#20). */

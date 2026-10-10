@@ -36,36 +36,63 @@ export interface ModelPlacement {
 export const MODEL_ROTATION_X = -Math.PI / 2;
 
 /**
+ * The fore-aft extent of the hull spec the model stands in for, as
+ * fractions of the half-length (`fx` units, bow on +X): the 2D profile's
+ * stern and bow. No spec spans [-1, 1], so a mesh fitted to the full
+ * length lands its stern and bow beyond the spec's, and every light seated
+ * at a spec station lands off the mesh's counterpart of it.
+ */
+export interface HullSpan {
+  sternX: number;
+  bowX: number;
+}
+
+/**
  * Where to put a hull model so it reads as a vessel of `lengthMeters`
- * floating at the origin: bow on +X, keel on the waterline (y = 0),
- * centred fore-aft and athwartships.
+ * floating at the origin: bow on +X, keel on the waterline (y = 0).
+ *
+ * With a `span`, the mesh is fitted to the spec's own extent: its length
+ * becomes `(bowX - sternX) * L/2` and its stern lands at `sternX * L/2`, so
+ * the mesh and lightPosition()'s analytic stations share one frame. Without
+ * one — or with one that is not finite or has the bow aft of the stern —
+ * the mesh is fitted to the full length and centred fore-aft. Either way it
+ * is centred athwartships.
  *
  * A degenerate model (no length) or a nonsense vessel length leaves the
- * scale at 1 rather than collapsing or inverting the mesh.
+ * scale at 1 rather than collapsing or inverting the mesh, and centred
+ * fore-aft: there is no length for a span to be a fraction of.
  */
 export function placeHullModel(
   raw: ModelBox,
   lengthMeters: number,
+  span?: HullSpan,
 ): ModelPlacement {
   const rawLength = raw.max.x - raw.min.x;
-  const scale =
-    rawLength > 0 && Number.isFinite(lengthMeters) && lengthMeters > 0
-      ? lengthMeters / rawLength
-      : 1;
+  const fits = rawLength > 0 && Number.isFinite(lengthMeters) && lengthMeters > 0;
+  const spanned =
+    fits &&
+    span !== undefined &&
+    Number.isFinite(span.sternX) &&
+    Number.isFinite(span.bowX) &&
+    span.bowX > span.sternX;
+  const target = spanned ? ((span.bowX - span.sternX) * lengthMeters) / 2 : lengthMeters;
+  const scale = fits ? target / rawLength : 1;
 
   // MODEL_ROTATION_X maps local (x, y, z) to world (x, z, -y), so the
   // world extents of the scaled box are:
   //   x: [s*min.x, s*max.x]   (fore-aft)
   //   y: [s*min.z, s*max.z]   (height)
   //   z: [-s*max.y, -s*min.y] (athwartships)
-  const centreX = (scale * (raw.min.x + raw.max.x)) / 2;
+  const shiftX = spanned
+    ? (span.sternX * lengthMeters) / 2 - scale * raw.min.x
+    : -(scale * (raw.min.x + raw.max.x)) / 2;
   const keelY = scale * raw.min.z;
   const centreZ = (-scale * (raw.min.y + raw.max.y)) / 2;
 
   return {
     scale,
     rotationX: MODEL_ROTATION_X,
-    position: [-centreX, -keelY, -centreZ],
+    position: [shiftX, -keelY, -centreZ],
   };
 }
 
@@ -351,13 +378,13 @@ export interface LightSeat {
 
 /** The hull spec's stations that placeLights keys lights on, in fx/py
  * units: enough to recognise "this light is on the mast" without a
- * light having to say so. */
-export interface HullStations {
+ * light having to say so. `sternX` and `bowX` are also the span the mesh
+ * is fitted to (see HullSpan). */
+export interface HullStations extends HullSpan {
   /** Half-beam. */
   beam: number;
   mastX: number;
   aftMastX: number;
-  sternX: number;
 }
 
 /**
