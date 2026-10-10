@@ -44,7 +44,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "colregs-engine": "github:mark-brannan/colregs-engine#main"
+    "colregs-engine": "^0.1.7"
   },
   "peerDependencies": {
     "react": "^19.2.8",
