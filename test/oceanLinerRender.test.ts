@@ -257,7 +257,7 @@ function seat(profile: StationProfile): Seat[] {
     {},
     { lights: {} } as unknown as Parameters<typeof placeLights>[3],
   );
-  const stations = { beam: hull.beam, mastX: hull.mastX, aftMastX: hull.aftMastX, sternX: hull.sternX };
+  const stations = { beam: hull.beam, mastX: hull.mastX, aftMastX: hull.aftMastX, bowX: hull.bowX, sternX: hull.sternX };
   // BenchyModel's lightRadius(): how far off the surface a light is seated.
   const clearance = Math.max(LENGTH * 0.012, 0.12);
   const at = anchorLights(placed, LENGTH, stations, profile, clearance);
