@@ -106,6 +106,10 @@ properties; they ship no stylesheet. A consumer must define:
   the flashing-light animation; `nav-wright/benchy` additionally uses
   `model-view`, `scene-3d` and `scene-3d-stack`
 
+`BearingView`'s opt-in `seascape` presentation also reads `--bearing-sea-near`,
+`--bearing-sea-far` and `--bearing-horizon`; each has a built-in fallback, so
+defining them is optional.
+
 The lights themselves are literal colors, not properties, so they are
 correct whatever the consumer does. Everything else — hull, sea, rigging,
 grid — is undefined until these are set. Whether nav-wright should ship a
