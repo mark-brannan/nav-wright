@@ -75,6 +75,12 @@ turns an asset into a URL, so resolving it is the consumer's job. Copy it
 into your own static assets and pass that path if you would rather not
 resolve it through a bundler.
 
+**The mesh is fitted to the hull's own span.** `hull` carries the spec's
+`sternX` and `bowX`; the mesh is scaled so its length runs from one to the
+other, not across the full length, so its stern, bow and heights share the
+frame the spec's light stations are drawn in. Without a `hull` it is fitted
+to the full length and centred.
+
 A failed model load — offline, a blocked CDN, no WebGL context — falls back
 to `ProfileView`, on the reasoning that the lights are the subject and
 losing them is worse than losing the hull rendering.

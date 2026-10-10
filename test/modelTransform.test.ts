@@ -97,6 +97,118 @@ describe('placeHullModel', () => {
   });
 });
 
+describe('placeHullModel with a hull span', () => {
+  // power-small's stations: stern at -0.85, bow at +0.90 of the half-length
+  // (a span of 0.875 of the full length).
+  const span = { sternX: -0.85, bowX: 0.9 };
+  const L = 12;
+
+  /** The model's world fore-aft extent and height once placed. */
+  function placed(raw: ModelBox, length: number, s?: typeof span) {
+    const { scale, position } = placeHullModel(raw, length, s);
+    return {
+      scale,
+      stern: scale * raw.min.x + position[0],
+      bow: scale * raw.max.x + position[0],
+      keel: scale * raw.min.z + position[1],
+      top: scale * raw.max.z + position[1],
+    };
+  }
+
+  it('lands the mesh stern at sternX * L/2 and its bow at bowX * L/2', () => {
+    const p = placed(benchyish, L, span);
+    expect(p.stern).toBeCloseTo(-0.85 * (L / 2), 10);
+    expect(p.bow).toBeCloseTo(0.9 * (L / 2), 10);
+  });
+
+  it('fits the mesh length to (bowX - sternX) * L/2, not to the full length', () => {
+    const rawLength = benchyish.max.x - benchyish.min.x;
+    const { scale } = placeHullModel(benchyish, L, span);
+    expect(scale).toBeCloseTo(((0.9 + 0.85) * (L / 2)) / rawLength, 10);
+    // 0.875 of the scale the full-length fit gives.
+    expect(scale / placeHullModel(benchyish, L).scale).toBeCloseTo(0.875, 10);
+  });
+
+  it('scales height with the length, so stations stay in the spec’s frame', () => {
+    const full = placed(benchyish, L);
+    const fitted = placed(benchyish, L, span);
+    expect(fitted.top - fitted.keel).toBeCloseTo(0.875 * (full.top - full.keel), 10);
+  });
+
+  it('still rests the keel on the waterline and centres athwartships', () => {
+    const { scale, position } = placeHullModel(benchyish, L, span);
+    expect(scale * benchyish.min.z + position[1]).toBeCloseTo(0, 10);
+    expect(-scale * benchyish.max.y + position[2]).toBeCloseTo(
+      -(-scale * benchyish.min.y + position[2]),
+      10,
+    );
+  });
+
+  it('is the full-length, centred fit when there is no span', () => {
+    const p = placed(benchyish, L);
+    expect(p.stern).toBeCloseTo(-L / 2, 10);
+    expect(p.bow).toBeCloseTo(L / 2, 10);
+    expect(placeHullModel(benchyish, L, undefined)).toEqual(placeHullModel(benchyish, L));
+  });
+
+  it('falls back to the full-length fit for a span that is not a span', () => {
+    const full = placeHullModel(benchyish, L);
+    for (const bad of [
+      { sternX: Number.NaN, bowX: Number.NaN }, // BenchyModel's NO_HULL
+      { sternX: -0.85, bowX: Number.NaN },
+      { sternX: Number.NaN, bowX: 0.9 },
+      { sternX: -0.85, bowX: Number.POSITIVE_INFINITY },
+      { sternX: 0.5, bowX: -0.5 }, // bow aft of the stern
+      { sternX: 0.2, bowX: 0.2 }, // no length at all
+    ]) {
+      expect(placeHullModel(benchyish, L, bad)).toEqual(full);
+    }
+  });
+
+  it('leaves the scale at 1 and centres for a nonsense length or a degenerate model', () => {
+    const flat: ModelBox = { min: { x: 3, y: 0, z: 0 }, max: { x: 3, y: 1, z: 1 } };
+    for (const bad of [0, -12, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(placeHullModel(benchyish, bad, span)).toEqual(placeHullModel(benchyish, bad));
+    }
+    expect(placeHullModel(flat, L, span)).toEqual(placeHullModel(flat, L));
+    expect(placeHullModel(flat, L, span).scale).toBe(1);
+  });
+
+  it('agrees with three.js when the placement is actually applied', () => {
+    const size = {
+      x: benchyish.max.x - benchyish.min.x,
+      y: benchyish.max.y - benchyish.min.y,
+      z: benchyish.max.z - benchyish.min.z,
+    };
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(size.x, size.y, size.z));
+    mesh.geometry.translate(
+      (benchyish.min.x + benchyish.max.x) / 2,
+      (benchyish.min.y + benchyish.max.y) / 2,
+      (benchyish.min.z + benchyish.max.z) / 2,
+    );
+
+    const raw = new THREE.Box3().setFromObject(mesh);
+    const placement = placeHullModel({ min: { ...raw.min }, max: { ...raw.max } }, L, span);
+    mesh.rotation.x = placement.rotationX;
+    mesh.scale.setScalar(placement.scale);
+    mesh.position.set(...placement.position);
+    mesh.updateMatrixWorld(true);
+
+    const box = new THREE.Box3().setFromObject(mesh);
+    expect(box.min.x).toBeCloseTo(-0.85 * (L / 2), 6);
+    expect(box.max.x).toBeCloseTo(0.9 * (L / 2), 6);
+    expect(box.min.y).toBeCloseTo(0, 6);
+    expect(box.getCenter(new THREE.Vector3()).z).toBeCloseTo(0, 6);
+  });
+
+  it('puts the mesh stern where lightPosition puts a stern-station light', () => {
+    const stern = lightPosition({ fx: span.sternX, py: 0, z: 0 }, L);
+    expect(placed(benchyish, L, span).stern).toBeCloseTo(stern[0], 10);
+    const bow = lightPosition({ fx: span.bowX, py: 0, z: 0 }, L);
+    expect(placed(benchyish, L, span).bow).toBeCloseTo(bow[0], 10);
+  });
+});
+
 describe('lightPosition', () => {
   it('puts a light on the centreline at the bow on +X', () => {
     const [x, , z] = lightPosition({ fx: 1, py: 0, z: 0 }, 20);
@@ -317,7 +429,13 @@ describe('anchorLights', () => {
     mast: { aftX: -3, foreX: -1, top: 6 },
   };
   const L = 20;
-  const hull: HullStations = { beam: 0.22, mastX: 0.2, aftMastX: -0.4, sternX: -0.88 };
+  const hull: HullStations = {
+    beam: 0.22,
+    mastX: 0.2,
+    aftMastX: -0.4,
+    sternX: -0.88,
+    bowX: 0.92,
+  };
   const { beam } = hull;
   const shoulderX = bowShoulder(profile);
 

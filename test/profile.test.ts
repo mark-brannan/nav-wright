@@ -17,6 +17,7 @@ import {
   stationAt,
   stationProfile,
 } from '../src/profile.js';
+import { allHulls } from '../src/hulls.js';
 
 describe('nav-wright/profile', () => {
   it('re-exports the pure station-profile API', () => {
@@ -54,6 +55,36 @@ describe('nav-wright/profile', () => {
     expect(Math.max(...profile!.halfBeam)).toBeCloseTo(5, 1);
     expect(Math.max(...profile!.top)).toBeCloseTo(5, 1);
   });
+
+  it('fits the mesh to the hull span when given one', () => {
+    // Same 40-long box on a 20 m vessel, but standing in for power-small:
+    // stern at -0.85 and bow at +0.90 of the half-length, so x in
+    // [-8.5, 9], scale (0.9 + 0.85) * 10 / 40 = 0.4375, height 10 * 0.4375.
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(40, 20, 10));
+    const scene = new THREE.Group();
+    scene.add(mesh);
+
+    const profile = profileHullModel(scene, 20, { sternX: -0.85, bowX: 0.9 });
+    expect(profile).not.toBeNull();
+    expect(profile!.minX).toBeCloseTo(-8.5, 6);
+    expect(profile!.maxX).toBeCloseTo(9, 6);
+    expect(Math.max(...profile!.top)).toBeCloseTo(4.375, 1);
+  });
+
+  it.each(Object.entries(allHulls))(
+    '%s: the mesh spans the same stern and bow its spec draws',
+    (_name, hull) => {
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(40, 20, 10));
+      const scene = new THREE.Group();
+      scene.add(mesh);
+      const { sternX, bowX } = hull.spec;
+
+      const profile = profileHullModel(scene, 20, { sternX, bowX });
+      expect(profile).not.toBeNull();
+      expect(profile!.minX).toBeCloseTo(sternX * 10, 6);
+      expect(profile!.maxX).toBeCloseTo(bowX * 10, 6);
+    },
+  );
 
   it('does not mutate the scene it profiles', () => {
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(40, 20, 10));

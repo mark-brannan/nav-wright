@@ -11,7 +11,7 @@
 
 import * as THREE from 'three';
 import { PROFILE_STATIONS, placeHullModel, sampleEdges, stationProfile } from './modelTransform.js';
-import type { StationProfile } from './modelTransform.js';
+import type { HullSpan, StationProfile } from './modelTransform.js';
 
 /** Every mesh under `root` as one world-space triangle list: flat xyz
  * vertices and a merged index. */
@@ -52,15 +52,21 @@ function worldMesh(root: THREE.Object3D): { xyz: Float32Array; index: number[] }
 
 /**
  * A clone of `scene`, placed as a vessel of `lengthMeters` the way
- * placeHullModel() defines: bow on +X, keel on the waterline, centred
- * fore-aft and athwartships. The clone leaves `scene` itself untouched.
+ * placeHullModel() defines: bow on +X, keel on the waterline, fitted to the
+ * hull `span` if one is given (else centred fore-aft over the full length).
+ * The clone leaves `scene` itself untouched.
  */
-export function placeScene(scene: THREE.Object3D, lengthMeters: number): THREE.Object3D {
+export function placeScene(
+  scene: THREE.Object3D,
+  lengthMeters: number,
+  span?: HullSpan,
+): THREE.Object3D {
   const g = scene.clone(true);
   const raw = new THREE.Box3().setFromObject(scene);
   const { scale, rotationX, position } = placeHullModel(
     { min: { ...raw.min }, max: { ...raw.max } },
     lengthMeters,
+    span,
   );
 
   g.rotation.x = rotationX;
@@ -71,16 +77,18 @@ export function placeScene(scene: THREE.Object3D, lengthMeters: number): THREE.O
 }
 
 /**
- * Place `scene` as a vessel of `lengthMeters` and read its shape back out
- * as a StationProfile: the same pipeline BenchyModel's Hull runs, so a
- * consumer comparing anchorLights()'s seats against its own HullSpec runs
- * the view's real function rather than a re-implementation.
+ * Place `scene` as a vessel of `lengthMeters` (fitted to `span`, if given)
+ * and read its shape back out as a StationProfile: the same pipeline
+ * BenchyModel's Hull runs, so a consumer comparing anchorLights()'s seats
+ * against its own HullSpec runs the view's real function rather than a
+ * re-implementation.
  */
 export function profileHullModel(
   scene: THREE.Object3D,
   lengthMeters: number,
+  span?: HullSpan,
 ): StationProfile | null {
-  const placed = placeScene(scene, lengthMeters);
+  const placed = placeScene(scene, lengthMeters, span);
   // Sample the edges at half a station so a flat roof spanning several
   // stations still registers in each of them.
   const { xyz, index } = worldMesh(placed);
