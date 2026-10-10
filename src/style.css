@@ -14,6 +14,10 @@
   --rig-stroke: #33465f;
   --grid-line: #33465f;
   --accent-soft: #9fc7bd;
+  /* BearingView's opt-in seascape; each has the same fallback in the component */
+  --bearing-sea-near: #0a1424;
+  --bearing-sea-far: #03060b;
+  --bearing-horizon: #1b2a42;
 }
 
 .scene-svg {
