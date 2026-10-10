@@ -24,6 +24,7 @@ export {
   stationProfile,
 } from './modelTransform.js';
 export type {
+  HullSpan,
   HullStations,
   LightSeat,
   ModelBox,
