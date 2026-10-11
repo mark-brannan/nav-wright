@@ -212,7 +212,12 @@ function table(rows: MeshVerdict[]): string {
   const pad = (s: unknown, n: number): string => String(s).padEnd(n);
   const mark = (ok: boolean, v: unknown): string => (ok ? '+' : '-') + v;
   const lines = [
-    pad('model', 26) + pad('verts', 7) + pad('L:B:H', 16) + pad('bow', 7) + pad('rail', 12) + 'mast',
+    pad('model', 26) +
+      pad('verts', 7) +
+      pad('L:B:H', 16) +
+      pad('bow', 7) +
+      pad('rail', 12) +
+      'mast',
   ];
   for (const r of rows) {
     lines.push(

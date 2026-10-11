@@ -28,10 +28,7 @@ function arcOf(lightsData: LightsData, lightId: string): Arc | null {
   return lightsData.lights[lightId]?.arc ?? null;
 }
 
-function characterOf(
-  lightsData: LightsData,
-  dl: DisplayLight,
-): 'steady' | 'flashing' {
+function characterOf(lightsData: LightsData, dl: DisplayLight): 'steady' | 'flashing' {
   const c = dl.spec.character ?? lightsData.lights[dl.spec.light]?.character;
   return c === 'flashing' ? 'flashing' : 'steady';
 }
@@ -52,14 +49,8 @@ export function placeLights(
   // lights claim the top of the column first, whatever the entry order.
   let mastStackTop = hull.mastTopZ;
   for (const dl of displayLights) {
-    if (
-      dl.spec.light === 'light:masthead' &&
-      !dl.spec.position?.includes('abaft')
-    ) {
-      mastStackTop = Math.min(
-        mastStackTop,
-        hull.mastTopZ - (dl.spec.count ?? 1) * STACK_DZ,
-      );
+    if (dl.spec.light === 'light:masthead' && !dl.spec.position?.includes('abaft')) {
+      mastStackTop = Math.min(mastStackTop, hull.mastTopZ - (dl.spec.count ?? 1) * STACK_DZ);
     }
   }
   const ifPract = (dl: DisplayLight) =>
@@ -201,10 +192,7 @@ export function placeLights(
               z: hull.mastTopZ - i * STACK_DZ,
             });
           }
-          mastStackTop = Math.min(
-            mastStackTop,
-            hull.mastTopZ - count * STACK_DZ,
-          );
+          mastStackTop = Math.min(mastStackTop, hull.mastTopZ - count * STACK_DZ);
         }
         break;
       }
@@ -215,8 +203,7 @@ export function placeLights(
         const arc = arcOf(lightsData, 'light:all_round');
         if (pos.includes('side on which')) {
           // 27(d): pairs on the obstruction / clear side
-          const obstructionPort =
-            facts['fact:obstruction_side'] === 'obstruction_side:port';
+          const obstructionPort = facts['fact:obstruction_side'] === 'obstruction_side:port';
           const isObstruction = spec.color === 'red';
           const side = isObstruction === obstructionPort ? -1 : 1;
           for (let i = 0; i < count; i++) {
@@ -389,16 +376,13 @@ export function placeLights(
  * (lights.json bearing_convention), and 360 ≡ 0: the port sidelight's
  * 247.5–360.0 includes dead ahead. Boundaries are inclusive.
  */
-export function bearingInArc(
-  bearing: number,
-  arc: Arc | null | undefined,
-): boolean {
+export function bearingInArc(bearing: number, arc: Arc | null | undefined): boolean {
   if (arc == null) return true; // torch / deck lights: no prescribed arc
   const b = ((bearing % 360) + 360) % 360;
   const { from_deg: f, to_deg: t } = arc;
   let extent = t - f;
   if (extent <= 0) extent += 360;
-  const rel = ((b - f) % 360 + 360) % 360;
+  const rel = (((b - f) % 360) + 360) % 360;
   return rel <= extent;
 }
 
@@ -408,6 +392,9 @@ export function bearingInArc(
  * bearing view and its 3D counterpart) filters through this one function.
  * Generic so a caller can carry a light's seat along with it.
  */
-export function lightsInView<T extends { arc: Arc | null }>(placed: readonly T[], theta: number): T[] {
+export function lightsInView<T extends { arc: Arc | null }>(
+  placed: readonly T[],
+  theta: number,
+): T[] {
   return placed.filter((l) => bearingInArc(theta, l.arc));
 }

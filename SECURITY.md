@@ -5,9 +5,9 @@
 This package is extracted and unreleased, not yet published to npm, and
 maintained as a single moving line: only `main` gets fixes.
 
-| Version | Supported |
-| ------- | --------- |
-| `main` | yes |
+| Version         | Supported                   |
+| --------------- | --------------------------- |
+| `main`          | yes                         |
 | a pinned commit | no — update to `main` first |
 
 ## Reporting a vulnerability

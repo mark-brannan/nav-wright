@@ -114,7 +114,11 @@ export const SKY_LIGHT: readonly [number, number, number] = [0x3a, 0x65, 0x93];
 /** Background colour for a sky brightness 0..1 (clamped): black to SKY_LIGHT. */
 export function skyColor(brightness: number): string {
   const t = Number.isFinite(brightness) ? Math.min(1, Math.max(0, brightness)) : 0;
-  return `#${SKY_LIGHT.map((c) => Math.round(c * t).toString(16).padStart(2, '0')).join('')}`;
+  return `#${SKY_LIGHT.map((c) =>
+    Math.round(c * t)
+      .toString(16)
+      .padStart(2, '0'),
+  ).join('')}`;
 }
 
 /** Moonlight reaches this far: the hull hint is at full strength here and nearer. */

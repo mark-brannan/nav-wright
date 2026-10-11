@@ -43,14 +43,22 @@ describe('hull roster', () => {
 
   // Rule 23(a)(ii): a second masthead light is abaft of and higher than the
   // forward one; every hull a 50 m+ vessel can select must draw it that way.
-  it.each(['containerShip', 'tanker', 'bulker', 'cruiseShip', 'ferry', 'warship', 'dredger', 'squareRigger', 'trawler', 'tug'] as const)(
-    '%s carries the after masthead higher than the forward one',
-    (name) => {
-      const s = allHulls[name].spec;
-      expect(s.aftMastX).toBeLessThan(s.mastX);
-      expect(s.aftMastTopZ).toBeGreaterThan(s.mastTopZ);
-    },
-  );
+  it.each([
+    'containerShip',
+    'tanker',
+    'bulker',
+    'cruiseShip',
+    'ferry',
+    'warship',
+    'dredger',
+    'squareRigger',
+    'trawler',
+    'tug',
+  ] as const)('%s carries the after masthead higher than the forward one', (name) => {
+    const s = allHulls[name].spec;
+    expect(s.aftMastX).toBeLessThan(s.mastX);
+    expect(s.aftMastTopZ).toBeGreaterThan(s.mastTopZ);
+  });
 
   // Annex I 3(a): with two masthead lights, the forward one sits within a
   // quarter of the length from the stem and the two are at least half a
@@ -89,7 +97,11 @@ describe('selectHull', () => {
     ['power 200 m', { 'fact:length_m': 200 }, 'containerShip'],
     ['power 200 m at 14 kn', { 'fact:length_m': 200, 'fact:max_speed_kn': 14 }, 'bulker'],
     ['power 200 m at 22 kn', { 'fact:length_m': 200, 'fact:max_speed_kn': 22 }, 'containerShip'],
-    ['activity outranks length', { 'fact:activity': 'activity:pilot', 'fact:length_m': 200 }, 'pilotBoat'],
+    [
+      'activity outranks length',
+      { 'fact:activity': 'activity:pilot', 'fact:length_m': 200 },
+      'pilotBoat',
+    ],
   ];
   it.each(cases)('%s', (_label, facts, expected) => {
     expect(selectHull(facts)).toBe(allHulls[expected]);

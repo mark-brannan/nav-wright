@@ -25,8 +25,7 @@ export interface SceneLabels {
 }
 
 export const defaultSceneLabels: SceneLabels = {
-  bearingAlt: (theta) =>
-    `Bearing view: her lights as seen from relative bearing ${theta} degrees`,
+  bearingAlt: (theta) => `Bearing view: her lights as seen from relative bearing ${theta} degrees`,
   bearingNoLights: 'No lights visible from this bearing',
   bearingThetaLabel: 'Relative bearing θ',
   bearingThetaValue: (theta, aspect) => `${theta} degrees, ${aspect}`,

@@ -99,7 +99,10 @@ export function ThetaControl({
 
   const hull =
     plan
-      .map(([fx, py], i) => `${i === 0 ? 'M' : 'L'}${(py * HULL).toFixed(1)},${(-fx * HULL).toFixed(1)}`)
+      .map(
+        ([fx, py], i) =>
+          `${i === 0 ? 'M' : 'L'}${(py * HULL).toFixed(1)},${(-fx * HULL).toFixed(1)}`,
+      )
       .join(' ') + ' Z';
   const [ex, ey] = polar(0, 0, RING, t);
 

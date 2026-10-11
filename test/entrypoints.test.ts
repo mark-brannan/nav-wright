@@ -68,14 +68,17 @@ describe('entry points', () => {
     expect(leaked).toEqual([]);
   });
 
-  it('reaches no 3D dependency from the benchy entry either, since the '
-    + 'canvas loads behind a dynamic import', () => {
-    const imports = staticImports(resolve(SRC, 'benchy.ts'));
-    const leaked = THREE_D_ONLY.filter((dep) => imports.has(dep)).map(
-      (dep) => `${dep} (via ${imports.get(dep)})`,
-    );
-    expect(leaked).toEqual([]);
-  });
+  it(
+    'reaches no 3D dependency from the benchy entry either, since the ' +
+      'canvas loads behind a dynamic import',
+    () => {
+      const imports = staticImports(resolve(SRC, 'benchy.ts'));
+      const leaked = THREE_D_ONLY.filter((dep) => imports.has(dep)).map(
+        (dep) => `${dep} (via ${imports.get(dep)})`,
+      );
+      expect(leaked).toEqual([]);
+    },
+  );
 
   it('actually resolves the modules it walks', () => {
     // Guards the walker itself: a typo in the resolution above would make
