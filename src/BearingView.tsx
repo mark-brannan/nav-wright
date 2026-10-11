@@ -8,7 +8,7 @@ import { useId } from 'react';
 import type { ReactElement } from 'react';
 import type { Hull } from './hulls.js';
 import type { PlacedLight } from './placement.js';
-import { bearingInArc } from './placement.js';
+import { lightsInView } from './placement.js';
 import type { SceneLabels } from './labels.js';
 import { defaultSceneLabels } from './labels.js';
 import { ThetaControl } from './ThetaControl.js';
@@ -20,17 +20,7 @@ const HORIZON = 150;
 const SCALE = 150;
 const ZSCALE = 95;
 
-export function BearingView({
-  hull,
-  placed,
-  theta,
-  onTheta,
-  hullHint,
-  range,
-  sky = 0,
-  seascape = false,
-  labels = defaultSceneLabels,
-}: {
+type BearingSceneProps = {
   hull: Hull;
   placed: PlacedLight[];
   theta: number;
@@ -44,52 +34,70 @@ export function BearingView({
   /** Opt-in night seascape: a horizon and a sea under the lights. Default: lights only on black. */
   seascape?: boolean;
   labels?: SceneLabels;
-}): ReactElement {
+};
+
+export function BearingView(props: BearingSceneProps): ReactElement {
+  const { hull, theta, onTheta, labels = defaultSceneLabels } = props;
+  return (
+    <div className="bearing-view">
+      <BearingScene {...props} />
+      <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
+    </div>
+  );
+}
+
+/** The bearing view's picture without its dial: what the 3D bearing view
+ *  shows while three.js and the model load. */
+export function BearingScene({
+  hull,
+  placed,
+  theta,
+  onTheta,
+  hullHint,
+  range,
+  sky = 0,
+  seascape = false,
+  labels = defaultSceneLabels,
+}: BearingSceneProps): ReactElement {
   const drag = useDragRotate<SVGSVGElement>(theta, onTheta);
   const rad = (theta * Math.PI) / 180;
   const sin = Math.sin(rad);
   const cos = Math.cos(rad);
 
-  const projected = placed
-    .map((l) => ({
-      light: l,
-      visible: bearingInArc(theta, l.arc),
-      x: CX + (l.fx * sin - l.py * cos) * SCALE,
-      y: HORIZON - l.z * ZSCALE,
-    }))
-    .filter((p) => p.visible);
+  const projected = lightsInView(placed, theta).map((l) => ({
+    light: l,
+    x: CX + (l.fx * sin - l.py * cos) * SCALE,
+    y: HORIZON - l.z * ZSCALE,
+  }));
 
   return (
-    <div className="bearing-view">
-      <svg
-        viewBox="0 0 440 240"
-        role="img"
-        aria-label={labels.bearingAlt(Math.round(theta))}
-        className="scene-svg scene-svg-black"
-        style={{ touchAction: 'pan-y', cursor: 'grab' }}
-        {...drag}
-      >
-        <rect className="bearing-sky" width="440" height="240" fill={skyColor(sky)} />
-        {seascape && <Seascape />}
-        {hullHint > 0 && <HullHint hull={hull} theta={theta} range={range} strength={hullHint} />}
-        {projected.map((p) => (
-          <Glow
-            key={p.light.key}
-            x={p.x}
-            y={p.y}
-            color={p.light.color}
-            flashing={p.light.character === 'flashing'}
-            r={5.5}
-          />
-        ))}
-        {projected.length === 0 && (
-          <text x="220" y="120" textAnchor="middle" className="bearing-empty">
-            {labels.bearingNoLights}
-          </text>
-        )}
-      </svg>
-      <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
-    </div>
+    <svg
+      viewBox="0 0 440 240"
+      role="img"
+      aria-label={labels.bearingAlt(Math.round(theta))}
+      className="scene-svg scene-svg-black"
+      style={{ touchAction: 'pan-y', cursor: 'grab' }}
+      {...drag}
+    >
+      <rect className="bearing-sky" width="440" height="240" fill={skyColor(sky)} />
+      {seascape && <Seascape />}
+      {hullHint > 0 && <HullHint hull={hull} theta={theta} range={range} strength={hullHint} />}
+      {projected.map((p) => (
+        <Glow
+          key={p.light.key}
+          x={p.x}
+          y={p.y}
+          color={p.light.color}
+          flashing={p.light.character === 'flashing'}
+          r={5.5}
+        />
+      ))}
+      {projected.length === 0 && (
+        <text x="220" y="120" textAnchor="middle" className="bearing-empty">
+          {labels.bearingNoLights}
+        </text>
+      )}
+    </svg>
   );
 }
 
