@@ -30,11 +30,11 @@ import type { PlacedLight } from './placement.js';
 import {
   VIEW_FRAME,
   anchorLights,
-  fitView,
   lightPosition,
   lightRadius,
   orbitAngles,
   orbitPosition,
+  viewFrame,
 } from './modelTransform.js';
 import type { HullStations } from './modelTransform.js';
 import { placeScene, profileHullModel } from './sceneProfile.js';
@@ -46,8 +46,9 @@ const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN,
  * the lights need the mesh's profile, which only exists once the model
  * has loaded — so they arrive together, on the hull, rather than the
  * lights appearing first at their analytic positions and then jumping.
- * Everything is placed in metres and drawn in view units (fitView), so
- * the hull is the same size on screen whatever her length. */
+ * Everything is placed in metres and drawn in view units (viewFrame),
+ * framed from her length and spec rather than the mesh, so she is the same
+ * size on screen whatever her length and whichever mesh is drawn for her. */
 function Hull({
   modelUrl,
   lengthMeters,
@@ -71,10 +72,10 @@ function Hull({
     () => placeScene(scene, lengthMeters, { sternX, bowX }),
     [scene, lengthMeters, sternX, bowX],
   );
-  const fit = useMemo(() => {
-    const box = new THREE.Box3().setFromObject(group);
-    return fitView({ min: { ...box.min }, max: { ...box.max } });
-  }, [group]);
+  const fit = useMemo(
+    () => viewFrame(lengthMeters, hull, placed),
+    [lengthMeters, hull, placed],
+  );
   const profile = useMemo(
     () => profileHullModel(scene, lengthMeters, { sternX, bowX }),
     [scene, lengthMeters, sternX, bowX],
@@ -276,8 +277,8 @@ export function BenchyModel({
   onTilt?: (t: number) => void;
   /** The hull spec's stations (half-beam, masts, stern and bow) in fx/py
    * units, so each light can be seated on the mesh's counterpart of where
-   * the 2D profile put it, and the mesh fitted to the spec's own
-   * bow-to-stern span. The default seats everything on the centreline and
+   * the 2D profile put it, the mesh fitted to the spec's own bow-to-stern
+   * span, and the view framed on her (mast heights too: pass the HullSpec). The default seats everything on the centreline and
    * fits the mesh to the full length. */
   hull?: HullStations;
   /** Accessible name for the canvas. Comes from the caller's SceneLabels —
