@@ -128,3 +128,4 @@ npm run build
 from a git ref via `prepare`, which is how the `github:` pin above works.
 
 `npm run dev` opens the playground: every hull in every view, with each prop as a control.
+The latest `main` is hosted at <https://mark-brannan.github.io/nav-wright/>.
