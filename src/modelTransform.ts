@@ -7,6 +7,8 @@
 // if these renderers move into a library. The caller supplies the model's
 // untransformed bounding box; everything after that is arithmetic.
 
+import { MAX_TILT } from './tilt.js';
+
 export interface Vec3 {
   x: number;
   y: number;
@@ -461,4 +463,94 @@ export function anchorLights(
     if (isSide(l)) return [x, s.deck + clearance, z];
     return [x, analytic[i][1] + (lift.get(groupKey(l, i)) ?? 0), z];
   });
+}
+
+// --- Framing the view -----------------------------------------------------
+//
+// The hull is placed and lit in metres, then drawn in view units: fitView()
+// scales it so its bounding sphere is one fixed size at the origin. The
+// camera's frame never changes with length or model, so a camera the
+// viewer has dragged never needs re-seating. A sphere because its outline
+// is the same from every bearing: orbiting cannot push the hull off screen.
+
+/** The camera's frame, in view units, looking at the origin. */
+export const VIEW_FRAME = {
+  fov: 40,
+  distance: 1.6,
+  minDistance: 0.6,
+  maxDistance: 8,
+  near: 0.01,
+  far: 40,
+} as const;
+
+/** The hull's bounding sphere is drawn this big: nine tenths of what the
+ * vertical field of view holds at VIEW_FRAME.distance, leaving headroom for
+ * lights seated above the mesh. The canvas is wider than tall, so height is
+ * the limit. */
+export const FIT_RADIUS =
+  0.9 * VIEW_FRAME.distance * Math.sin((VIEW_FRAME.fov / 2) * (Math.PI / 180));
+
+export interface ViewFit {
+  scale: number;
+  /** Translation applied after the scale, as [x, y, z]. */
+  position: [number, number, number];
+}
+
+/** How to draw a hull whose placed bounding box (metres) is `box`: scaled
+ * so its bounding sphere has radius FIT_RADIUS, centred on the origin. A
+ * box with no extent is drawn as it is. */
+export function fitView(box: ModelBox): ViewFit {
+  const dx = box.max.x - box.min.x;
+  const dy = box.max.y - box.min.y;
+  const dz = box.max.z - box.min.z;
+  const radius = Math.hypot(dx, dy, dz) / 2;
+  if (!(radius > 0) || !Number.isFinite(radius)) return { scale: 1, position: [0, 0, 0] };
+  const scale = FIT_RADIUS / radius;
+  return {
+    scale,
+    position: [
+      (-scale * (box.min.x + box.max.x)) / 2,
+      (-scale * (box.min.y + box.max.y)) / 2,
+      (-scale * (box.min.z + box.max.z)) / 2,
+    ],
+  };
+}
+
+/** Bead radius for a light in metres, and how far off the surface it is
+ * seated: a fixed fraction of her length, so it too holds its size. */
+export function lightRadius(lengthMeters: number): number {
+  return lengthMeters * 0.012;
+}
+
+/** Where the camera sits, in view units, for a viewer at relative bearing
+ * `theta` and elevation `tilt` (degrees), `distance` from the origin.
+ * theta 0 = seen from ahead (+X, the bow), 90 = from her starboard beam
+ * (+Z), matching the bearing view's aspects; tilt is clamped to
+ * [0, MAX_TILT]. */
+export function orbitPosition(
+  theta: number,
+  tilt: number,
+  distance: number = VIEW_FRAME.distance,
+): [number, number, number] {
+  const DEG = Math.PI / 180;
+  const polar = (90 - Math.min(MAX_TILT, Math.max(0, tilt))) * DEG;
+  const rad = theta * DEG;
+  return [
+    distance * Math.sin(polar) * Math.cos(rad),
+    distance * Math.cos(polar),
+    distance * Math.sin(polar) * Math.sin(rad),
+  ];
+}
+
+/** The inverse of orbitPosition, from OrbitControls' angles (radians) to
+ * whole degrees: theta in 0..359, tilt from the waterline. three's
+ * azimuthal angle runs from +Z toward +X, so theta 0 (camera on +X) is its
+ * 90 degrees; its polar angle is from straight up. */
+export function orbitAngles(azimuthal: number, polar: number): { theta: number; tilt: number } {
+  const DEG = Math.PI / 180;
+  const theta = Math.round(90 - azimuthal / DEG);
+  return {
+    theta: ((theta % 360) + 360) % 360,
+    tilt: Math.round(90 - polar / DEG),
+  };
 }
