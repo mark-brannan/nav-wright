@@ -361,13 +361,13 @@ export function BenchyModel({
         aria-label={label}
       >
         <color attach="background" args={[background]} />
-        <ambientLight intensity={night ? 0.35 : 0.7} />
+        <ambientLight intensity={night ? 0.12 : 0.7} />
         <directionalLight
           position={[4, 6, 5]}
-          intensity={night ? 0.5 : 1.1}
-          color={night ? '#9fb4d8' : '#ffffff'}
+          intensity={night ? 0.35 : 1.1}
+          color={night ? '#8aa2c8' : '#ffffff'}
         />
-        <directionalLight position={[-4, 3, -3]} intensity={night ? 0.15 : 0.3} />
+        <directionalLight position={[-4, 3, -3]} intensity={night ? 0.06 : 0.3} />
         <OrbitRig
           theta={theta}
           onTheta={onTheta}
