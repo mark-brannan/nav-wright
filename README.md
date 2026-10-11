@@ -126,3 +126,5 @@ npm run build
 
 `npm run build` is what emits `dist/` with types; it also runs on install
 from a git ref via `prepare`, which is how the `github:` pin above works.
+
+`npm run dev` opens the playground: every hull in every view, with each prop as a control.
