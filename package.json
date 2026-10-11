@@ -41,7 +41,8 @@
     "test": "vitest run",
     "build": "tsc -p tsconfig.build.json && cp src/style.css dist/style.css",
     "prepublishOnly": "npm run build",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "models": "npm run build && node scripts/loft-hulls.mjs"
   },
   "dependencies": {
     "colregs-engine": "^0.1.7"
