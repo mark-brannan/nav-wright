@@ -541,3 +541,16 @@ export function orbitPosition(
     distance * Math.sin(polar) * Math.sin(rad),
   ];
 }
+
+/** The inverse of orbitPosition, from OrbitControls' angles (radians) to
+ * whole degrees: theta in 0..359, tilt from the waterline. three's
+ * azimuthal angle runs from +Z toward +X, so theta 0 (camera on +X) is its
+ * 90 degrees; its polar angle is from straight up. */
+export function orbitAngles(azimuthal: number, polar: number): { theta: number; tilt: number } {
+  const DEG = Math.PI / 180;
+  const theta = Math.round(90 - azimuthal / DEG);
+  return {
+    theta: ((theta % 360) + 360) % 360,
+    tilt: Math.round(90 - polar / DEG),
+  };
+}

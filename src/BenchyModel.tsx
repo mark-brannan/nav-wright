@@ -33,6 +33,7 @@ import {
   fitView,
   lightPosition,
   lightRadius,
+  orbitAngles,
   orbitPosition,
 } from './modelTransform.js';
 import type { HullStations } from './modelTransform.js';
@@ -234,14 +235,7 @@ function OrbitRig({
       onChange={() => {
         const c = controls.current;
         if (!c) return;
-        // three's azimuthal angle is measured from +Z toward +X; theta 0
-        // puts the camera on +X, which is three's 90 degrees. Its polar
-        // angle is from straight up; tilt is from the waterline.
-        const deg = (90 - c.getAzimuthalAngle() / DEG + 360) % 360;
-        const next = {
-          theta: Math.round(deg),
-          tilt: Math.round(90 - c.getPolarAngle() / DEG),
-        };
+        const next = orbitAngles(c.getAzimuthalAngle(), c.getPolarAngle());
         const prev = reported.current;
         if (prev && prev.theta === next.theta && prev.tilt === next.tilt) return;
         reported.current = next;

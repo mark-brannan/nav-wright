@@ -10,6 +10,7 @@ import {
   anchorLights,
   fitView,
   lightRadius,
+  orbitAngles,
   orbitPosition,
 } from '../src/modelTransform.js';
 import type { HullStations, ViewFit } from '../src/modelTransform.js';
@@ -137,4 +138,20 @@ describe('view frame', () => {
     const point = { x: 3, y: 1, z: 0 };
     expect(fitView({ min: point, max: point })).toEqual({ scale: 1, position: [0, 0, 0] });
   });
+
+  it('reports a drag just short of dead ahead as theta 0, never 360', () => {
+    const DEG = Math.PI / 180;
+    // theta 359.7 is three's azimuth 90.3 degrees.
+    expect(orbitAngles(90.3 * DEG, 80 * DEG)).toEqual({ theta: 0, tilt: 10 });
+    expect(orbitAngles(-179.9 * DEG, 90 * DEG).theta).toBe(270);
+  });
+
+  it.each([0, 1, 45, 90, 179, 180, 270, 359])(
+    'reads back theta %i from where orbitPosition puts the camera',
+    (theta) => {
+      const [x, y, z] = orbitPosition(theta, 30);
+      const s = new THREE.Spherical().setFromCartesianCoords(x, y, z);
+      expect(orbitAngles(s.theta, s.phi)).toEqual({ theta, tilt: 30 });
+    },
+  );
 });
