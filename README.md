@@ -3,20 +3,22 @@
 Renderer for vessels, navigation lights, and rules-of-the-road scenes:
 profile, bearing (lights-only, seen from a relative bearing θ) and plan
 (arc sector) views in SVG, plus an optional 3D view of the vessel as an
-orbitable model. Sibling of
-[coast-wright](https://github.com/mark-brannan/coast-wright) and
-[wire-wright](https://github.com/mark-brannan/wire-wright).
+orbitable model.
 
-**Status: extracted, unreleased.** The renderer was built inside
-[searoom](https://github.com/mark-brannan/searoom) and moved here by
-[searoom#18](https://github.com/mark-brannan/searoom/issues/18); searoom
-becomes its first consumer once that issue's step 4 lands. Design:
-[searoom/docs/design.md](https://github.com/mark-brannan/searoom/blob/main/docs/design.md).
+Try the playground! <https://mark-brannan.github.io/nav-wright/>.
+
+Consumed by [searoom](https://github.com/mark-brannan/searoom):
+* [searoom/docs/design.md](https://github.com/mark-brannan/searoom/blob/main/docs/design.md)
+* **Live demo: <https://mark-brannan.github.io/searoom/>**
+
+Sibling of:
+* [coast-wright](https://github.com/mark-brannan/coast-wright)
+* [wire-wright](https://github.com/mark-brannan/wire-wright)
 
 ## Install
 
 ```sh
-npm install github:mark-brannan/nav-wright#<sha>
+npm install github:mark-brannan/nav-wright#main
 ```
 
 Not on npm. `react` is a peer dependency; `colregs-engine` comes along as a
