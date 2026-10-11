@@ -8,8 +8,10 @@ import {
   BearingView,
   HULL_HINT_FAR_NM,
   HULL_HINT_NEAR_NM,
+  SKY_LIGHT,
   hullHintOpacity,
   hullSilhouette,
+  skyColor,
 } from '../src/BearingView.js';
 import { selectHull } from '../src/hulls.js';
 import type { FactRecord } from 'colregs-engine';
@@ -18,16 +20,23 @@ const facts: FactRecord = {};
 const hull = selectHull(facts);
 const noop = () => {};
 
-const render = (props: { hullHint?: boolean; range?: number; seascape?: boolean; theta?: number }): string =>
+const render = (props: {
+  hullHint?: number;
+  range?: number;
+  seascape?: boolean;
+  theta?: number;
+  sky?: number;
+}): string =>
   renderToStaticMarkup(
     <BearingView
       hull={hull}
       placed={[]}
       theta={props.theta ?? 0}
       onTheta={noop}
-      hullHint={props.hullHint ?? false}
+      hullHint={props.hullHint ?? 0}
       range={props.range}
       seascape={props.seascape}
+      sky={props.sky}
     />,
   );
 
@@ -35,6 +44,14 @@ const hintOpacity = (html: string): number | undefined => {
   const tag = /<path[^>]*class="bearing-hull-hint"[^>]*>/.exec(html)?.[0];
   const v = tag && /opacity="([^"]*)"/.exec(tag)?.[1];
   return v === undefined || v === null || v === '' ? undefined : Number(v);
+};
+
+const skyFill = (html: string): string | undefined =>
+  /<rect[^>]*class="bearing-sky"[^>]*fill="([^"]*)"/.exec(html)?.[1];
+
+const luminance = (hex: string): number => {
+  const n = parseInt(hex.slice(1), 16);
+  return (n >> 16) * 0.2126 + ((n >> 8) & 0xff) * 0.7152 + (n & 0xff) * 0.0722;
 };
 
 const width = (pts: [number, number][]): number => {
@@ -62,8 +79,8 @@ describe('BearingView presentation', () => {
   it('gives each seascape on a page its own gradient id', () => {
     const two = renderToStaticMarkup(
       <>
-        <BearingView hull={hull} placed={[]} theta={0} onTheta={noop} hullHint={false} seascape />
-        <BearingView hull={hull} placed={[]} theta={0} onTheta={noop} hullHint={false} seascape />
+        <BearingView hull={hull} placed={[]} theta={0} onTheta={noop} hullHint={0} seascape />
+        <BearingView hull={hull} placed={[]} theta={0} onTheta={noop} hullHint={0} seascape />
       </>,
     );
     const ids = [...two.matchAll(/<linearGradient id="([^"]+)"/g)].map((m) => m[1]);
@@ -72,9 +89,51 @@ describe('BearingView presentation', () => {
   });
 
   it('draws the hull hint on its own, without the seascape', () => {
-    const html = render({ hullHint: true, range: 0.5 });
+    const html = render({ hullHint: 1, range: 0.5 });
     expect(html).toContain('bearing-hull-hint');
     expect(html).not.toContain('bearing-sea');
+  });
+});
+
+describe('hull hint strength', () => {
+  it('draws nothing at strength 0', () => {
+    expect(render({ hullHint: 0, range: 0.5 })).not.toContain('bearing-hull-hint');
+  });
+
+  it('scales the range fade: stronger setting, more visible hull, never past full', () => {
+    const faint = hintOpacity(render({ hullHint: 0.3, range: 0.5 }));
+    const full = hintOpacity(render({ hullHint: 1, range: 0.5 }));
+    expect(faint).toBeCloseTo(0.3, 3);
+    expect(full).toBe(1);
+    expect(hintOpacity(render({ hullHint: 0.3, range: 1.75 }))).toBeLessThan(faint as number);
+    expect(hintOpacity(render({ hullHint: 5, range: 0.5 }))).toBe(1);
+  });
+
+  it('is still gone past the far range, however strong the setting', () => {
+    expect(render({ hullHint: 1, range: HULL_HINT_FAR_NM })).not.toContain('bearing-hull-hint');
+  });
+});
+
+describe('sky', () => {
+  it('is black by default and at 0', () => {
+    expect(skyFill(render({}))).toBe('#000000');
+    expect(skyColor(0)).toBe('#000000');
+  });
+
+  it('reaches the light night blue at 1 and clamps beyond either end', () => {
+    const light = `#${SKY_LIGHT.map((c) => c.toString(16).padStart(2, '0')).join('')}`;
+    expect(skyFill(render({ sky: 1 }))).toBe(light);
+    expect(skyColor(7)).toBe(light);
+    expect(skyColor(-1)).toBe('#000000');
+    expect(skyColor(Number.NaN)).toBe('#000000');
+  });
+
+  it('only ever brightens as the setting rises, and stays blue', () => {
+    const steps = [0, 0.25, 0.5, 0.75, 1].map(skyColor);
+    for (let i = 1; i < steps.length; i++)
+      expect(luminance(steps[i])).toBeGreaterThan(luminance(steps[i - 1]));
+    const n = parseInt(skyColor(0.5).slice(1), 16);
+    expect(n & 0xff).toBeGreaterThan(n >> 16);
   });
 });
 
@@ -103,10 +162,10 @@ describe('hull hint opacity by range', () => {
   });
 
   it('shows in the rendered hint: absent at 3 nm, faint at 0.5 nm and fainter in between', () => {
-    expect(hintOpacity(render({ hullHint: true, range: 3 }))).toBeUndefined();
-    expect(render({ hullHint: true, range: 3 })).not.toContain('bearing-hull-hint');
-    const near = hintOpacity(render({ hullHint: true, range: 0.5 }));
-    const mid = hintOpacity(render({ hullHint: true, range: 1.75 }));
+    expect(hintOpacity(render({ hullHint: 1, range: 3 }))).toBeUndefined();
+    expect(render({ hullHint: 1, range: 3 })).not.toContain('bearing-hull-hint');
+    const near = hintOpacity(render({ hullHint: 1, range: 0.5 }));
+    const mid = hintOpacity(render({ hullHint: 1, range: 1.75 }));
     expect(near).toBeGreaterThan(0);
     expect(mid).toBeGreaterThan(0);
     expect(mid).toBeLessThan(near as number);

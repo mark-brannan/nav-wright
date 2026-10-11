@@ -32,7 +32,7 @@ const cases: [string, () => string, string][] = [
     'BearingView',
     () =>
       renderToStaticMarkup(
-        <BearingView hull={hull} placed={[]} theta={0} onTheta={noop} hullHint={false} />,
+        <BearingView hull={hull} placed={[]} theta={0} onTheta={noop} hullHint={0} />,
       ),
     defaultSceneLabels.bearingAlt(0),
   ],
