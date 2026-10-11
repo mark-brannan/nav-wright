@@ -75,21 +75,28 @@ function Hull({
   // length, so it lands in the frame the spec's stations are drawn in. A
   // missing spec (NO_HULL's NaNs) falls back to the full-length fit.
   const { sternX, bowX } = hull;
-  const group = useMemo(
-    () => placeScene(scene, lengthMeters, { sternX, bowX }),
-    [scene, lengthMeters, sternX, bowX],
-  );
-  // The clone shares the cached GLTF's materials; fading them in place would
-  // fade every other view of the same mesh, so the clone gets its own.
-  const materials = useMemo(() => ownMaterials(group), [group]);
+  // Clone and materials are made together: the clone shares the cached GLTF's
+  // materials, and fading those would fade every other view of the mesh.
+  // `depth` is the same mesh writing depth only, so a faded hull shows its
+  // nearest surface over the sky, not every face behind it.
+  const { group, materials, depth } = useMemo(() => {
+    const g = placeScene(scene, lengthMeters, { sternX, bowX });
+    const materials = ownMaterials(g);
+    const depth = g.clone(true);
+    depth.traverse((o) => {
+      if ((o as THREE.Mesh).isMesh) (o as THREE.Mesh).material = DEPTH_ONLY;
+    });
+    return { group: g, materials, depth };
+  }, [scene, lengthMeters, sternX, bowX]);
+  const faded = opacity < 1;
   useEffect(() => {
     for (const m of materials) {
-      m.transparent = opacity < 1;
+      m.transparent = faded;
       m.opacity = opacity;
-      m.depthWrite = opacity >= 1;
+      m.depthWrite = !faded;
       m.needsUpdate = true;
     }
-  }, [materials, opacity]);
+  }, [materials, opacity, faded]);
   const fit = useMemo(() => {
     const box = new THREE.Box3().setFromObject(group);
     return fitView({ min: { ...box.min }, max: { ...box.max } });
@@ -114,6 +121,7 @@ function Hull({
 
   return (
     <group scale={fit.scale} position={fit.position}>
+      <primitive object={depth} visible={faded && opacity > 0} />
       <primitive object={group} visible={opacity > 0} />
       {placed.map((l, i) =>
         shown && !shown.has(l) ? null : (
@@ -129,6 +137,9 @@ function Hull({
     </group>
   );
 }
+
+/** Writes depth, draws nothing: the faded hull's prepass. */
+const DEPTH_ONLY = new THREE.MeshBasicMaterial({ colorWrite: false });
 
 /** Give every mesh under `root` its own copy of its material(s), and return
  * them, so they can be changed without touching the loader's cache. */
