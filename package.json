@@ -37,6 +37,7 @@
     "MODELS.md"
   ],
   "scripts": {
+    "dev": "vite --config playground/vite.config.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "build": "tsc -p tsconfig.build.json && cp src/style.css dist/style.css",
@@ -48,9 +49,9 @@
     "colregs-engine": "^0.1.7"
   },
   "peerDependencies": {
-    "react": "^19.2.8",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",
+    "react": "^19.2.8",
     "three": ">=0.159"
   },
   "devDependencies": {
@@ -60,10 +61,13 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "colregs": "^0.3.4",
     "react": "~19.3.0",
     "react-dom": "~19.3.0",
     "three": "^0.186.1",
     "typescript": "^7.0.2",
+    "vite": "^8.3.4",
     "vitest": "^5.0.3"
   },
   "peerDependenciesMeta": {
