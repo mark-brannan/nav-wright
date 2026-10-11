@@ -21,7 +21,7 @@ export type { Aspect, SceneLabels } from './labels.js';
 export { bearingLabel } from './bearing.js';
 
 // Scene views
-export { BearingView } from './BearingView.js';
+export { BearingView, SKY_LIGHT, skyColor } from './BearingView.js';
 export { PlanView } from './PlanView.js';
 export { ProfileView } from './ProfileView.js';
 
