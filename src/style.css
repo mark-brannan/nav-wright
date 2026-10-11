@@ -86,6 +86,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
   margin-top: 10px;
 }
 
