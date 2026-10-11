@@ -28,7 +28,7 @@
       "import": "./dist/profile.js"
     },
     "./style.css": "./dist/style.css",
-    "./models/3dbenchy-lowpoly.glb": "./models/3dbenchy-lowpoly.glb",
+    "./models/*": "./models/*",
     "./package.json": "./package.json"
   },
   "files": [
