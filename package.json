@@ -44,7 +44,9 @@
     "build": "tsc -p tsconfig.build.json && cp src/style.css dist/style.css",
     "prepublishOnly": "npm run build",
     "prepare": "npm run build",
-    "models": "npm run build && node scripts/loft-hulls.mjs"
+    "models": "npm run build && node scripts/loft-hulls.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "colregs-engine": "^0.1.7"
@@ -64,6 +66,7 @@
     "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^6.1.2",
     "colregs": "^0.3.4",
+    "prettier": "3.6.2",
     "react": "~19.3.0",
     "react-dom": "~19.3.0",
     "three": "^0.186.1",
