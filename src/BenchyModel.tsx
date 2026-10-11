@@ -96,7 +96,8 @@ function Hull({
   // The clones are this hull's alone; the loader's cache never sees them.
   useEffect(() => () => materials.forEach((m) => m.dispose()), [materials]);
   const faded = opacity < 1;
-  useEffect(() => {
+  // Before paint, so a freshly loaded hull never shows solid for a frame.
+  useLayoutEffect(() => {
     for (const m of materials) {
       m.transparent = faded;
       m.opacity = opacity;
@@ -203,13 +204,17 @@ function SceneLight({
     <group position={at}>
       <mesh renderOrder={2}>
         <sphereGeometry args={[r, 12, 12]} />
+        {/* transparent so it joins the faded hull's pass and renderOrder puts it after */}
         <meshBasicMaterial
           color={light.color}
+          transparent
           depthTest={false}
+          depthWrite={false}
           toneMapped={false}
         />
       </mesh>
-      <mesh ref={halo} renderOrder={1}>
+      {/* after the core (2), or the core paints over the glow */}
+      <mesh ref={halo} renderOrder={3}>
         <sphereGeometry args={[r * 2.6, 12, 12]} />
         <meshBasicMaterial
           color={light.color}

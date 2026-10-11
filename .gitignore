@@ -3,3 +3,4 @@ dist/
 *.tgz
 _site/
 tsconfig.tsbuildinfo
+playground-dist/
