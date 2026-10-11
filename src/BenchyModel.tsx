@@ -27,35 +27,38 @@ import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
-import { anchorLights, lightPosition } from './modelTransform.js';
+import {
+  VIEW_FRAME,
+  anchorLights,
+  fitView,
+  lightPosition,
+  lightRadius,
+  orbitPosition,
+} from './modelTransform.js';
 import type { HullStations } from './modelTransform.js';
 import { placeScene, profileHullModel } from './sceneProfile.js';
 import { DEFAULT_TILT, MAX_TILT } from './tilt.js';
 
 const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN, bowX: NaN };
 
-/** Camera distance as a multiple of the vessel's length. */
-const ORBIT_DISTANCE = 1.6;
-
-/** Bead radius for a light, and how far off the surface it is seated. */
-function lightRadius(lengthMeters: number): number {
-  return Math.max(lengthMeters * 0.012, 0.12);
-}
-
 /** The placed hull and her lights, seated on it. One component because
  * the lights need the mesh's profile, which only exists once the model
  * has loaded — so they arrive together, on the hull, rather than the
- * lights appearing first at their analytic positions and then jumping. */
+ * lights appearing first at their analytic positions and then jumping.
+ * Everything is placed in metres and drawn in view units (fitView), so
+ * the hull is the same size on screen whatever her length. */
 function Hull({
   modelUrl,
   lengthMeters,
   hull,
   placed,
+  anchored,
 }: {
   modelUrl: string;
   lengthMeters: number;
   hull: HullStations;
   placed: PlacedLight[];
+  anchored: boolean;
 }): ReactElement {
   const { scene } = useGLTF(modelUrl);
 
@@ -67,6 +70,10 @@ function Hull({
     () => placeScene(scene, lengthMeters, { sternX, bowX }),
     [scene, lengthMeters, sternX, bowX],
   );
+  const fit = useMemo(() => {
+    const box = new THREE.Box3().setFromObject(group);
+    return fitView({ min: { ...box.min }, max: { ...box.max } });
+  }, [group]);
   const profile = useMemo(
     () => profileHullModel(scene, lengthMeters, { sternX, bowX }),
     [scene, lengthMeters, sternX, bowX],
@@ -81,7 +88,7 @@ function Hull({
   );
 
   return (
-    <>
+    <group scale={fit.scale} position={fit.position}>
       <primitive object={group} />
       {placed.map((l, i) => (
         <SceneLight
@@ -91,7 +98,8 @@ function Hull({
           position={positions?.[i]}
         />
       ))}
-    </>
+      {anchored && <AnchorCable lengthMeters={lengthMeters} />}
+    </group>
   );
 }
 
@@ -184,19 +192,18 @@ const MAX_POLAR = 90 * DEG;
 /** Drives the camera from `theta` (relative bearing of the viewer, the
  * same angle the bearing view's slider carries) and `tilt` (elevation
  * above the waterline), and reports both back when the user drags, so
- * each stays one number rather than two. */
+ * each stays one number rather than two. Works in view units (see
+ * VIEW_FRAME), so it has no length to follow. */
 function OrbitRig({
   theta,
   onTheta,
   tilt,
   onTilt,
-  lengthMeters,
 }: {
   theta: number;
   onTheta?: (t: number) => void;
   tilt: number;
   onTilt?: (t: number) => void;
-  lengthMeters: number;
 }): ReactElement {
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const camera = useThree((s) => s.camera);
@@ -204,36 +211,24 @@ function OrbitRig({
   // report comes back as a prop and re-seats the camera mid-drag.
   const reported = useRef<{ theta: number; tilt: number } | null>(null);
 
-  const distance = lengthMeters * ORBIT_DISTANCE;
-  // The stand-in mesh is about 0.8 of its length tall; aim at its middle so
-  // it sits centred in the frame rather than riding the top edge.
-  const targetY = lengthMeters * 0.38;
-
   useEffect(() => {
     const r = reported.current;
     if (r && Math.abs(r.theta - theta) < 0.5 && Math.abs(r.tilt - tilt) < 0.5)
       return;
-    const polar = Math.min(MAX_POLAR, Math.max(MIN_POLAR, (90 - tilt) * DEG));
-    const rad = theta * DEG;
-    // theta 0 = seen from ahead (+X, the bow), 90 = from her starboard
-    // beam (+Z), matching the bearing view's aspects. At 90 the bow falls
-    // to the right of the frame, as it does in the 2D profile.
-    camera.position.set(
-      distance * Math.sin(polar) * Math.cos(rad),
-      distance * Math.cos(polar) + targetY,
-      distance * Math.sin(polar) * Math.sin(rad),
-    );
+    // At theta 90 the bow falls to the right of the frame, as it does in
+    // the 2D profile.
+    camera.position.set(...orbitPosition(theta, tilt));
     controls.current?.update();
-  }, [theta, tilt, camera, distance, targetY]);
+  }, [theta, tilt, camera]);
 
   return (
     <OrbitControls
       ref={controls}
-      target={[0, targetY, 0]}
+      target={[0, 0, 0]}
       enablePan
       enableZoom
-      minDistance={lengthMeters * 0.5}
-      maxDistance={lengthMeters * 8}
+      minDistance={VIEW_FRAME.minDistance}
+      maxDistance={VIEW_FRAME.maxDistance}
       minPolarAngle={MIN_POLAR}
       maxPolarAngle={MAX_POLAR}
       onChange={() => {
@@ -304,7 +299,7 @@ export function BenchyModel({
         className="scene-3d"
         dpr={[1, 2]}
         gl={{ antialias: true }}
-        camera={{ fov: 40, near: 0.1, far: lengthMeters * 40 }}
+        camera={{ fov: VIEW_FRAME.fov, near: VIEW_FRAME.near, far: VIEW_FRAME.far }}
         role="img"
         aria-label={label}
       >
@@ -317,7 +312,6 @@ export function BenchyModel({
           onTheta={onTheta}
           tilt={tilt}
           onTilt={onTilt}
-          lengthMeters={lengthMeters}
         />
         <Suspense fallback={null}>
           <Hull
@@ -325,9 +319,9 @@ export function BenchyModel({
             lengthMeters={lengthMeters}
             hull={hull}
             placed={placed}
+            anchored={anchored}
           />
         </Suspense>
-        {anchored && <AnchorCable lengthMeters={lengthMeters} />}
       </Canvas>
     </ModelErrorBoundary>
   );
