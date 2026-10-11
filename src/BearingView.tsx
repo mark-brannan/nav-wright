@@ -12,6 +12,7 @@ import { bearingInArc } from './placement.js';
 import type { SceneLabels } from './labels.js';
 import { defaultSceneLabels } from './labels.js';
 import { ThetaControl } from './ThetaControl.js';
+import { useDragRotate } from './rotate.js';
 import { Glow } from './svg.js';
 
 const CX = 220;
@@ -40,6 +41,7 @@ export function BearingView({
   seascape?: boolean;
   labels?: SceneLabels;
 }): ReactElement {
+  const drag = useDragRotate<SVGSVGElement>(theta, onTheta);
   const rad = (theta * Math.PI) / 180;
   const sin = Math.sin(rad);
   const cos = Math.cos(rad);
@@ -60,6 +62,8 @@ export function BearingView({
         role="img"
         aria-label={labels.bearingAlt(Math.round(theta))}
         className="scene-svg scene-svg-black"
+        style={{ touchAction: 'pan-y', cursor: 'grab' }}
+        {...drag}
       >
         <rect width="440" height="240" fill="#000000" />
         {seascape && <Seascape />}
@@ -80,7 +84,7 @@ export function BearingView({
           </text>
         )}
       </svg>
-      <ThetaControl theta={theta} onTheta={onTheta} labels={labels} />
+      <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
     </div>
   );
 }
