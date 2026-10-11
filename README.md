@@ -83,8 +83,9 @@ frame the spec's light stations are drawn in. Without a `hull` it is fitted
 to the full length and centred.
 
 A failed model load — offline, a blocked CDN, no WebGL context — falls back
-to `ProfileView`, on the reasoning that the lights are the subject and
-losing them is worse than losing the hull rendering.
+to the SVG bearing scene, which also stands in while the model loads, on the
+reasoning that the lights are the subject and losing them is worse than
+losing the hull rendering.
 
 ## Labels
 

@@ -21,7 +21,7 @@
 // relies on (local +X is the bow). The scale/orientation math itself
 // lives in modelTransform.ts, where it is unit-tested.
 
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentRef, ReactElement, ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
@@ -58,6 +58,7 @@ function Hull({
   anchored,
   theta,
   opacity,
+  onReady,
 }: {
   modelUrl: string;
   lengthMeters: number;
@@ -68,8 +69,11 @@ function Hull({
   theta: number;
   /** The mesh's opacity, 0 (hidden: lights only) .. 1 (solid). */
   opacity: number;
+  /** Called once the model has loaded and the lights are on it. */
+  onReady: () => void;
 }): ReactElement {
   const { scene } = useGLTF(modelUrl);
+  useLayoutEffect(onReady, [onReady]);
 
   // The mesh is fitted to the spec's own bow-to-stern span, not the full
   // length, so it lands in the frame the spec's stations are drawn in. A
@@ -79,7 +83,9 @@ function Hull({
     () => withOwnMaterials(placeScene(scene, lengthMeters, { sternX, bowX })),
     [scene, lengthMeters, sternX, bowX],
   );
-  useEffect(() => fadeMaterials(group, opacity), [group, opacity]);
+  useEffect(() => () => disposeMaterials(group), [group]);
+  // Before paint, so a freshly loaded hull never shows solid for a frame.
+  useLayoutEffect(() => fadeMaterials(group, opacity), [group, opacity]);
   const fit = useMemo(() => {
     const box = new THREE.Box3().setFromObject(group);
     return fitView({ min: { ...box.min }, max: { ...box.max } });
@@ -115,34 +121,50 @@ function Hull({
   );
 }
 
+const materialsOf = (group: THREE.Object3D): THREE.Material[] => {
+  const all: THREE.Material[] = [];
+  group.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (mesh.isMesh) all.push(...(Array.isArray(mesh.material) ? mesh.material : [mesh.material]));
+  });
+  return all;
+};
+
 /** Give every mesh in `group` its own material, so fading this hull never
- * fades another instance of the same cached model. */
+ * fades another instance of the same cached model. Each clone remembers the
+ * model's own opacity, so fading scales it rather than replacing it. */
 function withOwnMaterials(group: THREE.Object3D): THREE.Object3D {
   group.traverse((o) => {
     const mesh = o as THREE.Mesh;
     if (!mesh.isMesh) return;
-    mesh.material = Array.isArray(mesh.material)
-      ? mesh.material.map((m) => m.clone())
-      : mesh.material.clone();
+    const own = (m: THREE.Material): THREE.Material => {
+      const c = m.clone();
+      c.userData.baseOpacity = m.opacity;
+      c.userData.baseTransparent = m.transparent;
+      return c;
+    };
+    mesh.material = Array.isArray(mesh.material) ? mesh.material.map(own) : own(mesh.material);
   });
   return group;
 }
 
-/** Set the hull's opacity. It keeps writing depth, so a faded hull still
- * hides its own far side and reads as a solid ghost, not a wireframe; the
- * lights ignore depth (SceneLight), so it never hides one of them. */
+function disposeMaterials(group: THREE.Object3D): void {
+  for (const m of materialsOf(group)) m.dispose();
+}
+
+/** Set the hull's opacity, as a fraction of the model's own. It keeps
+ * writing depth, so a faded hull still hides its own far side and reads as
+ * a solid ghost, not a wireframe; the lights are drawn after it with no
+ * depth test (SceneLight), so it never veils one of them. */
 function fadeMaterials(group: THREE.Object3D, opacity: number): void {
   const o = Math.min(1, Math.max(0, opacity));
-  group.traverse((obj) => {
-    const mesh = obj as THREE.Mesh;
-    if (!mesh.isMesh) return;
-    for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
-      const transparent = o < 1;
-      if (m.transparent !== transparent) m.needsUpdate = true;
-      m.transparent = transparent;
-      m.opacity = o;
-    }
-  });
+  for (const m of materialsOf(group)) {
+    const base = (m.userData.baseOpacity as number | undefined) ?? 1;
+    const transparent = o < 1 || m.userData.baseTransparent === true;
+    if (m.transparent !== transparent) m.needsUpdate = true;
+    m.transparent = transparent;
+    m.opacity = base * o;
+  }
 }
 
 /** One light: a small emissive bead inside an additive halo, so it reads
@@ -179,9 +201,13 @@ function SceneLight({
     <group position={at}>
       <mesh renderOrder={2}>
         <sphereGeometry args={[r, 12, 12]} />
+        {/* transparent only to share the faded hull's render list, so its
+            renderOrder puts it after the hull rather than under it */}
         <meshBasicMaterial
           color={light.color}
+          transparent
           depthTest={false}
+          depthWrite={false}
           toneMapped={false}
         />
       </mesh>
@@ -204,27 +230,42 @@ function SceneLight({
 /** The anchor cable, when she is anchored: bow to the seabed, drawn in the
  * scene for the same reason the lights are. */
 function AnchorCable({ lengthMeters }: { lengthMeters: number }): ReactElement {
-  const points = useMemo(
-    () => [
+  // One Line per length, not per render: Hull re-renders on every degree
+  // the viewer walks round her.
+  const line = useMemo(() => {
+    const geometry = new THREE.BufferGeometry().setFromPoints([
       new THREE.Vector3(lengthMeters / 2, lengthMeters * 0.08, 0),
       new THREE.Vector3(lengthMeters * 0.95, -lengthMeters * 0.35, 0),
-    ],
-    [lengthMeters],
-  );
-  const geometry = useMemo(
-    () => new THREE.BufferGeometry().setFromPoints(points),
-    [points],
-  );
-  return (
-    <primitive
-      object={new THREE.Line(geometry, new THREE.LineDashedMaterial({
+    ]);
+    const l = new THREE.Line(
+      geometry,
+      new THREE.LineDashedMaterial({
         color: '#7d8ea3',
         dashSize: lengthMeters * 0.03,
         gapSize: lengthMeters * 0.03,
-      }))}
-      onUpdate={(l: THREE.Line) => l.computeLineDistances()}
-    />
+      }),
+    );
+    l.computeLineDistances();
+    return l;
+  }, [lengthMeters]);
+  useEffect(
+    () => () => {
+      line.geometry.dispose();
+      (line.material as THREE.Material).dispose();
+    },
+    [line],
   );
+  return <primitive object={line} />;
+}
+
+/** The in-canvas Suspense fallback: tells BenchyModel a model is on its way,
+ * so it can show its `loading` stand-in over the empty canvas meanwhile. */
+function Pending({ onPending }: { onPending: (p: boolean) => void }): null {
+  useLayoutEffect(() => {
+    onPending(true);
+    return () => onPending(false);
+  }, [onPending]);
+  return null;
 }
 
 const DEG = Math.PI / 180;
@@ -301,6 +342,7 @@ export function BenchyModel({
   background = '#0a1622',
   label,
   fallback = <div className="scene-3d" />,
+  loading,
   onError,
 }: {
   /** URL of the .glb to render. This package ships one at
@@ -332,6 +374,10 @@ export function BenchyModel({
   label?: string;
   /** Shown if the model or the WebGL context fails. */
   fallback?: ReactNode;
+  /** Laid over the canvas while the model downloads (the lights ride on
+   * it, so the canvas has nothing to show until then). Needs a positioned
+   * parent, such as .scene-3d-stack. */
+  loading?: ReactNode;
   onError?: (error: unknown) => void;
 }): ReactElement {
   // Where the camera actually stands, for the arc cull: the theta prop, or
@@ -339,10 +385,12 @@ export function BenchyModel({
   // for a caller that does not feed onTheta back in.
   const [seenFrom, setSeenFrom] = useState(theta);
   const [lastTheta, setLastTheta] = useState(theta);
-  if (theta !== lastTheta) {
+  if (!Object.is(theta, lastTheta)) {
     setLastTheta(theta);
     setSeenFrom(theta);
   }
+  const [pending, setPending] = useState(true);
+  const ready = useMemo(() => () => setPending(false), []);
   return (
     <ModelErrorBoundary fallback={fallback} onError={onError}>
       <Canvas
@@ -366,7 +414,7 @@ export function BenchyModel({
           tilt={tilt}
           onTilt={onTilt}
         />
-        <Suspense fallback={null}>
+        <Suspense fallback={<Pending onPending={setPending} />}>
           <Hull
             modelUrl={modelUrl}
             lengthMeters={lengthMeters}
@@ -375,9 +423,15 @@ export function BenchyModel({
             anchored={anchored}
             theta={seenFrom}
             opacity={hullOpacity}
+            onReady={ready}
           />
         </Suspense>
       </Canvas>
+      {pending && loading && (
+        <div className="scene-3d-loading" style={{ position: 'absolute', inset: 0 }}>
+          {loading}
+        </div>
+      )}
     </ModelErrorBoundary>
   );
 }

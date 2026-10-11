@@ -4,9 +4,9 @@
 // lift the hint and the model fades in under the same lights.
 //
 // Lights obey their arcs exactly as the SVG bearing view's do (both cull
-// through lightsSeenFrom). While three.js loads, and in place of a model
-// that cannot load, the SVG bearing scene stands in, so the exam view is
-// never lost to a slow network or a browser without WebGL.
+// through lightsSeenFrom). While three.js or the model loads, and in place
+// of a model that cannot load, the SVG bearing scene stands in, so the exam
+// view is never lost to a slow network or a browser without WebGL.
 
 import { lazy, Suspense, useState } from 'react';
 import type { ReactElement } from 'react';
@@ -109,6 +109,7 @@ export function BearingModelView({
               background={skyColor(sky)}
               label={labels.bearingAlt(Math.round(theta))}
               fallback={flat}
+              loading={flat}
               onError={() => setModelFailed(true)}
             />
           </div>

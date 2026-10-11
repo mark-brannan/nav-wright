@@ -61,6 +61,14 @@
   border-radius: 0;
 }
 
+/* The SVG stand-in laid over the canvas while the model downloads (the
+   component positions it inline): drawn borderless inside the frame. */
+.scene-3d-loading > .scene-svg {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+
 .scene-3d-stack canvas {
   /* The view orbits on drag, so the canvas takes the pointer. */
   touch-action: none;
