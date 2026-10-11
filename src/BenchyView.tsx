@@ -1,6 +1,6 @@
 // The vessel as a 3D model, orbitable: drag to swing round her and tilt,
 // right-drag to pan, wheel to zoom. The horizontal angle is the same
-// relative bearing the bearing view carries, driven by the same slider, so
+// relative bearing the bearing view carries, driven by the same dial, so
 // moving between the two tabs keeps you standing in the same place.
 
 import { lazy, Suspense, useState } from 'react';
@@ -83,7 +83,7 @@ export function BenchyView({
             />
           </Suspense>
         </div>
-        <ThetaControl theta={theta} onTheta={onTheta} labels={labels} />
+        <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
         {onTilt && <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />}
       </div>
     </ModelErrorBoundary>
