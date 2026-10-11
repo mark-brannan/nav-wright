@@ -1,17 +1,22 @@
-// The vessel as a 3D model, orbitable: drag to swing round her and tilt,
-// right-drag to pan, wheel to zoom. The horizontal angle is the same
-// relative bearing the bearing view carries, driven by the same dial, so
-// moving between the two tabs keeps you standing in the same place.
+// The bearing view, in 3D: her lights as seen from relative bearing θ, over
+// the vessel as an orbitable model. One view for both jobs. With the hull
+// hint at 0 and the sky black it is the exam view, lights only on black;
+// lift the hint and the model fades in under the same lights.
+//
+// Lights obey their arcs exactly as the SVG bearing view's do (both cull
+// through lightsSeenFrom). While three.js loads, and in place of a model
+// that cannot load, the SVG bearing scene stands in, so the exam view is
+// never lost to a slow network or a browser without WebGL.
 
 import { lazy, Suspense, useState } from 'react';
 import type { ReactElement } from 'react';
 import type { FactRecord } from 'colregs-engine';
 import type { Hull } from './hulls.js';
+import { BearingScene, hullHintOpacity, skyColor } from './BearingView.js';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
 import type { BenchyLabels } from './benchyLabels.js';
 import { defaultBenchyLabels } from './benchyLabels.js';
-import { ProfileView } from './ProfileView.js';
 import { DEFAULT_TILT } from './tilt.js';
 import { ThetaControl } from './ThetaControl.js';
 import { TiltControl } from './TiltControl.js';
@@ -22,7 +27,7 @@ const BenchyModel = lazy(() =>
   import('./BenchyModel.js').then((m) => ({ default: m.BenchyModel })),
 );
 
-export function BenchyView({
+export function BearingModelView({
   modelUrl,
   hull,
   placed,
@@ -31,6 +36,9 @@ export function BenchyView({
   onTheta,
   tilt = DEFAULT_TILT,
   onTilt,
+  hullHint,
+  range,
+  sky = 0,
   labels = defaultBenchyLabels,
 }: {
   /** URL of the .glb to render. This package ships one at
@@ -45,17 +53,37 @@ export function BenchyView({
   /** Camera elevation above the waterline, degrees; see TiltControl. */
   tilt?: number;
   onTilt?: (t: number) => void;
+  /** Hull hint strength, 0 (lights only) .. 1 (the model solid); range fades it further. */
+  hullHint: number;
+  /** Range to her in nautical miles; fades the hull hint (see hullHintOpacity). */
+  range?: number;
+  /** Background, 0 (black, the exam default) .. 1 (a lighter night blue). See skyColor. */
+  sky?: number;
   labels?: BenchyLabels;
 }): ReactElement {
-  // A failed model load degrades to the 2D profile rather than to a blank
-  // pane: the lights are the subject of this app, so losing them is worse
-  // than losing the hull rendering.
   const [modelFailed, setModelFailed] = useState(false);
 
-  const svgProfile = (
-    <ProfileView hull={hull} placed={placed} facts={facts} labels={labels} />
+  const flat = (
+    <BearingScene
+      hull={hull}
+      placed={placed}
+      theta={theta}
+      onTheta={onTheta}
+      hullHint={hullHint}
+      range={range}
+      sky={sky}
+      labels={labels}
+    />
   );
-  if (modelFailed) return svgProfile;
+  const dial = <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />;
+
+  if (modelFailed)
+    return (
+      <div className="bearing-view">
+        {flat}
+        {dial}
+      </div>
+    );
 
   const lengthMeters =
     typeof facts['fact:length_m'] === 'number' ? facts['fact:length_m'] : 12;
@@ -63,10 +91,10 @@ export function BenchyView({
   // The outer boundary catches a failed chunk load for the lazy import,
   // which happens before BenchyModel's own boundary exists to catch it.
   return (
-    <ModelErrorBoundary fallback={svgProfile} onError={() => setModelFailed(true)}>
-      <div className="model-view">
-        <div className="scene-3d-stack" role="img" aria-label={labels.benchyAlt}>
-          <Suspense fallback={<div className="scene-3d" aria-hidden="true" />}>
+    <ModelErrorBoundary fallback={flat} onError={() => setModelFailed(true)}>
+      <div className="bearing-view model-view">
+        <Suspense fallback={flat}>
+          <div className="scene-3d-stack">
             <BenchyModel
               modelUrl={modelUrl}
               lengthMeters={lengthMeters}
@@ -77,13 +105,15 @@ export function BenchyView({
               tilt={tilt}
               onTilt={onTilt}
               hull={hull.spec}
-              label={labels.benchyAlt}
-              fallback={<div className="scene-3d" aria-hidden="true" />}
+              hullOpacity={Math.min(1, Math.max(0, hullHint)) * hullHintOpacity(range)}
+              background={skyColor(sky)}
+              label={labels.bearingAlt(Math.round(theta))}
+              fallback={flat}
               onError={() => setModelFailed(true)}
             />
-          </Suspense>
-        </div>
-        <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
+          </div>
+        </Suspense>
+        {dial}
         {onTilt && <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />}
       </div>
     </ModelErrorBoundary>

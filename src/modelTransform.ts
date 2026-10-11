@@ -7,6 +7,8 @@
 // if these renderers move into a library. The caller supplies the model's
 // untransformed bounding box; everything after that is arithmetic.
 
+import type { PlacedLight } from './placement.js';
+import { lightsSeenFrom } from './placement.js';
 import { MAX_TILT } from './tilt.js';
 
 export interface Vec3 {
@@ -463,6 +465,21 @@ export function anchorLights(
     if (isSide(l)) return [x, s.deck + clearance, z];
     return [x, analytic[i][1] + (lift.get(groupKey(l, i)) ?? 0), z];
   });
+}
+
+/** The lights the 3D view draws for a viewer at relative bearing `theta`,
+ * each with its seat (`seats[i]` belongs to `lights[i]`; missing seats
+ * stay undefined). Seated first, culled second, so a light's seat never
+ * moves as the viewer walks round; only whether it is lit changes. */
+export function seatsSeenFrom(
+  lights: readonly PlacedLight[],
+  seats: readonly ([number, number, number] | undefined)[] | null,
+  theta: number,
+): { light: PlacedLight; position: [number, number, number] | undefined }[] {
+  return lightsSeenFrom(
+    lights.map((light, i) => ({ light, arc: light.arc, position: seats?.[i] })),
+    theta,
+  ).map(({ light, position }) => ({ light, position }));
 }
 
 // --- Framing the view -----------------------------------------------------

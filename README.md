@@ -51,16 +51,17 @@ so nothing here depends on a particular app's copy of the COLREGS data.
 does.
 
 ```jsx
-import { BenchyView } from 'nav-wright/benchy';
+import { BearingModelView } from 'nav-wright/benchy';
 import modelUrl from 'nav-wright/models/3dbenchy-lowpoly.glb?url'; // Vite
 
-<BenchyView modelUrl={modelUrl} hull={hull} placed={placed} facts={facts}
-            theta={theta} onTheta={setTheta} tilt={tilt} onTilt={setTilt} />
+<BearingModelView modelUrl={modelUrl} hull={hull} placed={placed} facts={facts}
+                  theta={theta} onTheta={setTheta} tilt={tilt} onTilt={setTilt}
+                  hullHint={0.3} sky={0} />
 ```
 
 | Export | What it is |
 | --- | --- |
-| `BenchyView` | the vessel as an orbitable 3D model, with her lights seated on the mesh |
+| `BearingModelView` | the bearing view in 3D: lights culled to their arcs, over a fading orbitable model |
 | `DEFAULT_TILT`, `MAX_TILT` | the camera-elevation range, for clamping app state against |
 | `TiltControl` | the camera-elevation slider |
 | `ModelErrorBoundary` | degrades a failed model load to a fallback rather than a blank pane |

@@ -21,7 +21,7 @@ const THREE_D_ONLY = ['three', '@react-three/fiber', '@react-three/drei'];
 /** Every bare specifier reachable from `entry` by *static* imports, and
  * the module each was reached through. A dynamic `import()` is
  * deliberately not followed: deferring three.js behind one is exactly how
- * BenchyView and preloadBenchyModel keep it out of their own chunk. */
+ * BearingModelView and preloadBenchyModel keep it out of their own chunk. */
 function staticImports(entry: string): Map<string, string> {
   const found = new Map<string, string>();
   const seen = new Set<string>();

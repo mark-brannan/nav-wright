@@ -10,7 +10,7 @@ export { PX, PZ, allHulls, selectHull } from './hulls.js';
 export type { Hull, HullSpec } from './hulls.js';
 
 // Light placement and arc geometry
-export { bearingInArc, placeLights } from './placement.js';
+export { bearingInArc, lightsSeenFrom, placeLights } from './placement.js';
 export type { PlacedLight } from './placement.js';
 
 // Scene labels (the i18n seam: English defaults, consumer-supplied catalog)

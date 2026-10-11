@@ -1,13 +1,14 @@
-// Renders the vessel as a 3D model, for the "Benchy" scene view. Every
-// vessel uses the same stand-in mesh regardless of hull, size or mode of
-// propulsion; only the length scaling varies.
+// Renders the vessel as a 3D model, for the 3D bearing view. The mesh is
+// the consumer's choice per hull (modelUrl); only the length scaling varies.
 //
 // The lights are drawn in the scene rather than as a 2D overlay: the view
 // orbits, so a flat annotation layer in profile coordinates would slide
 // off the hull the moment you dragged it. They come from the same
 // placeLights output the 2D views use, so there is still one
 // light-placement implementation; what changes here is only where on the
-// mesh each light is seated. The mesh's shape is read back as a station
+// mesh each light is seated. A light shows only while the viewer stands
+// inside its arc (seatsSeenFrom, over the same lightsSeenFrom cull the SVG
+// bearing view uses), so the two never disagree about what is visible. The mesh's shape is read back as a station
 // profile and each light snapped to the surface at its station (see
 // anchorLights in modelTransform.ts), so a sidelight sits on the rail
 // and a masthead light clears the cabin instead of landing inside it.
@@ -20,7 +21,7 @@
 // relies on (local +X is the bow). The scale/orientation math itself
 // lives in modelTransform.ts, where it is unit-tested.
 
-import { Suspense, useEffect, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentRef, ReactElement, ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
@@ -35,6 +36,7 @@ import {
   lightRadius,
   orbitAngles,
   orbitPosition,
+  seatsSeenFrom,
 } from './modelTransform.js';
 import type { HullStations } from './modelTransform.js';
 import { placeScene, profileHullModel } from './sceneProfile.js';
@@ -54,12 +56,18 @@ function Hull({
   hull,
   placed,
   anchored,
+  theta,
+  opacity,
 }: {
   modelUrl: string;
   lengthMeters: number;
   hull: HullStations;
   placed: PlacedLight[];
   anchored: boolean;
+  /** The viewer's relative bearing: lights outside their arc from here are not drawn. */
+  theta: number;
+  /** The mesh's opacity, 0 (hidden: lights only) .. 1 (solid). */
+  opacity: number;
 }): ReactElement {
   const { scene } = useGLTF(modelUrl);
 
@@ -68,9 +76,10 @@ function Hull({
   // missing spec (NO_HULL's NaNs) falls back to the full-length fit.
   const { sternX, bowX } = hull;
   const group = useMemo(
-    () => placeScene(scene, lengthMeters, { sternX, bowX }),
+    () => withOwnMaterials(placeScene(scene, lengthMeters, { sternX, bowX })),
     [scene, lengthMeters, sternX, bowX],
   );
+  useEffect(() => fadeMaterials(group, opacity), [group, opacity]);
   const fit = useMemo(() => {
     const box = new THREE.Box3().setFromObject(group);
     return fitView({ min: { ...box.min }, max: { ...box.max } });
@@ -88,20 +97,52 @@ function Hull({
     [placed, lengthMeters, hull, profile],
   );
 
+  const seen = seatsSeenFrom(placed, positions, theta);
+
   return (
     <group scale={fit.scale} position={fit.position}>
-      <primitive object={group} />
-      {placed.map((l, i) => (
+      <primitive object={group} visible={opacity > 0} />
+      {seen.map(({ light, position }) => (
         <SceneLight
-          key={l.key}
-          light={l}
+          key={light.key}
+          light={light}
           lengthMeters={lengthMeters}
-          position={positions?.[i]}
+          position={position}
         />
       ))}
-      {anchored && <AnchorCable lengthMeters={lengthMeters} />}
+      {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
     </group>
   );
+}
+
+/** Give every mesh in `group` its own material, so fading this hull never
+ * fades another instance of the same cached model. */
+function withOwnMaterials(group: THREE.Object3D): THREE.Object3D {
+  group.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    mesh.material = Array.isArray(mesh.material)
+      ? mesh.material.map((m) => m.clone())
+      : mesh.material.clone();
+  });
+  return group;
+}
+
+/** Set the hull's opacity. It keeps writing depth, so a faded hull still
+ * hides its own far side and reads as a solid ghost, not a wireframe; the
+ * lights ignore depth (SceneLight), so it never hides one of them. */
+function fadeMaterials(group: THREE.Object3D, opacity: number): void {
+  const o = Math.min(1, Math.max(0, opacity));
+  group.traverse((obj) => {
+    const mesh = obj as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+      const transparent = o < 1;
+      if (m.transparent !== transparent) m.needsUpdate = true;
+      m.transparent = transparent;
+      m.opacity = o;
+    }
+  });
 }
 
 /** One light: a small emissive bead inside an additive halo, so it reads
@@ -110,8 +151,8 @@ function Hull({
  *
  * Drawn without depth testing, so a light is never swallowed by the
  * stand-in mesh's oversized superstructure — which is a cartoon's, not
- * this vessel's. The 2D profile likewise draws every light regardless of
- * what is in front of it; arc culling is the bearing view's job. */
+ * this vessel's. Whether it is drawn at all is the arc cull's call, in
+ * Hull above. */
 function SceneLight({
   light,
   lengthMeters,
@@ -256,6 +297,8 @@ export function BenchyModel({
   tilt = DEFAULT_TILT,
   onTilt,
   hull = NO_HULL,
+  hullOpacity = 1,
+  background = '#0a1622',
   label,
   fallback = <div className="scene-3d" />,
   onError,
@@ -280,6 +323,10 @@ export function BenchyModel({
    * bow-to-stern span. The default seats everything on the centreline and
    * fits the mesh to the full length. */
   hull?: HullStations;
+  /** The mesh's opacity, 0 (lights only, the exam view) .. 1 (solid). */
+  hullOpacity?: number;
+  /** The scene's background colour. */
+  background?: string;
   /** Accessible name for the canvas. Comes from the caller's SceneLabels —
    * these views render without an IntlProvider, by design (searoom#20). */
   label?: string;
@@ -287,6 +334,15 @@ export function BenchyModel({
   fallback?: ReactNode;
   onError?: (error: unknown) => void;
 }): ReactElement {
+  // Where the camera actually stands, for the arc cull: the theta prop, or
+  // the orbit's own report when the viewer drags, so the cull is right even
+  // for a caller that does not feed onTheta back in.
+  const [seenFrom, setSeenFrom] = useState(theta);
+  const [lastTheta, setLastTheta] = useState(theta);
+  if (theta !== lastTheta) {
+    setLastTheta(theta);
+    setSeenFrom(theta);
+  }
   return (
     <ModelErrorBoundary fallback={fallback} onError={onError}>
       <Canvas
@@ -297,13 +353,16 @@ export function BenchyModel({
         role="img"
         aria-label={label}
       >
-        <color attach="background" args={['#0a1622']} />
+        <color attach="background" args={[background]} />
         <ambientLight intensity={0.7} />
         <directionalLight position={[4, 6, 5]} intensity={1.1} />
         <directionalLight position={[-4, 3, -3]} intensity={0.3} />
         <OrbitRig
           theta={theta}
-          onTheta={onTheta}
+          onTheta={(t) => {
+            setSeenFrom(t);
+            onTheta?.(t);
+          }}
           tilt={tilt}
           onTilt={onTilt}
         />
@@ -314,6 +373,8 @@ export function BenchyModel({
             hull={hull}
             placed={placed}
             anchored={anchored}
+            theta={seenFrom}
+            opacity={hullOpacity}
           />
         </Suspense>
       </Canvas>

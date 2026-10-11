@@ -6,11 +6,11 @@
 // only by a consumer who imports this subpath.
 //
 // BenchyModel itself is deliberately not re-exported: it lives behind
-// BenchyView's lazy() boundary, and naming it here would load three.js
+// BearingModelView's lazy() boundary, and naming it here would load three.js
 // eagerly for anyone importing this module and undo the split.
 
-// The scene view
-export { BenchyView } from './BenchyView.js';
+// The bearing view in 3D: her lights from θ, over the model
+export { BearingModelView } from './BearingModelView.js';
 
 // Camera elevation: the range TiltControl and a consumer's URL state
 // clamp against
@@ -26,6 +26,6 @@ export { ModelErrorBoundary } from './ModelErrorBoundary.js';
 // on import)
 export { preloadBenchyModel } from './preload.js';
 
-// Scene labels for the 3D view: SceneLabels plus the canvas's own
+// Scene labels for the 3D view: SceneLabels plus the tilt control's
 export { defaultBenchyLabels } from './benchyLabels.js';
 export type { BenchyLabels } from './benchyLabels.js';

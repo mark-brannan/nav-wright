@@ -401,3 +401,16 @@ export function bearingInArc(
   const rel = ((b - f) % 360 + 360) % 360;
   return rel <= extent;
 }
+
+/**
+ * The lights a viewer at relative bearing `theta` can see: those whose arc
+ * takes that bearing in. The one cull both bearing views draw through, the
+ * SVG and the 3D, so they agree on every light at every angle. Generic so a
+ * caller can carry a light's seat or index along with it.
+ */
+export function lightsSeenFrom<T extends { arc: Arc | null }>(
+  lights: readonly T[],
+  theta: number,
+): T[] {
+  return lights.filter((l) => bearingInArc(theta, l.arc));
+}

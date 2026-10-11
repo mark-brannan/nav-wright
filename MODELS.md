@@ -19,7 +19,7 @@ hull, size or mode of propulsion (see
   units are preserved from the STL; the renderer scales the model to a
   vessel's `fact:length_m` at render time.
 - **Shipped in the package**, resolvable as
-  `nav-wright/models/3dbenchy-lowpoly.glb`. `BenchyView` takes the URL as a
+  `nav-wright/models/3dbenchy-lowpoly.glb`. `BearingModelView` takes the URL as a
   prop rather than importing the file, so resolving it stays the
   consumer's job — see the README's "The 3D view".
 - **Bow orientation:** confirmed against the source mesh, not assumed. The
