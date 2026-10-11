@@ -6,12 +6,13 @@
 //
 // Falls back to the 2D BearingView, same props, if the model or WebGL fails:
 // the fallback keeps the exam's meaning, where the Benchy view's profile
-// fallback would not.
+// fallback would not. While three.js or the model loads, the 2D bearing
+// scene stands in on the canvas, so the lights are never a blank wait.
 
 import { Suspense, useState } from 'react';
 import type { ReactElement } from 'react';
 import type { FactRecord } from 'colregs-engine';
-import { BearingView, hullHintOpacity, skyColor } from './BearingView.js';
+import { BearingScene, BearingView, hullHintOpacity, skyColor } from './BearingView.js';
 import type { Hull } from './hulls.js';
 import { LazyBenchyModel } from './lazyModel.js';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
@@ -82,6 +83,18 @@ export function BearingModelView({
   const lengthMeters =
     typeof facts['fact:length_m'] === 'number' ? facts['fact:length_m'] : 12;
   const background = skyColor(sky);
+  const standIn = (
+    <BearingScene
+      hull={hull}
+      placed={placed}
+      theta={theta}
+      onTheta={onTheta}
+      hullHint={hullHint}
+      range={range}
+      sky={sky}
+      labels={labels}
+    />
+  );
   const blank = (
     <div className="scene-3d" style={{ background }} aria-hidden="true" />
   );
@@ -96,7 +109,7 @@ export function BearingModelView({
           aria-label={labels.bearingAlt(Math.round(theta))}
           style={{ background }}
         >
-          <Suspense fallback={blank}>
+          <Suspense fallback={standIn}>
             <LazyBenchyModel
               modelUrl={modelUrl}
               lengthMeters={lengthMeters}
@@ -113,6 +126,7 @@ export function BearingModelView({
               night
               label={labels.bearingAlt(Math.round(theta))}
               fallback={blank}
+              loading={standIn}
               onError={() => setModelFailed(true)}
             />
           </Suspense>

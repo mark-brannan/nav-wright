@@ -406,7 +406,8 @@ export function bearingInArc(
  * The lights a viewer at relative bearing `theta` can see: those whose arc
  * holds theta. Every view that claims to show what an observer sees (the 2D
  * bearing view and its 3D counterpart) filters through this one function.
+ * Generic so a caller can carry a light's seat along with it.
  */
-export function lightsInView(placed: PlacedLight[], theta: number): PlacedLight[] {
+export function lightsInView<T extends { arc: Arc | null }>(placed: readonly T[], theta: number): T[] {
   return placed.filter((l) => bearingInArc(theta, l.arc));
 }

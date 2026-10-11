@@ -21,14 +21,13 @@
 // relies on (local +X is the bow). The scale/orientation math itself
 // lives in modelTransform.ts, where it is unit-tested.
 
-import { Suspense, useEffect, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentRef, ReactElement, ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
-import { lightsInView } from './placement.js';
 import {
   VIEW_FRAME,
   anchorLights,
@@ -36,6 +35,7 @@ import {
   lightRadius,
   orbitAngles,
   orbitPosition,
+  seatsSeenFrom,
   viewFrame,
 } from './modelTransform.js';
 import type { HullStations } from './modelTransform.js';
@@ -59,6 +59,7 @@ function Hull({
   anchored,
   inViewAt,
   opacity,
+  onReady,
 }: {
   modelUrl: string;
   lengthMeters: number;
@@ -69,8 +70,11 @@ function Hull({
   inViewAt?: number;
   /** Mesh opacity, 0 (hidden) .. 1. The lights are never faded. */
   opacity: number;
+  /** Called once the model has loaded and the lights are on it. */
+  onReady: () => void;
 }): ReactElement {
   const { scene } = useGLTF(modelUrl);
+  useLayoutEffect(onReady, [onReady]);
 
   // The mesh is fitted to the spec's own bow-to-stern span, not the full
   // length, so it lands in the frame the spec's stations are drawn in. A
@@ -89,6 +93,8 @@ function Hull({
     });
     return { group: g, materials, depth };
   }, [scene, lengthMeters, sternX, bowX]);
+  // The clones are this hull's alone; the loader's cache never sees them.
+  useEffect(() => () => materials.forEach((m) => m.dispose()), [materials]);
   const faded = opacity < 1;
   useEffect(() => {
     for (const m of materials) {
@@ -115,25 +121,29 @@ function Hull({
     [placed, lengthMeters, hull, profile],
   );
 
-  const shown = useMemo(
-    () => (inViewAt === undefined ? null : new Set(lightsInView(placed, inViewAt))),
-    [placed, inViewAt],
+  // Every light is seated first, on the whole hull, and only then culled to
+  // its arc: a seat never depends on which other lights are lit, so none
+  // jumps as the viewer walks round her.
+  const seen = useMemo(
+    () =>
+      inViewAt === undefined
+        ? placed.map((light, i) => ({ light, position: positions?.[i] }))
+        : seatsSeenFrom(placed, positions, inViewAt),
+    [placed, positions, inViewAt],
   );
 
   return (
     <group scale={fit.scale} position={fit.position}>
       <primitive object={depth} visible={faded && opacity > 0} />
       <primitive object={group} visible={opacity > 0} />
-      {placed.map((l, i) =>
-        shown && !shown.has(l) ? null : (
-          <SceneLight
-            key={l.key}
-            light={l}
-            lengthMeters={lengthMeters}
-            position={positions?.[i]}
-          />
-        ),
-      )}
+      {seen.map(({ light, position }) => (
+        <SceneLight
+          key={light.key}
+          light={light}
+          lengthMeters={lengthMeters}
+          position={position}
+        />
+      ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
     </group>
   );
@@ -218,27 +228,42 @@ function SceneLight({
 /** The anchor cable, when she is anchored: bow to the seabed, drawn in the
  * scene for the same reason the lights are. */
 function AnchorCable({ lengthMeters }: { lengthMeters: number }): ReactElement {
-  const points = useMemo(
-    () => [
+  // One Line per length, not per render: Hull re-renders on every degree
+  // the viewer walks round her.
+  const line = useMemo(() => {
+    const geometry = new THREE.BufferGeometry().setFromPoints([
       new THREE.Vector3(lengthMeters / 2, lengthMeters * 0.08, 0),
       new THREE.Vector3(lengthMeters * 0.95, -lengthMeters * 0.35, 0),
-    ],
-    [lengthMeters],
-  );
-  const geometry = useMemo(
-    () => new THREE.BufferGeometry().setFromPoints(points),
-    [points],
-  );
-  return (
-    <primitive
-      object={new THREE.Line(geometry, new THREE.LineDashedMaterial({
+    ]);
+    const l = new THREE.Line(
+      geometry,
+      new THREE.LineDashedMaterial({
         color: '#7d8ea3',
         dashSize: lengthMeters * 0.03,
         gapSize: lengthMeters * 0.03,
-      }))}
-      onUpdate={(l: THREE.Line) => l.computeLineDistances()}
-    />
+      }),
+    );
+    l.computeLineDistances();
+    return l;
+  }, [lengthMeters]);
+  useEffect(
+    () => () => {
+      line.geometry.dispose();
+      (line.material as THREE.Material).dispose();
+    },
+    [line],
   );
+  return <primitive object={line} />;
+}
+
+/** The in-canvas Suspense fallback: tells BenchyModel a model is on its way,
+ * so it can show its `loading` stand-in over the empty canvas meanwhile. */
+function Pending({ onPending }: { onPending: (p: boolean) => void }): null {
+  useLayoutEffect(() => {
+    onPending(true);
+    return () => onPending(false);
+  }, [onPending]);
+  return null;
 }
 
 const DAY_BACKGROUND = '#0a1622';
@@ -321,6 +346,7 @@ export function BenchyModel({
   night = false,
   label,
   fallback = <div className="scene-3d" />,
+  loading,
   onError,
 }: {
   /** URL of the .glb to render. This package ships one at
@@ -360,8 +386,23 @@ export function BenchyModel({
   label?: string;
   /** Shown if the model or the WebGL context fails. */
   fallback?: ReactNode;
+  /** Laid over the canvas while the model downloads (the lights ride on
+   * it, so the canvas has nothing to show until then). Needs a positioned
+   * parent, such as .scene-3d-stack. */
+  loading?: ReactNode;
   onError?: (error: unknown) => void;
 }): ReactElement {
+  // Where the camera actually stands, for the arc cull: `inViewAt`, or the
+  // orbit's own report while the viewer drags, so the cull is right even for
+  // a caller that does not feed onTheta back in.
+  const [seenFrom, setSeenFrom] = useState(inViewAt);
+  const [lastInViewAt, setLastInViewAt] = useState(inViewAt);
+  if (!Object.is(inViewAt, lastInViewAt)) {
+    setLastInViewAt(inViewAt);
+    setSeenFrom(inViewAt);
+  }
+  const [pending, setPending] = useState(true);
+  const ready = useMemo(() => () => setPending(false), []);
   return (
     <ModelErrorBoundary fallback={fallback} onError={onError}>
       <Canvas
@@ -382,23 +423,32 @@ export function BenchyModel({
         <directionalLight position={[-4, 3, -3]} intensity={night ? 0.06 : 0.3} />
         <OrbitRig
           theta={theta}
-          onTheta={onTheta}
+          onTheta={(t) => {
+            if (inViewAt !== undefined) setSeenFrom(t);
+            onTheta?.(t);
+          }}
           tilt={tilt}
           onTilt={onTilt}
           pan={!night}
         />
-        <Suspense fallback={null}>
+        <Suspense fallback={<Pending onPending={setPending} />}>
           <Hull
             modelUrl={modelUrl}
             lengthMeters={lengthMeters}
             hull={hull}
             placed={placed}
             anchored={anchored}
-            inViewAt={inViewAt}
+            inViewAt={inViewAt === undefined ? undefined : seenFrom}
             opacity={Math.min(1, Math.max(0, hullOpacity))}
+            onReady={ready}
           />
         </Suspense>
       </Canvas>
+      {pending && loading && (
+        <div className="scene-3d-loading" style={{ position: 'absolute', inset: 0 }}>
+          {loading}
+        </div>
+      )}
     </ModelErrorBoundary>
   );
 }
