@@ -26,6 +26,7 @@ export function BearingView({
   onTheta,
   hullHint,
   range,
+  sky = 0,
   seascape = false,
   labels = defaultSceneLabels,
 }: {
@@ -33,9 +34,12 @@ export function BearingView({
   placed: PlacedLight[];
   theta: number;
   onTheta: (t: number) => void;
-  hullHint: boolean;
+  /** Hull hint strength, 0 (off) .. 1 (plain to see); range fades it further. */
+  hullHint: number;
   /** Range to her in nautical miles; fades the hull hint (see hullHintOpacity). */
   range?: number;
+  /** Background, 0 (black, the exam default) .. 1 (a lighter night blue). See skyColor. */
+  sky?: number;
   /** Opt-in night seascape: a horizon and a sea under the lights. Default: lights only on black. */
   seascape?: boolean;
   labels?: SceneLabels;
@@ -61,9 +65,9 @@ export function BearingView({
         aria-label={labels.bearingAlt(Math.round(theta))}
         className="scene-svg scene-svg-black"
       >
-        <rect width="440" height="240" fill="#000000" />
+        <rect className="bearing-sky" width="440" height="240" fill={skyColor(sky)} />
         {seascape && <Seascape />}
-        {hullHint && <HullHint hull={hull} theta={theta} range={range} />}
+        {hullHint > 0 && <HullHint hull={hull} theta={theta} range={range} strength={hullHint} />}
         {projected.map((p) => (
           <Glow
             key={p.light.key}
@@ -87,9 +91,19 @@ export function BearingView({
 
 // --- seascape (opt-in) ------------------------------------------------------
 // Everything that turns the lights-only view into a night at sea lives in
-// this block: the horizon, the sea, and the range-faded hull silhouette. The
-// sky stays black so the lights remain the only spectacle. BearingView above
-// only decides whether to mount these.
+// this block: the sky, the horizon, the sea, and the range-faded hull
+// silhouette. The sky is black unless the viewer lifts it, so the lights stay
+// the only spectacle by default. BearingView above only decides whether to
+// mount these.
+
+/** The sky at full brightness: a lighter night blue. Black is brightness 0. */
+export const SKY_LIGHT: readonly [number, number, number] = [0x3a, 0x65, 0x93];
+
+/** Background colour for a sky brightness 0..1 (clamped): black to SKY_LIGHT. */
+export function skyColor(brightness: number): string {
+  const t = Number.isFinite(brightness) ? Math.min(1, Math.max(0, brightness)) : 0;
+  return `#${SKY_LIGHT.map((c) => Math.round(c * t).toString(16).padStart(2, '0')).join('')}`;
+}
 
 /** Moonlight reaches this far: the hull hint is at full strength here and nearer. */
 export const HULL_HINT_NEAR_NM = 0.5;
@@ -167,12 +181,14 @@ function HullHint({
   hull,
   theta,
   range,
+  strength,
 }: {
   hull: Hull;
   theta: number;
   range?: number;
+  strength: number;
 }): ReactElement | null {
-  const opacity = hullHintOpacity(range);
+  const opacity = Math.min(1, strength) * hullHintOpacity(range);
   if (opacity <= 0) return null;
   const d = hullSilhouette(hull, theta)
     .map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`)
@@ -181,8 +197,8 @@ function HullHint({
     <path
       className="bearing-hull-hint"
       d={`${d} Z`}
-      fill="#10161f"
-      stroke="#1d2836"
+      fill="#3a4a60"
+      stroke="#607898"
       strokeWidth={1}
       opacity={opacity.toFixed(3)}
     />
