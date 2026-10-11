@@ -57,7 +57,10 @@ const OUT = fileURLToPath(new URL('../docs/research/', import.meta.url));
  * (sidelights and a sternlight). placeLights() reads only these fields. */
 const DISPLAY = [
   ['rule:23a_i', { light: 'light:masthead', position: 'forward', count: 1 }],
-  ['rule:23a_ii', { light: 'light:masthead', position: 'abaft and higher than the forward one', count: 1 }],
+  [
+    'rule:23a_ii',
+    { light: 'light:masthead', position: 'abaft and higher than the forward one', count: 1 },
+  ],
   ['rule:23a_iii_iv', { light: 'light:sidelights' }],
   ['rule:23a_iii_iv', { light: 'light:sternlight' }],
 ].map(([entry, spec]) => ({
@@ -120,15 +123,28 @@ describe.skipIf(!dir || !existsSync(file))('ship-ocean-liner lights', () => {
     };
     console.log(
       Object.entries(readings)
-        .map(([k, y]) => `${k.padEnd(26)} y=${y.toFixed(2)} m  forward light ${seat({ ...profile, mast: { ...profile.mast, top: y } })[0].at[1].toFixed(2)} m`)
+        .map(
+          ([k, y]) =>
+            `${k.padEnd(26)} y=${y.toFixed(2)} m  forward light ${seat({ ...profile, mast: { ...profile.mast, top: y } })[0].at[1].toFixed(2)} m`,
+        )
         .join('\n'),
     );
-    console.log(now.map((l, i) => `${l.id} ${l.color}: now ${l.at.map((n) => n.toFixed(2))}  default ${dflt[i].at.map((n) => n.toFixed(2))}`).join('\n'));
+    console.log(
+      now
+        .map(
+          (l, i) =>
+            `${l.id} ${l.color}: now ${l.at.map((n) => n.toFixed(2))}  default ${dflt[i].at.map((n) => n.toFixed(2))}`,
+        )
+        .join('\n'),
+    );
     console.log(JSON.stringify({ masts, mast: profile.mast, rake }));
 
     const scene = { pts, xyz, profile, masts };
     writeFileSync(join(OUT, 'ship-ocean-liner-masthead-now.svg'), svg(scene, 'now', now));
-    writeFileSync(join(OUT, 'ship-ocean-liner-masthead-default.svg'), svg(scene, 'default', dflt, now));
+    writeFileSync(
+      join(OUT, 'ship-ocean-liner-masthead-default.svg'),
+      svg(scene, 'default', dflt, now),
+    );
   });
 });
 
@@ -251,13 +267,16 @@ interface Seat {
  * swapped for whichever one is under test. */
 function seat(profile: StationProfile): Seat[] {
   const hull = allHulls.cruiseShip.spec;
-  const placed = placeLights(
-    DISPLAY as unknown as Parameters<typeof placeLights>[0],
-    hull,
-    {},
-    { lights: {} } as unknown as Parameters<typeof placeLights>[3],
-  );
-  const stations = { beam: hull.beam, mastX: hull.mastX, aftMastX: hull.aftMastX, bowX: hull.bowX, sternX: hull.sternX };
+  const placed = placeLights(DISPLAY as unknown as Parameters<typeof placeLights>[0], hull, {}, {
+    lights: {},
+  } as unknown as Parameters<typeof placeLights>[3]);
+  const stations = {
+    beam: hull.beam,
+    mastX: hull.mastX,
+    aftMastX: hull.aftMastX,
+    bowX: hull.bowX,
+    sternX: hull.sternX,
+  };
   // BenchyModel's lightRadius(): how far off the surface a light is seated.
   const clearance = Math.max(LENGTH * 0.012, 0.12);
   const at = anchorLights(placed, LENGTH, stations, profile, clearance);
@@ -321,11 +340,31 @@ function svg(scene: Scene, which: 'now' | 'default', seats: Seat[], was?: Seat[]
     `<desc id="d">Side view of the Kenney liner mesh at a length of ${LENGTH} m, bow to the right. Two masts, one at each end of the superstructure, stand highest; the mast band (the top 5% of the hull's height) covers only their tops. The forward masthead light sits at the forward mast's outer edge at ${m(fore.at[1])} and the after masthead light at the after mast's outer edge at ${m(aft.at[1])}.</desc>`,
     `<style>text{font:13px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#1f2933}.h{font-size:18px;font-weight:600}.s{font-size:13px;fill:#52606d}.k{font-size:12px;fill:#52606d}.o{fill:#c2410c;font-weight:600}.b{font-weight:600;paint-order:stroke;stroke:#f8fafc;stroke-width:3px}.k{paint-order:stroke;stroke:#f8fafc;stroke-width:3px}.mesh{fill:#9fb3c8;stroke:#9fb3c8;stroke-width:.4}.wl{stroke:#3e7cb1;stroke-width:1.5}.band{fill:#f97316;fill-opacity:.16}.edge{stroke:#c2410c;stroke-width:1.2;stroke-dasharray:4 3}.cl{fill:#f97316;fill-opacity:.35;stroke:#c2410c;stroke-width:1.5}.w{fill:#fff;stroke:#111827;stroke-width:2}.g{fill:#16a34a;stroke:#111827;stroke-width:2}.r{fill:#dc2626;stroke:#111827;stroke-width:2}.ghost{fill:none;stroke:#111827;stroke-width:1.5;stroke-dasharray:3 3}.lead{stroke:#52606d;stroke-width:1}</style>`,
     `<rect width="${WIDTH}" height="${HEIGHT}" fill="#f8fafc"/>`,
-    label(ML, 34, dflt ? 'ship-ocean-liner: the lights under the #36 part 2 default' : 'ship-ocean-liner: the lights as anchorLights seats them today', 'start', 'h'),
-    label(ML, 56, dflt
-      ? `Same two edges, but the masthead height comes from the middle of the band (${pct(top * (1 + MAST_BAND) / 2)} of the hull's height) rather than its highest point.`
-      : `Both masthead lights sit at the outer edges of the mast band, lifted to the mesh's highest point (${m(top)} at a length of ${LENGTH} m).`, 'start', 's'),
-    label(ML, 76, `Kenney Watercraft Kit (CC0), ship-ocean-liner.glb, side view, bow to the right. Orange: the mast band, the top 5% of the hull's height (MAST_BAND ${MAST_BAND}).`, 'start', 's'),
+    label(
+      ML,
+      34,
+      dflt
+        ? 'ship-ocean-liner: the lights under the #36 part 2 default'
+        : 'ship-ocean-liner: the lights as anchorLights seats them today',
+      'start',
+      'h',
+    ),
+    label(
+      ML,
+      56,
+      dflt
+        ? `Same two edges, but the masthead height comes from the middle of the band (${pct((top * (1 + MAST_BAND)) / 2)} of the hull's height) rather than its highest point.`
+        : `Both masthead lights sit at the outer edges of the mast band, lifted to the mesh's highest point (${m(top)} at a length of ${LENGTH} m).`,
+      'start',
+      's',
+    ),
+    label(
+      ML,
+      76,
+      `Kenney Watercraft Kit (CC0), ship-ocean-liner.glb, side view, bow to the right. Orange: the mast band, the top 5% of the hull's height (MAST_BAND ${MAST_BAND}).`,
+      'start',
+      's',
+    ),
   );
 
   // water, hull, band
@@ -336,8 +375,18 @@ function svg(scene: Scene, which: 'now' | 'default', seats: Seat[], was?: Seat[]
     `<rect class="band" x="${ML - 20}" y="${f1(Y(top))}" width="${LENGTH * S + 40}" height="${f1(Y(floor) - Y(top))}"/>`,
   );
   masts.forEach((c, i) => {
-    lines.push(`<rect class="cl" x="${f1(X(c.aftX))}" y="${f1(Y(top))}" width="${f1(X(c.foreX) - X(c.aftX))}" height="${f1(Y(floor) - Y(top))}"/>`);
-    lines.push(label((X(c.aftX) + X(c.foreX)) / 2, Y(floor) + 20, i === 0 ? 'after mast' : 'forward mast', 'middle', 'o'));
+    lines.push(
+      `<rect class="cl" x="${f1(X(c.aftX))}" y="${f1(Y(top))}" width="${f1(X(c.foreX) - X(c.aftX))}" height="${f1(Y(floor) - Y(top))}"/>`,
+    );
+    lines.push(
+      label(
+        (X(c.aftX) + X(c.foreX)) / 2,
+        Y(floor) + 20,
+        i === 0 ? 'after mast' : 'forward mast',
+        'middle',
+        'o',
+      ),
+    );
   });
 
   // the two edges the code reads, and the span between them
@@ -349,7 +398,13 @@ function svg(scene: Scene, which: 'now' | 'default', seats: Seat[], was?: Seat[]
     `<line class="edge" x1="${f1(foreEdge)}" x2="${f1(foreEdge)}" y1="${f1(Y(top))}" y2="${f1(yDim)}"/>`,
     `<line class="lead" x1="${f1(aftEdge)}" x2="${f1(foreEdge)}" y1="${f1(yDim)}" y2="${f1(yDim)}" marker-start="url(#a)" marker-end="url(#a)"/>`,
     `<defs><marker id="a" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L7 4L1 7" fill="none" stroke="#52606d"/></marker></defs>`,
-    label(X(0), yDim - 6, `mast.aftX to mast.foreX: ${f2((profile.mast.foreX - profile.mast.aftX) / LENGTH)} of the length (hullMeshCheck wants under 0.35)`, 'middle', 'k'),
+    label(
+      X(0),
+      yDim - 6,
+      `mast.aftX to mast.foreX: ${f2((profile.mast.foreX - profile.mast.aftX) / LENGTH)} of the length (hullMeshCheck wants under 0.35)`,
+      'middle',
+      'k',
+    ),
     label(aftEdge, yDim + 16, `mast.aftX ${m(profile.mast.aftX)}`, 'middle', 'k'),
     label(foreEdge, yDim + 16, `mast.foreX ${m(profile.mast.foreX)}`, 'middle', 'k'),
   );
@@ -376,8 +431,20 @@ function svg(scene: Scene, which: 'now' | 'default', seats: Seat[], was?: Seat[]
   const height = (k: number): string =>
     was ? `${m(seats[k].at[1])} up (today ${f2(was[k].at[1])})` : `${m(seats[k].at[1])} up`;
   lines.push(
-    two(X(fore.at[0]), Y(fore.at[1]) - 22, 'forward masthead light', `Rule 23(a)(i), ${height(0)}`, 'middle'),
-    two(X(aft.at[0]), Y(aft.at[1]) - 22, 'after masthead light', `Rule 23(a)(ii), ${height(1)}`, 'middle'),
+    two(
+      X(fore.at[0]),
+      Y(fore.at[1]) - 22,
+      'forward masthead light',
+      `Rule 23(a)(i), ${height(0)}`,
+      'middle',
+    ),
+    two(
+      X(aft.at[0]),
+      Y(aft.at[1]) - 22,
+      'after masthead light',
+      `Rule 23(a)(ii), ${height(1)}`,
+      'middle',
+    ),
     two(X(stbd.at[0]) + 14, Y(stbd.at[1]) + 4, 'sidelights', 'red and green', 'start'),
     two(X(stern.at[0]) + 14, Y(stern.at[1]) + 4, 'sternlight', 'Rule 23(a)(iv)', 'start'),
   );
@@ -386,7 +453,13 @@ function svg(scene: Scene, which: 'now' | 'default', seats: Seat[], was?: Seat[]
   const bx = WIDTH - ML;
   lines.push(
     `<line class="lead" x1="${ML}" x2="${ML + 5 * S}" y1="${HEIGHT - 28}" y2="${HEIGHT - 28}"/>`,
-    label(ML + 5 * S + 8, HEIGHT - 24, `5 m, at a length of ${LENGTH} m; the mesh is ${f2((scene.pts.hi[1] - scene.pts.lo[1]) / (scene.pts.hi[2] - scene.pts.lo[2]))} as tall as it is long`, 'start', 'k'),
+    label(
+      ML + 5 * S + 8,
+      HEIGHT - 24,
+      `5 m, at a length of ${LENGTH} m; the mesh is ${f2((scene.pts.hi[1] - scene.pts.lo[1]) / (scene.pts.hi[2] - scene.pts.lo[2]))} as tall as it is long`,
+      'start',
+      'k',
+    ),
     label(bx, HEIGHT - 24, 'bow →', 'end', 'b'),
     '</svg>',
   );

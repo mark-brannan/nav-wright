@@ -30,10 +30,7 @@ export function Glow({
 }): ReactElement {
   const fill = lightFill(color);
   return (
-    <g
-      className={flashing ? 'light-flash' : undefined}
-      opacity={dim ? 0.45 : 1}
-    >
+    <g className={flashing ? 'light-flash' : undefined} opacity={dim ? 0.45 : 1}>
       <circle cx={x} cy={y} r={r * 2.6} fill={fill} opacity={0.16} />
       <circle cx={x} cy={y} r={r * 1.5} fill={fill} opacity={0.3} />
       <circle cx={x} cy={y} r={r} fill={fill} />
@@ -43,12 +40,7 @@ export function Glow({
 }
 
 /** Point at bearing β (deg cw from ahead) and radius r, bow pointing up. */
-export function polar(
-  cx: number,
-  cy: number,
-  r: number,
-  bearingDeg: number,
-): [number, number] {
+export function polar(cx: number, cy: number, r: number, bearingDeg: number): [number, number] {
   const a = (bearingDeg * Math.PI) / 180;
   return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
 }

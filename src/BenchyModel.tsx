@@ -105,10 +105,7 @@ function Hull({
       m.needsUpdate = true;
     }
   }, [materials, opacity, faded]);
-  const fit = useMemo(
-    () => viewFrame(lengthMeters, hull, placed),
-    [lengthMeters, hull, placed],
-  );
+  const fit = useMemo(() => viewFrame(lengthMeters, hull, placed), [lengthMeters, hull, placed]);
   const profile = useMemo(
     () => profileHullModel(scene, lengthMeters, { sternX, bowX }),
     [scene, lengthMeters, sternX, bowX],
@@ -116,9 +113,7 @@ function Hull({
 
   const positions = useMemo(
     () =>
-      profile
-        ? anchorLights(placed, lengthMeters, hull, profile, lightRadius(lengthMeters))
-        : null,
+      profile ? anchorLights(placed, lengthMeters, hull, profile, lightRadius(lengthMeters)) : null,
     [placed, lengthMeters, hull, profile],
   );
 
@@ -138,12 +133,7 @@ function Hull({
       <primitive object={depth} visible={faded && opacity > 0} />
       <primitive object={group} visible={opacity > 0} />
       {seen.map(({ light, position }) => (
-        <SceneLight
-          key={light.key}
-          light={light}
-          lengthMeters={lengthMeters}
-          position={position}
-        />
+        <SceneLight key={light.key} light={light} lengthMeters={lengthMeters} position={position} />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
     </group>
@@ -195,8 +185,7 @@ function SceneLight({
 
   useFrame(({ clock }) => {
     if (!halo.current) return;
-    const on =
-      light.character !== 'flashing' || clock.elapsedTime % 1.2 < 0.35;
+    const on = light.character !== 'flashing' || clock.elapsedTime % 1.2 < 0.35;
     halo.current.visible = on;
   });
 
@@ -303,8 +292,7 @@ function OrbitRig({
 
   useEffect(() => {
     const r = reported.current;
-    if (r && Math.abs(r.theta - theta) < 0.5 && Math.abs(r.tilt - tilt) < 0.5)
-      return;
+    if (r && Math.abs(r.theta - theta) < 0.5 && Math.abs(r.tilt - tilt) < 0.5) return;
     // At theta 90 the bow falls to the right of the frame, as it does in
     // the 2D profile.
     camera.position.set(...orbitPosition(theta, tilt));

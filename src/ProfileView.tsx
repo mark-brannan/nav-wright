@@ -22,12 +22,7 @@ export function ProfileView({
 }): ReactElement {
   const anchored = facts['fact:position'] === 'position:anchored';
   return (
-    <svg
-      viewBox="0 0 440 240"
-      role="img"
-      aria-label={labels.profileAlt}
-      className="scene-svg"
-    >
+    <svg viewBox="0 0 440 240" role="img" aria-label={labels.profileAlt} className="scene-svg">
       <rect width="440" height="240" fill="var(--sea-night)" />
       {/* horizon + waterline */}
       <line x1="0" y1={PZ(0)} x2="440" y2={PZ(0)} stroke="var(--waterline)" strokeWidth="1" />

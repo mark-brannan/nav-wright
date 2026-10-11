@@ -4,12 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { thetaAfterDrag, thetaAtPoint, wrapDegrees } from '../src/rotate.js';
-import {
-  THETA_PAGE_STEP,
-  ThetaControl,
-  thetaForKey,
-  thetaFromInput,
-} from '../src/ThetaControl.js';
+import { THETA_PAGE_STEP, ThetaControl, thetaForKey, thetaFromInput } from '../src/ThetaControl.js';
 import { defaultSceneLabels } from '../src/labels.js';
 
 describe('wrapDegrees', () => {

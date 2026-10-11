@@ -14,22 +14,22 @@ Side view of `ship-ocean-liner.glb` at a length of 30 m, bow to the right, with 
 
 ![The liner with two masts, four funnels, and the mast band across the two mast tops](ship-ocean-liner-masthead-now.svg)
 
-| Fact | Value | Source |
-|---|---|---|
-| Mesh | 4,366 vertices, 2,796 triangles, 0.42 as tall as long | measured |
-| Masts | after mast x -11.53 to -10.20 m, forward mast x 9.21 to 10.55 m; both tips 12.59 m | measured, `bandClusters` in the test |
-| Band | two separate clusters, 19.4 m apart (0.65 L) | measured |
-| Heading | bow at +Z of the glTF | see Limits |
+| Fact    | Value                                                                              | Source                               |
+| ------- | ---------------------------------------------------------------------------------- | ------------------------------------ |
+| Mesh    | 4,366 vertices, 2,796 triangles, 0.42 as tall as long                              | measured                             |
+| Masts   | after mast x -11.53 to -10.20 m, forward mast x 9.21 to 10.55 m; both tips 12.59 m | measured, `bandClusters` in the test |
+| Band    | two separate clusters, 19.4 m apart (0.65 L)                                       | measured                             |
+| Heading | bow at +Z of the glTF                                                              | see Limits                           |
 
 ## What the default changes
 
 The default logged on #36 keeps both edges and takes the height "from the band's height range rather than the mesh extremes". The mesh's highest point is the mast tips, so the band's range is 11.96 to 12.59 m. The ruling does not say where in that range; I took the middle. All three readings are within 0.63 m (5% of the hull's height) of each other.
 
-| Reading of "from the band" | `mast.top` | Forward light | After light |
-|---|---|---|---|
-| Highest point (today) | 12.59 m | 12.95 m | 14.17 m |
-| Middle of the range (drawn below) | 12.28 m | 12.64 m | 13.86 m |
-| Floor of the range | 11.96 m | 12.32 m | 13.54 m |
+| Reading of "from the band"        | `mast.top` | Forward light | After light |
+| --------------------------------- | ---------- | ------------- | ----------- |
+| Highest point (today)             | 12.59 m    | 12.95 m       | 14.17 m     |
+| Middle of the range (drawn below) | 12.28 m    | 12.64 m       | 13.86 m     |
+| Floor of the range                | 11.96 m    | 12.32 m       | 13.54 m     |
 
 The lights are 0.36 m above `mast.top` (`lightRadius`); the after light is a further 1.2 m up because `placeLights` puts it 0.1 higher than the forward one in drawing units (Rule 23(a)(ii): abaft and higher).
 
@@ -64,11 +64,11 @@ Both are code changes the research does not make.
 >
 > The picture is `docs/research/ship-ocean-liner-masthead-now.svg`. The band is two mast tops 20 m apart; the code already puts the forward light on the forward mast and the after light on the after mast. The default moves each light 0.31 m on a 30 m hull. All nine wide-band hulls in the Kenney kit are several masts or posts, none a flat deck.
 >
-> | Answer | Cost |
-> |---|---|
-> | Drop part 2, no code change (recommended) | Nothing in `src/` moves. The harness's mast test becomes a cluster count, which is toil. |
-> | Take the logged default | One small change. Lights drop 0.31 m; the rationale stays wrong for this hull. |
-> | Seat each masthead light on its own mast | A new seat rule: forward light on the forward cluster, after light on the after one. The only option that matches how this hull is built. |
+> | Answer                                    | Cost                                                                                                                                      |
+> | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+> | Drop part 2, no code change (recommended) | Nothing in `src/` moves. The harness's mast test becomes a cluster count, which is toil.                                                  |
+> | Take the logged default                   | One small change. Lights drop 0.31 m; the rationale stays wrong for this hull.                                                            |
+> | Seat each masthead light on its own mast  | A new seat rule: forward light on the forward cluster, after light on the after one. The only option that matches how this hull is built. |
 
 ## Limits
 
