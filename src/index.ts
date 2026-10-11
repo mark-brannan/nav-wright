@@ -25,8 +25,10 @@ export { BearingView, SKY_LIGHT, skyColor } from './BearingView.js';
 export { PlanView } from './PlanView.js';
 export { ProfileView } from './ProfileView.js';
 
-// The relative-bearing slider, shared by BearingView and the 3D view
+// The relative-bearing dial, shared by BearingView and the 3D view, and the
+// drag-to-rotate gesture behind it; θ wraps through 359 back to 0
 export { ThetaControl } from './ThetaControl.js';
+export { thetaAfterDrag, thetaAtPoint, useDragRotate, wrapDegrees } from './rotate.js';
 
 // The 3D scene view ships from its own entry point, `nav-wright/benchy`,
 // so three.js stays out of this one. The station-profile math it's built
