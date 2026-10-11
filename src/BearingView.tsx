@@ -8,7 +8,7 @@ import { useId } from 'react';
 import type { ReactElement } from 'react';
 import type { Hull } from './hulls.js';
 import type { PlacedLight } from './placement.js';
-import { bearingInArc } from './placement.js';
+import { lightsInView } from './placement.js';
 import type { SceneLabels } from './labels.js';
 import { defaultSceneLabels } from './labels.js';
 import { ThetaControl } from './ThetaControl.js';
@@ -50,14 +50,11 @@ export function BearingView({
   const sin = Math.sin(rad);
   const cos = Math.cos(rad);
 
-  const projected = placed
-    .map((l) => ({
-      light: l,
-      visible: bearingInArc(theta, l.arc),
-      x: CX + (l.fx * sin - l.py * cos) * SCALE,
-      y: HORIZON - l.z * ZSCALE,
-    }))
-    .filter((p) => p.visible);
+  const projected = lightsInView(placed, theta).map((l) => ({
+    light: l,
+    x: CX + (l.fx * sin - l.py * cos) * SCALE,
+    y: HORIZON - l.z * ZSCALE,
+  }));
 
   return (
     <div className="bearing-view">

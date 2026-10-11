@@ -71,6 +71,19 @@
   cursor: grabbing;
 }
 
+/* BearingModelView's "no lights visible" note, over the canvas. */
+.bearing-empty-overlay {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-soft);
+  font-size: 14px;
+  pointer-events: none;
+}
+
 .plan-svg {
   max-width: 440px;
   margin: 0 auto;

@@ -1,4 +1,5 @@
-// Renders the vessel as a 3D model, for the "Benchy" scene view. Every
+// Renders the vessel as a 3D model, for the Benchy view and the 3D bearing
+// view (BearingModelView: night, faint hull, lights in arc only). Every
 // vessel uses the same stand-in mesh regardless of hull, size or mode of
 // propulsion; only the length scaling varies.
 //
@@ -27,6 +28,7 @@ import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
+import { lightsInView } from './placement.js';
 import {
   VIEW_FRAME,
   anchorLights,
@@ -54,12 +56,18 @@ function Hull({
   hull,
   placed,
   anchored,
+  inViewAt,
+  opacity,
 }: {
   modelUrl: string;
   lengthMeters: number;
   hull: HullStations;
   placed: PlacedLight[];
   anchored: boolean;
+  /** Draw only the lights whose arc holds this bearing; undefined draws all. */
+  inViewAt?: number;
+  /** Mesh opacity, 0 (hidden) .. 1. The lights are never faded. */
+  opacity: number;
 }): ReactElement {
   const { scene } = useGLTF(modelUrl);
 
@@ -71,6 +79,17 @@ function Hull({
     () => placeScene(scene, lengthMeters, { sternX, bowX }),
     [scene, lengthMeters, sternX, bowX],
   );
+  // The clone shares the cached GLTF's materials; fading them in place would
+  // fade every other view of the same mesh, so the clone gets its own.
+  const materials = useMemo(() => ownMaterials(group), [group]);
+  useEffect(() => {
+    for (const m of materials) {
+      m.transparent = opacity < 1;
+      m.opacity = opacity;
+      m.depthWrite = opacity >= 1;
+      m.needsUpdate = true;
+    }
+  }, [materials, opacity]);
   const fit = useMemo(() => {
     const box = new THREE.Box3().setFromObject(group);
     return fitView({ min: { ...box.min }, max: { ...box.max } });
@@ -88,20 +107,43 @@ function Hull({
     [placed, lengthMeters, hull, profile],
   );
 
+  const shown = useMemo(
+    () => (inViewAt === undefined ? null : new Set(lightsInView(placed, inViewAt))),
+    [placed, inViewAt],
+  );
+
   return (
     <group scale={fit.scale} position={fit.position}>
-      <primitive object={group} />
-      {placed.map((l, i) => (
-        <SceneLight
-          key={l.key}
-          light={l}
-          lengthMeters={lengthMeters}
-          position={positions?.[i]}
-        />
-      ))}
-      {anchored && <AnchorCable lengthMeters={lengthMeters} />}
+      <primitive object={group} visible={opacity > 0} />
+      {placed.map((l, i) =>
+        shown && !shown.has(l) ? null : (
+          <SceneLight
+            key={l.key}
+            light={l}
+            lengthMeters={lengthMeters}
+            position={positions?.[i]}
+          />
+        ),
+      )}
+      {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
     </group>
   );
+}
+
+/** Give every mesh under `root` its own copy of its material(s), and return
+ * them, so they can be changed without touching the loader's cache. */
+function ownMaterials(root: THREE.Object3D): THREE.Material[] {
+  const out: THREE.Material[] = [];
+  root.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    const own = (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).map((m) =>
+      m.clone(),
+    );
+    mesh.material = Array.isArray(mesh.material) ? own : own[0]!;
+    out.push(...own);
+  });
+  return out;
 }
 
 /** One light: a small emissive bead inside an additive halo, so it reads
@@ -110,8 +152,9 @@ function Hull({
  *
  * Drawn without depth testing, so a light is never swallowed by the
  * stand-in mesh's oversized superstructure — which is a cartoon's, not
- * this vessel's. The 2D profile likewise draws every light regardless of
- * what is in front of it; arc culling is the bearing view's job. */
+ * this vessel's. Which lights are drawn at all is Hull's call: every one,
+ * as the 2D profile does, or only those in arc (inViewAt), as the bearing
+ * view does. */
 function SceneLight({
   light,
   lengthMeters,
@@ -186,6 +229,8 @@ function AnchorCable({ lengthMeters }: { lengthMeters: number }): ReactElement {
   );
 }
 
+const DAY_BACKGROUND = '#0a1622';
+
 const DEG = Math.PI / 180;
 const MIN_POLAR = (90 - MAX_TILT) * DEG;
 const MAX_POLAR = 90 * DEG;
@@ -200,11 +245,13 @@ function OrbitRig({
   onTheta,
   tilt,
   onTilt,
+  pan,
 }: {
   theta: number;
   onTheta?: (t: number) => void;
   tilt: number;
   onTilt?: (t: number) => void;
+  pan: boolean;
 }): ReactElement {
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const camera = useThree((s) => s.camera);
@@ -226,7 +273,7 @@ function OrbitRig({
     <OrbitControls
       ref={controls}
       target={[0, 0, 0]}
-      enablePan
+      enablePan={pan}
       enableZoom
       minDistance={VIEW_FRAME.minDistance}
       maxDistance={VIEW_FRAME.maxDistance}
@@ -256,6 +303,10 @@ export function BenchyModel({
   tilt = DEFAULT_TILT,
   onTilt,
   hull = NO_HULL,
+  inViewAt,
+  hullOpacity = 1,
+  background = DAY_BACKGROUND,
+  night = false,
   label,
   fallback = <div className="scene-3d" />,
   onError,
@@ -280,6 +331,18 @@ export function BenchyModel({
    * bow-to-stern span. The default seats everything on the centreline and
    * fits the mesh to the full length. */
   hull?: HullStations;
+  /** Draw only the lights a viewer at this relative bearing can see (their
+   * arc holds it), as the bearing view does. Undefined draws every light,
+   * as the profile does. Pass `theta` here to keep the exam's meaning. */
+  inViewAt?: number;
+  /** The mesh's opacity, 0 (lights only) .. 1 (solid). */
+  hullOpacity?: number;
+  /** Canvas background colour. */
+  background?: string;
+  /** Moonlight rather than daylight on the mesh, and no panning: with the
+   * orbit centre pinned to the vessel, the camera's azimuth is the viewer's
+   * relative bearing and nothing else. */
+  night?: boolean;
   /** Accessible name for the canvas. Comes from the caller's SceneLabels —
    * these views render without an IntlProvider, by design (searoom#20). */
   label?: string;
@@ -297,15 +360,20 @@ export function BenchyModel({
         role="img"
         aria-label={label}
       >
-        <color attach="background" args={['#0a1622']} />
-        <ambientLight intensity={0.7} />
-        <directionalLight position={[4, 6, 5]} intensity={1.1} />
-        <directionalLight position={[-4, 3, -3]} intensity={0.3} />
+        <color attach="background" args={[background]} />
+        <ambientLight intensity={night ? 0.35 : 0.7} />
+        <directionalLight
+          position={[4, 6, 5]}
+          intensity={night ? 0.5 : 1.1}
+          color={night ? '#9fb4d8' : '#ffffff'}
+        />
+        <directionalLight position={[-4, 3, -3]} intensity={night ? 0.15 : 0.3} />
         <OrbitRig
           theta={theta}
           onTheta={onTheta}
           tilt={tilt}
           onTilt={onTilt}
+          pan={!night}
         />
         <Suspense fallback={null}>
           <Hull
@@ -314,6 +382,8 @@ export function BenchyModel({
             hull={hull}
             placed={placed}
             anchored={anchored}
+            inViewAt={inViewAt}
+            opacity={Math.min(1, Math.max(0, hullOpacity))}
           />
         </Suspense>
       </Canvas>

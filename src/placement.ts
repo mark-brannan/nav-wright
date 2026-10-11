@@ -401,3 +401,12 @@ export function bearingInArc(
   const rel = ((b - f) % 360 + 360) % 360;
   return rel <= extent;
 }
+
+/**
+ * The lights a viewer at relative bearing `theta` can see: those whose arc
+ * holds theta. Every view that claims to show what an observer sees (the 2D
+ * bearing view and its 3D counterpart) filters through this one function.
+ */
+export function lightsInView(placed: PlacedLight[], theta: number): PlacedLight[] {
+  return placed.filter((l) => bearingInArc(theta, l.arc));
+}
