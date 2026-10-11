@@ -17,7 +17,6 @@ import { DEFAULT_TILT } from './tilt.js';
 import { ThetaControl } from './ThetaControl.js';
 import { TiltControl } from './TiltControl.js';
 
-
 export function BenchyView({
   modelUrl,
   hull,
@@ -48,13 +47,10 @@ export function BenchyView({
   // than losing the hull rendering.
   const [modelFailed, setModelFailed] = useState(false);
 
-  const svgProfile = (
-    <ProfileView hull={hull} placed={placed} facts={facts} labels={labels} />
-  );
+  const svgProfile = <ProfileView hull={hull} placed={placed} facts={facts} labels={labels} />;
   if (modelFailed) return svgProfile;
 
-  const lengthMeters =
-    typeof facts['fact:length_m'] === 'number' ? facts['fact:length_m'] : 12;
+  const lengthMeters = typeof facts['fact:length_m'] === 'number' ? facts['fact:length_m'] : 12;
 
   // The outer boundary catches a failed chunk load for the lazy import,
   // which happens before BenchyModel's own boundary exists to catch it.

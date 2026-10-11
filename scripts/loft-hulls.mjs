@@ -93,7 +93,10 @@ function readProfile(Profile) {
     const a = attrs(m[0]);
     if (m[1] === 'line') {
       if (a.stroke === 'var(--rig-stroke)')
-        spars.push([[fx(+a.x1), fz(+a.y1)], [fx(+a.x2), fz(+a.y2)]]);
+        spars.push([
+          [fx(+a.x1), fz(+a.y1)],
+          [fx(+a.x2), fz(+a.y2)],
+        ]);
       continue;
     }
     const pts = pathPoints(a.d ?? '');
@@ -114,7 +117,7 @@ function extentAt(poly, x) {
   for (let k = 0; k < poly.length; k++) {
     const [x1, y1] = poly[k];
     const [x2, y2] = poly[(k + 1) % poly.length];
-    if ((x < Math.min(x1, x2)) || (x > Math.max(x1, x2))) continue;
+    if (x < Math.min(x1, x2) || x > Math.max(x1, x2)) continue;
     const y = x1 === x2 ? Math.max(y1, y2) : y1 + ((x - x1) / (x2 - x1)) * (y2 - y1);
     const yl = x1 === x2 ? Math.min(y1, y2) : y;
     lo = Math.min(lo, yl);
@@ -123,10 +126,7 @@ function extentAt(poly, x) {
   return lo <= hi ? [lo, hi] : null;
 }
 
-const xRange = (poly) => [
-  Math.min(...poly.map((p) => p[0])),
-  Math.max(...poly.map((p) => p[0])),
-];
+const xRange = (poly) => [Math.min(...poly.map((p) => p[0])), Math.max(...poly.map((p) => p[0]))];
 
 // --- building ------------------------------------------------------------
 
@@ -168,9 +168,14 @@ function loft(part, poly, beamAt, depth) {
     for (let j = 1; j <= SECTION; j++) part.quad(a[j - 1], b[j - 1], b[j], a[j]);
     part.quad(a[SECTION], b[SECTION], b[0], a[0]); // deck
   }
-  for (const [ring, flip] of [[rings[0], false], [rings.at(-1), true]]) {
+  for (const [ring, flip] of [
+    [rings[0], false],
+    [rings.at(-1), true],
+  ]) {
     if (!ring) continue;
-    const c = ring.reduce((m, p) => [m[0] + p[0], m[1] + p[1], m[2] + p[2]], [0, 0, 0]).map((v) => v / ring.length);
+    const c = ring
+      .reduce((m, p) => [m[0] + p[0], m[1] + p[1], m[2] + p[2]], [0, 0, 0])
+      .map((v) => v / ring.length);
     for (let j = 0; j < ring.length; j++) {
       const p = ring[j];
       const q = ring[(j + 1) % ring.length];
@@ -212,10 +217,20 @@ function buildHull(hull) {
   // Sail and small craft get round bilges; ships a fuller, boxier section.
   const fullness = hull.spec.beam < 0.21 ? 2 : 3.5;
   const parts = { hull: new Part(), house: new Part(), rig: new Part() };
-  loft(parts.hull, shell, beam, (s, lo, hi) => hi - (hi - lo) * (1 - Math.abs(s) ** fullness) ** (1 / fullness));
+  loft(
+    parts.hull,
+    shell,
+    beam,
+    (s, lo, hi) => hi - (hi - lo) * (1 - Math.abs(s) ** fullness) ** (1 / fullness),
+  );
   // A deckhouse is a box: its sides stand straight from its own floor.
   for (const h of houses)
-    loft(parts.house, h, (x) => beam(x) * HOUSE_BEAM, (s, lo, hi) => (Math.abs(s) === 1 ? hi : lo));
+    loft(
+      parts.house,
+      h,
+      (x) => beam(x) * HOUSE_BEAM,
+      (s, lo, hi) => (Math.abs(s) === 1 ? hi : lo),
+    );
   for (const s of spars) spar(parts.rig, s);
   return parts;
 }
@@ -225,11 +240,19 @@ function buildHull(hull) {
 function faceNormals(pos) {
   const n = new Float32Array(pos.length);
   for (let i = 0; i < pos.length; i += 9) {
-    const ux = pos[i + 3] - pos[i], uy = pos[i + 4] - pos[i + 1], uz = pos[i + 5] - pos[i + 2];
-    const vx = pos[i + 6] - pos[i], vy = pos[i + 7] - pos[i + 1], vz = pos[i + 8] - pos[i + 2];
-    let x = uy * vz - uz * vy, y = uz * vx - ux * vz, z = ux * vy - uy * vx;
+    const ux = pos[i + 3] - pos[i],
+      uy = pos[i + 4] - pos[i + 1],
+      uz = pos[i + 5] - pos[i + 2];
+    const vx = pos[i + 6] - pos[i],
+      vy = pos[i + 7] - pos[i + 1],
+      vz = pos[i + 8] - pos[i + 2];
+    let x = uy * vz - uz * vy,
+      y = uz * vx - ux * vz,
+      z = ux * vy - uy * vx;
     const l = Math.hypot(x, y, z) || 1;
-    x /= l; y /= l; z /= l;
+    x /= l;
+    y /= l;
+    z /= l;
     for (let k = 0; k < 3; k++) n.set([x, y, z], i + 3 * k);
   }
   return n;
@@ -257,12 +280,29 @@ function glb(parts, id) {
     gltf.materials.push({
       name,
       doubleSided: true,
-      pbrMetallicRoughness: { baseColorFactor: [...COLOURS[name], 1], metallicFactor: 0, roughnessFactor: 0.8 },
+      pbrMetallicRoughness: {
+        baseColorFactor: [...COLOURS[name], 1],
+        metallicFactor: 0,
+        roughnessFactor: 0.8,
+      },
     });
-    for (const [attr, data] of [['POSITION', pos], ['NORMAL', nor]]) {
+    for (const [attr, data] of [
+      ['POSITION', pos],
+      ['NORMAL', nor],
+    ]) {
       const bytes = new Uint8Array(data.buffer);
-      gltf.bufferViews.push({ buffer: 0, byteOffset: offset, byteLength: bytes.length, target: 34962 });
-      const acc = { bufferView: gltf.bufferViews.length - 1, componentType: 5126, count: data.length / 3, type: 'VEC3' };
+      gltf.bufferViews.push({
+        buffer: 0,
+        byteOffset: offset,
+        byteLength: bytes.length,
+        target: 34962,
+      });
+      const acc = {
+        bufferView: gltf.bufferViews.length - 1,
+        componentType: 5126,
+        count: data.length / 3,
+        type: 'VEC3',
+      };
       if (attr === 'POSITION') {
         acc.min = [0, 1, 2].map((k) => Math.min(...data.filter((_, i) => i % 3 === k)));
         acc.max = [0, 1, 2].map((k) => Math.max(...data.filter((_, i) => i % 3 === k)));
@@ -289,7 +329,13 @@ function glb(parts, id) {
     b.writeUInt32LE(type, 4);
     return b;
   };
-  return Buffer.concat([header, ch(json.length, 0x4e4f534a), json, ch(body.length, 0x004e4942), body]);
+  return Buffer.concat([
+    header,
+    ch(json.length, 0x4e4f534a),
+    json,
+    ch(body.length, 0x004e4942),
+    body,
+  ]);
 }
 
 mkdirSync(OUT, { recursive: true });
