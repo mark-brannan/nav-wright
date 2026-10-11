@@ -3,10 +3,11 @@
 // relative bearing the bearing view carries, driven by the same dial, so
 // moving between the two tabs keeps you standing in the same place.
 
-import { lazy, Suspense, useState } from 'react';
+import { Suspense, useState } from 'react';
 import type { ReactElement } from 'react';
 import type { FactRecord } from 'colregs-engine';
 import type { Hull } from './hulls.js';
+import { LazyBenchyModel as BenchyModel } from './lazyModel.js';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
 import type { BenchyLabels } from './benchyLabels.js';
@@ -16,11 +17,6 @@ import { DEFAULT_TILT } from './tilt.js';
 import { ThetaControl } from './ThetaControl.js';
 import { TiltControl } from './TiltControl.js';
 
-// Lazy: three.js (and the model) only ship to a browser that actually
-// opens this view, so the 2D views' bundle is untouched.
-const BenchyModel = lazy(() =>
-  import('./BenchyModel.js').then((m) => ({ default: m.BenchyModel })),
-);
 
 export function BenchyView({
   modelUrl,

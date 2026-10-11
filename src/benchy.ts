@@ -9,8 +9,10 @@
 // BenchyView's lazy() boundary, and naming it here would load three.js
 // eagerly for anyone importing this module and undo the split.
 
-// The scene view
+// The scene views: the free-orbit model, and the bearing view in 3D (night,
+// faint hull, only the lights in arc)
 export { BenchyView } from './BenchyView.js';
+export { BearingModelView, bearingHullOpacity } from './BearingModelView.js';
 
 // Camera elevation: the range TiltControl and a consumer's URL state
 // clamp against

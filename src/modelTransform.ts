@@ -7,6 +7,10 @@
 // if these renderers move into a library. The caller supplies the model's
 // untransformed bounding box; everything after that is arithmetic.
 
+import type { PlacedLight } from './placement.js';
+import { lightsInView } from './placement.js';
+import { MAX_TILT } from './tilt.js';
+
 export interface Vec3 {
   x: number;
   y: number;
@@ -385,6 +389,10 @@ export interface HullStations extends HullSpan {
   beam: number;
   mastX: number;
   aftMastX: number;
+  /** Mast heights, z units: with the lights, the vessel's own height, which
+   * frames the view (viewFrame). */
+  mastTopZ?: number;
+  aftMastTopZ?: number;
 }
 
 /**
@@ -461,4 +469,200 @@ export function anchorLights(
     if (isSide(l)) return [x, s.deck + clearance, z];
     return [x, analytic[i][1] + (lift.get(groupKey(l, i)) ?? 0), z];
   });
+}
+
+/** The lights the 3D view draws for a viewer at relative bearing `theta`,
+ * each with its seat (`seats[i]` belongs to `lights[i]`; missing seats
+ * stay undefined). Seated first, culled second, so a light's seat never
+ * moves as the viewer walks round; only whether it is lit changes. */
+export function seatsSeenFrom(
+  lights: readonly PlacedLight[],
+  seats: readonly ([number, number, number] | undefined)[] | null,
+  theta: number,
+): { light: PlacedLight; position: [number, number, number] | undefined }[] {
+  return lightsInView(
+    lights.map((light, i) => ({ light, arc: light.arc, position: seats?.[i] })),
+    theta,
+  ).map(({ light, position }) => ({ light, position }));
+}
+
+// --- Framing the view -----------------------------------------------------
+//
+// The hull is placed and lit in metres, then drawn in view units: viewFrame()
+// scales and centres the scene from the vessel — her length and her spec's
+// own heights and beam — never from the mesh. So the frame is the same
+// whichever mesh is drawn for her (her own, or Benchy swapped in), and a mesh
+// swap changes nothing on screen but the mesh: same length, same place. The
+// camera's frame never changes either, so a camera the viewer has dragged
+// never needs re-seating.
+
+/** The camera's frame, in view units, looking at the origin. */
+export const VIEW_FRAME = {
+  fov: 40,
+  /** The canvas's width over its height: `.scene-3d-stack` in style.css. */
+  aspect: 440 / 240,
+  distance: 1.6,
+  minDistance: 0.6,
+  maxDistance: 8,
+  near: 0.01,
+  far: 40,
+} as const;
+
+/**
+ * Headroom every frame keeps above the waterline, as a fraction of her
+ * length. A spec's masts stand at most ~0.45 of her length, but a mesh can
+ * stand taller than the profile it fits — Benchy, which may be drawn in
+ * place of any vessel, is about 0.75 of it, and the Kenney sailing hulls'
+ * masts nearly 1.0 — and lights are seated on top of the mesh. The frame
+ * cannot ask the mesh (a swap must not move it), so it holds the tallest
+ * mesh shipped for a hull; test/viewFrame.test.ts checks every one.
+ */
+export const FRAME_HEADROOM = 0.85;
+
+/** How far inside the canvas edge the frame stays, as a fraction of the
+ * half-width or half-height. */
+export const FRAME_MARGIN = 0.9;
+
+/** The vessel, in fx/py/z units, as viewFrame() reads her. A HullSpec fits. */
+export interface FrameSpec extends HullSpan {
+  /** Half-beam. */
+  beam: number;
+  mastTopZ?: number;
+  aftMastTopZ?: number;
+}
+
+export interface ViewFit {
+  /** View units per metre. */
+  scale: number;
+  /** Translation applied after the scale, as [x, y, z]. */
+  position: [number, number, number];
+}
+
+const finite = (v: number | undefined): v is number => typeof v === 'number' && Number.isFinite(v);
+
+/** The vessel's envelope at length 1, in metres-per-metre: bow on +X, up
+ * on +Y, starboard on +Z. From the spec and its lights, never a mesh. */
+export function frameBox(
+  spec: FrameSpec,
+  lights: readonly { fx: number; py: number; z: number }[] = [],
+): ModelBox {
+  const spanned = finite(spec.sternX) && finite(spec.bowX) && spec.bowX > spec.sternX;
+  const xs = [spanned ? spec.sternX : -1, spanned ? spec.bowX : 1, ...lights.map((l) => l.fx)];
+  const ys = [finite(spec.beam) && spec.beam > 0 ? spec.beam : 0.25, ...lights.map((l) => Math.abs(l.py))];
+  const zs = [spec.mastTopZ, spec.aftMastTopZ, ...lights.map((l) => l.z)].filter(finite);
+  // A light's halo reaches this far past its seat (SceneLight: 2.6 beads).
+  const pad = lightRadius(1) * 2.6;
+  const halfBeam = Math.max(...ys) / 2 + pad;
+  const top = Math.max(FRAME_HEADROOM, (Math.max(0, ...zs) / 2) * LIGHT_Z_TO_X + pad);
+  return {
+    min: { x: Math.min(...xs) / 2 - pad, y: 0, z: -halfBeam },
+    max: { x: Math.max(...xs) / 2 + pad, y: top, z: halfBeam },
+  };
+}
+
+/** Tilts and bearings the frame is checked from: every whole bearing in
+ * steps of FRAME_STEP degrees and every tilt in [0, MAX_TILT]. */
+const FRAME_STEP = 3;
+
+/**
+ * The camera distance, in units of her length, at which `box` (frameBox's,
+ * at length 1) stays inside FRAME_MARGIN of the canvas from every bearing
+ * and tilt, the camera looking at `target`.
+ */
+export function frameDistance(box: ModelBox, target: Vec3): number {
+  const DEG = Math.PI / 180;
+  const tanV = Math.tan((VIEW_FRAME.fov / 2) * DEG) * FRAME_MARGIN;
+  const tanH = tanV * VIEW_FRAME.aspect;
+  const corners: Vec3[] = [];
+  for (const x of [box.min.x, box.max.x])
+    for (const y of [box.min.y, box.max.y])
+      for (const z of [box.min.z, box.max.z])
+        corners.push({ x: x - target.x, y: y - target.y, z: z - target.z });
+  let need = 0;
+  const tilts: number[] = [];
+  for (let t = 0; t < MAX_TILT; t += FRAME_STEP) tilts.push(t);
+  tilts.push(MAX_TILT);
+  for (let theta = 0; theta < 360; theta += FRAME_STEP) {
+    for (const tilt of tilts) {
+      // u: origin to camera; r and v: the screen's right and up.
+      const [ux, uy, uz] = orbitPosition(theta, tilt, 1);
+      const rl = Math.hypot(uz, ux);
+      const rx = uz / rl;
+      const rz = -ux / rl;
+      // v = u x r, the screen's up.
+      const vx = uy * rz;
+      const vy = uz * rx - ux * rz;
+      const vz = -uy * rx;
+      for (const c of corners) {
+        const toward = c.x * ux + c.y * uy + c.z * uz;
+        const across = Math.abs(c.x * rx + c.z * rz);
+        const up = Math.abs(c.x * vx + c.y * vy + c.z * vz);
+        need = Math.max(need, toward + across / tanH, toward + up / tanV);
+      }
+    }
+  }
+  return need;
+}
+
+/**
+ * How to draw a vessel of `lengthMeters` in view units: scaled so her frame
+ * (frameBox: her spec's span, beam and mast and light heights, with
+ * FRAME_HEADROOM above the waterline) fills the canvas from VIEW_FRAME's
+ * camera without leaving it from any bearing or tilt, and centred on
+ * midships, half the frame's height above the waterline — the point the
+ * camera orbits. Her length on screen depends on her spec's proportions
+ * and not on her length, and never on the mesh drawn for her.
+ *
+ * A nonsense length draws the scene as it is.
+ */
+export function viewFrame(
+  lengthMeters: number,
+  spec: FrameSpec,
+  lights: readonly { fx: number; py: number; z: number }[] = [],
+): ViewFit {
+  if (!(lengthMeters > 0) || !Number.isFinite(lengthMeters))
+    return { scale: 1, position: [0, 0, 0] };
+  const box = frameBox(spec, lights);
+  const target = { x: 0, y: box.max.y / 2, z: 0 };
+  const scale = VIEW_FRAME.distance / (frameDistance(box, target) * lengthMeters);
+  return { scale, position: [0, -scale * target.y * lengthMeters, 0] };
+}
+
+/** Bead radius for a light in metres, and how far off the surface it is
+ * seated: a fixed fraction of her length, so it too holds its size. */
+export function lightRadius(lengthMeters: number): number {
+  return lengthMeters * 0.012;
+}
+
+/** Where the camera sits, in view units, for a viewer at relative bearing
+ * `theta` and elevation `tilt` (degrees), `distance` from the origin.
+ * theta 0 = seen from ahead (+X, the bow), 90 = from her starboard beam
+ * (+Z), matching the bearing view's aspects; tilt is clamped to
+ * [0, MAX_TILT]. */
+export function orbitPosition(
+  theta: number,
+  tilt: number,
+  distance: number = VIEW_FRAME.distance,
+): [number, number, number] {
+  const DEG = Math.PI / 180;
+  const polar = (90 - Math.min(MAX_TILT, Math.max(0, tilt))) * DEG;
+  const rad = theta * DEG;
+  return [
+    distance * Math.sin(polar) * Math.cos(rad),
+    distance * Math.cos(polar),
+    distance * Math.sin(polar) * Math.sin(rad),
+  ];
+}
+
+/** The inverse of orbitPosition, from OrbitControls' angles (radians) to
+ * whole degrees: theta in 0..359, tilt from the waterline. three's
+ * azimuthal angle runs from +Z toward +X, so theta 0 (camera on +X) is its
+ * 90 degrees; its polar angle is from straight up. */
+export function orbitAngles(azimuthal: number, polar: number): { theta: number; tilt: number } {
+  const DEG = Math.PI / 180;
+  const theta = Math.round(90 - azimuthal / DEG);
+  return {
+    theta: ((theta % 360) + 360) % 360,
+    tilt: Math.round(90 - polar / DEG),
+  };
 }

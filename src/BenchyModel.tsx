@@ -1,4 +1,5 @@
-// Renders the vessel as a 3D model, for the "Benchy" scene view. Every
+// Renders the vessel as a 3D model, for the Benchy view and the 3D bearing
+// view (BearingModelView: night, faint hull, lights in arc only). Every
 // vessel uses the same stand-in mesh regardless of hull, size or mode of
 // propulsion; only the length scaling varies.
 //
@@ -20,52 +21,92 @@
 // relies on (local +X is the bow). The scale/orientation math itself
 // lives in modelTransform.ts, where it is unit-tested.
 
-import { Suspense, useEffect, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentRef, ReactElement, ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
-import { anchorLights, lightPosition } from './modelTransform.js';
+import {
+  VIEW_FRAME,
+  anchorLights,
+  lightPosition,
+  lightRadius,
+  orbitAngles,
+  orbitPosition,
+  seatsSeenFrom,
+  viewFrame,
+} from './modelTransform.js';
 import type { HullStations } from './modelTransform.js';
 import { placeScene, profileHullModel } from './sceneProfile.js';
 import { DEFAULT_TILT, MAX_TILT } from './tilt.js';
 
 const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN, bowX: NaN };
 
-/** Camera distance as a multiple of the vessel's length. */
-const ORBIT_DISTANCE = 1.6;
-
-/** Bead radius for a light, and how far off the surface it is seated. */
-function lightRadius(lengthMeters: number): number {
-  return Math.max(lengthMeters * 0.012, 0.12);
-}
-
 /** The placed hull and her lights, seated on it. One component because
  * the lights need the mesh's profile, which only exists once the model
  * has loaded — so they arrive together, on the hull, rather than the
- * lights appearing first at their analytic positions and then jumping. */
+ * lights appearing first at their analytic positions and then jumping.
+ * Everything is placed in metres and drawn in view units (viewFrame),
+ * framed from her length and spec rather than the mesh, so she is the same
+ * size on screen whatever her length and whichever mesh is drawn for her. */
 function Hull({
   modelUrl,
   lengthMeters,
   hull,
   placed,
+  anchored,
+  inViewAt,
+  opacity,
+  onReady,
 }: {
   modelUrl: string;
   lengthMeters: number;
   hull: HullStations;
   placed: PlacedLight[];
+  anchored: boolean;
+  /** Draw only the lights whose arc holds this bearing; undefined draws all. */
+  inViewAt?: number;
+  /** Mesh opacity, 0 (hidden) .. 1. The lights are never faded. */
+  opacity: number;
+  /** Called once the model has loaded and the lights are on it. */
+  onReady: () => void;
 }): ReactElement {
   const { scene } = useGLTF(modelUrl);
+  useLayoutEffect(onReady, [onReady]);
 
   // The mesh is fitted to the spec's own bow-to-stern span, not the full
   // length, so it lands in the frame the spec's stations are drawn in. A
   // missing spec (NO_HULL's NaNs) falls back to the full-length fit.
   const { sternX, bowX } = hull;
-  const group = useMemo(
-    () => placeScene(scene, lengthMeters, { sternX, bowX }),
-    [scene, lengthMeters, sternX, bowX],
+  // Clone and materials are made together: the clone shares the cached GLTF's
+  // materials, and fading those would fade every other view of the mesh.
+  // `depth` is the same mesh writing depth only, so a faded hull shows its
+  // nearest surface over the sky, not every face behind it.
+  const { group, materials, depth } = useMemo(() => {
+    const g = placeScene(scene, lengthMeters, { sternX, bowX });
+    const materials = ownMaterials(g);
+    const depth = g.clone(true);
+    depth.traverse((o) => {
+      if ((o as THREE.Mesh).isMesh) (o as THREE.Mesh).material = DEPTH_ONLY;
+    });
+    return { group: g, materials, depth };
+  }, [scene, lengthMeters, sternX, bowX]);
+  // The clones are this hull's alone; the loader's cache never sees them.
+  useEffect(() => () => materials.forEach((m) => m.dispose()), [materials]);
+  const faded = opacity < 1;
+  useEffect(() => {
+    for (const m of materials) {
+      m.transparent = faded;
+      m.opacity = opacity;
+      m.depthWrite = !faded;
+      m.needsUpdate = true;
+    }
+  }, [materials, opacity, faded]);
+  const fit = useMemo(
+    () => viewFrame(lengthMeters, hull, placed),
+    [lengthMeters, hull, placed],
   );
   const profile = useMemo(
     () => profileHullModel(scene, lengthMeters, { sternX, bowX }),
@@ -80,19 +121,51 @@ function Hull({
     [placed, lengthMeters, hull, profile],
   );
 
+  // Every light is seated first, on the whole hull, and only then culled to
+  // its arc: a seat never depends on which other lights are lit, so none
+  // jumps as the viewer walks round her.
+  const seen = useMemo(
+    () =>
+      inViewAt === undefined
+        ? placed.map((light, i) => ({ light, position: positions?.[i] }))
+        : seatsSeenFrom(placed, positions, inViewAt),
+    [placed, positions, inViewAt],
+  );
+
   return (
-    <>
-      <primitive object={group} />
-      {placed.map((l, i) => (
+    <group scale={fit.scale} position={fit.position}>
+      <primitive object={depth} visible={faded && opacity > 0} />
+      <primitive object={group} visible={opacity > 0} />
+      {seen.map(({ light, position }) => (
         <SceneLight
-          key={l.key}
-          light={l}
+          key={light.key}
+          light={light}
           lengthMeters={lengthMeters}
-          position={positions?.[i]}
+          position={position}
         />
       ))}
-    </>
+      {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
+    </group>
   );
+}
+
+/** Writes depth, draws nothing: the faded hull's prepass. */
+const DEPTH_ONLY = new THREE.MeshBasicMaterial({ colorWrite: false });
+
+/** Give every mesh under `root` its own copy of its material(s), and return
+ * them, so they can be changed without touching the loader's cache. */
+function ownMaterials(root: THREE.Object3D): THREE.Material[] {
+  const out: THREE.Material[] = [];
+  root.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    const own = (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).map((m) =>
+      m.clone(),
+    );
+    mesh.material = Array.isArray(mesh.material) ? own : own[0]!;
+    out.push(...own);
+  });
+  return out;
 }
 
 /** One light: a small emissive bead inside an additive halo, so it reads
@@ -101,8 +174,9 @@ function Hull({
  *
  * Drawn without depth testing, so a light is never swallowed by the
  * stand-in mesh's oversized superstructure — which is a cartoon's, not
- * this vessel's. The 2D profile likewise draws every light regardless of
- * what is in front of it; arc culling is the bearing view's job. */
+ * this vessel's. Which lights are drawn at all is Hull's call: every one,
+ * as the 2D profile does, or only those in arc (inViewAt), as the bearing
+ * view does. */
 function SceneLight({
   light,
   lengthMeters,
@@ -154,28 +228,45 @@ function SceneLight({
 /** The anchor cable, when she is anchored: bow to the seabed, drawn in the
  * scene for the same reason the lights are. */
 function AnchorCable({ lengthMeters }: { lengthMeters: number }): ReactElement {
-  const points = useMemo(
-    () => [
+  // One Line per length, not per render: Hull re-renders on every degree
+  // the viewer walks round her.
+  const line = useMemo(() => {
+    const geometry = new THREE.BufferGeometry().setFromPoints([
       new THREE.Vector3(lengthMeters / 2, lengthMeters * 0.08, 0),
       new THREE.Vector3(lengthMeters * 0.95, -lengthMeters * 0.35, 0),
-    ],
-    [lengthMeters],
-  );
-  const geometry = useMemo(
-    () => new THREE.BufferGeometry().setFromPoints(points),
-    [points],
-  );
-  return (
-    <primitive
-      object={new THREE.Line(geometry, new THREE.LineDashedMaterial({
+    ]);
+    const l = new THREE.Line(
+      geometry,
+      new THREE.LineDashedMaterial({
         color: '#7d8ea3',
         dashSize: lengthMeters * 0.03,
         gapSize: lengthMeters * 0.03,
-      }))}
-      onUpdate={(l: THREE.Line) => l.computeLineDistances()}
-    />
+      }),
+    );
+    l.computeLineDistances();
+    return l;
+  }, [lengthMeters]);
+  useEffect(
+    () => () => {
+      line.geometry.dispose();
+      (line.material as THREE.Material).dispose();
+    },
+    [line],
   );
+  return <primitive object={line} />;
 }
+
+/** The in-canvas Suspense fallback: tells BenchyModel a model is on its way,
+ * so it can show its `loading` stand-in over the empty canvas meanwhile. */
+function Pending({ onPending }: { onPending: (p: boolean) => void }): null {
+  useLayoutEffect(() => {
+    onPending(true);
+    return () => onPending(false);
+  }, [onPending]);
+  return null;
+}
+
+const DAY_BACKGROUND = '#0a1622';
 
 const DEG = Math.PI / 180;
 const MIN_POLAR = (90 - MAX_TILT) * DEG;
@@ -184,19 +275,20 @@ const MAX_POLAR = 90 * DEG;
 /** Drives the camera from `theta` (relative bearing of the viewer, the
  * same angle the bearing view's slider carries) and `tilt` (elevation
  * above the waterline), and reports both back when the user drags, so
- * each stays one number rather than two. */
+ * each stays one number rather than two. Works in view units (see
+ * VIEW_FRAME), so it has no length to follow. */
 function OrbitRig({
   theta,
   onTheta,
   tilt,
   onTilt,
-  lengthMeters,
+  pan,
 }: {
   theta: number;
   onTheta?: (t: number) => void;
   tilt: number;
   onTilt?: (t: number) => void;
-  lengthMeters: number;
+  pan: boolean;
 }): ReactElement {
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const camera = useThree((s) => s.camera);
@@ -204,49 +296,30 @@ function OrbitRig({
   // report comes back as a prop and re-seats the camera mid-drag.
   const reported = useRef<{ theta: number; tilt: number } | null>(null);
 
-  const distance = lengthMeters * ORBIT_DISTANCE;
-  // The stand-in mesh is about 0.8 of its length tall; aim at its middle so
-  // it sits centred in the frame rather than riding the top edge.
-  const targetY = lengthMeters * 0.38;
-
   useEffect(() => {
     const r = reported.current;
     if (r && Math.abs(r.theta - theta) < 0.5 && Math.abs(r.tilt - tilt) < 0.5)
       return;
-    const polar = Math.min(MAX_POLAR, Math.max(MIN_POLAR, (90 - tilt) * DEG));
-    const rad = theta * DEG;
-    // theta 0 = seen from ahead (+X, the bow), 90 = from her starboard
-    // beam (+Z), matching the bearing view's aspects. At 90 the bow falls
-    // to the right of the frame, as it does in the 2D profile.
-    camera.position.set(
-      distance * Math.sin(polar) * Math.cos(rad),
-      distance * Math.cos(polar) + targetY,
-      distance * Math.sin(polar) * Math.sin(rad),
-    );
+    // At theta 90 the bow falls to the right of the frame, as it does in
+    // the 2D profile.
+    camera.position.set(...orbitPosition(theta, tilt));
     controls.current?.update();
-  }, [theta, tilt, camera, distance, targetY]);
+  }, [theta, tilt, camera]);
 
   return (
     <OrbitControls
       ref={controls}
-      target={[0, targetY, 0]}
-      enablePan
+      target={[0, 0, 0]}
+      enablePan={pan}
       enableZoom
-      minDistance={lengthMeters * 0.5}
-      maxDistance={lengthMeters * 8}
+      minDistance={VIEW_FRAME.minDistance}
+      maxDistance={VIEW_FRAME.maxDistance}
       minPolarAngle={MIN_POLAR}
       maxPolarAngle={MAX_POLAR}
       onChange={() => {
         const c = controls.current;
         if (!c) return;
-        // three's azimuthal angle is measured from +Z toward +X; theta 0
-        // puts the camera on +X, which is three's 90 degrees. Its polar
-        // angle is from straight up; tilt is from the waterline.
-        const deg = (90 - c.getAzimuthalAngle() / DEG + 360) % 360;
-        const next = {
-          theta: Math.round(deg),
-          tilt: Math.round(90 - c.getPolarAngle() / DEG),
-        };
+        const next = orbitAngles(c.getAzimuthalAngle(), c.getPolarAngle());
         const prev = reported.current;
         if (prev && prev.theta === next.theta && prev.tilt === next.tilt) return;
         reported.current = next;
@@ -267,8 +340,13 @@ export function BenchyModel({
   tilt = DEFAULT_TILT,
   onTilt,
   hull = NO_HULL,
+  inViewAt,
+  hullOpacity = 1,
+  background = DAY_BACKGROUND,
+  night = false,
   label,
   fallback = <div className="scene-3d" />,
+  loading,
   onError,
 }: {
   /** URL of the .glb to render. This package ships one at
@@ -287,48 +365,90 @@ export function BenchyModel({
   onTilt?: (t: number) => void;
   /** The hull spec's stations (half-beam, masts, stern and bow) in fx/py
    * units, so each light can be seated on the mesh's counterpart of where
-   * the 2D profile put it, and the mesh fitted to the spec's own
-   * bow-to-stern span. The default seats everything on the centreline and
+   * the 2D profile put it, the mesh fitted to the spec's own bow-to-stern
+   * span, and the view framed on her (mast heights too: pass the HullSpec). The default seats everything on the centreline and
    * fits the mesh to the full length. */
   hull?: HullStations;
+  /** Draw only the lights a viewer at this relative bearing can see (their
+   * arc holds it), as the bearing view does. Undefined draws every light,
+   * as the profile does. Pass `theta` here to keep the exam's meaning. */
+  inViewAt?: number;
+  /** The mesh's opacity, 0 (lights only) .. 1 (solid). */
+  hullOpacity?: number;
+  /** Canvas background colour. */
+  background?: string;
+  /** Moonlight rather than daylight on the mesh, and no panning: with the
+   * orbit centre pinned to the vessel, the camera's azimuth is the viewer's
+   * relative bearing and nothing else. */
+  night?: boolean;
   /** Accessible name for the canvas. Comes from the caller's SceneLabels —
    * these views render without an IntlProvider, by design (searoom#20). */
   label?: string;
   /** Shown if the model or the WebGL context fails. */
   fallback?: ReactNode;
+  /** Laid over the canvas while the model downloads (the lights ride on
+   * it, so the canvas has nothing to show until then). Needs a positioned
+   * parent, such as .scene-3d-stack. */
+  loading?: ReactNode;
   onError?: (error: unknown) => void;
 }): ReactElement {
+  // Where the camera actually stands, for the arc cull: `inViewAt`, or the
+  // orbit's own report while the viewer drags, so the cull is right even for
+  // a caller that does not feed onTheta back in.
+  const [seenFrom, setSeenFrom] = useState(inViewAt);
+  const [lastInViewAt, setLastInViewAt] = useState(inViewAt);
+  if (!Object.is(inViewAt, lastInViewAt)) {
+    setLastInViewAt(inViewAt);
+    setSeenFrom(inViewAt);
+  }
+  const [pending, setPending] = useState(true);
+  const ready = useMemo(() => () => setPending(false), []);
   return (
     <ModelErrorBoundary fallback={fallback} onError={onError}>
       <Canvas
         className="scene-3d"
         dpr={[1, 2]}
         gl={{ antialias: true }}
-        camera={{ fov: 40, near: 0.1, far: lengthMeters * 40 }}
+        camera={{ fov: VIEW_FRAME.fov, near: VIEW_FRAME.near, far: VIEW_FRAME.far }}
         role="img"
         aria-label={label}
       >
-        <color attach="background" args={['#0a1622']} />
-        <ambientLight intensity={0.7} />
-        <directionalLight position={[4, 6, 5]} intensity={1.1} />
-        <directionalLight position={[-4, 3, -3]} intensity={0.3} />
+        <color attach="background" args={[background]} />
+        <ambientLight intensity={night ? 0.12 : 0.7} />
+        <directionalLight
+          position={[4, 6, 5]}
+          intensity={night ? 0.35 : 1.1}
+          color={night ? '#8aa2c8' : '#ffffff'}
+        />
+        <directionalLight position={[-4, 3, -3]} intensity={night ? 0.06 : 0.3} />
         <OrbitRig
           theta={theta}
-          onTheta={onTheta}
+          onTheta={(t) => {
+            if (inViewAt !== undefined) setSeenFrom(t);
+            onTheta?.(t);
+          }}
           tilt={tilt}
           onTilt={onTilt}
-          lengthMeters={lengthMeters}
+          pan={!night}
         />
-        <Suspense fallback={null}>
+        <Suspense fallback={<Pending onPending={setPending} />}>
           <Hull
             modelUrl={modelUrl}
             lengthMeters={lengthMeters}
             hull={hull}
             placed={placed}
+            anchored={anchored}
+            inViewAt={inViewAt === undefined ? undefined : seenFrom}
+            opacity={Math.min(1, Math.max(0, hullOpacity))}
+            onReady={ready}
           />
         </Suspense>
-        {anchored && <AnchorCable lengthMeters={lengthMeters} />}
       </Canvas>
+      {pending && loading && (
+        <div className="scene-3d-loading" style={{ position: 'absolute', inset: 0 }}>
+          {loading}
+        </div>
+      )}
     </ModelErrorBoundary>
   );
 }
