@@ -7,7 +7,7 @@ name: Pages
 on:
   push:
     branches: [main]
-    paths: [playground/**, src/**, models/**, package-lock.json, .github/workflows/pages.yml]
+    paths: [playground/**, src/**, models/**, package.json, package-lock.json, .github/workflows/pages.yml]
   workflow_dispatch:
 
 permissions:
