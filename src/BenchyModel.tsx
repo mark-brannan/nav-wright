@@ -213,6 +213,7 @@ function SceneLight({
           toneMapped={false}
         />
       </mesh>
+      {/* after the core (2), or the core paints over the glow */}
       <mesh ref={halo} renderOrder={3}>
         <sphereGeometry args={[r * 2.6, 12, 12]} />
         <meshBasicMaterial
