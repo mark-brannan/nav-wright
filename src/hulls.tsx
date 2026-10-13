@@ -126,9 +126,30 @@ const sailSmall: Hull = {
       />
       {mast(0.12, 0.92, 0.3)}
       {/* boom + backstay + forestay */}
-      <line x1={PX(0.12)} y1={PZ(0.4)} x2={PX(-0.6)} y2={PZ(0.36)} stroke={rigStroke} strokeWidth={1.5} />
-      <line x1={PX(0.12)} y1={PZ(0.92) - 6} x2={PX(0.94)} y2={PZ(0.18)} stroke={rigStroke} strokeWidth={0.75} />
-      <line x1={PX(0.12)} y1={PZ(0.92) - 6} x2={PX(-0.87)} y2={PZ(0.18)} stroke={rigStroke} strokeWidth={0.75} />
+      <line
+        x1={PX(0.12)}
+        y1={PZ(0.4)}
+        x2={PX(-0.6)}
+        y2={PZ(0.36)}
+        stroke={rigStroke}
+        strokeWidth={1.5}
+      />
+      <line
+        x1={PX(0.12)}
+        y1={PZ(0.92) - 6}
+        x2={PX(0.94)}
+        y2={PZ(0.18)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+      <line
+        x1={PX(0.12)}
+        y1={PZ(0.92) - 6}
+        x2={PX(-0.87)}
+        y2={PZ(0.18)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
     </g>
   ),
 };
@@ -169,8 +190,22 @@ const openBoat: Hull = {
         strokeWidth={1.5}
       />
       {/* thwarts */}
-      <line x1={PX(0.25)} y1={PZ(0.16)} x2={PX(0.25)} y2={PZ(0.08)} stroke={rigStroke} strokeWidth={1} />
-      <line x1={PX(-0.35)} y1={PZ(0.16)} x2={PX(-0.35)} y2={PZ(0.08)} stroke={rigStroke} strokeWidth={1} />
+      <line
+        x1={PX(0.25)}
+        y1={PZ(0.16)}
+        x2={PX(0.25)}
+        y2={PZ(0.08)}
+        stroke={rigStroke}
+        strokeWidth={1}
+      />
+      <line
+        x1={PX(-0.35)}
+        y1={PZ(0.16)}
+        x2={PX(-0.35)}
+        y2={PZ(0.08)}
+        stroke={rigStroke}
+        strokeWidth={1}
+      />
     </g>
   ),
 };
@@ -313,9 +348,24 @@ const containerShip: Hull = {
         stroke={hullStroke}
         strokeWidth={0.75}
       />
-      <line x1={PX(0.7)} y1={PZ(0.54)} x2={PX(-0.3)} y2={PZ(0.54)} stroke={hullStroke} strokeWidth={0.5} />
+      <line
+        x1={PX(0.7)}
+        y1={PZ(0.54)}
+        x2={PX(-0.3)}
+        y2={PZ(0.54)}
+        stroke={hullStroke}
+        strokeWidth={0.5}
+      />
       {[0.5, 0.3, 0.1, -0.1].map((fx) => (
-        <line key={fx} x1={PX(fx)} y1={PZ(0.42)} x2={PX(fx)} y2={PZ(0.66)} stroke={hullStroke} strokeWidth={0.5} />
+        <line
+          key={fx}
+          x1={PX(fx)}
+          y1={PZ(0.42)}
+          x2={PX(fx)}
+          y2={PZ(0.66)}
+          stroke={hullStroke}
+          strokeWidth={0.5}
+        />
       ))}
       {/* aft superstructure */}
       <path
@@ -398,7 +448,14 @@ const trawler: Hull = {
         strokeWidth={2}
       />
       {/* trawl warp */}
-      <line x1={PX(-0.55)} y1={PZ(0.88)} x2={PX(-0.95)} y2={PZ(0.02)} stroke={rigStroke} strokeWidth={0.75} />
+      <line
+        x1={PX(-0.55)}
+        y1={PZ(0.88)}
+        x2={PX(-0.95)}
+        y2={PZ(0.02)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
     </g>
   ),
 };
@@ -456,7 +513,14 @@ const tug: Hull = {
       />
       {mast(0.1, 0.6, 0.68)}
       {/* towing bitts + fender bow */}
-      <line x1={PX(-0.4)} y1={PZ(0.26)} x2={PX(-0.4)} y2={PZ(0.36)} stroke={rigStroke} strokeWidth={2.5} />
+      <line
+        x1={PX(-0.4)}
+        y1={PZ(0.26)}
+        x2={PX(-0.4)}
+        y2={PZ(0.36)}
+        stroke={rigStroke}
+        strokeWidth={2.5}
+      />
       <path
         d={`M${PX(0.9)},${PZ(0.4)} q6,-4 4,-16`}
         fill="none"
@@ -609,7 +673,14 @@ const pilotBoat: Hull = {
       />
       {mast(0.0, 0.72, 0.5)}
       {/* fender strake */}
-      <line x1={PX(0.86)} y1={PZ(0.2)} x2={PX(-0.84)} y2={PZ(0.18)} stroke={rigStroke} strokeWidth={2} />
+      <line
+        x1={PX(0.86)}
+        y1={PZ(0.2)}
+        x2={PX(-0.84)}
+        y2={PZ(0.18)}
+        stroke={rigStroke}
+        strokeWidth={2}
+      />
     </g>
   ),
 };
@@ -657,7 +728,15 @@ const ferry: Hull = {
         strokeWidth={1}
       />
       {[0.5, 0.3, 0.1, -0.1, -0.3, -0.5].map((fx) => (
-        <line key={fx} x1={PX(fx)} y1={PZ(0.4)} x2={PX(fx + 0.1)} y2={PZ(0.4)} stroke={hullStroke} strokeWidth={0.75} />
+        <line
+          key={fx}
+          x1={PX(fx)}
+          y1={PZ(0.4)}
+          x2={PX(fx + 0.1)}
+          y2={PZ(0.4)}
+          stroke={hullStroke}
+          strokeWidth={0.75}
+        />
       ))}
       {/* bridge forward, funnel aft */}
       <path
@@ -731,7 +810,14 @@ const tanker: Hull = {
         strokeWidth={1}
       />
       {/* pipe deck and midships manifold */}
-      <line x1={PX(0.68)} y1={PZ(0.34)} x2={PX(-0.44)} y2={PZ(0.34)} stroke={rigStroke} strokeWidth={1} />
+      <line
+        x1={PX(0.68)}
+        y1={PZ(0.34)}
+        x2={PX(-0.44)}
+        y2={PZ(0.34)}
+        stroke={rigStroke}
+        strokeWidth={1}
+      />
       <path
         d={d([
           [0.12, 0.3],
@@ -932,7 +1018,15 @@ const cruiseShip: Hull = {
         strokeWidth={1}
       />
       {[0.48, 0.66].map((z) => (
-        <line key={z} x1={PX(0.66)} y1={PZ(z)} x2={PX(-0.8)} y2={PZ(z)} stroke={hullStroke} strokeWidth={0.5} />
+        <line
+          key={z}
+          x1={PX(0.66)}
+          y1={PZ(z)}
+          x2={PX(-0.8)}
+          y2={PZ(z)}
+          stroke={hullStroke}
+          strokeWidth={0.5}
+        />
       ))}
       {/* raked funnel */}
       <path
@@ -994,7 +1088,14 @@ const warship: Hull = {
         stroke={hullStroke}
         strokeWidth={1}
       />
-      <line x1={PX(0.6)} y1={PZ(0.45)} x2={PX(0.82)} y2={PZ(0.5)} stroke={rigStroke} strokeWidth={1.5} />
+      <line
+        x1={PX(0.6)}
+        y1={PZ(0.45)}
+        x2={PX(0.82)}
+        y2={PZ(0.5)}
+        stroke={rigStroke}
+        strokeWidth={1.5}
+      />
       {/* bridge block */}
       <path
         d={d([
@@ -1075,7 +1176,14 @@ const squareRigger: Hull = {
         strokeWidth={1.5}
       />
       {/* bowsprit */}
-      <line x1={PX(0.86)} y1={PZ(0.3)} x2={PX(1.06)} y2={PZ(0.42)} stroke={rigStroke} strokeWidth={2} />
+      <line
+        x1={PX(0.86)}
+        y1={PZ(0.3)}
+        x2={PX(1.06)}
+        y2={PZ(0.42)}
+        stroke={rigStroke}
+        strokeWidth={2}
+      />
       {/* fore, main, mizzen with braced yards */}
       {mast(0.5, 1.0, 0.26)}
       {mast(-0.05, 1.1, 0.26)}
@@ -1102,9 +1210,30 @@ const squareRigger: Hull = {
         ),
       )}
       {/* stays */}
-      <line x1={PX(0.5)} y1={PZ(1.0) - 6} x2={PX(1.04)} y2={PZ(0.4)} stroke={rigStroke} strokeWidth={0.75} />
-      <line x1={PX(-0.05)} y1={PZ(1.1) - 6} x2={PX(0.5)} y2={PZ(0.98)} stroke={rigStroke} strokeWidth={0.75} />
-      <line x1={PX(-0.55)} y1={PZ(0.9) - 6} x2={PX(-0.05)} y2={PZ(1.06)} stroke={rigStroke} strokeWidth={0.75} />
+      <line
+        x1={PX(0.5)}
+        y1={PZ(1.0) - 6}
+        x2={PX(1.04)}
+        y2={PZ(0.4)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+      <line
+        x1={PX(-0.05)}
+        y1={PZ(1.1) - 6}
+        x2={PX(0.5)}
+        y2={PZ(0.98)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+      <line
+        x1={PX(-0.55)}
+        y1={PZ(0.9) - 6}
+        x2={PX(-0.05)}
+        y2={PZ(1.06)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
     </g>
   ),
 };
@@ -1163,7 +1292,14 @@ const seiner: Hull = {
       />
       {mast(0.15, 0.9, 0.56)}
       {/* boom */}
-      <line x1={PX(0.15)} y1={PZ(0.66)} x2={PX(-0.4)} y2={PZ(0.5)} stroke={rigStroke} strokeWidth={1.5} />
+      <line
+        x1={PX(0.15)}
+        y1={PZ(0.66)}
+        x2={PX(-0.4)}
+        y2={PZ(0.5)}
+        stroke={rigStroke}
+        strokeWidth={1.5}
+      />
       {/* power block on its crane, net stacked aft */}
       <path
         d={`M${PX(-0.2)},${PZ(0.24)} L${PX(-0.45)},${PZ(0.78)}`}
@@ -1171,7 +1307,14 @@ const seiner: Hull = {
         stroke={rigStroke}
         strokeWidth={2}
       />
-      <circle cx={PX(-0.45)} cy={PZ(0.78)} r={4} fill={hullFill} stroke={hullStroke} strokeWidth={1} />
+      <circle
+        cx={PX(-0.45)}
+        cy={PZ(0.78)}
+        r={4}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
       <path
         d={d([
           [-0.5, 0.24],
@@ -1224,8 +1367,22 @@ const dredger: Hull = {
         stroke={rigStroke}
         strokeWidth={2}
       />
-      <line x1={PX(0.72)} y1={PZ(0.6)} x2={PX(1.04)} y2={PZ(-0.02)} stroke={rigStroke} strokeWidth={2.5} />
-      <line x1={PX(0.7)} y1={PZ(0.78)} x2={PX(0.98)} y2={PZ(0.1)} stroke={rigStroke} strokeWidth={0.75} />
+      <line
+        x1={PX(0.72)}
+        y1={PZ(0.6)}
+        x2={PX(1.04)}
+        y2={PZ(-0.02)}
+        stroke={rigStroke}
+        strokeWidth={2.5}
+      />
+      <line
+        x1={PX(0.7)}
+        y1={PZ(0.78)}
+        x2={PX(0.98)}
+        y2={PZ(0.1)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
       {/* aft house + mast, spud pole at the stern */}
       <path
         d={d([
@@ -1239,7 +1396,14 @@ const dredger: Hull = {
         strokeWidth={1}
       />
       {mast(-0.45, 0.95, 0.56)}
-      <line x1={PX(-0.88)} y1={PZ(-0.02)} x2={PX(-0.88)} y2={PZ(0.72)} stroke={rigStroke} strokeWidth={3} />
+      <line
+        x1={PX(-0.88)}
+        y1={PZ(-0.02)}
+        x2={PX(-0.88)}
+        y2={PZ(0.72)}
+        stroke={rigStroke}
+        strokeWidth={3}
+      />
     </g>
   ),
 };
@@ -1254,13 +1418,11 @@ const dredger: Hull = {
  */
 export function selectHull(facts: FactRecord): Hull {
   const activity = facts['fact:activity'];
-  const length = typeof facts['fact:length_m'] === 'number'
-    ? (facts['fact:length_m'] as number)
-    : 12;
+  const length =
+    typeof facts['fact:length_m'] === 'number' ? (facts['fact:length_m'] as number) : 12;
   if (activity === 'activity:trawling') return trawler;
   if (activity === 'activity:fishing') return seiner;
-  if (activity === 'activity:towing' || activity === 'activity:pushing')
-    return tug;
+  if (activity === 'activity:towing' || activity === 'activity:pushing') return tug;
   if (activity === 'activity:being_towed') return barge;
   if (activity === 'activity:pilot') return pilotBoat;
   if (activity === 'activity:cbd') return tanker;

@@ -123,11 +123,7 @@ export function lightPosition(
   // fx and py share one scale — the plan view plots both against
   // HULL_SCALE — so athwartships needs no separate beam figure.
   const halfLength = lengthMeters / 2;
-  return [
-    light.fx * halfLength,
-    light.z * halfLength * LIGHT_Z_TO_X,
-    light.py * halfLength,
-  ];
+  return [light.fx * halfLength, light.z * halfLength * LIGHT_Z_TO_X, light.py * halfLength];
 }
 
 // --- Anchoring lights to the mesh -----------------------------------------
@@ -212,8 +208,12 @@ export function sampleEdges(
       const key = a < b ? a * n + b : b * n + a;
       if (seen.has(key)) continue;
       seen.add(key);
-      const ax = xyz[a * 3], ay = xyz[a * 3 + 1], az = xyz[a * 3 + 2];
-      const dx = xyz[b * 3] - ax, dy = xyz[b * 3 + 1] - ay, dz = xyz[b * 3 + 2] - az;
+      const ax = xyz[a * 3],
+        ay = xyz[a * 3 + 1],
+        az = xyz[a * 3 + 2];
+      const dx = xyz[b * 3] - ax,
+        dy = xyz[b * 3 + 1] - ay,
+        dz = xyz[b * 3 + 2] - az;
       const len = Math.hypot(dx, dy, dz);
       const steps = Math.ceil(len / spacing);
       for (let k = 1; k < steps; k++) {
@@ -440,8 +440,7 @@ export function anchorLights(
   const shoulderX = bowShoulder(profile);
   const seat = lights.map((l, i): { x: number; top: number; mast: boolean } => {
     if (isSide(l)) return { x: shoulderX, top: 0, mast: false };
-    if (same(l.fx, hull.mastX))
-      return { x: profile.mast.foreX, top: profile.mast.top, mast: true };
+    if (same(l.fx, hull.mastX)) return { x: profile.mast.foreX, top: profile.mast.top, mast: true };
     if (same(l.fx, hull.aftMastX))
       return { x: profile.mast.aftX, top: profile.mast.top, mast: true };
     if (same(l.fx, hull.sternX))
@@ -548,7 +547,10 @@ export function frameBox(
 ): ModelBox {
   const spanned = finite(spec.sternX) && finite(spec.bowX) && spec.bowX > spec.sternX;
   const xs = [spanned ? spec.sternX : -1, spanned ? spec.bowX : 1, ...lights.map((l) => l.fx)];
-  const ys = [finite(spec.beam) && spec.beam > 0 ? spec.beam : 0.25, ...lights.map((l) => Math.abs(l.py))];
+  const ys = [
+    finite(spec.beam) && spec.beam > 0 ? spec.beam : 0.25,
+    ...lights.map((l) => Math.abs(l.py)),
+  ];
   const zs = [spec.mastTopZ, spec.aftMastTopZ, ...lights.map((l) => l.z)].filter(finite);
   // A light's halo reaches this far past its seat (SceneLight: 2.6 beads).
   const pad = lightRadius(1) * 2.6;

@@ -81,7 +81,9 @@ describe('BearingModelView', () => {
       const flat = renderToStaticMarkup(
         <BearingView hull={hull} placed={[masthead]} theta={theta} onTheta={noop} hullHint={0} />,
       ).includes('bearing-empty');
-      expect(render(theta, [masthead]).includes('bearing-empty-overlay'), `theta ${theta}`).toBe(flat);
+      expect(render(theta, [masthead]).includes('bearing-empty-overlay'), `theta ${theta}`).toBe(
+        flat,
+      );
     }
   });
 

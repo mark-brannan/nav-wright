@@ -3,20 +3,22 @@
 Renderer for vessels, navigation lights, and rules-of-the-road scenes:
 profile, bearing (lights-only, seen from a relative bearing θ) and plan
 (arc sector) views in SVG, plus an optional 3D view of the vessel as an
-orbitable model. Sibling of
-[coast-wright](https://github.com/mark-brannan/coast-wright) and
-[wire-wright](https://github.com/mark-brannan/wire-wright).
+orbitable model.
 
-**Status: extracted, unreleased.** The renderer was built inside
-[searoom](https://github.com/mark-brannan/searoom) and moved here by
-[searoom#18](https://github.com/mark-brannan/searoom/issues/18); searoom
-becomes its first consumer once that issue's step 4 lands. Design:
-[searoom/docs/design.md](https://github.com/mark-brannan/searoom/blob/main/docs/design.md).
+Try the playground! <https://mark-brannan.github.io/nav-wright/>.
+
+Consumed by [searoom](https://github.com/mark-brannan/searoom):
+* [searoom/docs/design.md](https://github.com/mark-brannan/searoom/blob/main/docs/design.md)
+* **Live demo: <https://mark-brannan.github.io/searoom/>**
+
+Sibling of:
+* [coast-wright](https://github.com/mark-brannan/coast-wright)
+* [wire-wright](https://github.com/mark-brannan/wire-wright)
 
 ## Install
 
 ```sh
-npm install github:mark-brannan/nav-wright#<sha>
+npm install github:mark-brannan/nav-wright#main
 ```
 
 Not on npm. `react` is a peer dependency; `colregs-engine` comes along as a
@@ -30,15 +32,15 @@ installs none of them.
 
 ## What it exports
 
-| Export | What it is |
-| --- | --- |
-| `selectHull(facts)`, `allHulls`, `Hull`, `HullSpec`, `PX`, `PZ` | the curated base-drawing set, and the profile-view coordinate mapping |
-| `placeLights(displayLights, hull, facts, lightsData)` → `PlacedLight[]` | a lawful display turned into lights positioned on a hull |
-| `bearingInArc(bearing, arc)` | is a light visible from this relative bearing — the exam-faithful part; arcs come verbatim from the data, not from geometry invented here |
-| `ProfileView`, `PlanView`, `BearingView`, `bearingLabel` | the three scene components |
-| `Glow`, `lightFill`, `LIGHT_COLORS`, `polar`, `sectorPath` | the SVG primitives the views are built from |
-| `SceneLabels`, `defaultSceneLabels`, `Aspect` | the label interface |
-| `ThetaControl` | the relative-bearing slider, shared with the 3D view |
+| Export                                                                  | What it is                                                                                                                                |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `selectHull(facts)`, `allHulls`, `Hull`, `HullSpec`, `PX`, `PZ`         | the curated base-drawing set, and the profile-view coordinate mapping                                                                     |
+| `placeLights(displayLights, hull, facts, lightsData)` → `PlacedLight[]` | a lawful display turned into lights positioned on a hull                                                                                  |
+| `bearingInArc(bearing, arc)`                                            | is a light visible from this relative bearing — the exam-faithful part; arcs come verbatim from the data, not from geometry invented here |
+| `ProfileView`, `PlanView`, `BearingView`, `bearingLabel`                | the three scene components                                                                                                                |
+| `Glow`, `lightFill`, `LIGHT_COLORS`, `polar`, `sectorPath`              | the SVG primitives the views are built from                                                                                               |
+| `SceneLabels`, `defaultSceneLabels`, `Aspect`                           | the label interface                                                                                                                       |
+| `ThetaControl`                                                          | the relative-bearing slider, shared with the 3D view                                                                                      |
 
 `placeLights` takes its light data as an argument rather than importing it,
 so nothing here depends on a particular app's copy of the COLREGS data.
@@ -54,18 +56,26 @@ does.
 import { BenchyView } from 'nav-wright/benchy';
 import modelUrl from 'nav-wright/models/3dbenchy-lowpoly.glb?url'; // Vite
 
-<BenchyView modelUrl={modelUrl} hull={hull} placed={placed} facts={facts}
-            theta={theta} onTheta={setTheta} tilt={tilt} onTilt={setTilt} />
+<BenchyView
+  modelUrl={modelUrl}
+  hull={hull}
+  placed={placed}
+  facts={facts}
+  theta={theta}
+  onTheta={setTheta}
+  tilt={tilt}
+  onTilt={setTilt}
+/>;
 ```
 
-| Export | What it is |
-| --- | --- |
-| `BenchyView` | the vessel as an orbitable 3D model, with her lights seated on the mesh |
-| `DEFAULT_TILT`, `MAX_TILT` | the camera-elevation range, for clamping app state against |
-| `TiltControl` | the camera-elevation slider |
-| `ModelErrorBoundary` | degrades a failed model load to a fallback rather than a blank pane |
-| `preloadBenchyModel(url)` | warms the model cache; loads three.js on call, not on import |
-| `BenchyLabels`, `defaultBenchyLabels` | `SceneLabels` plus the 3D view's own labels |
+| Export                                | What it is                                                              |
+| ------------------------------------- | ----------------------------------------------------------------------- |
+| `BenchyView`                          | the vessel as an orbitable 3D model, with her lights seated on the mesh |
+| `DEFAULT_TILT`, `MAX_TILT`            | the camera-elevation range, for clamping app state against              |
+| `TiltControl`                         | the camera-elevation slider                                             |
+| `ModelErrorBoundary`                  | degrades a failed model load to a fallback rather than a blank pane     |
+| `preloadBenchyModel(url)`             | warms the model cache; loads three.js on call, not on import            |
+| `BenchyLabels`, `defaultBenchyLabels` | `SceneLabels` plus the 3D view's own labels                             |
 
 **The model URL is a prop, not a built-in.** The package ships the mesh at
 `nav-wright/models/3dbenchy-lowpoly.glb` (CC0 — see

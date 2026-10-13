@@ -1,20 +1,101 @@
-:root { color-scheme: dark; }
-body { margin: 0; background: #060b14; color: #d8e1ee; font: 14px/1.4 system-ui, sans-serif; }
-.pg { padding: 16px; max-width: 1400px; margin: 0 auto; }
-.pg header { display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; }
-.pg h1 { font-size: 18px; margin: 0 0 12px; }
-.muted { color: #8796ab; font-size: 12px; margin: 4px 0; }
-.err { color: #ff8a80; font-size: 12px; }
-.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-fieldset { border: 1px solid #23324a; border-radius: 8px; margin: 0; }
-legend { color: #9fc7bd; padding: 0 4px; }
-.field { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 4px 0; }
-.field select, .field input[type=number] { max-width: 150px; background: #0f1a2b; color: inherit; border: 1px solid #33465f; }
-.range { display: flex; gap: 6px; align-items: center; }
-.range output { min-width: 3ch; text-align: right; font-variant-numeric: tabular-nums; }
-.views { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; margin-top: 16px; }
-.views figure { margin: 0; min-width: 0; }
-.views figcaption { color: #9fc7bd; margin-bottom: 4px; }
-.theta-control { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
-.theta-control input { flex: 1; }
-@media (max-width: 480px) { .views { grid-template-columns: 1fr; } }
+:root {
+  color-scheme: dark;
+}
+body {
+  margin: 0;
+  background: #060b14;
+  color: #d8e1ee;
+  font:
+    14px/1.4 system-ui,
+    sans-serif;
+}
+.pg {
+  padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.pg header {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.pg h1 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.muted {
+  color: #8796ab;
+  font-size: 12px;
+  margin: 4px 0;
+}
+.err {
+  color: #ff8a80;
+  font-size: 12px;
+}
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+fieldset {
+  border: 1px solid #23324a;
+  border-radius: 8px;
+  margin: 0;
+}
+legend {
+  color: #9fc7bd;
+  padding: 0 4px;
+}
+.field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+.field select,
+.field input[type='number'] {
+  max-width: 150px;
+  background: #0f1a2b;
+  color: inherit;
+  border: 1px solid #33465f;
+}
+.range {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.range output {
+  min-width: 3ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.views {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.views figure {
+  margin: 0;
+  min-width: 0;
+}
+.views figcaption {
+  color: #9fc7bd;
+  margin-bottom: 4px;
+}
+.theta-control {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+}
+.theta-control input {
+  flex: 1;
+}
+@media (max-width: 480px) {
+  .views {
+    grid-template-columns: 1fr;
+  }
+}

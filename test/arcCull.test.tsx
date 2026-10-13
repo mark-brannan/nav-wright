@@ -20,7 +20,13 @@ const ARCS = {
   allRound: { from_deg: 0.0, to_deg: 360.0 },
 } as const;
 
-const light = (key: keyof typeof ARCS, color: string, fx: number, py: number, z: number): PlacedLight => ({
+const light = (
+  key: keyof typeof ARCS,
+  color: string,
+  fx: number,
+  py: number,
+  z: number,
+): PlacedLight => ({
   key,
   lightId: `light:${key}`,
   color,
@@ -60,7 +66,13 @@ const seen3d = (theta: number): string[] =>
 // (the circle with no opacity of its own) to read how many lights it drew.
 const seen2d = (theta: number): number => {
   const html = renderToStaticMarkup(
-    <BearingScene hull={selectHull({})} placed={LIGHTS} theta={theta} onTheta={() => {}} hullHint={0} />,
+    <BearingScene
+      hull={selectHull({})}
+      placed={LIGHTS}
+      theta={theta}
+      onTheta={() => {}}
+      hullHint={0}
+    />,
   );
   return (html.match(/<circle(?![^>]*opacity)[^>]*>/g) ?? []).length;
 };

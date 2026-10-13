@@ -65,7 +65,11 @@ function lightsOf(s: HullSpec): LightSeat[] {
 
 /** Everything BenchyModel's Hull draws, in view units: the mesh's vertices
  * and each light's halo, seated on that mesh. */
-function drawn(file: string, s: HullSpec, L: number): { mesh: THREE.Vector3[]; lights: THREE.Vector3[] } {
+function drawn(
+  file: string,
+  s: HullSpec,
+  L: number,
+): { mesh: THREE.Vector3[]; lights: THREE.Vector3[] } {
   const scene = scenes.get(file)!;
   const placed = placeScene(scene, L, s);
   const lights = lightsOf(s);
@@ -93,7 +97,12 @@ function drawn(file: string, s: HullSpec, L: number): { mesh: THREE.Vector3[]; l
 }
 
 function camera(theta: number, tilt: number): THREE.PerspectiveCamera {
-  const c = new THREE.PerspectiveCamera(VIEW_FRAME.fov, VIEW_FRAME.aspect, VIEW_FRAME.near, VIEW_FRAME.far);
+  const c = new THREE.PerspectiveCamera(
+    VIEW_FRAME.fov,
+    VIEW_FRAME.aspect,
+    VIEW_FRAME.near,
+    VIEW_FRAME.far,
+  );
   c.position.set(...orbitPosition(theta, tilt));
   c.lookAt(0, 0, 0);
   c.updateMatrixWorld(true);
@@ -155,7 +164,10 @@ describe('view frame', () => {
       for (const file of [BENCHY, [...scenes.keys()].find((f) => own(f)?.id === id)!]) {
         const ref = screenLength(drawn(file, spec(id), 15).mesh);
         for (const L of LENGTHS)
-          expect(screenLength(drawn(file, spec(id), L).mesh), `${file} on ${id} at ${L} m`).toBeCloseTo(ref, 9);
+          expect(
+            screenLength(drawn(file, spec(id), L).mesh),
+            `${file} on ${id} at ${L} m`,
+          ).toBeCloseTo(ref, 9);
       }
     }
   });
@@ -181,7 +193,10 @@ describe('view frame', () => {
       const d = drawn(file, s, 30);
       for (const theta of BEARINGS)
         for (const tilt of TILTS)
-          expect(reach([...d.mesh, ...d.lights], theta, tilt), `${file} on ${s.id}, θ ${theta}, tilt ${tilt}`).toBeLessThan(1);
+          expect(
+            reach([...d.mesh, ...d.lights], theta, tilt),
+            `${file} on ${s.id}, θ ${theta}, tilt ${tilt}`,
+          ).toBeLessThan(1);
     }
   });
 
@@ -196,7 +211,9 @@ describe('view frame', () => {
       for (const x of [box.min.x, box.max.x])
         for (const y of [box.min.y, box.max.y])
           for (const z of [box.min.z, box.max.z])
-            corners.push(new THREE.Vector3(x, y, z).multiplyScalar(scale).add(new THREE.Vector3(...position)));
+            corners.push(
+              new THREE.Vector3(x, y, z).multiplyScalar(scale).add(new THREE.Vector3(...position)),
+            );
       for (let theta = 0.5; theta < 360; theta += 7)
         for (let tilt = 0.5; tilt <= MAX_TILT; tilt += 4)
           expect(reach(corners, theta, tilt), `${s.id} θ ${theta} tilt ${tilt}`).toBeLessThan(1);

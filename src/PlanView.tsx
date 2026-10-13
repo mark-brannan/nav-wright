@@ -44,10 +44,7 @@ export function PlanView({
 
   const hullPath =
     hull.plan
-      .map(
-        ([fx, py], i) =>
-          `${i === 0 ? 'M' : 'L'}${C + py * HULL_SCALE},${C - fx * HULL_SCALE}`,
-      )
+      .map(([fx, py], i) => `${i === 0 ? 'M' : 'L'}${C + py * HULL_SCALE},${C - fx * HULL_SCALE}`)
       .join(' ') + ' Z';
 
   const setFromPointer = (e: React.PointerEvent<SVGSVGElement>) => {
@@ -78,14 +75,7 @@ export function PlanView({
       {rings.map((l, i) => (
         <path
           key={l.key}
-          d={sectorPath(
-            C,
-            C,
-            84 + i * 13,
-            84 + i * 13 + 11,
-            l.arc!.from_deg,
-            l.arc!.to_deg,
-          )}
+          d={sectorPath(C, C, 84 + i * 13, 84 + i * 13 + 11, l.arc!.from_deg, l.arc!.to_deg)}
           fill={lightFill(l.color)}
           opacity={0.28}
           stroke={lightFill(l.color)}
@@ -123,7 +113,15 @@ export function PlanView({
         />
       ))}
       {/* observer bearing needle */}
-      <line x1={C} y1={C} x2={nx} y2={ny} stroke="var(--accent-soft)" strokeWidth={1.5} strokeDasharray="4 4" />
+      <line
+        x1={C}
+        y1={C}
+        x2={nx}
+        y2={ny}
+        stroke="var(--accent-soft)"
+        strokeWidth={1.5}
+        strokeDasharray="4 4"
+      />
       <circle cx={nx} cy={ny} r={7} fill="none" stroke="var(--accent-soft)" strokeWidth={1.5} />
       <circle cx={nx} cy={ny} r={2.4} fill="var(--accent-soft)" />
     </svg>

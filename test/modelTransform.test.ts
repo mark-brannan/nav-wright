@@ -77,10 +77,7 @@ describe('placeHullModel', () => {
     expect(raw.min.x).toBeCloseTo(benchyish.min.x, 6);
     expect(raw.max.z).toBeCloseTo(benchyish.max.z, 6);
 
-    const placement = placeHullModel(
-      { min: { ...raw.min }, max: { ...raw.max } },
-      12,
-    );
+    const placement = placeHullModel({ min: { ...raw.min }, max: { ...raw.max } }, 12);
     mesh.rotation.x = placement.rotationX;
     mesh.scale.setScalar(placement.scale);
     mesh.position.set(...placement.position);
@@ -302,20 +299,14 @@ describe('stationProfile', () => {
     // counted as "the mast" under the old MAST_BAND = 0.9 threshold;
     // tightening to 0.95 excludes it, leaving only the narrow mast at
     // the very top (nav-wright#36).
-    const xyz = [
-      -8, 0, 0, 8, 0, 0,
-      -3, 9.4, 0, 3, 9.4, 0,
-      -0.25, 10, 0, 0.25, 10, 0,
-    ];
+    const xyz = [-8, 0, 0, 8, 0, 0, -3, 9.4, 0, 3, 9.4, 0, -0.25, 10, 0, 0.25, 10, 0];
     const tightMast = stationProfile(xyz, 16)!;
     expect(tightMast.mast.aftX).toBeCloseTo(-0.25, 6);
     expect(tightMast.mast.foreX).toBeCloseTo(0.25, 6);
   });
 
   it('narrows toward the bow', () => {
-    expect(stationAt(profile, 9).halfBeam).toBeLessThan(
-      stationAt(profile, 0).halfBeam,
-    );
+    expect(stationAt(profile, 9).halfBeam).toBeLessThan(stationAt(profile, 0).halfBeam);
   });
 
   it('returns null for nothing to profile', () => {
@@ -479,10 +470,7 @@ describe('anchorLights', () => {
     const aft = { fx: hull.aftMastX, py: 0, z: 0.77 };
     const [f, a] = anchorLights([fore, aft], L, hull, profile, 0.2);
     expect(a[0]).toBeCloseTo(-3, 6);
-    expect(a[1] - f[1]).toBeCloseTo(
-      lightPosition(aft, L)[1] - lightPosition(fore, L)[1],
-      6,
-    );
+    expect(a[1] - f[1]).toBeCloseTo(lightPosition(aft, L)[1] - lightPosition(fore, L)[1], 6);
     expect(f[1]).toBeCloseTo(6.2, 6);
   });
 
@@ -502,10 +490,7 @@ describe('anchorLights', () => {
     expect(s[0]).toBe(-10);
     expect(s[1]).toBeCloseTo(2.7, 6); // transom top + clearance
     expect(t[0]).toBe(-10);
-    expect(t[1] - s[1]).toBeCloseTo(
-      lightPosition(towing, L)[1] - lightPosition(stern, L)[1],
-      6,
-    );
+    expect(t[1] - s[1]).toBeCloseTo(lightPosition(towing, L)[1] - lightPosition(stern, L)[1], 6);
   });
 
   it('lifts any other centreline light above the structure at its own station', () => {
@@ -562,10 +547,7 @@ describe('anchorLights', () => {
     // keeps its margin above them.
     expect(s[1]).toBeCloseTo(6.2, 6);
     expect(p[1]).toBeCloseTo(6.2, 6);
-    expect(h[1] - s[1]).toBeCloseTo(
-      lightPosition(head, L)[1] - lightPosition(yardS, L)[1],
-      6,
-    );
+    expect(h[1] - s[1]).toBeCloseTo(lightPosition(head, L)[1] - lightPosition(yardS, L)[1], 6);
   });
 
   it('collapses athwartships when the hull spec has no beam', () => {

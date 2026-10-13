@@ -53,10 +53,21 @@ const hullFacts: Record<HullKey, FactRecord> = {
   powerLarge: { ...power, ...underway, 'fact:length_m': 35 },
   sailSmall: { ...power, ...underway, 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 12 },
   sailLarge: { ...power, ...underway, 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 30 },
-  squareRigger: { ...power, ...underway, 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 60 },
+  squareRigger: {
+    ...power,
+    ...underway,
+    'fact:propulsion': 'propulsion:sail',
+    'fact:length_m': 60,
+  },
   trawler: { ...power, ...underway, 'fact:activity': 'activity:trawling', 'fact:length_m': 30 },
   seiner: { ...power, ...underway, 'fact:activity': 'activity:fishing', 'fact:length_m': 30 },
-  tug: { ...power, ...underway, 'fact:activity': 'activity:towing', 'fact:length_m': 30, 'fact:tow_length_m': 150 },
+  tug: {
+    ...power,
+    ...underway,
+    'fact:activity': 'activity:towing',
+    'fact:length_m': 30,
+    'fact:tow_length_m': 150,
+  },
   barge: { ...power, ...underway, 'fact:activity': 'activity:being_towed', 'fact:length_m': 40 },
   pilotBoat: { ...power, ...underway, 'fact:activity': 'activity:pilot', 'fact:length_m': 18 },
   ferry: { ...power, ...underway, 'fact:length_m': 90 },
@@ -65,14 +76,28 @@ const hullFacts: Record<HullKey, FactRecord> = {
   bulker: { ...power, ...underway, 'fact:length_m': 200, 'fact:max_speed_kn': 14 },
   cruiseShip: { ...power, ...underway, 'fact:length_m': 250, 'fact:max_speed_kn': 22 },
   warship: { ...power, ...underway, 'fact:activity': 'activity:mine', 'fact:length_m': 100 },
-  dredger: { ...power, ...underway, 'fact:activity': 'activity:ram_underwater', 'fact:length_m': 60 },
+  dredger: {
+    ...power,
+    ...underway,
+    'fact:activity': 'activity:ram_underwater',
+    'fact:length_m': 60,
+  },
 };
 
 const PROPULSIONS = ['propulsion:power', 'propulsion:sail', 'propulsion:oars'];
 const ACTIVITIES = [
-  'activity:none', 'activity:fishing', 'activity:trawling', 'activity:towing',
-  'activity:pushing', 'activity:being_towed', 'activity:nuc', 'activity:ram',
-  'activity:ram_underwater', 'activity:cbd', 'activity:mine', 'activity:pilot',
+  'activity:none',
+  'activity:fishing',
+  'activity:trawling',
+  'activity:towing',
+  'activity:pushing',
+  'activity:being_towed',
+  'activity:nuc',
+  'activity:ram',
+  'activity:ram_underwater',
+  'activity:cbd',
+  'activity:mine',
+  'activity:pilot',
   'activity:diving',
 ];
 const POSITIONS = ['position:underway', 'position:anchored', 'position:aground', 'position:moored'];
@@ -86,19 +111,33 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-function Select({ value, options, onChange }: {
+function Select({
+  value,
+  options,
+  onChange,
+}: {
   value: string;
   options: readonly string[];
   onChange: (v: string) => void;
 }) {
   return (
     <select value={value} onChange={(e) => onChange(e.target.value)}>
-      {options.map((o) => <option key={o} value={o}>{o}</option>)}
+      {options.map((o) => (
+        <option key={o} value={o}>
+          {o}
+        </option>
+      ))}
     </select>
   );
 }
 
-function Range({ value, min, max, step = 1, onChange }: {
+function Range({
+  value,
+  min,
+  max,
+  step = 1,
+  onChange,
+}: {
   value: number;
   min: number;
   max: number;
@@ -107,8 +146,14 @@ function Range({ value, min, max, step = 1, onChange }: {
 }) {
   return (
     <span className="range">
-      <input type="range" min={min} max={max} step={step} value={value}
-        onChange={(e) => onChange(Number(e.target.value))} />
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
       <output>{value}</output>
     </span>
   );
@@ -165,9 +210,7 @@ function Playground() {
 
   const placed = useMemo(() => {
     if (!display) return [];
-    const extra = additions
-      .filter((a) => additionsOn.includes(a.id))
-      .flatMap((a) => a.lights);
+    const extra = additions.filter((a) => additionsOn.includes(a.id)).flatMap((a) => a.lights);
     return placeLights([...display.lights, ...extra], hull.spec, facts, lightsData);
   }, [display, additions, additionsOn, hull, facts]);
 
@@ -182,22 +225,20 @@ function Playground() {
     );
     return {
       ...blank,
-      aspect: Object.fromEntries(
-        Object.keys(defaultSceneLabels.aspect).map((a) => [a, '']),
-      ),
+      aspect: Object.fromEntries(Object.keys(defaultSceneLabels.aspect).map((a) => [a, ''])),
     } as typeof defaultBenchyLabels;
   }, [labelsOn]);
 
-  const num = (k: string) => (typeof facts[k as keyof FactRecord] === 'number'
-    ? (facts[k as keyof FactRecord] as number) : '');
+  const num = (k: string) =>
+    typeof facts[k as keyof FactRecord] === 'number'
+      ? (facts[k as keyof FactRecord] as number)
+      : '';
 
   return (
     <div className="pg">
       <header>
         <h1>nav-wright playground</h1>
-        <span className="muted">
-          selectHull(facts) → {selectHull(facts).spec.id}
-        </span>
+        <span className="muted">selectHull(facts) → {selectHull(facts).spec.id}</span>
       </header>
 
       <section className="controls">
@@ -214,29 +255,46 @@ function Playground() {
         <fieldset>
           <legend>Facts</legend>
           <Field label="propulsion">
-            <Select value={String(facts['fact:propulsion'])} options={PROPULSIONS}
-              onChange={(v) => patchFacts({ 'fact:propulsion': v })} />
+            <Select
+              value={String(facts['fact:propulsion'])}
+              options={PROPULSIONS}
+              onChange={(v) => patchFacts({ 'fact:propulsion': v })}
+            />
           </Field>
           <Field label="activity">
-            <Select value={String(facts['fact:activity'])} options={ACTIVITIES}
-              onChange={(v) => patchFacts({ 'fact:activity': v })} />
+            <Select
+              value={String(facts['fact:activity'])}
+              options={ACTIVITIES}
+              onChange={(v) => patchFacts({ 'fact:activity': v })}
+            />
           </Field>
           <Field label="position">
-            <Select value={String(facts['fact:position'])} options={POSITIONS}
-              onChange={(v) => patchFacts({ 'fact:position': v })} />
+            <Select
+              value={String(facts['fact:position'])}
+              options={POSITIONS}
+              onChange={(v) => patchFacts({ 'fact:position': v })}
+            />
           </Field>
           {facts['fact:position'] === 'position:underway' && (
             <Field label="making way">
-              <input type="checkbox" checked={facts['fact:making_way'] === true}
-                onChange={(e) => patchFacts({ 'fact:making_way': e.target.checked })} />
+              <input
+                type="checkbox"
+                checked={facts['fact:making_way'] === true}
+                onChange={(e) => patchFacts({ 'fact:making_way': e.target.checked })}
+              />
             </Field>
           )}
           {(['fact:length_m', 'fact:tow_length_m', 'fact:max_speed_kn'] as const).map((k) => (
             <Field key={k} label={k.replace('fact:', '')}>
-              <input type="number" value={num(k)}
-                onChange={(e) => patchFacts({
-                  [k]: e.target.value === '' ? undefined : Number(e.target.value),
-                })} />
+              <input
+                type="number"
+                value={num(k)}
+                onChange={(e) =>
+                  patchFacts({
+                    [k]: e.target.value === '' ? undefined : Number(e.target.value),
+                  })
+                }
+              />
             </Field>
           ))}
         </fieldset>
@@ -246,21 +304,32 @@ function Playground() {
           {evaln.err && <p className="err">{evaln.err}</p>}
           {displays.length > 1 && (
             <Field label="lawful display">
-              <Select value={String(current)}
+              <Select
+                value={String(current)}
                 options={displays.map((_, i) => String(i))}
-                onChange={(v) => setDisplayIndex(Number(v))} />
+                onChange={(v) => setDisplayIndex(Number(v))}
+              />
             </Field>
           )}
           {display && (
-            <p className="muted">{display.entries.join(', ')}
-              {display.chosen.length > 0 && ` (${display.chosen.join(', ')})`}</p>
+            <p className="muted">
+              {display.entries.join(', ')}
+              {display.chosen.length > 0 && ` (${display.chosen.join(', ')})`}
+            </p>
           )}
           {additions.map((a) => (
             <Field key={a.id} label={`+ ${a.id}`}>
-              <input type="checkbox" checked={additionsOn.includes(a.id)}
-                onChange={(e) => setAdditionsOn(e.target.checked
-                  ? [...additionsOn, a.id]
-                  : additionsOn.filter((x) => x !== a.id))} />
+              <input
+                type="checkbox"
+                checked={additionsOn.includes(a.id)}
+                onChange={(e) =>
+                  setAdditionsOn(
+                    e.target.checked
+                      ? [...additionsOn, a.id]
+                      : additionsOn.filter((x) => x !== a.id),
+                  )
+                }
+              />
             </Field>
           ))}
           <p className="muted">{placed.length} lights placed</p>
@@ -268,21 +337,43 @@ function Playground() {
 
         <fieldset>
           <legend>View</legend>
-          <Field label="theta"><Range value={theta} min={0} max={359} onChange={setTheta} /></Field>
-          <Field label="tilt (3D)"><Range value={tilt} min={0} max={85} onChange={setTilt} /></Field>
-          <Field label="hullHint"><Range value={hullHint} min={0} max={1} step={0.05} onChange={setHullHint} /></Field>
+          <Field label="theta">
+            <Range value={theta} min={0} max={359} onChange={setTheta} />
+          </Field>
+          <Field label="tilt (3D)">
+            <Range value={tilt} min={0} max={85} onChange={setTilt} />
+          </Field>
+          <Field label="hullHint">
+            <Range value={hullHint} min={0} max={1} step={0.05} onChange={setHullHint} />
+          </Field>
           <Field label="range set">
-            <input type="checkbox" checked={rangeOn} onChange={(e) => setRangeOn(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={rangeOn}
+              onChange={(e) => setRangeOn(e.target.checked)}
+            />
           </Field>
           {rangeOn && (
-            <Field label="range nm"><Range value={range} min={0} max={5} step={0.1} onChange={setRange} /></Field>
+            <Field label="range nm">
+              <Range value={range} min={0} max={5} step={0.1} onChange={setRange} />
+            </Field>
           )}
-          <Field label="sky"><Range value={sky} min={0} max={1} step={0.05} onChange={setSky} /></Field>
+          <Field label="sky">
+            <Range value={sky} min={0} max={1} step={0.05} onChange={setSky} />
+          </Field>
           <Field label="seascape">
-            <input type="checkbox" checked={seascape} onChange={(e) => setSeascape(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={seascape}
+              onChange={(e) => setSeascape(e.target.checked)}
+            />
           </Field>
           <Field label="labels">
-            <input type="checkbox" checked={labelsOn} onChange={(e) => setLabelsOn(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={labelsOn}
+              onChange={(e) => setLabelsOn(e.target.checked)}
+            />
           </Field>
         </fieldset>
       </section>
@@ -294,9 +385,17 @@ function Playground() {
         </figure>
         <figure>
           <figcaption>BearingView</figcaption>
-          <BearingView hull={hull} placed={placed} theta={theta} onTheta={setTheta}
-            hullHint={hullHint} range={rangeOn ? range : undefined} sky={sky}
-            seascape={seascape} labels={labels} />
+          <BearingView
+            hull={hull}
+            placed={placed}
+            theta={theta}
+            onTheta={setTheta}
+            hullHint={hullHint}
+            range={rangeOn ? range : undefined}
+            sky={sky}
+            seascape={seascape}
+            labels={labels}
+          />
         </figure>
         <figure>
           <figcaption>PlanView</figcaption>
@@ -304,9 +403,18 @@ function Playground() {
         </figure>
         <figure>
           <figcaption>BenchyView ({model})</figcaption>
-          <BenchyView key={model} modelUrl={models[model]!} hull={hull} placed={placed}
-            facts={facts} theta={theta} onTheta={setTheta} tilt={tilt} onTilt={setTilt}
-            labels={labels} />
+          <BenchyView
+            key={model}
+            modelUrl={models[model]!}
+            hull={hull}
+            placed={placed}
+            facts={facts}
+            theta={theta}
+            onTheta={setTheta}
+            tilt={tilt}
+            onTilt={setTilt}
+            labels={labels}
+          />
         </figure>
       </section>
     </div>

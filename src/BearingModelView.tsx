@@ -80,8 +80,7 @@ export function BearingModelView({
   );
   if (modelFailed) return flat;
 
-  const lengthMeters =
-    typeof facts['fact:length_m'] === 'number' ? facts['fact:length_m'] : 12;
+  const lengthMeters = typeof facts['fact:length_m'] === 'number' ? facts['fact:length_m'] : 12;
   const background = skyColor(sky);
   const standIn = (
     <BearingScene
@@ -95,9 +94,7 @@ export function BearingModelView({
       labels={labels}
     />
   );
-  const blank = (
-    <div className="scene-3d" style={{ background }} aria-hidden="true" />
-  );
+  const blank = <div className="scene-3d" style={{ background }} aria-hidden="true" />;
   const noneInView = lightsInView(placed, theta).length === 0;
 
   return (
