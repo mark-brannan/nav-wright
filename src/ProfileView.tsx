@@ -9,7 +9,9 @@ import type { SceneLabels } from './labels.js';
 import { defaultSceneLabels } from './labels.js';
 import { Glow } from './svg.js';
 import type { HullStyle } from './hullStyles.js';
-import { StyledProfile, useHullStylePaint } from './hullStyles.js';
+import { StyledProfile, styleForTime, useHullStylePaint } from './hullStyles.js';
+import type { PlacedShape } from './shapes.js';
+import { ProfileShapes } from './shapeMarks.js';
 
 export function ProfileView({
   hull,
@@ -17,6 +19,8 @@ export function ProfileView({
   facts,
   labels = defaultSceneLabels,
   style,
+  time = 'night',
+  shapes,
 }: {
   hull: Hull;
   placed: PlacedLight[];
@@ -24,13 +28,18 @@ export function ProfileView({
   labels?: SceneLabels;
   /** Paint the hull in one of `hullStyles`. Default: the base drawing. */
   style?: HullStyle;
+  /** `day` switches the ground to daylight, hides the lights and draws `shapes`. Default: night. */
+  time?: 'day' | 'night';
+  /** Day shapes from `placeShapes`, drawn on the mast when `time` is `day`. */
+  shapes?: PlacedShape[];
 }): ReactElement {
+  const day = time === 'day';
   const position = facts['fact:position'];
   const anchored = position === 'position:anchored';
   // A styled sailing hull sets its sails only underway, never at anchor,
   // moored or aground.
   const underway = position === undefined || position === 'position:underway';
-  const paint = useHullStylePaint(style, 'profile');
+  const paint = useHullStylePaint(style, 'profile', time);
   return (
     <svg
       viewBox="0 0 440 240"
@@ -56,21 +65,28 @@ export function ProfileView({
         />
       )}
       {style ? (
-        <StyledProfile hull={hull} style={style} uid={paint.uid} sails={underway} />
+        <StyledProfile
+          hull={hull}
+          style={styleForTime(style, time)}
+          uid={paint.uid}
+          sails={underway}
+        />
       ) : (
         <hull.Profile />
       )}
-      {placed.map((l) => (
-        <Glow
-          key={l.key}
-          x={PX(l.fx) + l.py * 10}
-          y={PZ(l.z)}
-          color={l.color}
-          flashing={l.character === 'flashing'}
-          dim={l.py < -0.05}
-          r={l.lightId === 'light:deck_lights' ? 9 : 5}
-        />
-      ))}
+      {!day &&
+        placed.map((l) => (
+          <Glow
+            key={l.key}
+            x={PX(l.fx) + l.py * 10}
+            y={PZ(l.z)}
+            color={l.color}
+            flashing={l.character === 'flashing'}
+            dim={l.py < -0.05}
+            r={l.lightId === 'light:deck_lights' ? 9 : 5}
+          />
+        ))}
+      {day && shapes && <ProfileShapes shapes={shapes} />}
     </svg>
   );
 }

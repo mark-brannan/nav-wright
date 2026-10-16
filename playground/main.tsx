@@ -7,8 +7,10 @@ import { createRoot } from 'react-dom/client';
 import { evaluateDisplay } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
+import type { ShapesData } from '../src/index.js';
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
+import shapesJson from 'colregs/data/shapes.json' with { type: 'json' };
 import {
   BearingView,
   declaredFlashRate,
@@ -20,6 +22,7 @@ import {
   allHulls,
   defaultSceneLabels,
   placeLights,
+  placeShapes,
   selectHull,
 } from '../src/index.js';
 import { BenchyView, DEFAULT_TILT, defaultBenchyLabels } from '../src/benchy.js';
@@ -30,6 +33,7 @@ import type { HullKey } from './hullFacts.js';
 
 const lightsData = lightsJson as unknown as LightsData;
 const geometryData = geometryJson as unknown as GeometryData;
+const shapesData = shapesJson as unknown as ShapesData;
 
 const hullKeys = Object.keys(allHulls) as HullKey[];
 
@@ -145,6 +149,8 @@ function Playground() {
   const [rangeGlow, setRangeGlow] = useState(false);
   const [flashRateOn, setFlashRateOn] = useState(false);
   const [labelsOn, setLabelsOn] = useState(true);
+  // ?day opens in daylight, so a day view has a link
+  const [day, setDay] = useState(() => new URLSearchParams(location.search).has('day'));
 
   const hull = allHulls[hullKey];
 
@@ -167,13 +173,18 @@ function Playground() {
     setAdditionsOn([]);
   };
 
+  // Day states fact:time, which is what makes the engine return shapes.
+  const dayFacts = useMemo(
+    () => (day ? ({ ...facts, 'fact:time': 'time:day' } as FactRecord) : facts),
+    [day, facts],
+  );
   const evaln = useMemo((): { ok?: DisplayEvaluation; err?: string } => {
     try {
-      return { ok: evaluateDisplay(facts) };
+      return { ok: evaluateDisplay(dayFacts) };
     } catch (e) {
       return { err: String(e) };
     }
-  }, [facts]);
+  }, [dayFacts]);
 
   const displays = evaln.ok?.displays ?? [];
   const additions = evaln.ok?.optionalAdditions ?? [];
@@ -185,6 +196,19 @@ function Playground() {
     const extra = additions.filter((a) => additionsOn.includes(a.id)).flatMap((a) => a.lights);
     return placeLights([...display.lights, ...extra], hull.spec, facts, lightsData, geometryData);
   }, [display, additions, additionsOn, hull, facts]);
+
+  const placedShapes = useMemo(() => {
+    if (!display) return [];
+    // a 'may' shape (Rule 28's cylinder) is an optional addition, like a 'may' light
+    const extra = additions.filter((a) => additionsOn.includes(a.id)).flatMap((a) => a.shapes);
+    return placeShapes(
+      [...display.shapes, ...extra],
+      hull.spec,
+      dayFacts,
+      shapesData,
+      geometryData,
+    );
+  }, [display, additions, additionsOn, hull, dayFacts]);
 
   // "Labels off" blanks every label string, to see the views without text.
   const labels = useMemo(() => {
@@ -362,6 +386,9 @@ function Playground() {
               onChange={(e) => setFlashRateOn(e.target.checked)}
             />
           </Field>
+          <Field label="day">
+            <input type="checkbox" checked={day} onChange={(e) => setDay(e.target.checked)} />
+          </Field>
           <Field label="labels">
             <input
               type="checkbox"
@@ -375,7 +402,14 @@ function Playground() {
       <section className="views">
         <figure>
           <figcaption>ProfileView</figcaption>
-          <ProfileView hull={hull} placed={placed} facts={facts} labels={labels} />
+          <ProfileView
+            hull={hull}
+            placed={placed}
+            facts={dayFacts}
+            labels={labels}
+            time={day ? 'day' : 'night'}
+            shapes={placedShapes}
+          />
         </figure>
         <figure>
           <figcaption>BearingView</figcaption>
@@ -399,7 +433,15 @@ function Playground() {
         </figure>
         <figure>
           <figcaption>PlanView</figcaption>
-          <PlanView hull={hull} placed={placed} theta={theta} onTheta={setTheta} labels={labels} />
+          <PlanView
+            hull={hull}
+            placed={placed}
+            theta={theta}
+            onTheta={setTheta}
+            labels={labels}
+            time={day ? 'day' : 'night'}
+            shapes={placedShapes}
+          />
         </figure>
         <figure>
           <figcaption>SceneView (crossing: target 045° relative, heading 270°, 1500 m)</figcaption>
