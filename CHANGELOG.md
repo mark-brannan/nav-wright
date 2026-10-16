@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.6](https://github.com/mark-brannan/nav-wright/compare/v0.1.5...v0.1.6) (2026-10-16)
+
+
+### Added
+
+* **lights:** opt-in single lantern, range-scaled glow and declared flash rate ([#47](https://github.com/mark-brannan/nav-wright/issues/47)) ([#100](https://github.com/mark-brannan/nav-wright/issues/100)) ([3165450](https://github.com/mark-brannan/nav-wright/commit/3165450ae586b1ab7722455a086e0537e803b0cf))
+* **models:** five Kenney Pirate Kit ships, two for squareRigger ([#44](https://github.com/mark-brannan/nav-wright/issues/44)) ([#104](https://github.com/mark-brannan/nav-wright/issues/104)) ([b72feb7](https://github.com/mark-brannan/nav-wright/commit/b72feb709442066e03ebe22467b849fd619b90b6))
+
 ## [0.1.5](https://github.com/mark-brannan/nav-wright/compare/v0.1.4...v0.1.5) (2026-10-16)
 
 
