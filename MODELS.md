@@ -221,3 +221,32 @@ a mesh is never dropped because another hull already has one
 | `container-ship-kenney-ship-cargo-c.glb`  | [ship-cargo-c.glb](https://kenney.nl/assets/watercraft-kit)           | CC0     | glTF +Z → +X (plan narrows to +Z)                                                      | ✓ 0.82 | ✓ 12/0.47 | ✓ 0.14 | **3/3** |
 | `cruise-ship-kenney-ship-ocean-liner.glb` | [ship-ocean-liner.glb](https://kenney.nl/assets/watercraft-kit)       | CC0     | glTF +Z → +X (end bands tie; cut-away forefoot at +Z, funnels rake to −Z in side view) | ✓ 0.75 | ✓ 23/0.57 | ✗ 0.74 | **2/3** |
 | `ferry-kenney-ship-ocean-liner-small.glb` | [ship-ocean-liner-small.glb](https://kenney.nl/assets/watercraft-kit) | CC0     | glTF +Z → +X (forefoot rises to +Z; funnels rake to −Z)                                | ✓ 0.64 | ✓ 21/0.57 | ✗ 0.63 | **2/3** |
+
+## `models/<hull-id>-kenney-<kit-name>.glb` from the Pirate Kit
+
+Five more meshes from Kenney's [Pirate Kit](https://kenney.nl/assets/pirate-kit)
+(`kenney_pirate-kit.zip`, `Models/GLB format/`, version 2.1), added under the
+same ruling ([docs/decisions.md](docs/decisions.md), 2026-09-16) and baked the
+same way as the Watercraft Kit above: Z up, bow on local `+X`, colormap
+embedded, every node at identity. The kit's own `ship-large`, `ship-small` and
+`boat-row-*` are re-exports of Watercraft Kit hulls already shipped and are not
+repeated; `ship-wreck` is a derelict and is left out.
+
+- **License:** CC0 1.0, per the kit's `License.txt`.
+- **Bow end:** measured. In the baked file the half-beam in the end 12% of the
+  length is 0.21 to 0.39 m at `+X` against 2.20 m at `-X`: the plan narrows to
+  `+X`, the same reading as the Watercraft Kit ships.
+- **Mesh check:** `test/hullMeshCheck.test.ts` over the raw kit files (glTF
+  Y-up), as above; all five pass all three criteria. The galleons stand in for
+  `squareRigger`, one of the eight hulls that had no sourced mesh; the medium
+  and the ghost join `sailLarge`. The small one is taller than she is long
+  (L:H 1:1.13), which overflows the `sailLarge` canvas by 4% in
+  `test/viewFrame.test.ts`, so she stands in for `sailSmall` instead.
+
+| File                                          | Kit file                                                      | License | Rotation (bow evidence)           | Bow    | Rail      | Mast   | Check   |
+| --------------------------------------------- | ------------------------------------------------------------- | ------- | --------------------------------- | ------ | --------- | ------ | ------- |
+| `square-rigger-kenney-ship-pirate-large.glb`  | [ship-pirate-large.glb](https://kenney.nl/assets/pirate-kit)  | CC0     | glTF +Z → +X (plan narrows to +Z) | ✓ 0.47 | ✓ 15/0.72 | ✓ 0.1  | **3/3** |
+| `square-rigger-kenney-ship-pirate-medium.glb` | [ship-pirate-medium.glb](https://kenney.nl/assets/pirate-kit) | CC0     | glTF +Z → +X (plan narrows to +Z) | ✓ 0.36 | ✓ 17/0.75 | ✓ 0.13 | **3/3** |
+| `sail-small-kenney-ship-pirate-small.glb`     | [ship-pirate-small.glb](https://kenney.nl/assets/pirate-kit)  | CC0     | glTF +Z → +X (plan narrows to +Z) | ✓ 0.21 | ✓ 17/0.72 | ✓ 0.15 | **3/3** |
+| `sail-large-kenney-ship-medium.glb`           | [ship-medium.glb](https://kenney.nl/assets/pirate-kit)        | CC0     | glTF +Z → +X (plan narrows to +Z) | ✓ 0.36 | ✓ 17/0.77 | ✓ 0.13 | **3/3** |
+| `sail-large-kenney-ship-ghost.glb`            | [ship-ghost.glb](https://kenney.nl/assets/pirate-kit)         | CC0     | glTF +Z → +X (plan narrows to +Z) | ✓ 0.36 | ✓ 17/0.75 | ✓ 0.13 | **3/3** |
