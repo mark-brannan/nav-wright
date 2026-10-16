@@ -111,6 +111,12 @@ describe('Annex I light placement, every hull', () => {
 
 describe('Annex I fallbacks', () => {
   const hull = allHulls.powerLarge;
+  it('a lone all-round is not a vertical line, so 2(i) is not cited or applied', () => {
+    const ls = placeLights([dl('light:all_round')], hull.spec, power(30), lightsData, geometry);
+    expect(ls[0].basis ?? []).not.toContain('AnxI.2(i)(i)');
+    const a = placeLights([dl('light:all_round')], hull.spec, power(30), lightsData);
+    expect(ls[0].z).toBe(a[0].z);
+  });
   it('without geometry the hand anchors stand and nothing is labelled', () => {
     const ls = placeLights(underway, hull.spec, power(30), lightsData);
     expect(ls.every((l) => l.basis === undefined && l.heightM === undefined)).toBe(true);

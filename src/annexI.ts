@@ -121,12 +121,17 @@ export function applyAnnexI(
       const mastLow = mastTopM - (fwdMast.length - 1) * s;
       topM = Math.min(topM, mastLow - s);
     }
-    const lowestOk = towingLit || lowestMin === undefined ? -Infinity : lowestMin;
+    // 2(i) governs lights "in a vertical line": two or three. A lone
+    // all-round (23(d)(i), 30(b)) only has to stay clear below the masthead.
+    const line = column.length >= 2;
+    const lowestOk = !line || towingLit || lowestMin === undefined ? -Infinity : lowestMin;
     topM = Math.max(topM, lowestOk + (column.length - 1) * s);
+    const moved = topM !== toM(column[0].z);
     column.forEach((l, i) => {
       l.z = toZ(topM - i * s);
       stamp(l);
-      addBasis(l, spacingRule!.cite);
+      if (line) addBasis(l, spacingRule!.cite);
+      else if (moved) addBasis(l, 'AnxI.2(f)(i)');
     });
     if (mastTopM !== null) {
       // 2(f)(i): masthead lights above and clear of every other light
