@@ -1408,25 +1408,336 @@ const dredger: Hull = {
   ),
 };
 
+/** A mine-countermeasures vessel: a beamy wooden or GRP hull, bridge
+ *  forward of midships, and the sweep deck aft with a gear boom over the
+ *  stern and the sweep wire streamed astern. Only the boom and the wire
+ *  down to the water are rig (they loft into the mesh); the wire and float
+ *  astern of the hull are drawn in the profile alone. */
+const mineClearance: Hull = {
+  spec: {
+    id: 'mine-clearance',
+    beam: 0.24,
+    mastX: 0.18,
+    mastTopZ: 0.92,
+    aftMastX: -0.42,
+    aftMastTopZ: 1.02,
+    sideLightX: 0.3,
+    sideLightZ: 0.56,
+    bowX: 0.92,
+    sternX: -0.88,
+    sternZ: 0.26,
+  },
+  plan: [
+    [1, 0],
+    [0.7, 0.18],
+    [0.1, 0.24],
+    [-0.7, 0.22],
+    [-0.9, 0.16],
+    [-0.9, -0.16],
+    [-0.7, -0.22],
+    [0.1, -0.24],
+    [0.7, -0.18],
+  ],
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.92, 0.42],
+          [0.97, 0.32],
+          [0.86, 0.05],
+          [-0.84, 0.05],
+          [-0.9, 0.18],
+          [-0.9, 0.28],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* bridge and superstructure */}
+      <path
+        d={d([
+          [0.5, 0.38],
+          [0.44, 0.66],
+          [0.0, 0.66],
+          [-0.05, 0.34],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {mast(0.18, 0.92, 0.66)}
+      {/* yardarm for the mine-clearance lights */}
+      <line
+        x1={PX(0.1)}
+        y1={PZ(0.82)}
+        x2={PX(0.26)}
+        y2={PZ(0.82)}
+        stroke={rigStroke}
+        strokeWidth={1.5}
+      />
+      {/* funnel house */}
+      <path
+        d={d([
+          [-0.15, 0.33],
+          [-0.15, 0.5],
+          [-0.36, 0.5],
+          [-0.36, 0.32],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {mast(-0.42, 1.02, 0.31)}
+      {/* sweep davit, gear boom over the stern, sweep wire to the water */}
+      <path
+        d={`M${PX(-0.62)},${PZ(0.3)} L${PX(-0.72)},${PZ(0.66)} L${PX(-0.8)},${PZ(0.29)}`}
+        fill="none"
+        stroke={rigStroke}
+        strokeWidth={2}
+      />
+      <line
+        x1={PX(-0.72)}
+        y1={PZ(0.66)}
+        x2={PX(-0.97)}
+        y2={PZ(0.46)}
+        stroke={rigStroke}
+        strokeWidth={1.5}
+      />
+      <line
+        x1={PX(-0.97)}
+        y1={PZ(0.46)}
+        x2={PX(-0.98)}
+        y2={PZ(0.0)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+      {/* streamed sweep and its float, astern */}
+      <path
+        d={`M${PX(-0.98)},${PZ(0.0)} Q${PX(-1.03)},${PZ(-0.08)} ${PX(-1.08)},${PZ(-0.02)}`}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={0.75}
+        strokeDasharray="3 2"
+      />
+      <path
+        d={d([
+          [-1.06, 0.0],
+          [-1.07, 0.04],
+          [-1.11, 0.04],
+          [-1.12, 0.0],
+        ])}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+    </g>
+  ),
+};
+
+/** A fishing vessel with its gear out: a derrick boom swung up from the
+ *  mast, the stern gantry, and the trawl warp running down astern to a net
+ *  under the water. The warp to the waterline is rig (it lofts into the
+ *  mesh); the warp under water and the net are drawn in the profile alone. */
+const fishingGear: Hull = {
+  spec: {
+    id: 'fishing-gear',
+    beam: 0.22,
+    mastX: 0.15,
+    mastTopZ: 0.74,
+    aftMastX: -0.55,
+    aftMastTopZ: 0.9,
+    sideLightX: 0.2,
+    sideLightZ: 0.36,
+    bowX: 0.92,
+    sternX: -0.86,
+    sternZ: 0.2,
+  },
+  plan: sailPlan,
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.93, 0.38],
+          [0.97, 0.24],
+          [0.82, 0.04],
+          [-0.8, 0.04],
+          [-0.86, 0.16],
+          [-0.86, 0.26],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* wheelhouse forward */}
+      <path
+        d={d([
+          [0.55, 0.35],
+          [0.5, 0.58],
+          [0.15, 0.58],
+          [0.1, 0.33],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {mast(0.15, 0.74, 0.58)}
+      {/* derrick boom, topped up from the mast foot */}
+      <line
+        x1={PX(0.05)}
+        y1={PZ(0.32)}
+        x2={PX(-0.3)}
+        y2={PZ(0.82)}
+        stroke={rigStroke}
+        strokeWidth={1.5}
+      />
+      <line
+        x1={PX(0.15)}
+        y1={PZ(0.7)}
+        x2={PX(-0.3)}
+        y2={PZ(0.82)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+      {/* stern gantry */}
+      <path
+        d={`M${PX(-0.45)},${PZ(0.24)} L${PX(-0.55)},${PZ(0.9)} L${PX(-0.65)},${PZ(0.24)}`}
+        fill="none"
+        stroke={rigStroke}
+        strokeWidth={2}
+      />
+      {/* trawl warp to the water */}
+      <line
+        x1={PX(-0.55)}
+        y1={PZ(0.88)}
+        x2={PX(-0.97)}
+        y2={PZ(0.0)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+      {/* the warp under water, and the net */}
+      <line
+        x1={PX(-0.97)}
+        y1={PZ(0.0)}
+        x2={PX(-1.06)}
+        y2={PZ(-0.14)}
+        stroke={hullStroke}
+        strokeWidth={0.75}
+        strokeDasharray="3 2"
+      />
+      <path
+        d={d([
+          [-1.06, -0.09],
+          [-1.06, -0.2],
+          [-1.17, -0.16],
+          [-1.17, -0.13],
+        ])}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={1}
+        strokeDasharray="2 1.5"
+      />
+    </g>
+  ),
+};
+
+/** A small coaster aground: trimmed by the head, her forefoot up on a shoal
+ *  and her keel clear of the waterline forward. The shoal is drawn in the
+ *  profile alone; the hull lofts with the trim. */
+const aground: Hull = {
+  spec: {
+    id: 'aground',
+    beam: 0.22,
+    mastX: 0.5,
+    mastTopZ: 0.88,
+    aftMastX: -0.55,
+    aftMastTopZ: 1.02,
+    sideLightX: -0.4,
+    sideLightZ: 0.6,
+    bowX: 0.92,
+    sternX: -0.88,
+    sternZ: 0.32,
+  },
+  plan: shipPlan,
+  Profile: () => (
+    <g>
+      {/* the shoal under the forefoot */}
+      <path
+        d={`M${PX(0.15)},${PZ(-0.22)} Q${PX(0.7)},${PZ(0.47)} ${PX(1.2)},${PZ(-0.22)}`}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={1}
+        strokeDasharray="4 2"
+      />
+      <path
+        d={d([
+          [0.95, 0.52],
+          [1.0, 0.42],
+          [0.86, 0.14],
+          [-0.86, 0.02],
+          [-0.92, 0.18],
+          [-0.92, 0.32],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* forecastle */}
+      <path
+        d={d([
+          [0.92, 0.5],
+          [0.92, 0.6],
+          [0.7, 0.6],
+          [0.7, 0.48],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {mast(0.5, 0.88, 0.46)}
+      {/* bridge aft */}
+      <path
+        d={d([
+          [-0.32, 0.37],
+          [-0.36, 0.68],
+          [-0.76, 0.68],
+          [-0.78, 0.33],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {mast(-0.55, 1.02, 0.68)}
+    </g>
+  ),
+};
+
 /**
- * Pick the base drawing for a set of facts. Activity first (a trawler is a
- * trawler at any length), then propulsion, then length bands for plain
+ * Pick the base drawing for a set of facts. Position first (a vessel
+ * aground is drawn aground whatever she is), then activity (a trawler is a
+ * trawler at any length; with gear out, the fishing hull draws it), then
+ * propulsion, then length bands for plain
  * power vessels. No fact separates a cruise ship from a box ship, so
  * `cruiseShip` is never chosen here; a consumer that knows picks it from
  * `allHulls`. Bulk carriers are told apart by speed: the slow end of the
- * large-ship band is the bulker, the fast end the container ship.
+ * large-ship band is the bulker, the fast end the container ship. The
+ * warship has no fact of its own either, since mine clearance took its
+ * mapping; it stays in `allHulls`.
  */
 export function selectHull(facts: FactRecord): Hull {
   const activity = facts['fact:activity'];
   const length =
     typeof facts['fact:length_m'] === 'number' ? (facts['fact:length_m'] as number) : 12;
-  if (activity === 'activity:trawling') return trawler;
-  if (activity === 'activity:fishing') return seiner;
+  if (facts['fact:position'] === 'position:aground') return aground;
+  if (activity === 'activity:trawling' || activity === 'activity:fishing') {
+    const gear = facts['fact:gear_extent_m'];
+    if (typeof gear === 'number' && gear > 0) return fishingGear;
+    return activity === 'activity:trawling' ? trawler : seiner;
+  }
   if (activity === 'activity:towing' || activity === 'activity:pushing') return tug;
   if (activity === 'activity:being_towed') return barge;
   if (activity === 'activity:pilot') return pilotBoat;
   if (activity === 'activity:cbd') return tanker;
-  if (activity === 'activity:mine') return warship;
+  if (activity === 'activity:mine') return mineClearance;
   if (activity === 'activity:ram_underwater') return dredger;
   const propulsion = facts['fact:propulsion'];
   if (propulsion === 'propulsion:oars') return openBoat;
@@ -1462,4 +1773,7 @@ export const allHulls = {
   cruiseShip,
   warship,
   dredger,
+  mineClearance,
+  fishingGear,
+  aground,
 };

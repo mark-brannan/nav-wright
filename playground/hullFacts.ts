@@ -8,7 +8,9 @@ export type HullKey = keyof typeof allHulls;
 
 // A fact record that shows each hull's kind of vessel, so picking a hull
 // also gives it lights that belong on it. cruiseShip has no facts of its own
-// (selectHull never picks it); it borrows a large fast power vessel's.
+// (selectHull never picks it); it borrows a large fast power vessel's. The
+// warship lost activity:mine to mineClearance, and keeps those lights to show
+// what a warship on that work carries.
 const underway = { 'fact:position': 'position:underway', 'fact:making_way': true } as const;
 const power = { 'fact:propulsion': 'propulsion:power', 'fact:activity': 'activity:none' } as const;
 export const hullFacts: Record<HullKey, FactRecord> = {
@@ -44,6 +46,20 @@ export const hullFacts: Record<HullKey, FactRecord> = {
     ...power,
     ...underway,
     'fact:activity': 'activity:ram_underwater',
+    'fact:length_m': 60,
+  },
+  mineClearance: { ...power, ...underway, 'fact:activity': 'activity:mine', 'fact:length_m': 50 },
+  fishingGear: {
+    ...power,
+    ...underway,
+    'fact:activity': 'activity:trawling',
+    'fact:length_m': 30,
+    'fact:gear_extent_m': 200,
+  },
+  aground: {
+    ...power,
+    'fact:position': 'position:aground',
+    'fact:making_way': false,
     'fact:length_m': 60,
   },
 };

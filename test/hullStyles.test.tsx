@@ -61,6 +61,22 @@ describe('hull style registry', () => {
   });
 });
 
+describe('style coverage', () => {
+  // Styles are generic over allHulls: no style keeps a per-hull table, so a
+  // hull added to the roster is painted by every style with no style edit.
+  it.each(['mineClearance', 'fishingGear', 'aground'] as const)(
+    'paints %s, a hull added after the styles, in every style',
+    (name) => {
+      const covered = pairs.filter(([n]) => n === name).map(([, id]) => id);
+      expect(covered).toEqual(hullStyleIds);
+    },
+  );
+
+  it('pairs every hull in allHulls with every style', () => {
+    expect(pairs).toHaveLength(Object.keys(allHulls).length * hullStyleIds.length);
+  });
+});
+
 describe('sails', () => {
   const hull = allHulls.sailSmall;
   const sail: FactRecord = { ...facts, 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 12 };

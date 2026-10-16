@@ -10,9 +10,9 @@ import { allHulls, selectHull } from '../src/hulls.js';
 const hulls = Object.entries(allHulls);
 
 describe('hull roster', () => {
-  it('has the agreed eighteen hulls with distinct ids', () => {
-    expect(hulls).toHaveLength(18);
-    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(18);
+  it('has the agreed twenty-one hulls with distinct ids', () => {
+    expect(hulls).toHaveLength(21);
+    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(21);
   });
 
   it.each(hulls)('%s keeps its light stations inside the hull', (_name, hull) => {
@@ -54,6 +54,9 @@ describe('hull roster', () => {
     'squareRigger',
     'trawler',
     'tug',
+    'mineClearance',
+    'fishingGear',
+    'aground',
   ] as const)('%s carries the after masthead higher than the forward one', (name) => {
     const s = allHulls[name].spec;
     expect(s.aftMastX).toBeLessThan(s.mastX);
@@ -62,16 +65,22 @@ describe('hull roster', () => {
 
   // Annex I 3(a): with two masthead lights, the forward one sits within a
   // quarter of the length from the stem and the two are at least half a
-  // length apart. The warship is left out: Rule 1(e) exempts vessels of
-  // special construction, and a real one carries its foremast on the bridge.
-  it.each(['containerShip', 'tanker', 'bulker', 'cruiseShip', 'ferry', 'dredger'] as const)(
-    '%s spaces its masthead lights as Annex I 3(a) asks',
-    (name) => {
-      const s = allHulls[name].spec;
-      expect(1 - s.mastX).toBeLessThanOrEqual(0.5);
-      expect(s.mastX - s.aftMastX).toBeGreaterThanOrEqual(1.0);
-    },
-  );
+  // length apart. The warship and the mine-clearance vessel are left out:
+  // Rule 1(e) exempts vessels of special construction, and a real one
+  // carries its foremast on the bridge.
+  it.each([
+    'containerShip',
+    'tanker',
+    'bulker',
+    'cruiseShip',
+    'ferry',
+    'dredger',
+    'aground',
+  ] as const)('%s spaces its masthead lights as Annex I 3(a) asks', (name) => {
+    const s = allHulls[name].spec;
+    expect(1 - s.mastX).toBeLessThanOrEqual(0.5);
+    expect(s.mastX - s.aftMastX).toBeGreaterThanOrEqual(1.0);
+  });
 });
 
 describe('selectHull', () => {
@@ -84,7 +93,7 @@ describe('selectHull', () => {
     ['being towed', { 'fact:activity': 'activity:being_towed' }, 'barge'],
     ['pilot', { 'fact:activity': 'activity:pilot' }, 'pilotBoat'],
     ['constrained by draught', { 'fact:activity': 'activity:cbd' }, 'tanker'],
-    ['mineclearance', { 'fact:activity': 'activity:mine' }, 'warship'],
+    ['mineclearance', { 'fact:activity': 'activity:mine' }, 'mineClearance'],
     ['underwater operations', { 'fact:activity': 'activity:ram_underwater' }, 'dredger'],
     ['oars', { 'fact:propulsion': 'propulsion:oars' }, 'openBoat'],
     ['sail 12 m', { 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 12 }, 'sailSmall'],
@@ -97,6 +106,51 @@ describe('selectHull', () => {
     ['power 200 m', { 'fact:length_m': 200 }, 'containerShip'],
     ['power 200 m at 14 kn', { 'fact:length_m': 200, 'fact:max_speed_kn': 14 }, 'bulker'],
     ['power 200 m at 22 kn', { 'fact:length_m': 200, 'fact:max_speed_kn': 22 }, 'containerShip'],
+    [
+      'trawling with gear out',
+      { 'fact:activity': 'activity:trawling', 'fact:gear_extent_m': 200 },
+      'fishingGear',
+    ],
+    [
+      'fishing with gear out',
+      { 'fact:activity': 'activity:fishing', 'fact:gear_extent_m': 40 },
+      'fishingGear',
+    ],
+    [
+      'trawling, gear extent 0',
+      { 'fact:activity': 'activity:trawling', 'fact:gear_extent_m': 0 },
+      'trawler',
+    ],
+    [
+      'fishing, gear extent 0',
+      { 'fact:activity': 'activity:fishing', 'fact:gear_extent_m': 0 },
+      'seiner',
+    ],
+    [
+      'gear extent without fishing',
+      { 'fact:activity': 'activity:towing', 'fact:gear_extent_m': 200 },
+      'tug',
+    ],
+    ['aground', { 'fact:position': 'position:aground' }, 'aground'],
+    [
+      'aground outranks activity',
+      {
+        'fact:position': 'position:aground',
+        'fact:activity': 'activity:trawling',
+        'fact:gear_extent_m': 200,
+      },
+      'aground',
+    ],
+    [
+      'aground outranks length',
+      { 'fact:position': 'position:aground', 'fact:length_m': 200 },
+      'aground',
+    ],
+    [
+      'at anchor is not aground',
+      { 'fact:position': 'position:anchored', 'fact:activity': 'activity:trawling' },
+      'trawler',
+    ],
     [
       'activity outranks length',
       { 'fact:activity': 'activity:pilot', 'fact:length_m': 200 },
