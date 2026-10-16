@@ -80,6 +80,12 @@ describe('entry points', () => {
     },
   );
 
+  it('exports the hull style registry from the SVG entry', async () => {
+    const index = await import('../src/index.js');
+    expect(index.hullStyleIds.length).toBeGreaterThanOrEqual(3);
+    for (const id of index.hullStyleIds) expect(index.hullStyles[id].id).toBe(id);
+  });
+
   it('actually resolves the modules it walks', () => {
     // Guards the walker itself: a typo in the resolution above would make
     // both assertions above vacuously true.

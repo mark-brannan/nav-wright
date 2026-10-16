@@ -7,6 +7,8 @@ import type { PlacedLight } from './placement.js';
 import type { SceneLabels } from './labels.js';
 import { defaultSceneLabels } from './labels.js';
 import { Glow, lightFill, polar, sectorPath } from './svg.js';
+import type { HullStyle } from './hullStyles.js';
+import { useHullStylePaint } from './hullStyles.js';
 
 const C = 220;
 const HULL_SCALE = 62;
@@ -17,13 +19,17 @@ export function PlanView({
   theta,
   onTheta,
   labels = defaultSceneLabels,
+  style,
 }: {
   hull: Hull;
   placed: PlacedLight[];
   theta: number;
   onTheta: (t: number) => void;
   labels?: SceneLabels;
+  /** Paint the deck outline in one of `hullStyles`. Default: the base look. */
+  style?: HullStyle;
 }): ReactElement {
+  const paint = useHullStylePaint(style, 'plan');
   // one ring radius per distinct light arc+color, staggered outward
   const arcLights = placed.filter((l) => l.arc !== null);
   const ringKeys: string[] = [];
@@ -63,6 +69,7 @@ export function PlanView({
       role="img"
       aria-label={labels.planAlt}
       className="scene-svg plan-svg"
+      style={paint.vars}
       onPointerDown={(e) => {
         e.currentTarget.setPointerCapture(e.pointerId);
         setFromPointer(e);
@@ -71,6 +78,7 @@ export function PlanView({
         if (e.buttons & 1) setFromPointer(e);
       }}
     >
+      {paint.defs}
       <rect width="440" height="440" fill="var(--sea-night)" />
       {rings.map((l, i) => (
         <path

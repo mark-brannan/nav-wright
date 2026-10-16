@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { bearingTheta, fitScale, pairFromPositions, pairLayout, toScreen } from '../src/sceneGeometry.js';
+import {
+  bearingTheta,
+  fitScale,
+  pairFromPositions,
+  pairLayout,
+  toScreen,
+} from '../src/sceneGeometry.js';
 
 const near = (a: number, b: number) => expect(a).toBeCloseTo(b, 6);
 
@@ -99,7 +105,7 @@ describe('pairFromPositions', () => {
 });
 
 describe('bearingTheta', () => {
-  it('head-on: own ship sees the target\'s bow (θ 0)', () => {
+  it("head-on: own ship sees the target's bow (θ 0)", () => {
     near(bearingTheta({ ownHeading: 0, targetHeading: 180, relativeBearing: 0, rangeM: 1000 }), 0);
   });
 
@@ -115,7 +121,7 @@ describe('bearingTheta', () => {
     near(bearingTheta({ ownHeading: 90, targetHeading: 90, relativeBearing: 0, rangeM: 300 }), 180);
   });
 
-  it('target abeam of own ship, same course: own ship is on the target\'s beam', () => {
+  it("target abeam of own ship, same course: own ship is on the target's beam", () => {
     // target due east, both heading north: own ship lies west of it, 270 from its bow
     near(bearingTheta({ ownHeading: 0, targetHeading: 0, relativeBearing: 90, rangeM: 400 }), 270);
   });

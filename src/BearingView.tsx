@@ -15,6 +15,8 @@ import { ThetaControl } from './ThetaControl.js';
 import { useDragRotate } from './rotate.js';
 import { mergeLanterns } from './lantern.js';
 import { Glow, glowProfile } from './svg.js';
+import type { HullStyle } from './hullStyles.js';
+import { useHullStylePaint } from './hullStyles.js';
 
 const CX = 220;
 const HORIZON = 150;
@@ -43,6 +45,8 @@ type BearingSceneProps = {
   /** Flash rate in flashes per minute for flashing lights (see declaredFlashRate). Default: the stylesheet's cycle. */
   flashesPerMinute?: number;
   labels?: SceneLabels;
+  /** Paint the hull hint and seascape in one of `hullStyles`. Default: the base look. Lights and sky are the same in every style. */
+  style?: HullStyle;
 };
 
 export function BearingView(props: BearingSceneProps): ReactElement {
@@ -71,8 +75,10 @@ export function BearingScene({
   lightRangesNm,
   flashesPerMinute,
   labels = defaultSceneLabels,
+  style,
 }: BearingSceneProps): ReactElement {
   const drag = useDragRotate<SVGSVGElement>(theta, onTheta);
+  const paint = useHullStylePaint(style, 'bearing');
   const rad = (theta * Math.PI) / 180;
   const sin = Math.sin(rad);
   const cos = Math.cos(rad);
@@ -90,12 +96,15 @@ export function BearingScene({
       role="img"
       aria-label={labels.bearingAlt(Math.round(theta))}
       className="scene-svg scene-svg-black"
-      style={{ touchAction: 'pan-y', cursor: 'grab' }}
+      style={{ touchAction: 'pan-y', cursor: 'grab', ...paint.vars }}
       {...drag}
     >
+      {paint.defs}
       <rect className="bearing-sky" width="440" height="240" fill={skyColor(sky)} />
       {seascape && <Seascape />}
-      {hullHint > 0 && <HullHint hull={hull} theta={theta} range={range} strength={hullHint} />}
+      {hullHint > 0 && (
+        <HullHint hull={hull} theta={theta} range={range} strength={hullHint} styled={!!style} />
+      )}
       {projected.map((p) => (
         <Glow
           key={p.light.key}
@@ -214,11 +223,13 @@ function HullHint({
   theta,
   range,
   strength,
+  styled,
 }: {
   hull: Hull;
   theta: number;
   range?: number;
   strength: number;
+  styled: boolean;
 }): ReactElement | null {
   const opacity = Math.min(1, strength) * hullHintOpacity(range);
   if (opacity <= 0) return null;
@@ -229,8 +240,8 @@ function HullHint({
     <path
       className="bearing-hull-hint"
       d={`${d} Z`}
-      fill="#3a4a60"
-      stroke="#607898"
+      fill={styled ? 'var(--hint-fill)' : '#3a4a60'}
+      stroke={styled ? 'var(--hint-stroke)' : '#607898'}
       strokeWidth={1}
       opacity={opacity.toFixed(3)}
     />
