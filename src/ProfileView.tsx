@@ -8,21 +8,34 @@ import type { PlacedLight } from './placement.js';
 import type { SceneLabels } from './labels.js';
 import { defaultSceneLabels } from './labels.js';
 import { Glow } from './svg.js';
+import type { HullStyle } from './hullStyles.js';
+import { StyledProfile, useHullStylePaint } from './hullStyles.js';
 
 export function ProfileView({
   hull,
   placed,
   facts,
   labels = defaultSceneLabels,
+  style,
 }: {
   hull: Hull;
   placed: PlacedLight[];
   facts: FactRecord;
   labels?: SceneLabels;
+  /** Paint the hull in one of `hullStyles`. Default: the base drawing. */
+  style?: HullStyle;
 }): ReactElement {
   const anchored = facts['fact:position'] === 'position:anchored';
+  const paint = useHullStylePaint(style, 'profile');
   return (
-    <svg viewBox="0 0 440 240" role="img" aria-label={labels.profileAlt} className="scene-svg">
+    <svg
+      viewBox="0 0 440 240"
+      role="img"
+      aria-label={labels.profileAlt}
+      className="scene-svg"
+      style={paint.vars}
+    >
+      {paint.defs}
       <rect width="440" height="240" fill="var(--sea-night)" />
       {/* horizon + waterline */}
       <line x1="0" y1={PZ(0)} x2="440" y2={PZ(0)} stroke="var(--waterline)" strokeWidth="1" />
@@ -38,7 +51,7 @@ export function ProfileView({
           strokeDasharray="3 4"
         />
       )}
-      <hull.Profile />
+      {style ? <StyledProfile hull={hull} style={style} uid={paint.uid} /> : <hull.Profile />}
       {placed.map((l) => (
         <Glow
           key={l.key}

@@ -21,6 +21,11 @@ export { mergeLanterns } from './lantern.js';
 export { PX, PZ, allHulls, selectHull } from './hulls.js';
 export type { Hull, HullSpec } from './hulls.js';
 
+// Hull styles: every style paints every hull; a view given none draws the
+// base drawing
+export { hullStyleIds, hullStyles } from './hullStyles.js';
+export type { Fill, Hatch, HullStyle, HullStyleId, Paint } from './hullStyles.js';
+
 // Light placement and arc geometry
 export { bearingInArc, lightsInView, placeLights } from './placement.js';
 export type { PlacedLight } from './placement.js';
@@ -38,7 +43,13 @@ export { PlanView } from './PlanView.js';
 export { ProfileView } from './ProfileView.js';
 export { SceneView } from './SceneView.js';
 export type { SceneVessel } from './SceneView.js';
-export { bearingTheta, fitScale, pairFromPositions, pairLayout, toScreen } from './sceneGeometry.js';
+export {
+  bearingTheta,
+  fitScale,
+  pairFromPositions,
+  pairLayout,
+  toScreen,
+} from './sceneGeometry.js';
 export type { LatLon, PairInput, PairLayout } from './sceneGeometry.js';
 
 // The relative-bearing dial, shared by BearingView and the 3D view, and the

@@ -99,3 +99,32 @@ legend {
     grid-template-columns: 1fr;
   }
 }
+.pg header a {
+  color: #9fc7bd;
+}
+.gallery-hull h2 {
+  font-size: 16px;
+  margin: 24px 0 8px;
+  border-bottom: 1px solid #23324a;
+  padding-bottom: 4px;
+}
+.gallery-row {
+  margin: 0 0 12px;
+}
+.gallery-row figcaption {
+  margin-bottom: 4px;
+}
+.gallery-views {
+  display: grid;
+  grid-template-columns: 1.83fr 1fr 1.83fr;
+  gap: 8px;
+  align-items: start;
+}
+.gallery-views .plan-svg {
+  max-width: none;
+}
+@media (max-width: 720px) {
+  .gallery-views {
+    grid-template-columns: 1fr;
+  }
+}

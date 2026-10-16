@@ -43,6 +43,7 @@ installs none of them.
 | `Glow`, `lightFill`, `LIGHT_COLORS`, `polar`, `sectorPath`                         | the SVG primitives the views are built from                                                                                               |
 | `SceneLabels`, `defaultSceneLabels`, `Aspect`                                      | the label interface                                                                                                                       |
 | `ThetaControl`                                                                     | the relative-bearing slider, shared with the 3D view                                                                                      |
+| `hullStyles`, `hullStyleIds`, `HullStyle`, `HullStyleId`                           | the hull styles: ways to paint every hull (see [Hull styles](#hull-styles))                                                               |
 
 `placeLights` takes its light data as an argument rather than importing it,
 so nothing here depends on a particular app's copy of the COLREGS data.
@@ -133,6 +134,38 @@ The lights themselves are literal colors, not properties, so they are
 correct whatever the consumer does. Everything else — hull, sea, rigging,
 grid — is undefined until these are set. Whether nav-wright should ship a
 default stylesheet is an open question, not a decision.
+
+## Hull styles
+
+A style is a set of variants for the whole roster, not a candidate in a
+contest: every style ships, and each one paints all of `allHulls`. Pass one
+to any view, and the same class can be drawn differently from one screen or
+setting to the next:
+
+```tsx
+import { ProfileView, hullStyles } from 'nav-wright';
+
+<ProfileView hull={hull} placed={placed} facts={facts} style={hullStyles.moonlit} />;
+```
+
+| Style     | Look                                                                        |
+| --------- | --------------------------------------------------------------------------- |
+| `painted` | soft gradient fills on hull and sails, a dusk sky, the hull mirrored in sea |
+| `plate`   | clean flat fills, engraved hatching, crisp ink lines: the pilot-book look   |
+| `moonlit` | near-silhouette: dark forms, a cold rim of moonlight, the lights dominate   |
+
+`ProfileView`, `PlanView` and `BearingView` take the optional `style`; given
+none, a view draws the base drawing exactly as before. A style is a paint
+layer over the base drawing, not a redrawing: it scopes `--hull-fill`,
+`--hull-stroke`, `--rig-stroke` and the sea properties to one `<svg>`, points
+them at its own gradients and patterns, and adds what the line drawings leave
+out (sails, a reflection) in the drawing's own coordinates. No `HullSpec`
+changes, so the lights land in the same place in every style, and the light
+colours stay literal. In the bearing view a style paints only the hull hint
+and the seascape; the sky and the lights are the exam view's.
+
+The playground's gallery page (`npm run dev`, then `/gallery.html`; also on
+the published playground) shows every hull in every style in all three views.
 
 ## Development
 
