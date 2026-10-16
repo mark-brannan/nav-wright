@@ -19,7 +19,27 @@ export interface SceneVessel {
 
 const SIZE = 440;
 const HULL_PX = 34; // half-length of a drawn hull, px
-const RING_PX = 22;
+const RING_GAP_PX = 6; // hull to first ring
+const RING_STEP_PX = 5;
+const RING_WIDTH_PX = 4;
+
+/** One ring per distinct arc+colour, the way PlanView stacks them. */
+function ringsOf(placed: PlacedLight[]): PlacedLight[] {
+  const seen = new Set<string>();
+  return placed.filter((l) => {
+    if (l.arc === null) return false;
+    const k = `${l.color}:${l.arc.from_deg}:${l.arc.to_deg}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+/** Radius, px, that the hull and its outermost ring reach from the vessel's centre. */
+function reachPx(v: SceneVessel): number {
+  const n = ringsOf(v.placed).length;
+  return n === 0 ? HULL_PX : HULL_PX + RING_GAP_PX + (n - 1) * RING_STEP_PX + RING_WIDTH_PX;
+}
 
 function Vessel({
   v,
@@ -33,13 +53,7 @@ function Vessel({
   id: string;
 }): ReactElement {
   const arcLights = v.placed.filter((l) => l.arc !== null);
-  const seen = new Set<string>();
-  const rings = arcLights.filter((l) => {
-    const k = `${l.color}:${l.arc!.from_deg}:${l.arc!.to_deg}`;
-    if (seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  });
+  const rings = ringsOf(v.placed);
   const hullPath =
     v.hull.plan
       .map(([fx, py], i) => `${i === 0 ? 'M' : 'L'}${py * HULL_PX},${-fx * HULL_PX}`)
@@ -52,8 +66,8 @@ function Vessel({
           d={sectorPath(
             0,
             0,
-            HULL_PX + 6 + i * 5,
-            HULL_PX + 6 + i * 5 + 4,
+            HULL_PX + RING_GAP_PX + i * RING_STEP_PX,
+            HULL_PX + RING_GAP_PX + i * RING_STEP_PX + RING_WIDTH_PX,
             l.arc!.from_deg,
             l.arc!.to_deg,
           )}
@@ -63,7 +77,14 @@ function Vessel({
       ))}
       <path d={hullPath} fill="var(--hull-fill)" stroke="var(--hull-stroke)" strokeWidth={1.2} />
       {arcLights.map((l) => (
-        <Glow key={l.key} x={l.py * HULL_PX} y={-l.fx * HULL_PX} color={l.color} r={2.2} />
+        <Glow
+          key={l.key}
+          x={l.py * HULL_PX}
+          y={-l.fx * HULL_PX}
+          color={l.color}
+          r={2.2}
+          flashing={l.character === 'flashing'}
+        />
       ))}
     </g>
   );
@@ -89,7 +110,9 @@ export function SceneView({
     relativeBearing,
     rangeM,
   });
-  const scale = fitScale(rangeM, SIZE - 2 * (HULL_PX + RING_PX), 0);
+  // every ring of both vessels stays inside the frame, whichever way it faces
+  const pad = Math.max(reachPx(own), reachPx(target));
+  const scale = fitScale(rangeM, SIZE - 2 * pad, 0);
   // centre the frame on the midpoint of the pair
   const mid = { x: SIZE / 2, y: SIZE / 2 };
   const off = (e: number, n: number): [number, number] =>

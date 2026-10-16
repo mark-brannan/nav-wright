@@ -16,4 +16,11 @@ describe('SceneView', () => {
     expect(html).toContain('rotate(180)');
     expect(html).toContain('data-line-of-bearing');
   });
+
+  it('renders finite coordinates when both vessels sit at one point', () => {
+    const html = renderToStaticMarkup(
+      <SceneView own={v(0)} target={v(90)} relativeBearing={0} rangeM={0} />,
+    );
+    expect(html).not.toContain('NaN');
+  });
 });

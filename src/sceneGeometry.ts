@@ -30,6 +30,39 @@ export interface PairLayout {
 
 const wrap = (d: number): number => ((d % 360) + 360) % 360;
 
+/** A `kin:position`: WGS84 latitude/longitude, degrees. */
+export interface LatLon {
+  latitude: number;
+  longitude: number;
+}
+
+const EARTH_RADIUS_M = 6_371_008.8;
+
+/**
+ * The pair input from two `kin:position`s and two `kin:heading_deg`s. A local
+ * flat-earth (equirectangular) projection about the pair's mean latitude:
+ * well inside a metre per nautical mile at encounter ranges.
+ */
+export function pairFromPositions(
+  own: LatLon,
+  target: LatLon,
+  ownHeading: number,
+  targetHeading: number,
+): PairInput {
+  const rad = Math.PI / 180;
+  const dLon = wrap(target.longitude - own.longitude + 180) - 180;
+  const meanLat = ((own.latitude + target.latitude) / 2) * rad;
+  const north = (target.latitude - own.latitude) * rad * EARTH_RADIUS_M;
+  const east = dLon * rad * EARTH_RADIUS_M * Math.cos(meanLat);
+  const trueBearing = wrap(Math.atan2(east, north) / rad);
+  return {
+    ownHeading,
+    targetHeading,
+    relativeBearing: wrap(trueBearing - ownHeading),
+    rangeM: Math.hypot(east, north),
+  };
+}
+
 export function pairLayout(p: PairInput): PairLayout {
   const trueBearing = wrap(p.ownHeading + p.relativeBearing);
   const a = (trueBearing * Math.PI) / 180;
@@ -47,7 +80,10 @@ export function pairLayout(p: PairInput): PairLayout {
  * a square frame of `size` px centred on the midpoint of the pair.
  */
 export function fitScale(rangeM: number, size: number, marginM: number): number {
-  return size / (Math.max(rangeM, 0) + 2 * marginM);
+  const span = Math.max(rangeM, 0) + 2 * Math.max(marginM, 0);
+  // a pair at zero range with no margin has no extent to fit; one px per metre
+  // keeps the frame finite instead of dividing by zero
+  return span > 0 ? size / span : 1;
 }
 
 /** Screen point (y down) of a metre offset from the frame centre. */
