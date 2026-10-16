@@ -8,12 +8,14 @@ orbitable model.
 Try the playground! <https://mark-brannan.github.io/nav-wright/>.
 
 Consumed by [searoom](https://github.com/mark-brannan/searoom):
-* [searoom/docs/design.md](https://github.com/mark-brannan/searoom/blob/main/docs/design.md)
-* **Live demo: <https://mark-brannan.github.io/searoom/>**
+
+- [searoom/docs/design.md](https://github.com/mark-brannan/searoom/blob/main/docs/design.md)
+- **Live demo: <https://mark-brannan.github.io/searoom/>**
 
 Sibling of:
-* [coast-wright](https://github.com/mark-brannan/coast-wright)
-* [wire-wright](https://github.com/mark-brannan/wire-wright)
+
+- [coast-wright](https://github.com/mark-brannan/coast-wright)
+- [wire-wright](https://github.com/mark-brannan/wire-wright)
 
 ## Install
 
@@ -32,18 +34,25 @@ installs none of them.
 
 ## What it exports
 
-| Export                                                                  | What it is                                                                                                                                |
-| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `selectHull(facts)`, `allHulls`, `Hull`, `HullSpec`, `PX`, `PZ`         | the curated base-drawing set, and the profile-view coordinate mapping                                                                     |
-| `placeLights(displayLights, hull, facts, lightsData)` → `PlacedLight[]` | a lawful display turned into lights positioned on a hull                                                                                  |
-| `bearingInArc(bearing, arc)`                                            | is a light visible from this relative bearing — the exam-faithful part; arcs come verbatim from the data, not from geometry invented here |
-| `ProfileView`, `PlanView`, `BearingView`, `bearingLabel`                | the three scene components                                                                                                                |
-| `Glow`, `lightFill`, `LIGHT_COLORS`, `polar`, `sectorPath`              | the SVG primitives the views are built from                                                                                               |
-| `SceneLabels`, `defaultSceneLabels`, `Aspect`                           | the label interface                                                                                                                       |
-| `ThetaControl`                                                          | the relative-bearing slider, shared with the 3D view                                                                                      |
+| Export                                                                             | What it is                                                                                                                                |
+| ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `selectHull(facts)`, `allHulls`, `Hull`, `HullSpec`, `PX`, `PZ`                    | the curated base-drawing set, and the profile-view coordinate mapping                                                                     |
+| `placeLights(displayLights, hull, facts, lightsData, geometry?)` → `PlacedLight[]` | a lawful display turned into lights positioned on a hull                                                                                  |
+| `bearingInArc(bearing, arc)`                                                       | is a light visible from this relative bearing — the exam-faithful part; arcs come verbatim from the data, not from geometry invented here |
+| `ProfileView`, `PlanView`, `BearingView`, `bearingLabel`                           | the three scene components                                                                                                                |
+| `Glow`, `lightFill`, `LIGHT_COLORS`, `polar`, `sectorPath`                         | the SVG primitives the views are built from                                                                                               |
+| `SceneLabels`, `defaultSceneLabels`, `Aspect`                                      | the label interface                                                                                                                       |
+| `ThetaControl`                                                                     | the relative-bearing slider, shared with the 3D view                                                                                      |
 
 `placeLights` takes its light data as an argument rather than importing it,
 so nothing here depends on a particular app's copy of the COLREGS data.
+Give it colregs' `geometry.json` as the fifth argument and, for a vessel with
+a `fact:length_m`, light heights and vertical separations follow Annex I
+(masthead height by length band, the after masthead 4.5 m higher, sidelights
+under three quarters of the masthead, vertical lights 2 m or 1 m apart). Each
+light it places that way carries `heightM` and `basis` (the Annex I paragraphs,
+e.g. `AnxI.2(a)(i)`) so a consumer can label it; anywhere the geometry is silent
+the hull's hand anchors stand.
 
 ## The 3D view
 

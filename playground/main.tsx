@@ -6,7 +6,8 @@ import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { evaluateDisplay } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
-import type { LightsData } from 'colregs-engine/schema';
+import type { GeometryData, LightsData } from 'colregs-engine/schema';
+import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
 import {
   BearingView,
@@ -22,6 +23,7 @@ import '../src/style.css';
 import './playground.css';
 
 const lightsData = lightsJson as unknown as LightsData;
+const geometryData = geometryJson as unknown as GeometryData;
 
 type HullKey = keyof typeof allHulls;
 const hullKeys = Object.keys(allHulls) as HullKey[];
@@ -211,7 +213,7 @@ function Playground() {
   const placed = useMemo(() => {
     if (!display) return [];
     const extra = additions.filter((a) => additionsOn.includes(a.id)).flatMap((a) => a.lights);
-    return placeLights([...display.lights, ...extra], hull.spec, facts, lightsData);
+    return placeLights([...display.lights, ...extra], hull.spec, facts, lightsData, geometryData);
   }, [display, additions, additionsOn, hull, facts]);
 
   // "Labels off" blanks every label string, to see the views without text.
