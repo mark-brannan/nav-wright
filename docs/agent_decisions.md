@@ -15,3 +15,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261016t204453z
 - nav-wright#54 slice 3: the dive-support hull draws no Code A flag, because no hull draws flags yet Undo: draw a flag in the diveSupport profile when flags arrive for the other hulls (no PR, branch claude/nw54-s3-1016p2)
+
+### 20261016t204456z
+- nav-wright#54 slice 3 resume: wip commit 6ae3d14 was the styles slice, already merged with more as #106, so slice 3 started fresh from origin/main and did not build on it Undo: cherry-pick 6ae3d14 onto the branch (no PR, branch claude/nw54-s3-1016p2)
