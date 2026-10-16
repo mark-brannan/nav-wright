@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.7](https://github.com/mark-brannan/nav-wright/compare/v0.1.6...v0.1.7) (2026-10-16)
+
+
+### Added
+
+* **hulls:** dive-support, wing-in-ground and restricted-ability hulls ([#54](https://github.com/mark-brannan/nav-wright/issues/54)) ([#109](https://github.com/mark-brannan/nav-wright/issues/109)) ([009d451](https://github.com/mark-brannan/nav-wright/commit/009d451c3f4a1c0d1c8e04fbaa43e00f17321a93))
+* **hulls:** mine-clearance, fishing-with-gear-out and aground hulls ([#54](https://github.com/mark-brannan/nav-wright/issues/54)) ([#108](https://github.com/mark-brannan/nav-wright/issues/108)) ([9933778](https://github.com/mark-brannan/nav-wright/commit/9933778c1cd62b60f01f4390556ad05b9ec764d1))
+* **scene:** optional narrow-channel / traffic-lane backdrop from env keys ([#49](https://github.com/mark-brannan/nav-wright/issues/49)) ([#113](https://github.com/mark-brannan/nav-wright/issues/113)) ([af249bc](https://github.com/mark-brannan/nav-wright/commit/af249bc95afcc026b5f85b11d26fc9f4341704dc))
+* **shapes:** day shapes and a day time prop on profile and plan ([#52](https://github.com/mark-brannan/nav-wright/issues/52)) ([#111](https://github.com/mark-brannan/nav-wright/issues/111)) ([1c84534](https://github.com/mark-brannan/nav-wright/commit/1c84534a55a1f73088275b20454fefef7db5b4c1))
+* **styles:** hull styles as roster variants, and a gallery of every hull in every style ([#54](https://github.com/mark-brannan/nav-wright/issues/54)) ([#106](https://github.com/mark-brannan/nav-wright/issues/106)) ([747326c](https://github.com/mark-brannan/nav-wright/commit/747326c610dbb28eb50237209d701cef8cd1faf7))
+* **tow:** tow and pushed-group scenes, pusher and partly-submerged hulls ([#51](https://github.com/mark-brannan/nav-wright/issues/51)) ([#112](https://github.com/mark-brannan/nav-wright/issues/112)) ([c5b75de](https://github.com/mark-brannan/nav-wright/commit/c5b75de65f28ec1bd95d85c59c86f445f2764618))
+
 ## [0.1.6](https://github.com/mark-brannan/nav-wright/compare/v0.1.5...v0.1.6) (2026-10-16)
 
 
