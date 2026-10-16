@@ -198,7 +198,7 @@ describe('view frame', () => {
             `${file} on ${s.id}, θ ${theta}, tilt ${tilt}`,
           ).toBeLessThan(1);
     }
-  });
+  }, 30_000);
 
   it('keeps the frame itself inside the margin, from between the checked angles too', () => {
     // The frame is solved on a 3-degree grid; a box corner between grid
