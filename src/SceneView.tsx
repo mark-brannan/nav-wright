@@ -35,7 +35,7 @@ const RING_STEP_PX = 5;
 const RING_WIDTH_PX = 4;
 
 /** One ring per distinct arc+colour, the way PlanView stacks them. */
-function ringsOf(placed: PlacedLight[]): PlacedLight[] {
+export function ringsOf(placed: PlacedLight[]): PlacedLight[] {
   const seen = new Set<string>();
   return placed.filter((l) => {
     if (l.arc === null) return false;

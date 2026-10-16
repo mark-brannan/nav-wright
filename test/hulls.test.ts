@@ -15,9 +15,9 @@ import { hullFacts } from '../playground/hullFacts.js';
 const hulls = Object.entries(allHulls);
 
 describe('hull roster', () => {
-  it('has the agreed twenty-four hulls with distinct ids', () => {
-    expect(hulls).toHaveLength(24);
-    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(24);
+  it('has the agreed twenty-six hulls with distinct ids', () => {
+    expect(hulls).toHaveLength(26);
+    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(26);
   });
 
   it.each(hulls)('%s keeps its light stations inside the hull', (_name, hull) => {
@@ -59,6 +59,7 @@ describe('hull roster', () => {
     'squareRigger',
     'trawler',
     'tug',
+    'pusher',
     'mineClearance',
     'fishingGear',
     'aground',
@@ -96,8 +97,33 @@ describe('selectHull', () => {
     ['trawling', { 'fact:activity': 'activity:trawling' }, 'trawler'],
     ['fishing other than trawling', { 'fact:activity': 'activity:fishing' }, 'seiner'],
     ['towing', { 'fact:activity': 'activity:towing' }, 'tug'],
-    ['pushing', { 'fact:activity': 'activity:pushing' }, 'tug'],
+    ['pushing', { 'fact:activity': 'activity:pushing' }, 'pusher'],
+    [
+      'pushing as a composite unit',
+      { 'fact:activity': 'activity:pushing', 'fact:composite_unit': true },
+      'pusher',
+    ],
+    [
+      'towing with a tow over 200 m',
+      { 'fact:activity': 'activity:towing', 'fact:tow_length_m': 250 },
+      'tug',
+    ],
     ['being towed', { 'fact:activity': 'activity:being_towed' }, 'barge'],
+    [
+      'a partly submerged tow',
+      { 'fact:activity': 'activity:being_towed', 'fact:partly_submerged': true } as FactRecord,
+      'partlySubmerged',
+    ],
+    [
+      'a partly submerged tow, by the older key',
+      { 'fact:activity': 'activity:being_towed', 'fact:inconspicuous_partly_submerged_tow': true },
+      'partlySubmerged',
+    ],
+    [
+      'being towed, not partly submerged',
+      { 'fact:activity': 'activity:being_towed', 'fact:inconspicuous_partly_submerged_tow': false },
+      'barge',
+    ],
     ['pilot', { 'fact:activity': 'activity:pilot' }, 'pilotBoat'],
     ['constrained by draught', { 'fact:activity': 'activity:cbd' }, 'tanker'],
     ['mineclearance', { 'fact:activity': 'activity:mine' }, 'mineClearance'],

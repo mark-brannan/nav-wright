@@ -70,9 +70,11 @@ faceted: three flat materials (hull, deckhouse, rig), no textures.
 | `fishing-gear-loft.glb`       | `fishing-gear` in [src/hulls.tsx](src/hulls.tsx)       |
 | `mine-clearance-loft.glb`     | `mine-clearance` in [src/hulls.tsx](src/hulls.tsx)     |
 | `open-loft.glb`               | `open` in [src/hulls.tsx](src/hulls.tsx)               |
+| `partly-submerged-loft.glb`   | `partly-submerged` in [src/hulls.tsx](src/hulls.tsx)   |
 | `pilot-boat-loft.glb`         | `pilot-boat` in [src/hulls.tsx](src/hulls.tsx)         |
 | `power-large-loft.glb`        | `power-large` in [src/hulls.tsx](src/hulls.tsx)        |
 | `power-small-loft.glb`        | `power-small` in [src/hulls.tsx](src/hulls.tsx)        |
+| `pusher-loft.glb`             | `pusher` in [src/hulls.tsx](src/hulls.tsx)             |
 | `restricted-ability-loft.glb` | `restricted-ability` in [src/hulls.tsx](src/hulls.tsx) |
 | `sail-large-loft.glb`         | `sail-large` in [src/hulls.tsx](src/hulls.tsx)         |
 | `sail-small-loft.glb`         | `sail-small` in [src/hulls.tsx](src/hulls.tsx)         |
@@ -99,8 +101,9 @@ so their `base` lofts above still fail it. Same Z-up, bow-on-`+X`
 convention and flat materials as the base lofts; no textures.
 
 Mesh check: `test/hullMeshCheck.test.ts` over these files turned Y-up
-(`(x, y, z) -> (x, z, -y)`), 3/3 on every row below; the base lofts score
-3/3 except `barge-loft` (bow) and `open-loft` (rail).
+(`(x, y, z) -> (x, z, -y)`), 3/3 on every row below that gives a score; the
+base lofts score 3/3 except `barge-loft` (bow) and `open-loft` (rail).
+`pusher` and `partly-submerged` (nav-wright#51) have not been through it yet.
 
 | File                                   | Hull class           | Variant  | Parameters (multipliers on the drawing)                                                                               | hullMeshCheck |
 | -------------------------------------- | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- | ------------- |
@@ -137,6 +140,9 @@ Mesh check: `test/hullMeshCheck.test.ts` over these files turned Y-up
 | `open-loft-slender.glb`                | `open`               | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9; plus a centre console (0.45 to 0.6 of length, half the hull height)  | 3/3           |
 | `open-loft-sheered.glb`                | `open`               | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1; plus a centre console (0.45 to 0.6 of length, half the hull height)      | 3/3           |
 | `open-loft-highside.glb`               | `open`               | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3; plus a centre console (0.45 to 0.6 of length, half the hull height) | 3/3           |
+| `partly-submerged-loft-slender.glb`    | `partly-submerged`   | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | not run       |
+| `partly-submerged-loft-sheered.glb`    | `partly-submerged`   | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | not run       |
+| `partly-submerged-loft-highside.glb`   | `partly-submerged`   | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | not run       |
 | `pilot-boat-loft-slender.glb`          | `pilot-boat`         | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
 | `pilot-boat-loft-sheered.glb`          | `pilot-boat`         | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
 | `pilot-boat-loft-highside.glb`         | `pilot-boat`         | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
@@ -146,6 +152,9 @@ Mesh check: `test/hullMeshCheck.test.ts` over these files turned Y-up
 | `power-small-loft-slender.glb`         | `power-small`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
 | `power-small-loft-sheered.glb`         | `power-small`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
 | `power-small-loft-highside.glb`        | `power-small`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `pusher-loft-slender.glb`              | `pusher`             | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | not run       |
+| `pusher-loft-sheered.glb`              | `pusher`             | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | not run       |
+| `pusher-loft-highside.glb`             | `pusher`             | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | not run       |
 | `restricted-ability-loft-slender.glb`  | `restricted-ability` | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
 | `restricted-ability-loft-sheered.glb`  | `restricted-ability` | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
 | `restricted-ability-loft-highside.glb` | `restricted-ability` | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |

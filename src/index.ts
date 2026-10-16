@@ -49,6 +49,13 @@ export { PlanView } from './PlanView.js';
 export { ProfileView } from './ProfileView.js';
 export { SceneView } from './SceneView.js';
 export type { SceneVessel } from './SceneView.js';
+
+// Tows and pushed groups (Rule 24): several hulls on one centreline, each
+// with her own display, and 24(a)(i)'s tow-length threshold read from data
+export { TowPlanView, TowProfileView, towGroupFromRecords, towLayout } from './towScene.js';
+export type { TowGroup, TowRecord, TowVessel } from './towScene.js';
+export { layoutTow, towThreshold } from './towGeometry.js';
+export type { TowHullInput, TowHullPlace, TowLayout, TowThreshold, TowTie } from './towGeometry.js';
 export {
   bearingTheta,
   fitScale,

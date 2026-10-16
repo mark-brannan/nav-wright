@@ -34,16 +34,17 @@ installs none of them.
 
 ## What it exports
 
-| Export                                                                             | What it is                                                                                                                                |
-| ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `selectHull(facts)`, `allHulls`, `Hull`, `HullSpec`, `PX`, `PZ`                    | the curated base-drawing set, and the profile-view coordinate mapping                                                                     |
-| `placeLights(displayLights, hull, facts, lightsData, geometry?)` → `PlacedLight[]` | a lawful display turned into lights positioned on a hull                                                                                  |
-| `bearingInArc(bearing, arc)`                                                       | is a light visible from this relative bearing — the exam-faithful part; arcs come verbatim from the data, not from geometry invented here |
-| `ProfileView`, `PlanView`, `BearingView`, `bearingLabel`                           | the three scene components                                                                                                                |
-| `Glow`, `lightFill`, `LIGHT_COLORS`, `polar`, `sectorPath`                         | the SVG primitives the views are built from                                                                                               |
-| `SceneLabels`, `defaultSceneLabels`, `Aspect`                                      | the label interface                                                                                                                       |
-| `ThetaControl`                                                                     | the relative-bearing slider, shared with the 3D view                                                                                      |
-| `hullStyles`, `hullStyleIds`, `HullStyle`, `HullStyleId`, `Fill`, `Hatch`, `Paint` | the hull styles: ways to paint every hull (see [Hull styles](#hull-styles))                                                               |
+| Export                                                                                          | What it is                                                                                                                                    |
+| ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `selectHull(facts)`, `allHulls`, `Hull`, `HullSpec`, `PX`, `PZ`                                 | the curated base-drawing set, and the profile-view coordinate mapping                                                                         |
+| `placeLights(displayLights, hull, facts, lightsData, geometry?)` → `PlacedLight[]`              | a lawful display turned into lights positioned on a hull                                                                                      |
+| `bearingInArc(bearing, arc)`                                                                    | is a light visible from this relative bearing — the exam-faithful part; arcs come verbatim from the data, not from geometry invented here     |
+| `ProfileView`, `PlanView`, `BearingView`, `bearingLabel`                                        | the three scene components                                                                                                                    |
+| `TowPlanView`, `TowProfileView`, `towGroupFromRecords`, `TowGroup`, `towThreshold`, `layoutTow` | a tow or pushed group (Rule 24) as one composition: every vessel with her own display (see [Tows and pushed groups](#tows-and-pushed-groups)) |
+| `Glow`, `lightFill`, `LIGHT_COLORS`, `polar`, `sectorPath`                                      | the SVG primitives the views are built from                                                                                                   |
+| `SceneLabels`, `defaultSceneLabels`, `Aspect`                                                   | the label interface                                                                                                                           |
+| `ThetaControl`                                                                                  | the relative-bearing slider, shared with the 3D view                                                                                          |
+| `hullStyles`, `hullStyleIds`, `HullStyle`, `HullStyleId`, `Fill`, `Hatch`, `Paint`              | the hull styles: ways to paint every hull (see [Hull styles](#hull-styles))                                                                   |
 
 `placeLights` takes its light data as an argument rather than importing it,
 so nothing here depends on a particular app's copy of the COLREGS data.
@@ -104,6 +105,29 @@ to the full length and centred.
 A failed model load — offline, a blocked CDN, no WebGL context — falls back
 to `ProfileView`, on the reasoning that the lights are the subject and
 losing them is worse than losing the hull rendering.
+
+## Tows and pushed groups
+
+A `TowGroup` is a lead vessel and the hulls she tows or pushes, each a
+`SceneVessel` with her own placed lights, so every vessel of the group keeps
+her own lawful display. `towGroupFromRecords(lead, members, data)` builds one
+from each vessel's fact record and the display the engine evaluated for it,
+running `selectHull` and `placeLights` (and `placeShapes`, given shapes and
+geometry data) per record. A member's tie comes from her `fact:tow_rigidity`
+(24(f)), else from the lead: astern on a line, alongside, or pushed ahead.
+With the lead's `fact:composite_unit`, the group is 24(b)'s one power-driven
+vessel and only the lead's display is drawn.
+
+`TowPlanView` draws the group from above with each hull's arc rings, the tow
+line or push contact, and the tow length against Rule 24(a)(i)'s threshold;
+`TowProfileView` stands the hulls end to end on one waterline, lights by
+night and day shapes by day. Neither hardcodes the threshold: pass
+`towThreshold(applicabilityJson)`, which reads it, and the masthead counts on
+either side of it, from colregs' towing entries.
+
+colregs-engine 0.1.9 does not yet accept `fact:tow_rigidity` or
+`fact:partly_submerged`, which colregs' 24(f) and 24(g) entries read, so
+those vessels' displays cannot come from the engine until it does.
 
 ## Labels
 

@@ -34,7 +34,25 @@ export const hullFacts: Record<HullKey, FactRecord> = {
     'fact:length_m': 30,
     'fact:tow_length_m': 150,
   },
+  // Pushing ahead, not a composite unit: 24(c)'s two masthead lights.
+  pusher: {
+    ...power,
+    ...underway,
+    'fact:activity': 'activity:pushing',
+    'fact:composite_unit': false,
+    'fact:length_m': 30,
+  },
   barge: { ...power, ...underway, 'fact:activity': 'activity:being_towed', 'fact:length_m': 40 },
+  // A partly submerged object under 24(g). The engine's fact vocabulary has
+  // only the older inconspicuous_partly_submerged_tow key, which no entry
+  // reads, so she evaluates to the empty display; that is also what the data
+  // prescribes her at night under 25 m wide and 100 m long, since 24(g)(i)'s
+  // lights are a corpus gap (applicability.json known_omissions).
+  partlySubmerged: {
+    'fact:position': 'position:underway',
+    'fact:inconspicuous_partly_submerged_tow': true,
+    'fact:length_m': 40,
+  },
   pilotBoat: { ...power, ...underway, 'fact:activity': 'activity:pilot', 'fact:length_m': 18 },
   ferry: { ...power, ...underway, 'fact:length_m': 90 },
   containerShip: { ...power, ...underway, 'fact:length_m': 250, 'fact:max_speed_kn': 22 },
