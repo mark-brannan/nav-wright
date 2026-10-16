@@ -408,10 +408,11 @@ function Playground() {
         <figure>
           <figcaption>SceneView (crossing: target 045° relative, heading 270°, 1500 m)</figcaption>
           <SceneView
-            own={{ hull, placed, heading: 0 }}
-            target={{ hull, placed, heading: 270 }}
+            own={{ hull, placed, heading: 0, speedMps: 5 }}
+            target={{ hull, placed, heading: 270, speedMps: 5 }}
             relativeBearing={45}
             rangeM={1500}
+            cpa={{ cpaM: 0, tcpaS: 212 }}
             labels={labels}
           />
         </figure>
