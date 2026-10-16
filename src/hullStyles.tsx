@@ -34,6 +34,22 @@ export interface Hatch {
 
 export type Fill = Paint | Hatch;
 
+/** The daylight palette of a style: the same gradient and hatch geometry as
+ *  its night look, in daylight colours (lighter sky and sea, the hull kept
+ *  dark enough to read as the same vessel). Bearing view has no day. */
+export type HullStyleDay = Pick<
+  HullStyle,
+  | 'sky'
+  | 'sea'
+  | 'waterline'
+  | 'hullFill'
+  | 'hullStroke'
+  | 'rig'
+  | 'sailFill'
+  | 'sailStroke'
+  | 'plan'
+>;
+
 export interface HullStyle {
   id: string;
   /** Display name, for a gallery or a caption. */
@@ -55,6 +71,8 @@ export interface HullStyle {
   ripple?: boolean;
   /** Plan view: the sea seen from above, and the deck outline. */
   plan: { sea: Fill; fill: Fill; stroke: string };
+  /** The same look by day, for views given `time="day"`. */
+  day?: HullStyleDay;
   /** Bearing view: the hull hint's silhouette and the opt-in seascape. */
   bearing: { hintFill: Fill; hintStroke: string; seaNear: string; seaFar: string; horizon: string };
 }
@@ -108,6 +126,51 @@ const painted: HullStyle = {
     },
     stroke: '#7f9cc6',
   },
+  day: {
+    sky: {
+      stops: [
+        [0, '#6fa6d8'],
+        [0.75, '#a9cdea'],
+        [1, '#d6e8f5'],
+      ],
+    },
+    sea: {
+      stops: [
+        [0, '#3f78a6'],
+        [1, '#173f66'],
+      ],
+    },
+    waterline: '#2c5a85',
+    hullFill: {
+      stops: [
+        [0, '#4a6e9c'],
+        [0.55, '#34527c'],
+        [1, '#1f3556'],
+      ],
+    },
+    hullStroke: '#1b2d4a',
+    rig: '#2a3f60',
+    sailFill: {
+      stops: [
+        [0, '#f4f7fb', 0.95],
+        [1, '#c4d0e0', 0.9],
+      ],
+      across: true,
+    },
+    sailStroke: '#32465f',
+    plan: {
+      sea: '#2f6a99',
+      fill: {
+        stops: [
+          [0, '#34527c'],
+          [0.5, '#5d86b8'],
+          [1, '#34527c'],
+        ],
+        across: true,
+      },
+      stroke: '#1b2d4a',
+    },
+  },
   bearing: {
     hintFill: {
       stops: [
@@ -124,6 +187,8 @@ const painted: HullStyle = {
 
 const plateHatch = { ground: '#24364c', ink: '#5d7896', gap: 4, angle: 45, width: 0.8 };
 
+const plateDayHatch = { ground: '#e2e8ee', ink: '#7d93aa', gap: 4, angle: 45, width: 0.8 };
+
 const plate: HullStyle = {
   id: 'plate',
   name: 'Technical plate',
@@ -138,6 +203,17 @@ const plate: HullStyle = {
   sailStroke: '#dbe4ee',
   reflection: 0,
   plan: { sea: '#141f2c', fill: { hatch: plateHatch }, stroke: '#dbe4ee' },
+  day: {
+    sky: '#e8eef3',
+    sea: { hatch: { ground: '#cfdce6', ink: '#9db3c6', gap: 6, angle: 0, width: 1 } },
+    waterline: '#2f4358',
+    hullFill: { hatch: plateDayHatch },
+    hullStroke: '#1d2a38',
+    rig: '#2f4358',
+    sailFill: '#f7f9fb',
+    sailStroke: '#1d2a38',
+    plan: { sea: '#e8eef3', fill: { hatch: plateDayHatch }, stroke: '#1d2a38' },
+  },
   bearing: {
     hintFill: { hatch: plateHatch },
     hintStroke: '#dbe4ee',
@@ -190,6 +266,33 @@ const moonlit: HullStyle = {
   },
   reflection: 0.22,
   plan: { sea: '#02050b', fill: '#04070e', stroke: '#7088ad' },
+  day: {
+    sky: {
+      stops: [
+        [0, '#9db8d6'],
+        [1, '#dbe7f1'],
+      ],
+    },
+    sea: {
+      stops: [
+        [0, '#587c9e'],
+        [1, '#2a4666'],
+      ],
+    },
+    waterline: '#46698c',
+    hullFill: '#0e1620',
+    hullStroke: '#2a3b52',
+    rig: '#1c2a3d',
+    sailFill: {
+      stops: [
+        [0, '#1b2a40'],
+        [1, '#0e1620'],
+      ],
+      across: true,
+    },
+    sailStroke: '#3a5070',
+    plan: { sea: '#4d7194', fill: '#0e1620', stroke: '#2a3b52' },
+  },
   bearing: {
     hintFill: '#04070e',
     hintStroke: '#7f96bb',
@@ -269,17 +372,47 @@ function paintDef(id: string, fill: Fill): { def: ReactElement | null; value: st
   return { def, value: `url(#${id})` };
 }
 
+/** A style as it looks at this time: by day, its `day` palette laid over it. */
+export function styleForTime(style: HullStyle, time: 'day' | 'night'): HullStyle {
+  return time === 'day' && style.day ? { ...style, ...style.day } : style;
+}
+
+/** Plain daylight ground for an unstyled view: points the scene's custom
+ *  properties at the day tokens in style.css (each with a fallback). */
+function dayGroundVars(view: 'profile' | 'plan'): CSSProperties {
+  const vars: Record<string, string> = {
+    '--sea-night': view === 'profile' ? 'var(--sky-day, #cfe6f7)' : 'var(--sea-day, #5f93b8)',
+    '--hull-fill': 'var(--hull-fill-day, #e9eef3)',
+    '--hull-stroke': 'var(--hull-stroke-day, #2b3a4d)',
+  };
+  if (view === 'profile') {
+    vars['--sea-below'] = 'var(--sea-day, #5f93b8)';
+    vars['--waterline'] = 'var(--waterline-day, #2f5f86)';
+    vars['--rig-stroke'] = 'var(--rig-stroke-day, #3a4a5f)';
+  }
+  return vars as CSSProperties;
+}
+
 export type StyledView = 'profile' | 'plan' | 'bearing';
 
 /** The <defs> a style needs in one view, and the custom properties that
  *  point the drawing at them, to set on that view's <svg>. Ids are scoped
  *  per call site, so any number of styled views can share a page. */
 export function useHullStylePaint(
-  style: HullStyle | undefined,
+  styleIn: HullStyle | undefined,
   view: StyledView,
+  time: 'day' | 'night' = 'night',
 ): { defs: ReactElement | null; vars: CSSProperties | undefined; uid: string } {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '');
-  if (!style) return { defs: null, vars: undefined, uid };
+  const style = styleIn && styleForTime(styleIn, time);
+  if (!style) {
+    // an unstyled hull gets a plain day ground; night is the stylesheet's
+    return {
+      defs: null,
+      vars: time === 'day' && view !== 'bearing' ? dayGroundVars(view) : undefined,
+      uid,
+    };
+  }
   const slots: Record<string, Fill> =
     view === 'profile'
       ? {

@@ -9,6 +9,8 @@ import { defaultSceneLabels } from './labels.js';
 import { Glow, lightFill, polar, sectorPath } from './svg.js';
 import type { HullStyle } from './hullStyles.js';
 import { useHullStylePaint } from './hullStyles.js';
+import type { PlacedShape } from './shapes.js';
+import { PlanShapes } from './shapeMarks.js';
 
 const C = 220;
 const HULL_SCALE = 62;
@@ -20,6 +22,8 @@ export function PlanView({
   onTheta,
   labels = defaultSceneLabels,
   style,
+  time = 'night',
+  shapes,
 }: {
   hull: Hull;
   placed: PlacedLight[];
@@ -28,10 +32,15 @@ export function PlanView({
   labels?: SceneLabels;
   /** Paint the deck outline in one of `hullStyles`. Default: the base look. */
   style?: HullStyle;
+  /** `day` switches the ground to daylight, hides the light arcs and draws `shapes`. Default: night. */
+  time?: 'day' | 'night';
+  /** Day shapes from `placeShapes`, marked at their positions when `time` is `day`. */
+  shapes?: PlacedShape[];
 }): ReactElement {
-  const paint = useHullStylePaint(style, 'plan');
+  const day = time === 'day';
+  const paint = useHullStylePaint(style, 'plan', time);
   // one ring radius per distinct light arc+color, staggered outward
-  const arcLights = placed.filter((l) => l.arc !== null);
+  const arcLights = day ? [] : placed.filter((l) => l.arc !== null);
   const ringKeys: string[] = [];
   for (const l of arcLights) {
     const k = `${l.color}:${l.arc!.from_deg}:${l.arc!.to_deg}`;
@@ -120,6 +129,14 @@ export function PlanView({
           flashing={l.character === 'flashing'}
         />
       ))}
+      {day && shapes && (
+        <PlanShapes
+          shapes={shapes}
+          center={C}
+          hullScale={HULL_SCALE}
+          legendLabel={labels.planShapesAlt ?? 'Day shapes'}
+        />
+      )}
       {/* observer bearing needle */}
       <line
         x1={C}

@@ -18,7 +18,7 @@ import type { PlacedLight } from './placement.js';
 
 type Entry = GeometryData['vertical_positioning'][number];
 
-function holds(when: Entry['when'], facts: FactRecord): boolean {
+export function holds(when: Entry['when'], facts: FactRecord): boolean {
   if (!when) return true;
   return Object.entries(when).every(([fact, want]) => {
     const have = facts[fact as keyof FactRecord] as unknown;

@@ -24,11 +24,17 @@ export type { Hull, HullSpec } from './hulls.js';
 // Hull styles: every style paints every hull; a view given none draws the
 // base drawing
 export { hullStyleIds, hullStyles } from './hullStyles.js';
-export type { Fill, Hatch, HullStyle, HullStyleId, Paint } from './hullStyles.js';
+export type { Fill, Hatch, HullStyle, HullStyleDay, HullStyleId, Paint } from './hullStyles.js';
 
 // Light placement and arc geometry
 export { bearingInArc, lightsInView, placeLights } from './placement.js';
 export type { PlacedLight } from './placement.js';
+
+// Day shapes (Rule 20(d), Annex I 6): placement from colregs' shapes.json and
+// geometry.json passed in as data, and the drawing
+export { placeShapes } from './shapes.js';
+export type { PlacedShape, ShapesData } from './shapes.js';
+export { PlanShapes, ProfileShapes, ShapeMark } from './shapeMarks.js';
 
 // Scene labels (the i18n seam: English defaults, consumer-supplied catalog)
 export { defaultSceneLabels } from './labels.js';

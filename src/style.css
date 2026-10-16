@@ -14,6 +14,13 @@
   --rig-stroke: #33465f;
   --grid-line: #33465f;
   --accent-soft: #9fc7bd;
+  /* Daylight ground, for views given time="day" (an unstyled hull) */
+  --sky-day: #cfe6f7;
+  --sea-day: #5f93b8;
+  --waterline-day: #2f5f86;
+  --hull-fill-day: #e9eef3;
+  --hull-stroke-day: #2b3a4d;
+  --rig-stroke-day: #3a4a5f;
   /* BearingView's opt-in seascape; each has the same fallback in the component */
   --bearing-sea-near: #0a1424;
   --bearing-sea-far: #03060b;
