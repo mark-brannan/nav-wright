@@ -18,10 +18,10 @@ Sibling of:
 ## Install
 
 ```sh
-npm install github:mark-brannan/nav-wright#main
+npm install nav-wright
 ```
 
-Not on npm. `react` is a peer dependency; `colregs-engine` comes along as a
+`react` is a peer dependency; `colregs-engine` comes along as a
 dependency, for the `FactRecord` / `LightsData` / `Arc` types the renderer
 is written against.
 
