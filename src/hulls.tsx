@@ -1412,31 +1412,35 @@ const dredger: Hull = {
  *  forward of midships, and the sweep deck aft with a gear boom over the
  *  stern and the sweep wire streamed astern. Only the boom and the wire
  *  down to the water are rig (they loft into the mesh); the wire and float
- *  astern of the hull are drawn in the profile alone. */
+ *  astern of the hull are drawn in the profile alone. Beam, deck line and
+ *  mast tops are set so that at 50 m, where Rule 23(a)(ii) first asks for
+ *  the after masthead light, Annex I puts both masthead lights on the drawn
+ *  mast heads and inside the profile frame; the yard sits where 27(f)'s
+ *  yard-end lights hang, two stack steps under the foremast head. */
 const mineClearance: Hull = {
   spec: {
     id: 'mine-clearance',
-    beam: 0.24,
+    beam: 0.17,
     mastX: 0.18,
     mastTopZ: 0.92,
     aftMastX: -0.42,
-    aftMastTopZ: 1.02,
+    aftMastTopZ: 1.14,
     sideLightX: 0.3,
-    sideLightZ: 0.56,
+    sideLightZ: 0.5,
     bowX: 0.92,
     sternX: -0.88,
     sternZ: 0.26,
   },
   plan: [
     [1, 0],
-    [0.7, 0.18],
-    [0.1, 0.24],
-    [-0.7, 0.22],
-    [-0.9, 0.16],
-    [-0.9, -0.16],
-    [-0.7, -0.22],
-    [0.1, -0.24],
-    [0.7, -0.18],
+    [0.7, 0.128],
+    [0.1, 0.17],
+    [-0.7, 0.156],
+    [-0.9, 0.113],
+    [-0.9, -0.113],
+    [-0.7, -0.156],
+    [0.1, -0.17],
+    [0.7, -0.128],
   ],
   Profile: () => (
     <g>
@@ -1457,21 +1461,21 @@ const mineClearance: Hull = {
       <path
         d={d([
           [0.5, 0.38],
-          [0.44, 0.66],
-          [0.0, 0.66],
+          [0.44, 0.6],
+          [0.0, 0.6],
           [-0.05, 0.34],
         ])}
         fill={hullFill}
         stroke={hullStroke}
         strokeWidth={1}
       />
-      {mast(0.18, 0.92, 0.66)}
+      {mast(0.18, 0.92, 0.6)}
       {/* yardarm for the mine-clearance lights */}
       <line
         x1={PX(0.1)}
-        y1={PZ(0.82)}
+        y1={PZ(0.66)}
         x2={PX(0.26)}
-        y2={PZ(0.82)}
+        y2={PZ(0.66)}
         stroke={rigStroke}
         strokeWidth={1.5}
       />
@@ -1487,7 +1491,7 @@ const mineClearance: Hull = {
         stroke={hullStroke}
         strokeWidth={1}
       />
-      {mast(-0.42, 1.02, 0.31)}
+      {mast(-0.42, 1.14, 0.31)}
       {/* sweep davit, gear boom over the stern, sweep wire to the water */}
       <path
         d={`M${PX(-0.62)},${PZ(0.3)} L${PX(-0.72)},${PZ(0.66)} L${PX(-0.8)},${PZ(0.29)}`}
@@ -1640,8 +1644,8 @@ const fishingGear: Hull = {
   ),
 };
 
-/** A small coaster aground: trimmed by the head, her forefoot up on a shoal
- *  and her keel clear of the waterline forward. The shoal is drawn in the
+/** A small coaster aground: her forefoot up on a shoal, so she sits
+ *  trimmed by the stern with her keel clear of the waterline forward. The shoal is drawn in the
  *  profile alone; the hull lofts with the trim. */
 const aground: Hull = {
   spec: {

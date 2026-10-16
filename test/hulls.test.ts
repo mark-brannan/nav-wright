@@ -3,9 +3,14 @@
 // inside the drawn hull, and selectHull must route every fact that names a
 // vessel kind to the drawing for it.
 
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { describe, expect, it } from 'vitest';
-import type { FactRecord } from 'colregs-engine';
-import { allHulls, selectHull } from '../src/hulls.js';
+import { evaluateDisplay, type FactRecord } from 'colregs-engine';
+import type { GeometryData, LightsData } from 'colregs-engine/schema';
+import { allHulls, PZ, selectHull } from '../src/hulls.js';
+import { placeLights } from '../src/placement.js';
+import { hullFacts } from '../playground/hullFacts.js';
 
 const hulls = Object.entries(allHulls);
 
@@ -159,5 +164,22 @@ describe('selectHull', () => {
   ];
   it.each(cases)('%s', (_label, facts, expected) => {
     expect(selectHull(facts)).toBe(allHulls[expected]);
+  });
+});
+
+describe('gallery lights in the profile frame', () => {
+  // The station check above keeps the hand anchors under 1.15 so a light
+  // and its glow clear the top of the profile viewBox. Annex I can lift a
+  // masthead light above its anchor; past the top edge the viewer is shown
+  // one light fewer than the vessel carries. Checked with the gallery's facts.
+  const json = (id: string) =>
+    JSON.parse(readFileSync(createRequire(import.meta.url).resolve(id), 'utf8')) as unknown;
+  const lightsData = json('colregs/data/lights.json') as LightsData;
+  const geometry = json('colregs/data/geometry.json') as GeometryData;
+  it.each(hulls)('%s puts every gallery light inside the profile', (name, hull) => {
+    const facts = hullFacts[name as keyof typeof hullFacts];
+    const display = evaluateDisplay(facts).displays[0];
+    const placed = placeLights(display.lights, hull.spec, facts, lightsData, geometry);
+    for (const l of placed) expect(PZ(l.z), l.key).toBeGreaterThanOrEqual(0);
   });
 });
