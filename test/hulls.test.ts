@@ -3,16 +3,21 @@
 // inside the drawn hull, and selectHull must route every fact that names a
 // vessel kind to the drawing for it.
 
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { describe, expect, it } from 'vitest';
-import type { FactRecord } from 'colregs-engine';
-import { allHulls, selectHull } from '../src/hulls.js';
+import { evaluateDisplay, type FactRecord } from 'colregs-engine';
+import type { GeometryData, LightsData } from 'colregs-engine/schema';
+import { allHulls, PZ, selectHull } from '../src/hulls.js';
+import { placeLights } from '../src/placement.js';
+import { hullFacts } from '../playground/hullFacts.js';
 
 const hulls = Object.entries(allHulls);
 
 describe('hull roster', () => {
-  it('has the agreed eighteen hulls with distinct ids', () => {
-    expect(hulls).toHaveLength(18);
-    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(18);
+  it('has the agreed twenty-one hulls with distinct ids', () => {
+    expect(hulls).toHaveLength(21);
+    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(21);
   });
 
   it.each(hulls)('%s keeps its light stations inside the hull', (_name, hull) => {
@@ -54,6 +59,9 @@ describe('hull roster', () => {
     'squareRigger',
     'trawler',
     'tug',
+    'mineClearance',
+    'fishingGear',
+    'aground',
   ] as const)('%s carries the after masthead higher than the forward one', (name) => {
     const s = allHulls[name].spec;
     expect(s.aftMastX).toBeLessThan(s.mastX);
@@ -62,16 +70,22 @@ describe('hull roster', () => {
 
   // Annex I 3(a): with two masthead lights, the forward one sits within a
   // quarter of the length from the stem and the two are at least half a
-  // length apart. The warship is left out: Rule 1(e) exempts vessels of
-  // special construction, and a real one carries its foremast on the bridge.
-  it.each(['containerShip', 'tanker', 'bulker', 'cruiseShip', 'ferry', 'dredger'] as const)(
-    '%s spaces its masthead lights as Annex I 3(a) asks',
-    (name) => {
-      const s = allHulls[name].spec;
-      expect(1 - s.mastX).toBeLessThanOrEqual(0.5);
-      expect(s.mastX - s.aftMastX).toBeGreaterThanOrEqual(1.0);
-    },
-  );
+  // length apart. The warship and the mine-clearance vessel are left out:
+  // Rule 1(e) exempts vessels of special construction, and a real one
+  // carries its foremast on the bridge.
+  it.each([
+    'containerShip',
+    'tanker',
+    'bulker',
+    'cruiseShip',
+    'ferry',
+    'dredger',
+    'aground',
+  ] as const)('%s spaces its masthead lights as Annex I 3(a) asks', (name) => {
+    const s = allHulls[name].spec;
+    expect(1 - s.mastX).toBeLessThanOrEqual(0.5);
+    expect(s.mastX - s.aftMastX).toBeGreaterThanOrEqual(1.0);
+  });
 });
 
 describe('selectHull', () => {
@@ -84,7 +98,7 @@ describe('selectHull', () => {
     ['being towed', { 'fact:activity': 'activity:being_towed' }, 'barge'],
     ['pilot', { 'fact:activity': 'activity:pilot' }, 'pilotBoat'],
     ['constrained by draught', { 'fact:activity': 'activity:cbd' }, 'tanker'],
-    ['mineclearance', { 'fact:activity': 'activity:mine' }, 'warship'],
+    ['mineclearance', { 'fact:activity': 'activity:mine' }, 'mineClearance'],
     ['underwater operations', { 'fact:activity': 'activity:ram_underwater' }, 'dredger'],
     ['oars', { 'fact:propulsion': 'propulsion:oars' }, 'openBoat'],
     ['sail 12 m', { 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 12 }, 'sailSmall'],
@@ -98,6 +112,51 @@ describe('selectHull', () => {
     ['power 200 m at 14 kn', { 'fact:length_m': 200, 'fact:max_speed_kn': 14 }, 'bulker'],
     ['power 200 m at 22 kn', { 'fact:length_m': 200, 'fact:max_speed_kn': 22 }, 'containerShip'],
     [
+      'trawling with gear out',
+      { 'fact:activity': 'activity:trawling', 'fact:gear_extent_m': 200 },
+      'fishingGear',
+    ],
+    [
+      'fishing with gear out',
+      { 'fact:activity': 'activity:fishing', 'fact:gear_extent_m': 40 },
+      'fishingGear',
+    ],
+    [
+      'trawling, gear extent 0',
+      { 'fact:activity': 'activity:trawling', 'fact:gear_extent_m': 0 },
+      'trawler',
+    ],
+    [
+      'fishing, gear extent 0',
+      { 'fact:activity': 'activity:fishing', 'fact:gear_extent_m': 0 },
+      'seiner',
+    ],
+    [
+      'gear extent without fishing',
+      { 'fact:activity': 'activity:towing', 'fact:gear_extent_m': 200 },
+      'tug',
+    ],
+    ['aground', { 'fact:position': 'position:aground' }, 'aground'],
+    [
+      'aground outranks activity',
+      {
+        'fact:position': 'position:aground',
+        'fact:activity': 'activity:trawling',
+        'fact:gear_extent_m': 200,
+      },
+      'aground',
+    ],
+    [
+      'aground outranks length',
+      { 'fact:position': 'position:aground', 'fact:length_m': 200 },
+      'aground',
+    ],
+    [
+      'at anchor is not aground',
+      { 'fact:position': 'position:anchored', 'fact:activity': 'activity:trawling' },
+      'trawler',
+    ],
+    [
       'activity outranks length',
       { 'fact:activity': 'activity:pilot', 'fact:length_m': 200 },
       'pilotBoat',
@@ -105,5 +164,22 @@ describe('selectHull', () => {
   ];
   it.each(cases)('%s', (_label, facts, expected) => {
     expect(selectHull(facts)).toBe(allHulls[expected]);
+  });
+});
+
+describe('gallery lights in the profile frame', () => {
+  // The station check above keeps the hand anchors under 1.15 so a light
+  // and its glow clear the top of the profile viewBox. Annex I can lift a
+  // masthead light above its anchor; past the top edge the viewer is shown
+  // one light fewer than the vessel carries. Checked with the gallery's facts.
+  const json = (id: string) =>
+    JSON.parse(readFileSync(createRequire(import.meta.url).resolve(id), 'utf8')) as unknown;
+  const lightsData = json('colregs/data/lights.json') as LightsData;
+  const geometry = json('colregs/data/geometry.json') as GeometryData;
+  it.each(hulls)('%s puts every gallery light inside the profile', (name, hull) => {
+    const facts = hullFacts[name as keyof typeof hullFacts];
+    const display = evaluateDisplay(facts).displays[0];
+    const placed = placeLights(display.lights, hull.spec, facts, lightsData, geometry);
+    for (const l of placed) expect(PZ(l.z), l.key).toBeGreaterThanOrEqual(0);
   });
 });

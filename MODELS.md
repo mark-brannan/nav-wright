@@ -37,7 +37,7 @@ hull, size or mode of propulsion (see
 
 ## `models/<hull-id>-loft.glb`
 
-One base mesh per hull in `allHulls`, eighteen in all (plus three variants each, below), lofted from that hull's
+One base mesh per hull in `allHulls`, twenty-one in all (plus three variants each, below), lofted from that hull's
 own 2D drawings by [scripts/loft-hulls.mjs](scripts/loft-hulls.mjs) — the
 fallback nav-wright#44 names for hulls with no sourced mesh. Low-poly and
 faceted: three flat materials (hull, deckhouse, rig), no textures.
@@ -59,12 +59,15 @@ faceted: three flat materials (hull, deckhouse, rig), no textures.
 
 | File                      | Hull drawing                                       |
 | ------------------------- | -------------------------------------------------- |
+| `aground-loft.glb`        | `aground` in [src/hulls.tsx](src/hulls.tsx)        |
 | `barge-loft.glb`          | `barge` in [src/hulls.tsx](src/hulls.tsx)          |
 | `bulker-loft.glb`         | `bulker` in [src/hulls.tsx](src/hulls.tsx)         |
 | `container-ship-loft.glb` | `container-ship` in [src/hulls.tsx](src/hulls.tsx) |
 | `cruise-ship-loft.glb`    | `cruise-ship` in [src/hulls.tsx](src/hulls.tsx)    |
 | `dredger-loft.glb`        | `dredger` in [src/hulls.tsx](src/hulls.tsx)        |
 | `ferry-loft.glb`          | `ferry` in [src/hulls.tsx](src/hulls.tsx)          |
+| `fishing-gear-loft.glb`   | `fishing-gear` in [src/hulls.tsx](src/hulls.tsx)   |
+| `mine-clearance-loft.glb` | `mine-clearance` in [src/hulls.tsx](src/hulls.tsx) |
 | `open-loft.glb`           | `open` in [src/hulls.tsx](src/hulls.tsx)           |
 | `pilot-boat-loft.glb`     | `pilot-boat` in [src/hulls.tsx](src/hulls.tsx)     |
 | `power-large-loft.glb`    | `power-large` in [src/hulls.tsx](src/hulls.tsx)    |
@@ -98,6 +101,9 @@ Mesh check: `test/hullMeshCheck.test.ts` over these files turned Y-up
 
 | File                               | Hull class       | Variant  | Parameters (multipliers on the drawing)                                                                               | hullMeshCheck |
 | ---------------------------------- | ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------- | ------------- |
+| `aground-loft-slender.glb`         | `aground`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `aground-loft-sheered.glb`         | `aground`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `aground-loft-highside.glb`        | `aground`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
 | `barge-loft-slender.glb`           | `barge`          | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9; bow tapered 0.7, cargo mound halved in length                        | 3/3           |
 | `barge-loft-sheered.glb`           | `barge`          | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1; bow tapered 0.7, cargo mound halved in length                            | 3/3           |
 | `barge-loft-highside.glb`          | `barge`          | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3; bow tapered 0.7, cargo mound halved in length                       | 3/3           |
@@ -116,6 +122,12 @@ Mesh check: `test/hullMeshCheck.test.ts` over these files turned Y-up
 | `ferry-loft-slender.glb`           | `ferry`          | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
 | `ferry-loft-sheered.glb`           | `ferry`          | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
 | `ferry-loft-highside.glb`          | `ferry`          | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `fishing-gear-loft-slender.glb`    | `fishing-gear`   | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `fishing-gear-loft-sheered.glb`    | `fishing-gear`   | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `fishing-gear-loft-highside.glb`   | `fishing-gear`   | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `mine-clearance-loft-slender.glb`  | `mine-clearance` | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `mine-clearance-loft-sheered.glb`  | `mine-clearance` | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `mine-clearance-loft-highside.glb` | `mine-clearance` | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
 | `open-loft-slender.glb`            | `open`           | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9; plus a centre console (0.45 to 0.6 of length, half the hull height)  | 3/3           |
 | `open-loft-sheered.glb`            | `open`           | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1; plus a centre console (0.45 to 0.6 of length, half the hull height)      | 3/3           |
 | `open-loft-highside.glb`           | `open`           | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3; plus a centre console (0.45 to 0.6 of length, half the hull height) | 3/3           |
