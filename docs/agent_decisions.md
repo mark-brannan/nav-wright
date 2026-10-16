@@ -9,3 +9,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261016t204444z
 - nav-wright#54 slice 3: fact:wig routes to wingInGround after the propulsion checks and before the length bands, so an activity or sail fact outranks it Undo: move the fact:wig line in selectHull above the activity checks (no PR, branch claude/nw54-s3-1016p2)
+
+### 20261016t204450z
+- nav-wright#54 slice 3: the generic RAM hull (activity:ram) is drawn as a 60 m buoy tender with a crane over the quarter Undo: redraw restrictedAbility in src/hulls.tsx and rerun npm run models (no PR, branch claude/nw54-s3-1016p2)
