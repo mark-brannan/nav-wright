@@ -1,0 +1,121 @@
+// Two vessels in one north-up plan frame: own ship and a target placed from
+// their relative bearing and range, each with its arcs, plus the line of
+// bearing between them. Composition only; it draws no verdict.
+
+import type { ReactElement } from 'react';
+import type { Hull } from './hulls.js';
+import type { PlacedLight } from './placement.js';
+import type { SceneLabels } from './labels.js';
+import { defaultSceneLabels } from './labels.js';
+import { fitScale, pairLayout, toScreen } from './sceneGeometry.js';
+import { Glow, lightFill, sectorPath } from './svg.js';
+
+export interface SceneVessel {
+  hull: Hull;
+  placed: PlacedLight[];
+  /** true heading, deg */
+  heading: number;
+}
+
+const SIZE = 440;
+const HULL_PX = 34; // half-length of a drawn hull, px
+const RING_PX = 22;
+
+function Vessel({
+  v,
+  x,
+  y,
+  id,
+}: {
+  v: SceneVessel;
+  x: number;
+  y: number;
+  id: string;
+}): ReactElement {
+  const arcLights = v.placed.filter((l) => l.arc !== null);
+  const seen = new Set<string>();
+  const rings = arcLights.filter((l) => {
+    const k = `${l.color}:${l.arc!.from_deg}:${l.arc!.to_deg}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+  const hullPath =
+    v.hull.plan
+      .map(([fx, py], i) => `${i === 0 ? 'M' : 'L'}${py * HULL_PX},${-fx * HULL_PX}`)
+      .join(' ') + ' Z';
+  return (
+    <g data-vessel={id} transform={`translate(${x} ${y}) rotate(${v.heading})`}>
+      {rings.map((l, i) => (
+        <path
+          key={l.key}
+          d={sectorPath(
+            0,
+            0,
+            HULL_PX + 6 + i * 5,
+            HULL_PX + 6 + i * 5 + 4,
+            l.arc!.from_deg,
+            l.arc!.to_deg,
+          )}
+          fill={lightFill(l.color)}
+          opacity={0.35}
+        />
+      ))}
+      <path d={hullPath} fill="var(--hull-fill)" stroke="var(--hull-stroke)" strokeWidth={1.2} />
+      {arcLights.map((l) => (
+        <Glow key={l.key} x={l.py * HULL_PX} y={-l.fx * HULL_PX} color={l.color} r={2.2} />
+      ))}
+    </g>
+  );
+}
+
+export function SceneView({
+  own,
+  target,
+  relativeBearing,
+  rangeM,
+  labels = defaultSceneLabels,
+}: {
+  own: SceneVessel;
+  target: SceneVessel;
+  /** target's bearing from own ship, relative to own bow, deg */
+  relativeBearing: number;
+  rangeM: number;
+  labels?: SceneLabels;
+}): ReactElement {
+  const lay = pairLayout({
+    ownHeading: own.heading,
+    targetHeading: target.heading,
+    relativeBearing,
+    rangeM,
+  });
+  const scale = fitScale(rangeM, SIZE - 2 * (HULL_PX + RING_PX), 0);
+  // centre the frame on the midpoint of the pair
+  const mid = { x: SIZE / 2, y: SIZE / 2 };
+  const off = (e: number, n: number): [number, number] =>
+    toScreen(e - lay.target.east / 2, n - lay.target.north / 2, scale, mid);
+  const [ox, oy] = off(0, 0);
+  const [tx, ty] = off(lay.target.east, lay.target.north);
+  return (
+    <svg
+      viewBox={`0 0 ${SIZE} ${SIZE}`}
+      role="img"
+      aria-label={labels.planAlt}
+      className="scene-svg plan-svg scene-pair-svg"
+    >
+      <rect width={SIZE} height={SIZE} fill="var(--sea-night)" />
+      <line
+        data-line-of-bearing
+        x1={ox}
+        y1={oy}
+        x2={tx}
+        y2={ty}
+        stroke="var(--accent-soft)"
+        strokeWidth={1.5}
+        strokeDasharray="4 4"
+      />
+      <Vessel v={own} x={ox} y={oy} id="own" />
+      <Vessel v={target} x={tx} y={ty} id="target" />
+    </svg>
+  );
+}
