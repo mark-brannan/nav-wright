@@ -15,6 +15,7 @@ import {
   lightRangesFor,
   PlanView,
   ProfileView,
+  SceneView,
   allHulls,
   defaultSceneLabels,
   placeLights,
@@ -438,6 +439,16 @@ function Playground() {
         <figure>
           <figcaption>PlanView</figcaption>
           <PlanView hull={hull} placed={placed} theta={theta} onTheta={setTheta} labels={labels} />
+        </figure>
+        <figure>
+          <figcaption>SceneView (crossing: target 045° relative, heading 270°, 1500 m)</figcaption>
+          <SceneView
+            own={{ hull, placed, heading: 0 }}
+            target={{ hull, placed, heading: 270 }}
+            relativeBearing={45}
+            rangeM={1500}
+            labels={labels}
+          />
         </figure>
         <figure>
           <figcaption>BenchyView ({model})</figcaption>
