@@ -37,7 +37,7 @@ hull, size or mode of propulsion (see
 
 ## `models/<hull-id>-loft.glb`
 
-One base mesh per hull in `allHulls`, twenty-one in all (plus three variants each, below), lofted from that hull's
+One base mesh per hull in `allHulls`, twenty-four in all (plus three variants each, below), lofted from that hull's
 own 2D drawings by [scripts/loft-hulls.mjs](scripts/loft-hulls.mjs) — the
 fallback nav-wright#44 names for hulls with no sourced mesh. Low-poly and
 faceted: three flat materials (hull, deckhouse, rig), no textures.
@@ -57,29 +57,32 @@ faceted: three flat materials (hull, deckhouse, rig), no textures.
   `nav-wright/models/tug-loft.glb`.
 - **Files:** every loft, one row each (`test/modelsListed.test.ts` fails when a file in `models/` is missing from this document).
 
-| File                      | Hull drawing                                       |
-| ------------------------- | -------------------------------------------------- |
-| `aground-loft.glb`        | `aground` in [src/hulls.tsx](src/hulls.tsx)        |
-| `barge-loft.glb`          | `barge` in [src/hulls.tsx](src/hulls.tsx)          |
-| `bulker-loft.glb`         | `bulker` in [src/hulls.tsx](src/hulls.tsx)         |
-| `container-ship-loft.glb` | `container-ship` in [src/hulls.tsx](src/hulls.tsx) |
-| `cruise-ship-loft.glb`    | `cruise-ship` in [src/hulls.tsx](src/hulls.tsx)    |
-| `dredger-loft.glb`        | `dredger` in [src/hulls.tsx](src/hulls.tsx)        |
-| `ferry-loft.glb`          | `ferry` in [src/hulls.tsx](src/hulls.tsx)          |
-| `fishing-gear-loft.glb`   | `fishing-gear` in [src/hulls.tsx](src/hulls.tsx)   |
-| `mine-clearance-loft.glb` | `mine-clearance` in [src/hulls.tsx](src/hulls.tsx) |
-| `open-loft.glb`           | `open` in [src/hulls.tsx](src/hulls.tsx)           |
-| `pilot-boat-loft.glb`     | `pilot-boat` in [src/hulls.tsx](src/hulls.tsx)     |
-| `power-large-loft.glb`    | `power-large` in [src/hulls.tsx](src/hulls.tsx)    |
-| `power-small-loft.glb`    | `power-small` in [src/hulls.tsx](src/hulls.tsx)    |
-| `sail-large-loft.glb`     | `sail-large` in [src/hulls.tsx](src/hulls.tsx)     |
-| `sail-small-loft.glb`     | `sail-small` in [src/hulls.tsx](src/hulls.tsx)     |
-| `seiner-loft.glb`         | `seiner` in [src/hulls.tsx](src/hulls.tsx)         |
-| `square-rigger-loft.glb`  | `square-rigger` in [src/hulls.tsx](src/hulls.tsx)  |
-| `tanker-loft.glb`         | `tanker` in [src/hulls.tsx](src/hulls.tsx)         |
-| `trawler-loft.glb`        | `trawler` in [src/hulls.tsx](src/hulls.tsx)        |
-| `tug-loft.glb`            | `tug` in [src/hulls.tsx](src/hulls.tsx)            |
-| `warship-loft.glb`        | `warship` in [src/hulls.tsx](src/hulls.tsx)        |
+| File                          | Hull drawing                                           |
+| ----------------------------- | ------------------------------------------------------ |
+| `aground-loft.glb`            | `aground` in [src/hulls.tsx](src/hulls.tsx)            |
+| `barge-loft.glb`              | `barge` in [src/hulls.tsx](src/hulls.tsx)              |
+| `bulker-loft.glb`             | `bulker` in [src/hulls.tsx](src/hulls.tsx)             |
+| `container-ship-loft.glb`     | `container-ship` in [src/hulls.tsx](src/hulls.tsx)     |
+| `cruise-ship-loft.glb`        | `cruise-ship` in [src/hulls.tsx](src/hulls.tsx)        |
+| `dive-support-loft.glb`       | `dive-support` in [src/hulls.tsx](src/hulls.tsx)       |
+| `dredger-loft.glb`            | `dredger` in [src/hulls.tsx](src/hulls.tsx)            |
+| `ferry-loft.glb`              | `ferry` in [src/hulls.tsx](src/hulls.tsx)              |
+| `fishing-gear-loft.glb`       | `fishing-gear` in [src/hulls.tsx](src/hulls.tsx)       |
+| `mine-clearance-loft.glb`     | `mine-clearance` in [src/hulls.tsx](src/hulls.tsx)     |
+| `open-loft.glb`               | `open` in [src/hulls.tsx](src/hulls.tsx)               |
+| `pilot-boat-loft.glb`         | `pilot-boat` in [src/hulls.tsx](src/hulls.tsx)         |
+| `power-large-loft.glb`        | `power-large` in [src/hulls.tsx](src/hulls.tsx)        |
+| `power-small-loft.glb`        | `power-small` in [src/hulls.tsx](src/hulls.tsx)        |
+| `restricted-ability-loft.glb` | `restricted-ability` in [src/hulls.tsx](src/hulls.tsx) |
+| `sail-large-loft.glb`         | `sail-large` in [src/hulls.tsx](src/hulls.tsx)         |
+| `sail-small-loft.glb`         | `sail-small` in [src/hulls.tsx](src/hulls.tsx)         |
+| `seiner-loft.glb`             | `seiner` in [src/hulls.tsx](src/hulls.tsx)             |
+| `square-rigger-loft.glb`      | `square-rigger` in [src/hulls.tsx](src/hulls.tsx)      |
+| `tanker-loft.glb`             | `tanker` in [src/hulls.tsx](src/hulls.tsx)             |
+| `trawler-loft.glb`            | `trawler` in [src/hulls.tsx](src/hulls.tsx)            |
+| `tug-loft.glb`                | `tug` in [src/hulls.tsx](src/hulls.tsx)                |
+| `warship-loft.glb`            | `warship` in [src/hulls.tsx](src/hulls.tsx)            |
+| `wing-in-ground-loft.glb`     | `wing-in-ground` in [src/hulls.tsx](src/hulls.tsx)     |
 
 ### Loft variants
 
@@ -99,71 +102,80 @@ Mesh check: `test/hullMeshCheck.test.ts` over these files turned Y-up
 (`(x, y, z) -> (x, z, -y)`), 3/3 on every row below; the base lofts score
 3/3 except `barge-loft` (bow) and `open-loft` (rail).
 
-| File                               | Hull class       | Variant  | Parameters (multipliers on the drawing)                                                                               | hullMeshCheck |
-| ---------------------------------- | ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------- | ------------- |
-| `aground-loft-slender.glb`         | `aground`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `aground-loft-sheered.glb`         | `aground`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `aground-loft-highside.glb`        | `aground`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `barge-loft-slender.glb`           | `barge`          | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9; bow tapered 0.7, cargo mound halved in length                        | 3/3           |
-| `barge-loft-sheered.glb`           | `barge`          | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1; bow tapered 0.7, cargo mound halved in length                            | 3/3           |
-| `barge-loft-highside.glb`          | `barge`          | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3; bow tapered 0.7, cargo mound halved in length                       | 3/3           |
-| `bulker-loft-slender.glb`          | `bulker`         | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `bulker-loft-sheered.glb`          | `bulker`         | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `bulker-loft-highside.glb`         | `bulker`         | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `container-ship-loft-slender.glb`  | `container-ship` | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `container-ship-loft-sheered.glb`  | `container-ship` | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `container-ship-loft-highside.glb` | `container-ship` | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `cruise-ship-loft-slender.glb`     | `cruise-ship`    | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `cruise-ship-loft-sheered.glb`     | `cruise-ship`    | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `cruise-ship-loft-highside.glb`    | `cruise-ship`    | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `dredger-loft-slender.glb`         | `dredger`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `dredger-loft-sheered.glb`         | `dredger`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `dredger-loft-highside.glb`        | `dredger`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `ferry-loft-slender.glb`           | `ferry`          | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `ferry-loft-sheered.glb`           | `ferry`          | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `ferry-loft-highside.glb`          | `ferry`          | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `fishing-gear-loft-slender.glb`    | `fishing-gear`   | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `fishing-gear-loft-sheered.glb`    | `fishing-gear`   | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `fishing-gear-loft-highside.glb`   | `fishing-gear`   | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `mine-clearance-loft-slender.glb`  | `mine-clearance` | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `mine-clearance-loft-sheered.glb`  | `mine-clearance` | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `mine-clearance-loft-highside.glb` | `mine-clearance` | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `open-loft-slender.glb`            | `open`           | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9; plus a centre console (0.45 to 0.6 of length, half the hull height)  | 3/3           |
-| `open-loft-sheered.glb`            | `open`           | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1; plus a centre console (0.45 to 0.6 of length, half the hull height)      | 3/3           |
-| `open-loft-highside.glb`           | `open`           | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3; plus a centre console (0.45 to 0.6 of length, half the hull height) | 3/3           |
-| `pilot-boat-loft-slender.glb`      | `pilot-boat`     | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `pilot-boat-loft-sheered.glb`      | `pilot-boat`     | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `pilot-boat-loft-highside.glb`     | `pilot-boat`     | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `power-large-loft-slender.glb`     | `power-large`    | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `power-large-loft-sheered.glb`     | `power-large`    | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `power-large-loft-highside.glb`    | `power-large`    | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `power-small-loft-slender.glb`     | `power-small`    | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `power-small-loft-sheered.glb`     | `power-small`    | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `power-small-loft-highside.glb`    | `power-small`    | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `sail-large-loft-slender.glb`      | `sail-large`     | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `sail-large-loft-sheered.glb`      | `sail-large`     | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `sail-large-loft-highside.glb`     | `sail-large`     | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `sail-small-loft-slender.glb`      | `sail-small`     | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `sail-small-loft-sheered.glb`      | `sail-small`     | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `sail-small-loft-highside.glb`     | `sail-small`     | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `seiner-loft-slender.glb`          | `seiner`         | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `seiner-loft-sheered.glb`          | `seiner`         | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `seiner-loft-highside.glb`         | `seiner`         | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `square-rigger-loft-slender.glb`   | `square-rigger`  | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `square-rigger-loft-sheered.glb`   | `square-rigger`  | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `square-rigger-loft-highside.glb`  | `square-rigger`  | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `tanker-loft-slender.glb`          | `tanker`         | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `tanker-loft-sheered.glb`          | `tanker`         | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `tanker-loft-highside.glb`         | `tanker`         | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `trawler-loft-slender.glb`         | `trawler`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `trawler-loft-sheered.glb`         | `trawler`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `trawler-loft-highside.glb`        | `trawler`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `tug-loft-slender.glb`             | `tug`            | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `tug-loft-sheered.glb`             | `tug`            | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `tug-loft-highside.glb`            | `tug`            | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `warship-loft-slender.glb`         | `warship`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
-| `warship-loft-sheered.glb`         | `warship`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
-| `warship-loft-highside.glb`        | `warship`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| File                                   | Hull class           | Variant  | Parameters (multipliers on the drawing)                                                                               | hullMeshCheck |
+| -------------------------------------- | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- | ------------- |
+| `aground-loft-slender.glb`             | `aground`            | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `aground-loft-sheered.glb`             | `aground`            | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `aground-loft-highside.glb`            | `aground`            | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `barge-loft-slender.glb`               | `barge`              | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9; bow tapered 0.7, cargo mound halved in length                        | 3/3           |
+| `barge-loft-sheered.glb`               | `barge`              | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1; bow tapered 0.7, cargo mound halved in length                            | 3/3           |
+| `barge-loft-highside.glb`              | `barge`              | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3; bow tapered 0.7, cargo mound halved in length                       | 3/3           |
+| `bulker-loft-slender.glb`              | `bulker`             | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `bulker-loft-sheered.glb`              | `bulker`             | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `bulker-loft-highside.glb`             | `bulker`             | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `container-ship-loft-slender.glb`      | `container-ship`     | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `container-ship-loft-sheered.glb`      | `container-ship`     | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `container-ship-loft-highside.glb`     | `container-ship`     | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `cruise-ship-loft-slender.glb`         | `cruise-ship`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `cruise-ship-loft-sheered.glb`         | `cruise-ship`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `cruise-ship-loft-highside.glb`        | `cruise-ship`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `dive-support-loft-slender.glb`        | `dive-support`       | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `dive-support-loft-sheered.glb`        | `dive-support`       | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `dive-support-loft-highside.glb`       | `dive-support`       | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `dredger-loft-slender.glb`             | `dredger`            | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `dredger-loft-sheered.glb`             | `dredger`            | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `dredger-loft-highside.glb`            | `dredger`            | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `ferry-loft-slender.glb`               | `ferry`              | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `ferry-loft-sheered.glb`               | `ferry`              | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `ferry-loft-highside.glb`              | `ferry`              | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `fishing-gear-loft-slender.glb`        | `fishing-gear`       | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `fishing-gear-loft-sheered.glb`        | `fishing-gear`       | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `fishing-gear-loft-highside.glb`       | `fishing-gear`       | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `mine-clearance-loft-slender.glb`      | `mine-clearance`     | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `mine-clearance-loft-sheered.glb`      | `mine-clearance`     | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `mine-clearance-loft-highside.glb`     | `mine-clearance`     | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `open-loft-slender.glb`                | `open`               | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9; plus a centre console (0.45 to 0.6 of length, half the hull height)  | 3/3           |
+| `open-loft-sheered.glb`                | `open`               | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1; plus a centre console (0.45 to 0.6 of length, half the hull height)      | 3/3           |
+| `open-loft-highside.glb`               | `open`               | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3; plus a centre console (0.45 to 0.6 of length, half the hull height) | 3/3           |
+| `pilot-boat-loft-slender.glb`          | `pilot-boat`         | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `pilot-boat-loft-sheered.glb`          | `pilot-boat`         | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `pilot-boat-loft-highside.glb`         | `pilot-boat`         | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `power-large-loft-slender.glb`         | `power-large`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `power-large-loft-sheered.glb`         | `power-large`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `power-large-loft-highside.glb`        | `power-large`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `power-small-loft-slender.glb`         | `power-small`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `power-small-loft-sheered.glb`         | `power-small`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `power-small-loft-highside.glb`        | `power-small`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `restricted-ability-loft-slender.glb`  | `restricted-ability` | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `restricted-ability-loft-sheered.glb`  | `restricted-ability` | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `restricted-ability-loft-highside.glb` | `restricted-ability` | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `sail-large-loft-slender.glb`          | `sail-large`         | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `sail-large-loft-sheered.glb`          | `sail-large`         | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `sail-large-loft-highside.glb`         | `sail-large`         | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `sail-small-loft-slender.glb`          | `sail-small`         | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `sail-small-loft-sheered.glb`          | `sail-small`         | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `sail-small-loft-highside.glb`         | `sail-small`         | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `seiner-loft-slender.glb`              | `seiner`             | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `seiner-loft-sheered.glb`              | `seiner`             | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `seiner-loft-highside.glb`             | `seiner`             | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `square-rigger-loft-slender.glb`       | `square-rigger`      | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `square-rigger-loft-sheered.glb`       | `square-rigger`      | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `square-rigger-loft-highside.glb`      | `square-rigger`      | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `tanker-loft-slender.glb`              | `tanker`             | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `tanker-loft-sheered.glb`              | `tanker`             | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `tanker-loft-highside.glb`             | `tanker`             | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `trawler-loft-slender.glb`             | `trawler`            | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `trawler-loft-sheered.glb`             | `trawler`            | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `trawler-loft-highside.glb`            | `trawler`            | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `tug-loft-slender.glb`                 | `tug`                | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `tug-loft-sheered.glb`                 | `tug`                | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `tug-loft-highside.glb`                | `tug`                | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `warship-loft-slender.glb`             | `warship`            | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `warship-loft-sheered.glb`             | `warship`            | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `warship-loft-highside.glb`            | `warship`            | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
+| `wing-in-ground-loft-slender.glb`      | `wing-in-ground`     | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
+| `wing-in-ground-loft-sheered.glb`      | `wing-in-ground`     | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
+| `wing-in-ground-loft-highside.glb`     | `wing-in-ground`     | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
 
 - **Known gap:** `anchorLights` reads the lights' seats off the mesh, and
   for these meshes its reading misses the specs' hand-set stations (searoom's

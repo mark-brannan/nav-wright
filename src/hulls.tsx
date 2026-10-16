@@ -1715,12 +1715,315 @@ const aground: Hull = {
   ),
 };
 
+/** A dive-support vessel: wheelhouse forward on a low working deck, the
+ *  dive station amidships with a decompression chamber, and an A-frame
+ *  over the stern with its fall down to the water. The foremast stands on
+ *  the wheelhouse, tall enough that 27(b)(i)'s red-white-red stack hangs
+ *  under the masthead light and clear of the roof. The fall below the
+ *  waterline and the diver's down-line are drawn in the profile alone. */
+const diveSupport: Hull = {
+  spec: {
+    id: 'dive-support',
+    beam: 0.22,
+    mastX: 0.38,
+    mastTopZ: 1.02,
+    aftMastX: -0.72,
+    aftMastTopZ: 0.78,
+    sideLightX: 0.42,
+    sideLightZ: 0.4,
+    bowX: 0.92,
+    sternX: -0.88,
+    sternZ: 0.2,
+  },
+  plan: shipPlan,
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.94, 0.4],
+          [0.98, 0.28],
+          [0.84, 0.03],
+          [-0.84, 0.03],
+          [-0.9, 0.14],
+          [-0.9, 0.22],
+          [0.2, 0.24],
+          [0.3, 0.36],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* wheelhouse forward */}
+      <path
+        d={d([
+          [0.66, 0.36],
+          [0.6, 0.56],
+          [0.22, 0.56],
+          [0.2, 0.3],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {mast(0.38, 1.02, 0.56)}
+      {/* decompression chamber on the dive deck */}
+      <path
+        d={d([
+          [-0.05, 0.24],
+          [-0.05, 0.36],
+          [-0.32, 0.36],
+          [-0.32, 0.23],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* A-frame over the stern, its fall to the water */}
+      <path
+        d={`M${PX(-0.58)},${PZ(0.22)} L${PX(-0.72)},${PZ(0.78) - 6} L${PX(-0.84)},${PZ(0.21)}`}
+        fill="none"
+        stroke={rigStroke}
+        strokeWidth={2}
+      />
+      <line
+        x1={PX(-0.72)}
+        y1={PZ(0.74)}
+        x2={PX(-0.96)}
+        y2={PZ(0.64)}
+        stroke={rigStroke}
+        strokeWidth={1.5}
+      />
+      <line
+        x1={PX(-0.96)}
+        y1={PZ(0.64)}
+        x2={PX(-0.96)}
+        y2={PZ(0.0)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+      {/* the down-line under water, and the diving stage on it */}
+      <line
+        x1={PX(-0.96)}
+        y1={PZ(0.0)}
+        x2={PX(-0.96)}
+        y2={PZ(-0.2)}
+        stroke={hullStroke}
+        strokeWidth={0.75}
+        strokeDasharray="3 2"
+      />
+      <path
+        d={d([
+          [-0.92, -0.2],
+          [-0.92, -0.26],
+          [-1.0, -0.26],
+          [-1.0, -0.2],
+        ])}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+    </g>
+  ),
+};
+
+/** A wing-in-ground craft on the water: a low, flat hull that is half
+ *  float, half fuselage, a canopy forward, short stub wings and a T-tail.
+ *  The plan outline carries the wings, so the side lights sit near the wing
+ *  tips; the masthead light rides a short mast on the canopy, and 23(c)'s
+ *  flashing red goes under it. */
+const wingInGround: Hull = {
+  spec: {
+    id: 'wing-in-ground',
+    beam: 0.3,
+    mastX: 0.3,
+    mastTopZ: 0.62,
+    aftMastX: -0.8,
+    aftMastTopZ: 0.7,
+    sideLightX: 0.1,
+    sideLightZ: 0.16,
+    bowX: 0.94,
+    sternX: -0.88,
+    sternZ: 0.16,
+  },
+  plan: [
+    [1, 0],
+    [0.8, 0.07],
+    [0.3, 0.09],
+    [0.12, 0.3],
+    [-0.08, 0.3],
+    [-0.12, 0.09],
+    [-0.75, 0.06],
+    [-0.82, 0.15],
+    [-0.92, 0.15],
+    [-0.92, -0.15],
+    [-0.82, -0.15],
+    [-0.75, -0.06],
+    [-0.12, -0.09],
+    [-0.08, -0.3],
+    [0.12, -0.3],
+    [0.3, -0.09],
+    [0.8, -0.07],
+  ],
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.96, 0.16],
+          [0.96, 0.1],
+          [0.8, 0.02],
+          [-0.2, 0.02],
+          [-0.88, 0.1],
+          [-0.9, 0.18],
+          [0.4, 0.2],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* canopy forward */}
+      <path
+        d={d([
+          [0.62, 0.19],
+          [0.5, 0.3],
+          [0.18, 0.3],
+          [0.1, 0.18],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {mast(0.3, 0.62, 0.3)}
+      {/* stub wing, seen edge on, and its float */}
+      <path
+        d={`M${PX(0.14)},${PZ(0.11)} L${PX(-0.1)},${PZ(0.13)}`}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={3}
+      />
+      {/* tail fin and the tailplane on top of it */}
+      <path
+        d={`M${PX(-0.62)},${PZ(0.16)} L${PX(-0.8)},${PZ(0.7)} L${PX(-0.9)},${PZ(0.7)} L${PX(-0.88)},${PZ(0.18)}`}
+        fill="none"
+        stroke={rigStroke}
+        strokeWidth={2}
+      />
+      <line
+        x1={PX(-0.72)}
+        y1={PZ(0.7)}
+        x2={PX(-0.96)}
+        y2={PZ(0.7)}
+        stroke={rigStroke}
+        strokeWidth={2.5}
+      />
+    </g>
+  ),
+};
+
+/** A vessel restricted in her ability to manoeuvre by her work, and not
+ *  diving, dredging or clearing mines: a buoy tender laying a navigation
+ *  buoy. Bridge forward, the long buoy deck aft with a heavy crane, its
+ *  boom swung out over the quarter and the buoy in the sling. Beam, deck
+ *  and mast heads are set so that at 60 m Annex I puts both masthead lights
+ *  on the drawn masts and inside the profile frame, with the red-white-red
+ *  stack under the forward one. */
+const restrictedAbility: Hull = {
+  spec: {
+    id: 'restricted-ability',
+    beam: 0.18,
+    mastX: 0.52,
+    mastTopZ: 0.94,
+    aftMastX: -0.5,
+    aftMastTopZ: 1.13,
+    sideLightX: 0.4,
+    sideLightZ: 0.5,
+    bowX: 0.92,
+    sternX: -0.88,
+    sternZ: 0.24,
+  },
+  plan: shipPlan,
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.94, 0.46],
+          [0.98, 0.34],
+          [0.86, 0.04],
+          [-0.86, 0.04],
+          [-0.92, 0.16],
+          [-0.92, 0.26],
+          [0.2, 0.28],
+          [0.3, 0.4],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* bridge and accommodation forward */}
+      <path
+        d={d([
+          [0.74, 0.42],
+          [0.68, 0.64],
+          [0.26, 0.64],
+          [0.22, 0.34],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {mast(0.52, 0.94, 0.64)}
+      {/* crane pedestal on the buoy deck */}
+      <path
+        d={d([
+          [-0.02, 0.28],
+          [-0.02, 0.44],
+          [-0.14, 0.44],
+          [-0.14, 0.28],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* crane boom out over the quarter, the fall and the buoy in the sling */}
+      <line
+        x1={PX(-0.08)}
+        y1={PZ(0.44)}
+        x2={PX(-0.72)}
+        y2={PZ(0.86)}
+        stroke={rigStroke}
+        strokeWidth={2.5}
+      />
+      <line
+        x1={PX(-0.72)}
+        y1={PZ(0.86)}
+        x2={PX(-0.72)}
+        y2={PZ(0.44)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+      <path
+        d={d([
+          [-0.66, 0.44],
+          [-0.69, 0.32],
+          [-0.75, 0.32],
+          [-0.78, 0.44],
+        ])}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* after mast, on the stern */}
+      {mast(-0.5, 1.13, 0.27)}
+    </g>
+  ),
+};
+
 /**
  * Pick the base drawing for a set of facts. Position first (a vessel
  * aground is drawn aground whatever she is), then activity (a trawler is a
  * trawler at any length; with gear out, the fishing hull draws it), then
- * propulsion, then length bands for plain
- * power vessels. No fact separates a cruise ship from a box ship, so
+ * propulsion, then the wing-in-ground craft (power-driven on the surface by
+ * Rule 3(m), so she would otherwise fall into a length band), then length
+ * bands for plain power vessels. No fact separates a cruise ship from a box ship, so
  * `cruiseShip` is never chosen here; a consumer that knows picks it from
  * `allHulls`. Bulk carriers are told apart by speed: the slow end of the
  * large-ship band is the bulker, the fast end the container ship. The
@@ -1743,12 +2046,15 @@ export function selectHull(facts: FactRecord): Hull {
   if (activity === 'activity:cbd') return tanker;
   if (activity === 'activity:mine') return mineClearance;
   if (activity === 'activity:ram_underwater') return dredger;
+  if (activity === 'activity:diving') return diveSupport;
+  if (activity === 'activity:ram') return restrictedAbility;
   const propulsion = facts['fact:propulsion'];
   if (propulsion === 'propulsion:oars') return openBoat;
   if (propulsion === 'propulsion:sail') {
     if (length < 20) return sailSmall;
     return length < 40 ? sailLarge : squareRigger;
   }
+  if (facts['fact:wig'] === true) return wingInGround;
   if (length < 7) return openBoat;
   if (length < 20) return powerSmall;
   if (length < 50) return powerLarge;
@@ -1780,4 +2086,7 @@ export const allHulls = {
   mineClearance,
   fishingGear,
   aground,
+  diveSupport,
+  wingInGround,
+  restrictedAbility,
 };

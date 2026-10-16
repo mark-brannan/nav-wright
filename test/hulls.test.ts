@@ -15,9 +15,9 @@ import { hullFacts } from '../playground/hullFacts.js';
 const hulls = Object.entries(allHulls);
 
 describe('hull roster', () => {
-  it('has the agreed twenty-one hulls with distinct ids', () => {
-    expect(hulls).toHaveLength(21);
-    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(21);
+  it('has the agreed twenty-four hulls with distinct ids', () => {
+    expect(hulls).toHaveLength(24);
+    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(24);
   });
 
   it.each(hulls)('%s keeps its light stations inside the hull', (_name, hull) => {
@@ -62,6 +62,7 @@ describe('hull roster', () => {
     'mineClearance',
     'fishingGear',
     'aground',
+    'restrictedAbility',
   ] as const)('%s carries the after masthead higher than the forward one', (name) => {
     const s = allHulls[name].spec;
     expect(s.aftMastX).toBeLessThan(s.mastX);
@@ -81,6 +82,7 @@ describe('hull roster', () => {
     'ferry',
     'dredger',
     'aground',
+    'restrictedAbility',
   ] as const)('%s spaces its masthead lights as Annex I 3(a) asks', (name) => {
     const s = allHulls[name].spec;
     expect(1 - s.mastX).toBeLessThanOrEqual(0.5);
@@ -155,6 +157,35 @@ describe('selectHull', () => {
       'at anchor is not aground',
       { 'fact:position': 'position:anchored', 'fact:activity': 'activity:trawling' },
       'trawler',
+    ],
+    ['diving', { 'fact:activity': 'activity:diving' }, 'diveSupport'],
+    ['diving at 60 m', { 'fact:activity': 'activity:diving', 'fact:length_m': 60 }, 'diveSupport'],
+    [
+      'restricted in ability to manoeuvre',
+      { 'fact:activity': 'activity:ram' },
+      'restrictedAbility',
+    ],
+    [
+      'underwater operations stay with the dredger',
+      { 'fact:activity': 'activity:ram_underwater', 'fact:length_m': 60 },
+      'dredger',
+    ],
+    ['wing-in-ground craft', { 'fact:wig': true }, 'wingInGround'],
+    [
+      'wing-in-ground craft near the surface',
+      { 'fact:wig': true, 'fact:wig_near_surface': true, 'fact:length_m': 15 },
+      'wingInGround',
+    ],
+    ['wing-in-ground outranks length', { 'fact:wig': true, 'fact:length_m': 60 }, 'wingInGround'],
+    [
+      'fact:wig false is a plain power vessel',
+      { 'fact:wig': false, 'fact:length_m': 15 },
+      'powerSmall',
+    ],
+    [
+      'aground outranks wing-in-ground',
+      { 'fact:position': 'position:aground', 'fact:wig': true },
+      'aground',
     ],
     [
       'activity outranks length',

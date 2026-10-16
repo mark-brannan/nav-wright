@@ -62,4 +62,18 @@ export const hullFacts: Record<HullKey, FactRecord> = {
     'fact:making_way': false,
     'fact:length_m': 60,
   },
+  diveSupport: { ...power, ...underway, 'fact:activity': 'activity:diving', 'fact:length_m': 30 },
+  wingInGround: {
+    ...power,
+    ...underway,
+    'fact:wig': true,
+    'fact:wig_near_surface': true,
+    'fact:length_m': 15,
+  },
+  restrictedAbility: {
+    ...power,
+    ...underway,
+    'fact:activity': 'activity:ram',
+    'fact:length_m': 60,
+  },
 };
