@@ -21,10 +21,13 @@ export interface SceneLabels {
   bearingThetaValue: (theta: number, aspect: string) => string;
   aspect: Record<Aspect, string>;
   planAlt: string;
+  /** SceneView's closest-point-of-approach marker */
+  sceneCpa?: (cpaM: number, tcpaS: number) => string;
   profileAlt: string;
 }
 
 export const defaultSceneLabels: SceneLabels = {
+  sceneCpa: (cpaM, tcpaS) => `CPA ${Math.round(cpaM)} m in ${Math.round(tcpaS)} s`,
   bearingAlt: (theta) => `Bearing view: her lights as seen from relative bearing ${theta} degrees`,
   bearingNoLights: 'No lights visible from this bearing',
   bearingThetaLabel: 'Relative bearing θ',

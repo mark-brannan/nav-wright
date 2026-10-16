@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fitScale, pairFromPositions, pairLayout, toScreen } from '../src/sceneGeometry.js';
+import { bearingTheta, fitScale, pairFromPositions, pairLayout, toScreen } from '../src/sceneGeometry.js';
 
 const near = (a: number, b: number) => expect(a).toBeCloseTo(b, 6);
 
@@ -95,5 +95,28 @@ describe('pairFromPositions', () => {
     );
     near(l.trueBearing, 180);
     expect(l.target.north).toBeLessThan(0);
+  });
+});
+
+describe('bearingTheta', () => {
+  it('head-on: own ship sees the target\'s bow (θ 0)', () => {
+    near(bearingTheta({ ownHeading: 0, targetHeading: 180, relativeBearing: 0, rangeM: 1000 }), 0);
+  });
+
+  it('crossing: target heading west on own starboard beam, own ship is dead ahead of it', () => {
+    near(bearingTheta({ ownHeading: 0, targetHeading: 270, relativeBearing: 90, rangeM: 500 }), 0);
+  });
+
+  it('crossing from the other side: target heading east on own port beam', () => {
+    near(bearingTheta({ ownHeading: 0, targetHeading: 90, relativeBearing: 270, rangeM: 500 }), 0);
+  });
+
+  it('overtaking: own ship astern of the target (θ 180)', () => {
+    near(bearingTheta({ ownHeading: 90, targetHeading: 90, relativeBearing: 0, rangeM: 300 }), 180);
+  });
+
+  it('target abeam of own ship, same course: own ship is on the target\'s beam', () => {
+    // target due east, both heading north: own ship lies west of it, 270 from its bow
+    near(bearingTheta({ ownHeading: 0, targetHeading: 0, relativeBearing: 90, rangeM: 400 }), 270);
   });
 });

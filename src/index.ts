@@ -38,7 +38,7 @@ export { PlanView } from './PlanView.js';
 export { ProfileView } from './ProfileView.js';
 export { SceneView } from './SceneView.js';
 export type { SceneVessel } from './SceneView.js';
-export { fitScale, pairFromPositions, pairLayout, toScreen } from './sceneGeometry.js';
+export { bearingTheta, fitScale, pairFromPositions, pairLayout, toScreen } from './sceneGeometry.js';
 export type { LatLon, PairInput, PairLayout } from './sceneGeometry.js';
 
 // The relative-bearing dial, shared by BearingView and the 3D view, and the

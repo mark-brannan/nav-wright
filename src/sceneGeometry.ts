@@ -76,6 +76,17 @@ export function pairLayout(p: PairInput): PairLayout {
 }
 
 /**
+ * The θ that `BearingView` wants to show what own ship sees of the target:
+ * the bearing of own ship from the target, relative to the target's bow. Fed
+ * the target's hull and placed lights, the view then draws exactly the lights
+ * (and sidelight cutoffs) own ship can see. Geometry only; it says nothing of
+ * who gives way.
+ */
+export function bearingTheta(p: PairInput): number {
+  return pairLayout(p).ownFromTarget;
+}
+
+/**
  * Pixels per metre that keep both vessels, plus `marginM` around each, inside
  * a square frame of `size` px centred on the midpoint of the pair.
  */
