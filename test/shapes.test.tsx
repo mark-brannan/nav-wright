@@ -295,6 +295,15 @@ describe('every day fixture, every shape', () => {
     expect(shapeElements(wrap('<script>alert(1)</script>'))).toBeNull();
     expect(shapeElements(wrap('<image href="x"/>'))).toBeNull();
     expect(shapeElements(wrap('<path d=M0/>'))).toBeNull();
+    expect(shapeElements(wrap('<path d="M0 0" r/>'))).toBeNull();
+  });
+
+  it('a long malformed shape svg is rejected in linear time', () => {
+    const wrap = (inner: string) => `<svg viewBox="0 0 1 1">${inner}</svg>`;
+    const t0 = performance.now();
+    expect(shapeElements(wrap(`<path ${'-'.repeat(200_000)}/>`))).toBeNull();
+    expect(shapeElements(wrap(`<path d="M0"${' '.repeat(200_000)}x/>`))).toBeNull();
+    expect(performance.now() - t0).toBeLessThan(1000);
   });
 
   it('shapes.json carries no basket, so none is drawn', () => {

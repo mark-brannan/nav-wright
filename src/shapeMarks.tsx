@@ -40,7 +40,28 @@ const ATTRS: Record<string, string> = {
   transform: 'transform',
 };
 const ELEMENT = /<([a-z]+)\b([^<>]*?)\/>/gy;
-const ATTR = /\s*([a-zA-Z-]+)="([^"<>]*)"/gy;
+const NAME_CHAR = /[a-zA-Z-]/;
+const SPACE = /\s/;
+
+/** An element's `name="value"` attributes, allowlisted, or null if any is
+ *  unquoted or malformed. A single forward scan, so its cost stays linear in
+ *  the length of the text whatever it holds. */
+function readAttrs(raw: string): Record<string, string> | null {
+  const props: Record<string, string> = {};
+  let i = 0;
+  for (;;) {
+    while (i < raw.length && SPACE.test(raw[i]!)) i++;
+    if (i === raw.length) return props;
+    const start = i;
+    while (i < raw.length && NAME_CHAR.test(raw[i]!)) i++;
+    if (i === start || raw[i] !== '=' || raw[i + 1] !== '"') return null;
+    const close = raw.indexOf('"', i + 2);
+    if (close < 0) return null;
+    const name = ATTRS[raw.slice(start, i)];
+    if (name) props[name] = raw.slice(i + 2, close);
+    i = close + 1;
+  }
+}
 
 /** The svg's drawing elements as React elements, or null if it holds anything else. */
 export function shapeElements(svg: string): ReactElement[] | null {
@@ -53,15 +74,8 @@ export function shapeElements(svg: string): ReactElement[] | null {
   while (ELEMENT.lastIndex < inner.length && (el = ELEMENT.exec(inner))) {
     const tag = el[1]!;
     if (!ELEMENTS.has(tag)) return null;
-    const props: Record<string, string> = {};
-    const raw = el[2]!.replace(/\s+$/, '');
-    ATTR.lastIndex = 0;
-    let a: RegExpExecArray | null;
-    while (ATTR.lastIndex < raw.length && (a = ATTR.exec(raw))) {
-      const name = ATTRS[a[1]!];
-      if (name) props[name] = a[2]!;
-    }
-    if (ATTR.lastIndex !== raw.length) return null; // unquoted or malformed attributes
+    const props = readAttrs(el[2]!);
+    if (!props) return null;
     out.push(createElement(tag, { key: out.length, ...props }));
     while (inner[ELEMENT.lastIndex] && /\s/.test(inner[ELEMENT.lastIndex]!)) ELEMENT.lastIndex++;
   }
