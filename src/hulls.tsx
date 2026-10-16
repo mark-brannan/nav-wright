@@ -1718,7 +1718,7 @@ const aground: Hull = {
 /** A dive-support vessel: wheelhouse forward on a low working deck, the
  *  dive station amidships with a decompression chamber, and an A-frame
  *  over the stern with its fall down to the water. The foremast stands on
- *  the wheelhouse, tall enough that 27(b)(i)'s red-white-red stack hangs
+ *  the wheelhouse, tall enough that 27(e)(i)'s red-white-red stack hangs
  *  under the masthead light and clear of the roof. The fall below the
  *  waterline and the diver's down-line are drawn in the profile alone. */
 const diveSupport: Hull = {
@@ -2023,9 +2023,9 @@ const restrictedAbility: Hull = {
  * trawler at any length; with gear out, the fishing hull draws it), then
  * propulsion, then the wing-in-ground craft (power-driven on the surface by
  * Rule 3(m), so she would otherwise fall into a length band), then length
- * bands for plain power vessels. No fact separates a cruise ship from a box ship, so
- * `cruiseShip` is never chosen here; a consumer that knows picks it from
- * `allHulls`. Bulk carriers are told apart by speed: the slow end of the
+ * bands for plain power vessels. No fact separates a cruise ship from a box
+ * ship, so `cruiseShip` is never chosen here; a consumer that knows picks it
+ * from `allHulls`. Bulk carriers are told apart by speed: the slow end of the
  * large-ship band is the bulker, the fast end the container ship. The
  * warship has no fact of its own either, since mine clearance took its
  * mapping; it stays in `allHulls`.
