@@ -3,7 +3,19 @@
 // to rename anything.
 
 // Rendering primitives
-export { Glow, LIGHT_COLORS, lightFill, polar, sectorPath } from './svg.js';
+export {
+  Glow,
+  LIGHT_COLORS,
+  declaredFlashRate,
+  flashPeriodSeconds,
+  glowProfile,
+  lightFill,
+  lightRangesFor,
+  polar,
+  sectorPath,
+} from './svg.js';
+export type { GlowProfile } from './svg.js';
+export { mergeLanterns } from './lantern.js';
 
 // Vessel models
 export { PX, PZ, allHulls, selectHull } from './hulls.js';
