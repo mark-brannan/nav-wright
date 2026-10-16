@@ -1,5 +1,5 @@
 // Day shapes: where each one goes on the hull and how big it is. Placement
-// only; src/shapes.tsx draws. Parallel to placeLights: deterministic, and
+// only; src/shapeMarks.tsx draws. Parallel to placeLights: deterministic, and
 // every number comes from colregs data passed in (shapes.json for the form
 // and size, geometry.json for the spacing, the relief and the 27(d) offset),
 // nothing imported at runtime.
@@ -83,6 +83,12 @@ type Item = {
   h: number;
   def: ShapesData['shapes'][string];
 };
+
+/** The Annex I 4 horizontal-offset entry geometry.json keys to a rule entry
+ *  (4(a) for the 26(c)(ii) gear, 4(b) for the 27(d) sides). */
+function offsetRule(geometry: GeometryData, entry: string) {
+  return geometry.direction_indicating?.find((e) => e.applies_to_entries?.includes(entry));
+}
 
 const rankOf = (pos: string) =>
   pos.startsWith('upper') ? 0 : pos.startsWith('middle') ? 1 : pos.startsWith('lower') ? 2 : 1;
@@ -201,9 +207,7 @@ export function placeShapes(
   orderedMast.forEach((it, i) => emit(it, hull.mastX, 0, mastCentres[i]!, []));
 
   // 27(d): beside the 27(b) stack, upper no higher than its lowest shape
-  const sideRule = geometry.horizontal_positioning.find((e) =>
-    (e as { applies_to_entries?: string[] }).applies_to_entries?.includes('rule:27d'),
-  ) as { cite: string; horizontal_from_ram_lights_m?: { min?: number } } | undefined;
+  const sideRule = offsetRule(geometry, 'rule:27d');
   const sideMinPy = (sideRule?.horizontal_from_ram_lights_m?.min ?? 0) / (length / 2);
   const sidePy = Math.max(sideMinPy, hull.beam * 1.6);
   const lowestIdx = orderedMast.reduce((a, m, i) => (m.entry.startsWith('rule:27b') ? i : a), -1);
@@ -222,7 +226,7 @@ export function placeShapes(
       const base = (hull.sideLightZ + 0.18 - deckZ) * k;
       s.items.forEach((it) => emit(it, hull.bowX - 0.08, 0, base, []));
     } else if (s.kind === 'gear') {
-      const dir = geometry.direction_indicating?.[0];
+      const dir = offsetRule(geometry, 'rule:26c_ii');
       const offM = dir?.horizontal_from_identity_lights_m?.min ?? 0;
       const cm = mastCentres.length ? mastCentres[mastCentres.length - 1]! : mastTopM;
       s.items.forEach((it) => emit(it, hull.mastX, offM / (length / 2), cm, dir ? [dir.cite] : []));

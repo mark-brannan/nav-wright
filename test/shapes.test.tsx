@@ -12,7 +12,7 @@ import shapesJson from 'colregs/data/shapes.json' with { type: 'json' };
 import fixturesJson from 'colregs/fixtures/applicability-fixtures.json' with { type: 'json' };
 import { PlanView } from '../src/PlanView.js';
 import { ProfileView } from '../src/ProfileView.js';
-import { ShapeMark } from '../src/shapeMarks.js';
+import { ShapeMark, shapeElements } from '../src/shapeMarks.js';
 import { allHulls, selectHull } from '../src/hulls.js';
 import { hullStyles } from '../src/hullStyles.js';
 import { placeLights } from '../src/placement.js';
@@ -147,7 +147,24 @@ describe('placement per rule', () => {
     const sides = byEntry(shapes, 'rule:27d');
     expect(sides.filter((x) => x.shapeId === 'shape:ball')).toHaveLength(2);
     expect(sides.filter((x) => x.shapeId === 'shape:diamond')).toHaveLength(2);
-    for (const x of sides) expect(Math.abs(x.py) * x.halfLengthM).toBeGreaterThanOrEqual(2);
+    // the minimum is geometry.json's AnxI.4(b) entry, read, not assumed
+    const anx4b = geometry.direction_indicating!.find((e) =>
+      e.applies_to_entries?.includes('rule:27d'),
+    )!;
+    const minAbeam = anx4b.horizontal_from_ram_lights_m!.min!;
+    for (const x of sides) {
+      expect(Math.abs(x.py) * x.halfLengthM).toBeGreaterThanOrEqual(minAbeam - 1e-9);
+      expect(x.basis).toContain(anx4b.cite);
+    }
+    // on a hull whose drawn beam is under the minimum, the minimum still holds
+    const short = { ...facts, 'fact:length_m': 3 } as FactRecord;
+    const shortSides = byEntry(
+      placeShapes(displayOf(facts).shapes, selectHull(facts).spec, short, shapesData, geometry),
+      'rule:27d',
+    );
+    for (const x of shortSides) {
+      expect(Math.abs(x.py) * x.halfLengthM).toBeGreaterThanOrEqual(minAbeam - 1e-9);
+    }
     // balls where the obstruction is (port), diamonds where it is safe to pass
     for (const x of sides) {
       expect(Math.sign(x.py)).toBe(x.shapeId === 'shape:ball' ? -1 : 1);
@@ -264,6 +281,20 @@ describe('every day fixture, every shape', () => {
       expect(html, id).toContain(`data-shape="${id}"`);
       expect(html, id).toContain(def.svg.match(/<(path|circle|rect)/)![0]);
     }
+  });
+
+  it('a shape svg is rebuilt from allowlisted elements and attributes, never injected', () => {
+    const wrap = (inner: string) => `<svg viewBox="0 0 1 1">${inner}</svg>`;
+    const html = (inner: string) => renderToStaticMarkup(<svg>{shapeElements(wrap(inner))}</svg>);
+    const handler = html('<path d="M0 0" onmouseover="alert(1)"/>');
+    expect(handler).toContain('d="M0 0"');
+    expect(handler).not.toContain('onmouseover');
+    const styled = html('<circle r="1" style="background:url(x)" stroke-width="0.1"/>');
+    expect(styled).not.toContain('style');
+    expect(styled).toContain('stroke-width="0.1"');
+    expect(shapeElements(wrap('<script>alert(1)</script>'))).toBeNull();
+    expect(shapeElements(wrap('<image href="x"/>'))).toBeNull();
+    expect(shapeElements(wrap('<path d=M0/>'))).toBeNull();
   });
 
   it('shapes.json carries no basket, so none is drawn', () => {

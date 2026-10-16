@@ -3,6 +3,7 @@
 // `svg`, verbatim and unredrawn, scaled from metres to pixels; the shapes
 // are black on the day ground (flag A carries its own white and blue).
 
+import { createElement } from 'react';
 import type { ReactElement } from 'react';
 import { PX, PZ } from './hulls.js';
 import type { PlacedShape } from './shapes.js';
@@ -12,13 +13,59 @@ const PROFILE_PX_PER_Z = PZ(0) - PZ(1);
 /** Cabinet-oblique drawing of an athwartship offset in the abeam profile. */
 const OBLIQUE = 0.5;
 
-// Only plain drawing elements pass; anything else in a svg string is dropped
-// and the shape's bounding box is drawn instead.
-const SAFE_INNER = /^(?:<(?:path|circle|rect|ellipse|polygon|line)\b[^<>]*\/>)+$/;
+// A shapes.json `svg` is rebuilt as React elements, never injected as
+// markup: only plain drawing elements and an allowlist of geometry and paint
+// attributes pass (no handlers, `style` or `href`). Anything else in the
+// string drops the whole drawing, and the shape's bounding box is drawn.
+const ELEMENTS = new Set(['path', 'circle', 'rect', 'ellipse', 'polygon', 'line']);
+const ATTRS: Record<string, string> = {
+  d: 'd',
+  cx: 'cx',
+  cy: 'cy',
+  r: 'r',
+  rx: 'rx',
+  ry: 'ry',
+  x: 'x',
+  y: 'y',
+  width: 'width',
+  height: 'height',
+  points: 'points',
+  x1: 'x1',
+  y1: 'y1',
+  x2: 'x2',
+  y2: 'y2',
+  fill: 'fill',
+  stroke: 'stroke',
+  'stroke-width': 'strokeWidth',
+  transform: 'transform',
+};
+const ELEMENT = /<([a-z]+)\b([^<>]*?)\/>/gy;
+const ATTR = /\s*([a-zA-Z-]+)="([^"<>]*)"/gy;
 
-function innerOf(svg: string): string | null {
+/** The svg's drawing elements as React elements, or null if it holds anything else. */
+export function shapeElements(svg: string): ReactElement[] | null {
   const m = /^<svg\b[^>]*>(.*)<\/svg>$/s.exec(svg.trim());
-  return m && SAFE_INNER.test(m[1]!) ? m[1]! : null;
+  if (!m) return null;
+  const inner = m[1]!.trim();
+  const out: ReactElement[] = [];
+  ELEMENT.lastIndex = 0;
+  let el: RegExpExecArray | null;
+  while (ELEMENT.lastIndex < inner.length && (el = ELEMENT.exec(inner))) {
+    const tag = el[1]!;
+    if (!ELEMENTS.has(tag)) return null;
+    const props: Record<string, string> = {};
+    const raw = el[2]!.replace(/\s+$/, '');
+    ATTR.lastIndex = 0;
+    let a: RegExpExecArray | null;
+    while (ATTR.lastIndex < raw.length && (a = ATTR.exec(raw))) {
+      const name = ATTRS[a[1]!];
+      if (name) props[name] = a[2]!;
+    }
+    if (ATTR.lastIndex !== raw.length) return null; // unquoted or malformed attributes
+    out.push(createElement(tag, { key: out.length, ...props }));
+    while (inner[ELEMENT.lastIndex] && /\s/.test(inner[ELEMENT.lastIndex]!)) ELEMENT.lastIndex++;
+  }
+  return out.length > 0 && ELEMENT.lastIndex === inner.length ? out : null;
 }
 
 /** One shape, centred on (x, y) pixels, `pxPerM` pixels to the metre. */
@@ -36,7 +83,7 @@ export function ShapeMark({
   opacity?: number;
 }): ReactElement {
   const s = pxPerM * shape.scale;
-  const inner = innerOf(shape.svg);
+  const inner = shapeElements(shape.svg);
   return (
     <g
       className="day-shape"
@@ -46,7 +93,7 @@ export function ShapeMark({
     >
       <title>{shape.term}</title>
       {inner ? (
-        <g dangerouslySetInnerHTML={{ __html: inner }} />
+        <g>{inner}</g>
       ) : (
         <rect
           width={shape.svgWidthM}
