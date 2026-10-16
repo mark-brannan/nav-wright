@@ -15,6 +15,17 @@ export interface SceneVessel {
   placed: PlacedLight[];
   /** true heading, deg */
   heading: number;
+  /** speed over ground, m/s; with it the scene draws the vessel's vector */
+  speedMps?: number;
+  /** course over ground, true deg; defaults to the heading */
+  courseDeg?: number;
+}
+
+/** East/north metres a vessel covers in `seconds` at its course and speed. */
+function travel(v: SceneVessel, seconds: number): { east: number; north: number } {
+  const a = (((v.courseDeg ?? v.heading) % 360) * Math.PI) / 180;
+  const d = (v.speedMps ?? 0) * seconds;
+  return { east: d * Math.sin(a), north: d * Math.cos(a) };
 }
 
 const SIZE = 440;
@@ -95,6 +106,8 @@ export function SceneView({
   target,
   relativeBearing,
   rangeM,
+  vectorMinutes = 6,
+  cpa,
   labels = defaultSceneLabels,
 }: {
   own: SceneVessel;
@@ -102,6 +115,13 @@ export function SceneView({
   /** target's bearing from own ship, relative to own bow, deg */
   relativeBearing: number;
   rangeM: number;
+  /** how far ahead, minutes, each course-and-speed vector reaches */
+  vectorMinutes?: number;
+  /**
+   * `geo:cpa_m` and `geo:tcpa_s`. Needs both vessels' `speedMps`: the marker
+   * joins where each will be at the time of closest approach.
+   */
+  cpa?: { cpaM: number; tcpaS: number };
   labels?: SceneLabels;
 }): ReactElement {
   const lay = pairLayout({
@@ -119,6 +139,45 @@ export function SceneView({
     toScreen(e - lay.target.east / 2, n - lay.target.north / 2, scale, mid);
   const [ox, oy] = off(0, 0);
   const [tx, ty] = off(lay.target.east, lay.target.north);
+  const vector = (v: SceneVessel, x: number, y: number, id: string): ReactElement | null => {
+    if (v.speedMps === undefined) return null;
+    const d = travel(v, vectorMinutes * 60);
+    return (
+      <line
+        data-vector={id}
+        x1={x}
+        y1={y}
+        x2={x + d.east * scale}
+        y2={y - d.north * scale}
+        stroke="var(--accent-soft)"
+        strokeWidth={1.5}
+      />
+    );
+  };
+  let cpaMarker: ReactElement | null = null;
+  if (cpa && own.speedMps !== undefined && target.speedMps !== undefined) {
+    const o = travel(own, cpa.tcpaS);
+    const t = travel(target, cpa.tcpaS);
+    const [cox, coy] = [ox + o.east * scale, oy - o.north * scale];
+    const [ctx, cty] = [tx + t.east * scale, ty - t.north * scale];
+    const text = (labels.sceneCpa ?? defaultSceneLabels.sceneCpa!)(cpa.cpaM, cpa.tcpaS);
+    cpaMarker = (
+      <g data-cpa>
+        <line x1={cox} y1={coy} x2={ctx} y2={cty} stroke="var(--accent)" strokeWidth={1.5} />
+        <circle cx={cox} cy={coy} r={3} fill="var(--accent)" />
+        <circle cx={ctx} cy={cty} r={3} fill="var(--accent)" />
+        <text
+          x={(cox + ctx) / 2}
+          y={(coy + cty) / 2 - 6}
+          textAnchor="middle"
+          fontSize={11}
+          fill="var(--accent)"
+        >
+          {text}
+        </text>
+      </g>
+    );
+  }
   return (
     <svg
       viewBox={`0 0 ${SIZE} ${SIZE}`}
@@ -137,6 +196,9 @@ export function SceneView({
         strokeWidth={1.5}
         strokeDasharray="4 4"
       />
+      {vector(own, ox, oy, 'own')}
+      {vector(target, tx, ty, 'target')}
+      {cpaMarker}
       <Vessel v={own} x={ox} y={oy} id="own" />
       <Vessel v={target} x={tx} y={ty} id="target" />
     </svg>
