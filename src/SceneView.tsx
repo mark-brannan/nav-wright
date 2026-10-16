@@ -8,6 +8,7 @@ import type { PlacedLight } from './placement.js';
 import type { SceneLabels } from './labels.js';
 import { defaultSceneLabels } from './labels.js';
 import { fitScale, pairLayout, toScreen } from './sceneGeometry.js';
+import { SceneEnvBackdrop, type SceneEnv } from './sceneEnv.js';
 import { Glow, lightFill, sectorPath } from './svg.js';
 
 export interface SceneVessel {
@@ -33,6 +34,7 @@ const HULL_PX = 34; // half-length of a drawn hull, px
 const RING_GAP_PX = 6; // hull to first ring
 const RING_STEP_PX = 5;
 const RING_WIDTH_PX = 4;
+const ENV_MARGIN_PX = 10; // water left beyond the outermost ring, inside the backdrop
 
 /** One ring per distinct arc+colour, the way PlanView stacks them. */
 export function ringsOf(placed: PlacedLight[]): PlacedLight[] {
@@ -108,6 +110,7 @@ export function SceneView({
   rangeM,
   vectorMinutes = 6,
   cpa,
+  env,
   labels = defaultSceneLabels,
 }: {
   own: SceneVessel;
@@ -122,6 +125,14 @@ export function SceneView({
    * joins where each will be at the time of closest approach.
    */
   cpa?: { cpaM: number; tcpaS: number };
+  /**
+   * `env:narrow_channel` and `env:traffic_lane`, as booleans. Absent or false
+   * draws nothing. The backdrop runs along own ship's course (its heading
+   * when no course is given), through the pair's midpoint, wide enough that
+   * both vessels sit inside it. Own ship's course as the axis is the coder's
+   * guess; the facts name no axis.
+   */
+  env?: SceneEnv;
   labels?: SceneLabels;
 }): ReactElement {
   const lay = pairLayout({
@@ -178,6 +189,26 @@ export function SceneView({
       </g>
     );
   }
+  let backdrop: ReactElement | null = null;
+  if (env?.narrowChannel || env?.trafficLane) {
+    const axisDeg = own.courseDeg ?? own.heading;
+    const a = (axisDeg * Math.PI) / 180;
+    // how far each vessel stands off the axis, across it
+    const across = (x: number, y: number): number =>
+      Math.abs((x - mid.x) * Math.cos(a) + (y - mid.y) * Math.sin(a));
+    const halfWidthPx =
+      Math.max(across(ox, oy) + reachPx(own), across(tx, ty) + reachPx(target)) + ENV_MARGIN_PX;
+    backdrop = (
+      <SceneEnvBackdrop
+        env={env}
+        axisDeg={axisDeg}
+        centre={mid}
+        halfWidthPx={halfWidthPx}
+        size={SIZE}
+        labels={labels}
+      />
+    );
+  }
   return (
     <svg
       viewBox={`0 0 ${SIZE} ${SIZE}`}
@@ -186,6 +217,7 @@ export function SceneView({
       className="scene-svg plan-svg scene-pair-svg"
     >
       <rect width={SIZE} height={SIZE} fill="var(--sea-night)" />
+      {backdrop}
       <line
         data-line-of-bearing
         x1={ox}
