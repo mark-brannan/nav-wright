@@ -11,5 +11,12 @@ describe('lofted hull meshes', () => {
       expect(bytes.toString('ascii', 0, 4)).toBe('glTF');
       expect(bytes.readUInt32LE(8)).toBe(bytes.length);
     });
+    for (const v of ['slender', 'sheered', 'highside'])
+      it(`${hull.spec.id} has a ${v} variant`, () => {
+        const f = new URL(`../models/${hull.spec.id}-loft-${v}.glb`, import.meta.url);
+        const bytes = readFileSync(f);
+        expect(bytes.toString('ascii', 0, 4)).toBe('glTF');
+        expect(bytes.readUInt32LE(8)).toBe(bytes.length);
+      });
   }
 });
