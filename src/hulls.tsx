@@ -586,6 +586,163 @@ const barge: Hull = {
   ),
 };
 
+/** A push tug: a square bow faced with two push knees that bear on the
+ *  barge's stern, and a wheelhouse raised on a pillar so the master sees
+ *  over the tow ahead. Pushing ahead she carries 24(c)'s two masthead
+ *  lights, or, rigidly joined into a composite unit, 24(b)'s power-driven
+ *  display for the whole unit; both stand on the wheelhouse mast. */
+const pusher: Hull = {
+  spec: {
+    id: 'pusher',
+    beam: 0.26,
+    mastX: 0.15,
+    mastTopZ: 0.95,
+    aftMastX: -0.45,
+    aftMastTopZ: 1.08,
+    sideLightX: 0.3,
+    sideLightZ: 0.42,
+    bowX: 0.92,
+    sternX: -0.86,
+    sternZ: 0.2,
+  },
+  plan: [
+    [1, 0.2],
+    [1, -0.2],
+    [0.95, -0.26],
+    [-0.8, -0.26],
+    [-0.92, -0.18],
+    [-0.92, 0.18],
+    [-0.8, 0.26],
+    [0.95, 0.26],
+  ],
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.97, 0.3],
+          [0.97, 0.08],
+          [0.9, 0.04],
+          [-0.8, 0.04],
+          [-0.88, 0.16],
+          [-0.88, 0.26],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* push knees, standing proud of the bow */}
+      <path
+        d={d([
+          [1.0, 0.46],
+          [1.0, 0.06],
+          [0.95, 0.06],
+          [0.95, 0.46],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* lower house, pillar and raised wheelhouse */}
+      <path
+        d={d([
+          [0.42, 0.3],
+          [0.42, 0.46],
+          [-0.22, 0.46],
+          [-0.22, 0.3],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      <path
+        d={d([
+          [0.26, 0.46],
+          [0.26, 0.64],
+          [0.04, 0.64],
+          [0.04, 0.46],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      <path
+        d={d([
+          [0.36, 0.64],
+          [0.4, 0.8],
+          [-0.06, 0.8],
+          [-0.1, 0.64],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {mast(0.15, 0.95, 0.8)}
+      {mast(-0.45, 1.08, 0.3)}
+    </g>
+  ),
+};
+
+/** An inconspicuous, partly submerged tow (Rule 24(g)): a dracone or a
+ *  raft of logs, barely awash, most of her body under the waterline. The
+ *  only light she is built for is 22(d)'s all-round white on a stub post;
+ *  her submerged body is drawn dashed in the profile alone. */
+const partlySubmerged: Hull = {
+  spec: {
+    id: 'partly-submerged',
+    beam: 0.16,
+    mastX: 0.0,
+    mastTopZ: 0.16,
+    aftMastX: -0.6,
+    aftMastTopZ: 0.14,
+    sideLightX: 0.5,
+    sideLightZ: 0.06,
+    bowX: 0.9,
+    sternX: -0.88,
+    sternZ: 0.08,
+  },
+  plan: [
+    [1, 0],
+    [0.8, 0.12],
+    [0.3, 0.16],
+    [-0.4, 0.16],
+    [-0.85, 0.12],
+    [-0.95, 0],
+    [-0.85, -0.12],
+    [-0.4, -0.16],
+    [0.3, -0.16],
+    [0.8, -0.12],
+  ],
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.92, 0],
+          [0.7, 0.07],
+          [-0.6, 0.07],
+          [-0.9, 0],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* the body under the water */}
+      <path
+        d={d([
+          [0.92, 0],
+          [0.75, -0.1],
+          [-0.75, -0.1],
+          [-0.9, 0],
+        ])}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={1}
+        strokeDasharray="3 2"
+      />
+      {mast(0.0, 0.16, 0.07)}
+    </g>
+  ),
+};
+
 // ---- plan outlines shared by the larger roster --------------------------
 
 /** fine-lined fast hull: pilot boat, warship */
@@ -2020,7 +2177,9 @@ const restrictedAbility: Hull = {
 /**
  * Pick the base drawing for a set of facts. Position first (a vessel
  * aground is drawn aground whatever she is), then activity (a trawler is a
- * trawler at any length; with gear out, the fishing hull draws it), then
+ * trawler at any length; with gear out, the fishing hull draws it; a vessel
+ * pushing draws the push tug, one towing the tug, and a tow the barge;
+ * a partly submerged object of 24(g) is drawn awash ahead of all of these), then
  * propulsion, then the wing-in-ground craft (power-driven on the surface by
  * Rule 3(m), so she would otherwise fall into a length band), then length
  * bands for plain power vessels. No fact separates a cruise ship from a box
@@ -2035,12 +2194,23 @@ export function selectHull(facts: FactRecord): Hull {
   const length =
     typeof facts['fact:length_m'] === 'number' ? (facts['fact:length_m'] as number) : 12;
   if (facts['fact:position'] === 'position:aground') return aground;
+  // fact:partly_submerged is colregs' 24(g) key; the older
+  // fact:inconspicuous_partly_submerged_tow is read too, since the engine's
+  // own fact vocabulary may still carry only that one. Either names the
+  // object, whatever else the record says, so it outranks activity.
+  const rec = facts as Readonly<Record<string, unknown>>;
+  if (
+    rec['fact:partly_submerged'] === true ||
+    rec['fact:inconspicuous_partly_submerged_tow'] === true
+  )
+    return partlySubmerged;
   if (activity === 'activity:trawling' || activity === 'activity:fishing') {
     const gear = facts['fact:gear_extent_m'];
     if (typeof gear === 'number' && gear > 0) return fishingGear;
     return activity === 'activity:trawling' ? trawler : seiner;
   }
-  if (activity === 'activity:towing' || activity === 'activity:pushing') return tug;
+  if (activity === 'activity:towing') return tug;
+  if (activity === 'activity:pushing') return pusher;
   if (activity === 'activity:being_towed') return barge;
   if (activity === 'activity:pilot') return pilotBoat;
   if (activity === 'activity:cbd') return tanker;
@@ -2074,7 +2244,9 @@ export const allHulls = {
   trawler,
   seiner,
   tug,
+  pusher,
   barge,
+  partlySubmerged,
   pilotBoat,
   ferry,
   containerShip,

@@ -10,9 +10,14 @@ import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import shapesJson from 'colregs/data/shapes.json' with { type: 'json' };
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
+import applicabilityJson from 'colregs/data/applicability.json' with { type: 'json' };
 import {
   PlanView,
   ProfileView,
+  TowPlanView,
+  TowProfileView,
+  towGroupFromRecords,
+  towThreshold,
   allHulls,
   hullStyleIds,
   hullStyles,
@@ -30,6 +35,103 @@ const lightsData = lightsJson as unknown as LightsData;
 const geometryData = geometryJson as unknown as GeometryData;
 const shapesData = shapesJson as unknown as ShapesData;
 const hullKeys = Object.keys(allHulls) as HullKey[];
+const threshold = towThreshold(applicabilityJson as unknown as { entries: unknown[] });
+
+/** Rule 24 groups, each vessel lit from her own record. A pushed group that
+ *  is not a composite unit is left out: its barge needs fact:tow_rigidity
+ *  (24(f)), which the engine's fact vocabulary does not have yet. */
+const underwayFacts = { 'fact:position': 'position:underway', 'fact:making_way': true };
+interface TowCase {
+  id: string;
+  name: string;
+  /** what the data leaves out, said under the name */
+  note?: string;
+  lead: object;
+  /** the lead's own drawn length, where her record's is the unit's */
+  leadLengthM?: number;
+  members: object[];
+}
+const tows: TowCase[] = [150, 250]
+  .map(
+    (towM): TowCase => ({
+      id: `tow-${towM}`,
+      name: `Tug and barge, ${towM} m tow`,
+      lead: {
+        ...underwayFacts,
+        'fact:propulsion': 'propulsion:power',
+        'fact:activity': 'activity:towing',
+        'fact:length_m': 30,
+        'fact:tow_length_m': towM,
+      },
+      members: [
+        {
+          ...underwayFacts,
+          'fact:activity': 'activity:being_towed',
+          'fact:length_m': 40,
+          'fact:tow_length_m': towM,
+        },
+      ],
+    }),
+  )
+  .concat([
+    {
+      id: 'tow-composite',
+      name: 'Composite unit, lit as one power-driven vessel (24(b))',
+      lead: {
+        ...underwayFacts,
+        'fact:propulsion': 'propulsion:power',
+        'fact:activity': 'activity:pushing',
+        'fact:composite_unit': true,
+        // the unit's length: 24(b) lights it as one 100 m vessel
+        'fact:length_m': 100,
+      },
+      leadLengthM: 30,
+      members: [{ ...underwayFacts, 'fact:activity': 'activity:being_towed', 'fact:length_m': 70 }],
+    },
+    {
+      id: 'tow-partly-submerged',
+      name: 'Tug and a partly submerged object (24(g)), 180 m tow',
+      note: "the object is unlit: colregs has no text for 24(g)(i)'s lights yet",
+      lead: {
+        ...underwayFacts,
+        'fact:propulsion': 'propulsion:power',
+        'fact:activity': 'activity:towing',
+        'fact:length_m': 30,
+        'fact:tow_length_m': 180,
+      },
+      members: [
+        {
+          ...underwayFacts,
+          'fact:inconspicuous_partly_submerged_tow': true,
+          'fact:length_m': 60,
+        },
+      ],
+    },
+  ]);
+
+function TowRow({ tow, time }: { tow: TowCase; time: 'day' | 'night' }) {
+  const group = useMemo(() => {
+    const rec = (f: object) => {
+      const facts = (time === 'day' ? { ...f, 'fact:time': 'time:day' } : f) as FactRecord;
+      return { facts, display: evaluateDisplay(facts).displays[0]! };
+    };
+    return towGroupFromRecords(
+      { ...rec(tow.lead), lengthM: tow.leadLengthM },
+      tow.members.map(rec),
+      {
+        lights: lightsData,
+        geometry: geometryData,
+        shapes: shapesData,
+      },
+    );
+  }, [tow, time]);
+  return (
+    <div className="gallery-views gallery-tow">
+      <TowProfileView group={group} threshold={threshold} time={time} />
+      <TowPlanView group={group} threshold={threshold} />
+    </div>
+  );
+}
 
 /** Rows of each hull's block: the base drawing (what a view draws given no
  *  style), then every shipped style. */
@@ -134,6 +236,20 @@ function Gallery() {
           ))}
         </section>
       ))}
+      <section className="gallery-hull" id="tows">
+        <h2>
+          Tows and pushed groups <span className="muted">Rule 24</span>
+        </h2>
+        {tows.map((t) => (
+          <figure key={t.id} className="gallery-row" id={t.id}>
+            <figcaption>
+              <strong>{t.name}</strong>
+              {t.note && <span className="muted"> {t.note}</span>}
+            </figcaption>
+            <TowRow tow={t} time={day ? 'day' : 'night'} />
+          </figure>
+        ))}
+      </section>
     </div>
   );
 }

@@ -123,6 +123,9 @@ legend {
 .gallery-views .plan-svg {
   max-width: none;
 }
+.gallery-views.gallery-tow {
+  grid-template-columns: 1fr 1fr;
+}
 @media (max-width: 720px) {
   .gallery-views {
     grid-template-columns: 1fr;

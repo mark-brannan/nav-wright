@@ -26,6 +26,13 @@ export interface SceneLabels {
   profileAlt: string;
   /** PlanView's day-shape legend (day mode only) */
   planShapesAlt?: string;
+  /** the tow and pushed-group views' alt text */
+  towPlanAlt?: string;
+  towProfileAlt?: string;
+  /** 24(a)(i)'s tow length against its threshold, e.g. "250 m tow, over 200 m" */
+  towLength?: (lengthM: number, thresholdM: number | undefined) => string;
+  /** the marker at the threshold, e.g. "200 m" */
+  towThreshold?: (thresholdM: number) => string;
 }
 
 export const defaultSceneLabels: SceneLabels = {
@@ -47,4 +54,11 @@ export const defaultSceneLabels: SceneLabels = {
   planAlt: "Plan view: each light's arc of visibility around the hull",
   profileAlt: 'Profile view: the vessel from abeam with her lights',
   planShapesAlt: 'Day shapes',
+  towPlanAlt: "Tow plan: each vessel's arcs, and the tow length against Rule 24's threshold",
+  towProfileAlt: 'Tow profile: the vessels of the tow from abeam, each with her own lights',
+  towLength: (m, t) =>
+    t === undefined
+      ? `${Math.round(m)} m tow`
+      : `${Math.round(m)} m tow, ${m > t ? 'over' : 'not over'} ${t} m`,
+  towThreshold: (t) => `${t} m`,
 };
