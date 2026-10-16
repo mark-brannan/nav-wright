@@ -48,6 +48,14 @@ const lengthOf = (v: TowVessel) => v.lengthM ?? DEFAULT_LENGTH_M;
 export interface TowRecord {
   facts: FactRecord;
   display: Display;
+  /**
+   * Her own length overall for the drawing, m, where `fact:length_m` names
+   * something longer: a composite unit's lead record carries the unit's
+   * length, since 24(b) lights the unit as one vessel of that length (two
+   * masthead lights from 50 m, 23(a)(ii)), and the pusher's own goes here.
+   * Default: `fact:length_m`.
+   */
+  lengthM?: number;
 }
 
 /**
@@ -58,7 +66,9 @@ export interface TowRecord {
  * alongside), else astern. The lead's `fact:tow_length_m` sets the astern
  * lines, shared out after the towed hulls' own lengths. With the lead's
  * `fact:composite_unit` the group is one 24(b) vessel: her display stands
- * for the unit and the pushed members are drawn unlit.
+ * for the unit and the pushed members are drawn unlit. Her record then
+ * describes the unit, `fact:length_m` the whole unit's length, so the
+ * display is evaluated for it; her own drawn length goes in `lengthM`.
  */
 export function towGroupFromRecords(
   lead: TowRecord,
@@ -68,7 +78,7 @@ export function towGroupFromRecords(
 ): TowGroup {
   const vessel = (r: TowRecord, lit: boolean): TowVessel => {
     const hull = selectHull(r.facts);
-    const len = r.facts['fact:length_m'];
+    const len = r.lengthM ?? r.facts['fact:length_m'];
     return {
       hull,
       heading,

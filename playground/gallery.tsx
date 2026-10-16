@@ -44,7 +44,11 @@ const underwayFacts = { 'fact:position': 'position:underway', 'fact:making_way':
 interface TowCase {
   id: string;
   name: string;
+  /** what the data leaves out, said under the name */
+  note?: string;
   lead: object;
+  /** the lead's own drawn length, where her record's is the unit's */
+  leadLengthM?: number;
   members: object[];
 }
 const tows: TowCase[] = [150, 250]
@@ -78,13 +82,16 @@ const tows: TowCase[] = [150, 250]
         'fact:propulsion': 'propulsion:power',
         'fact:activity': 'activity:pushing',
         'fact:composite_unit': true,
-        'fact:length_m': 30,
+        // the unit's length: 24(b) lights it as one 100 m vessel
+        'fact:length_m': 100,
       },
+      leadLengthM: 30,
       members: [{ ...underwayFacts, 'fact:activity': 'activity:being_towed', 'fact:length_m': 70 }],
     },
     {
       id: 'tow-partly-submerged',
       name: 'Tug and a partly submerged object (24(g)), 180 m tow',
+      note: "the object is unlit: colregs has no text for 24(g)(i)'s lights yet",
       lead: {
         ...underwayFacts,
         'fact:propulsion': 'propulsion:power',
@@ -108,11 +115,15 @@ function TowRow({ tow, time }: { tow: TowCase; time: 'day' | 'night' }) {
       const facts = (time === 'day' ? { ...f, 'fact:time': 'time:day' } : f) as FactRecord;
       return { facts, display: evaluateDisplay(facts).displays[0]! };
     };
-    return towGroupFromRecords(rec(tow.lead), tow.members.map(rec), {
-      lights: lightsData,
-      geometry: geometryData,
-      shapes: shapesData,
-    });
+    return towGroupFromRecords(
+      { ...rec(tow.lead), lengthM: tow.leadLengthM },
+      tow.members.map(rec),
+      {
+        lights: lightsData,
+        geometry: geometryData,
+        shapes: shapesData,
+      },
+    );
   }, [tow, time]);
   return (
     <div className="gallery-views gallery-tow">
@@ -233,6 +244,7 @@ function Gallery() {
           <figure key={t.id} className="gallery-row" id={t.id}>
             <figcaption>
               <strong>{t.name}</strong>
+              {t.note && <span className="muted"> {t.note}</span>}
             </figcaption>
             <TowRow tow={t} time={day ? 'day' : 'night'} />
           </figure>

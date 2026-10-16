@@ -116,7 +116,9 @@ running `selectHull` and `placeLights` (and `placeShapes`, given shapes and
 geometry data) per record. A member's tie comes from her `fact:tow_rigidity`
 (24(f)), else from the lead: astern on a line, alongside, or pushed ahead.
 With the lead's `fact:composite_unit`, the group is 24(b)'s one power-driven
-vessel and only the lead's display is drawn.
+vessel and only the lead's display is drawn. Her record then describes the
+unit: `fact:length_m` is the whole unit's, so 23(a) is evaluated for that
+length, and her own drawn length goes in the record's `lengthM`.
 
 `TowPlanView` draws the group from above with each hull's arc rings, the tow
 line or push contact, and the tow length against Rule 24(a)(i)'s threshold;

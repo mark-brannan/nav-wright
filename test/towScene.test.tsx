@@ -77,13 +77,13 @@ const barge = (towM: number, day = false) =>
     'fact:tow_length_m': towM,
     ...(day ? { 'fact:time': 'time:day' } : {}),
   });
-const pushing = (composite: boolean) =>
+const pushing = (composite: boolean, lengthM = 30) =>
   record({
     'fact:propulsion': 'propulsion:power',
     ...underway,
     'fact:activity': 'activity:pushing',
     'fact:composite_unit': composite,
-    'fact:length_m': 30,
+    'fact:length_m': lengthM,
   });
 const pushedBarge = () =>
   record24f(
@@ -159,25 +159,38 @@ describe('tug and barge astern', () => {
 });
 
 describe('pushed groups', () => {
-  it('a composite unit (24(b)) is one power-driven vessel with one set of lights', () => {
-    const g = towGroupFromRecords(
-      pushing(true),
-      [record({ ...underway, 'fact:activity': 'activity:being_towed', 'fact:length_m': 60 })],
+  // 24(b) regards the unit as one power-driven vessel, so her record carries
+  // the unit's length and 23(a) is evaluated for it; the pusher's own length
+  // only scales her drawing.
+  const composite = (pusherM: number, bargeM: number) =>
+    towGroupFromRecords(
+      { ...pushing(true, pusherM + bargeM), lengthM: pusherM },
+      [record({ ...underway, 'fact:activity': 'activity:being_towed', 'fact:length_m': bargeM })],
       data,
     );
+
+  it('a composite unit (24(b)) is one power-driven vessel with one set of lights', () => {
+    const g = composite(30, 60);
     expect(g.composite).toBe(true);
     expect(g.lead.hull).toBe(allHulls.pusher);
-    // 23(a): one masthead light under 50 m, sidelights, sternlight
-    expect(count(g.lead, 'light:masthead')).toBe(1);
+    expect(g.lead.lengthM).toBe(30);
+    // 23(a) for a 90 m unit: a second masthead light abaft (23(a)(ii)), sidelights, sternlight
+    expect(count(g.lead, 'light:masthead')).toBe(2);
     expect(count(g.lead, 'light:sternlight')).toBe(1);
     expect(g.members[0]!.tie).toBe('pushed_ahead');
     expect(g.members[0]!.vessel.placed).toEqual([]);
     const lit = [g.lead, ...g.members.map((m) => m.vessel)].filter((v) => v.placed.length > 0);
     expect(lit).toHaveLength(1);
+    const lay = towLayout(g);
+    expect(lay.maxM - lay.minM).toBeCloseTo(90);
     const html = plan(g);
     expect(html).toContain('data-composite="true"');
     expect(html).toContain('data-contact="pushed_ahead"');
     expect(html).not.toContain('data-tow-length');
+  });
+
+  it('a composite unit under 50 m overall shows one masthead light', () => {
+    expect(count(composite(20, 25).lead, 'light:masthead')).toBe(1);
   });
 
   it('pushing ahead, not composite: 24(c) on the pusher and 24(f)(i) on the barge', () => {

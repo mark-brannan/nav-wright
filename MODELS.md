@@ -103,7 +103,9 @@ convention and flat materials as the base lofts; no textures.
 Mesh check: `test/hullMeshCheck.test.ts` over these files turned Y-up
 (`(x, y, z) -> (x, z, -y)`), 3/3 on every row below that gives a score; the
 base lofts score 3/3 except `barge-loft` (bow) and `open-loft` (rail).
-`pusher` and `partly-submerged` (nav-wright#51) have not been through it yet.
+`pusher` and `partly-submerged` (nav-wright#51) score 2/3 by design: the
+push tug's square bow fails the bow test as the barge's does, and the awash
+object has no gunwale for the rail test.
 
 | File                                   | Hull class           | Variant  | Parameters (multipliers on the drawing)                                                                               | hullMeshCheck |
 | -------------------------------------- | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- | ------------- |
@@ -140,9 +142,9 @@ base lofts score 3/3 except `barge-loft` (bow) and `open-loft` (rail).
 | `open-loft-slender.glb`                | `open`               | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9; plus a centre console (0.45 to 0.6 of length, half the hull height)  | 3/3           |
 | `open-loft-sheered.glb`                | `open`               | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1; plus a centre console (0.45 to 0.6 of length, half the hull height)      | 3/3           |
 | `open-loft-highside.glb`               | `open`               | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3; plus a centre console (0.45 to 0.6 of length, half the hull height) | 3/3           |
-| `partly-submerged-loft-slender.glb`    | `partly-submerged`   | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | not run       |
-| `partly-submerged-loft-sheered.glb`    | `partly-submerged`   | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | not run       |
-| `partly-submerged-loft-highside.glb`   | `partly-submerged`   | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | not run       |
+| `partly-submerged-loft-slender.glb`    | `partly-submerged`   | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 2/3 (rail)    |
+| `partly-submerged-loft-sheered.glb`    | `partly-submerged`   | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 2/3 (rail)    |
+| `partly-submerged-loft-highside.glb`   | `partly-submerged`   | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 2/3 (rail)    |
 | `pilot-boat-loft-slender.glb`          | `pilot-boat`         | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
 | `pilot-boat-loft-sheered.glb`          | `pilot-boat`         | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
 | `pilot-boat-loft-highside.glb`         | `pilot-boat`         | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
@@ -152,9 +154,9 @@ base lofts score 3/3 except `barge-loft` (bow) and `open-loft` (rail).
 | `power-small-loft-slender.glb`         | `power-small`        | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
 | `power-small-loft-sheered.glb`         | `power-small`        | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
 | `power-small-loft-highside.glb`        | `power-small`        | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
-| `pusher-loft-slender.glb`              | `pusher`             | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | not run       |
-| `pusher-loft-sheered.glb`              | `pusher`             | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | not run       |
-| `pusher-loft-highside.glb`             | `pusher`             | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | not run       |
+| `pusher-loft-slender.glb`              | `pusher`             | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 2/3 (bow)     |
+| `pusher-loft-sheered.glb`              | `pusher`             | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 2/3 (bow)     |
+| `pusher-loft-highside.glb`             | `pusher`             | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 2/3 (bow)     |
 | `restricted-ability-loft-slender.glb`  | `restricted-ability` | slender  | beam 0.8, sheer 0.06, freeboard 0.92, house 0.9                                                                       | 3/3           |
 | `restricted-ability-loft-sheered.glb`  | `restricted-ability` | sheered  | beam 1.05, sheer 0.22, freeboard 1, house 1                                                                           | 3/3           |
 | `restricted-ability-loft-highside.glb` | `restricted-ability` | highside | beam 1.15, sheer 0.08, freeboard 1.25, house 1.3                                                                      | 3/3           |
