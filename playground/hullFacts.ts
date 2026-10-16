@@ -62,4 +62,26 @@ export const hullFacts: Record<HullKey, FactRecord> = {
     'fact:making_way': false,
     'fact:length_m': 60,
   },
+  // Stopped over her divers, and small enough that 27(e) lets her show the
+  // red-white-red stack alone: the engine's activity:diving is that case.
+  diveSupport: {
+    ...power,
+    ...underway,
+    'fact:activity': 'activity:diving',
+    'fact:making_way': false,
+    'fact:length_m': 15,
+  },
+  wingInGround: {
+    ...power,
+    ...underway,
+    'fact:wig': true,
+    'fact:wig_near_surface': true,
+    'fact:length_m': 15,
+  },
+  restrictedAbility: {
+    ...power,
+    ...underway,
+    'fact:activity': 'activity:ram',
+    'fact:length_m': 60,
+  },
 };
