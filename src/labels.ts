@@ -23,6 +23,9 @@ export interface SceneLabels {
   planAlt: string;
   /** SceneView's closest-point-of-approach marker */
   sceneCpa?: (cpaM: number, tcpaS: number) => string;
+  /** SceneView's environment backdrop: aria text for each drawn group */
+  envNarrowChannel?: string;
+  envTrafficLane?: string;
   profileAlt: string;
   /** PlanView's day-shape legend (day mode only) */
   planShapesAlt?: string;
@@ -37,6 +40,8 @@ export interface SceneLabels {
 
 export const defaultSceneLabels: SceneLabels = {
   sceneCpa: (cpaM, tcpaS) => `CPA ${Math.round(cpaM)} m in ${Math.round(tcpaS)} s`,
+  envNarrowChannel: 'Narrow channel: a water corridor between its banks',
+  envTrafficLane: 'Traffic lane: a one-way lane with a separation line on its port side',
   bearingAlt: (theta) => `Bearing view: her lights as seen from relative bearing ${theta} degrees`,
   bearingNoLights: 'No lights visible from this bearing',
   bearingThetaLabel: 'Relative bearing θ',

@@ -455,6 +455,17 @@ function Playground() {
           />
         </figure>
         <figure>
+          <figcaption>SceneView with env: narrow channel and traffic lane</figcaption>
+          <SceneView
+            own={{ hull, placed, heading: 0, speedMps: 5 }}
+            target={{ hull, placed, heading: 270, speedMps: 5 }}
+            relativeBearing={45}
+            rangeM={1500}
+            env={{ narrowChannel: true, trafficLane: true }}
+            labels={labels}
+          />
+        </figure>
+        <figure>
           <figcaption>
             BearingView derived from the pair (what own ship sees of the target)
           </figcaption>
