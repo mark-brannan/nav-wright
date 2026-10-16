@@ -25,7 +25,11 @@ export function ProfileView({
   /** Paint the hull in one of `hullStyles`. Default: the base drawing. */
   style?: HullStyle;
 }): ReactElement {
-  const anchored = facts['fact:position'] === 'position:anchored';
+  const position = facts['fact:position'];
+  const anchored = position === 'position:anchored';
+  // A styled sailing hull sets its sails only underway, never at anchor,
+  // moored or aground.
+  const underway = position === undefined || position === 'position:underway';
   const paint = useHullStylePaint(style, 'profile');
   return (
     <svg
@@ -51,7 +55,11 @@ export function ProfileView({
           strokeDasharray="3 4"
         />
       )}
-      {style ? <StyledProfile hull={hull} style={style} uid={paint.uid} /> : <hull.Profile />}
+      {style ? (
+        <StyledProfile hull={hull} style={style} uid={paint.uid} sails={underway} />
+      ) : (
+        <hull.Profile />
+      )}
       {placed.map((l) => (
         <Glow
           key={l.key}

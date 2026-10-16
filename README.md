@@ -43,7 +43,7 @@ installs none of them.
 | `Glow`, `lightFill`, `LIGHT_COLORS`, `polar`, `sectorPath`                         | the SVG primitives the views are built from                                                                                               |
 | `SceneLabels`, `defaultSceneLabels`, `Aspect`                                      | the label interface                                                                                                                       |
 | `ThetaControl`                                                                     | the relative-bearing slider, shared with the 3D view                                                                                      |
-| `hullStyles`, `hullStyleIds`, `HullStyle`, `HullStyleId`                           | the hull styles: ways to paint every hull (see [Hull styles](#hull-styles))                                                               |
+| `hullStyles`, `hullStyleIds`, `HullStyle`, `HullStyleId`, `Fill`, `Hatch`, `Paint` | the hull styles: ways to paint every hull (see [Hull styles](#hull-styles))                                                               |
 
 `placeLights` takes its light data as an argument rather than importing it,
 so nothing here depends on a particular app's copy of the COLREGS data.
@@ -159,7 +159,8 @@ none, a view draws the base drawing exactly as before. A style is a paint
 layer over the base drawing, not a redrawing: it scopes `--hull-fill`,
 `--hull-stroke`, `--rig-stroke` and the sea properties to one `<svg>`, points
 them at its own gradients and patterns, and adds what the line drawings leave
-out (sails, a reflection) in the drawing's own coordinates. No `HullSpec`
+out (sails, set only while the vessel is underway; a reflection) in the
+drawing's own coordinates. No `HullSpec`
 changes, so the lights land in the same place in every style, and the light
 colours stay literal. In the bearing view a style paints only the hull hint
 and the seascape; the sky and the lights are the exam view's.

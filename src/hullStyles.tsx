@@ -390,15 +390,19 @@ function Sails({ hull }: { hull: Hull }): ReactElement | null {
 }
 
 /** The hull in a style, for the profile view: sails under the rig, the
- *  base drawing itself untouched, and a reflection in the sea below. */
+ *  base drawing itself untouched, and a reflection in the sea below. Sails
+ *  are set only while the vessel is underway: at anchor, moored or aground
+ *  the rig stands bare, as it does in the base drawing. */
 export function StyledProfile({
   hull,
   style,
   uid,
+  sails,
 }: {
   hull: Hull;
   style: HullStyle;
   uid: string;
+  sails: boolean;
 }): ReactElement {
   const clip = `hs-${uid}-below`;
   const fade = `hs-${uid}-fade`;
@@ -407,7 +411,7 @@ export function StyledProfile({
   const W = PZ(0);
   const boat = (
     <>
-      <Sails hull={hull} />
+      {sails && <Sails hull={hull} />}
       <hull.Profile />
     </>
   );

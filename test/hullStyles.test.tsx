@@ -61,6 +61,28 @@ describe('hull style registry', () => {
   });
 });
 
+describe('sails', () => {
+  const hull = allHulls.sailSmall;
+  const sail: FactRecord = { ...facts, 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 12 };
+  const profile = (f: FactRecord, id: (typeof hullStyleIds)[number]) =>
+    renderToStaticMarkup(<ProfileView hull={hull} placed={[]} facts={f} style={hullStyles[id]} />);
+
+  it.each(hullStyleIds)('%s: set underway', (id) => {
+    expect(profile(sail, id)).toContain('hull-sails');
+  });
+
+  it.each(
+    hullStyleIds.flatMap((id) =>
+      (['position:anchored', 'position:moored', 'position:aground'] as const).map(
+        (p) => [id, p] as const,
+      ),
+    ),
+  )('%s: furled when %s', (id, position) => {
+    const f: FactRecord = { ...sail, 'fact:position': position, 'fact:making_way': false };
+    expect(profile(f, id)).not.toContain('hull-sails');
+  });
+});
+
 describe.each(pairs)('%s in %s', (_name, _id, hull, style) => {
   const placed = placeLights(lights, hull.spec, facts, lightsData, geometryData);
 
