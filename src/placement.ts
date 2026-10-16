@@ -5,7 +5,8 @@
 // lights.json and are the exam-faithful part.
 
 import type { DisplayLight, FactRecord } from 'colregs-engine';
-import type { Arc, LightsData } from 'colregs-engine/schema';
+import type { Arc, GeometryData, LightsData } from 'colregs-engine/schema';
+import { applyAnnexI } from './annexI.js';
 import type { HullSpec } from './hulls.js';
 
 export interface PlacedLight {
@@ -20,6 +21,10 @@ export interface PlacedLight {
   sourceEntry: string;
   combined?: boolean;
   ifPracticable?: boolean;
+  /** Height in metres above the hull datum (the drawn deck line), when Annex I placed it. */
+  heightM?: number;
+  /** Annex I paragraphs behind this light's height, e.g. `AnxI.2(a)(i)`. Absent where hand anchors stand. */
+  basis?: string[];
 }
 
 const STACK_DZ = 0.13;
@@ -35,9 +40,24 @@ function characterOf(lightsData: LightsData, dl: DisplayLight): 'steady' | 'flas
 
 /**
  * Place every light of a display on the given hull. Deterministic; the
- * same display always renders the same scene.
+ * same display always renders the same scene. With colregs'
+ * `geometry.json` (and `fact:length_m`) the heights and vertical
+ * separations come from Annex I and each moved light carries `heightM`
+ * and `basis`; without, or where Annex I is silent, the hull's hand
+ * anchors stand.
  */
 export function placeLights(
+  displayLights: DisplayLight[],
+  hull: HullSpec,
+  facts: FactRecord,
+  lightsData: LightsData,
+  geometry?: GeometryData,
+): PlacedLight[] {
+  const placed = placeByAnchors(displayLights, hull, facts, lightsData);
+  return geometry ? applyAnnexI(placed, hull, facts, geometry) : placed;
+}
+
+function placeByAnchors(
   displayLights: DisplayLight[],
   hull: HullSpec,
   facts: FactRecord,
