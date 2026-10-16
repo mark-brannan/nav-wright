@@ -55,6 +55,29 @@ faceted: three flat materials (hull, deckhouse, rig), no textures.
   deterministic; `test/loftModels.test.ts` fails when a hull has no mesh.
 - **Shipped in the package** under the `./models/*` export, e.g.
   `nav-wright/models/tug-loft.glb`.
+- **Files:** every loft, one row each (`test/modelsListed.test.ts` fails when a file in `models/` is missing from this document).
+
+| File                      | Hull drawing                                       |
+| ------------------------- | -------------------------------------------------- |
+| `barge-loft.glb`          | `barge` in [src/hulls.tsx](src/hulls.tsx)          |
+| `bulker-loft.glb`         | `bulker` in [src/hulls.tsx](src/hulls.tsx)         |
+| `container-ship-loft.glb` | `container-ship` in [src/hulls.tsx](src/hulls.tsx) |
+| `cruise-ship-loft.glb`    | `cruise-ship` in [src/hulls.tsx](src/hulls.tsx)    |
+| `dredger-loft.glb`        | `dredger` in [src/hulls.tsx](src/hulls.tsx)        |
+| `ferry-loft.glb`          | `ferry` in [src/hulls.tsx](src/hulls.tsx)          |
+| `open-loft.glb`           | `open` in [src/hulls.tsx](src/hulls.tsx)           |
+| `pilot-boat-loft.glb`     | `pilot-boat` in [src/hulls.tsx](src/hulls.tsx)     |
+| `power-large-loft.glb`    | `power-large` in [src/hulls.tsx](src/hulls.tsx)    |
+| `power-small-loft.glb`    | `power-small` in [src/hulls.tsx](src/hulls.tsx)    |
+| `sail-large-loft.glb`     | `sail-large` in [src/hulls.tsx](src/hulls.tsx)     |
+| `sail-small-loft.glb`     | `sail-small` in [src/hulls.tsx](src/hulls.tsx)     |
+| `seiner-loft.glb`         | `seiner` in [src/hulls.tsx](src/hulls.tsx)         |
+| `square-rigger-loft.glb`  | `square-rigger` in [src/hulls.tsx](src/hulls.tsx)  |
+| `tanker-loft.glb`         | `tanker` in [src/hulls.tsx](src/hulls.tsx)         |
+| `trawler-loft.glb`        | `trawler` in [src/hulls.tsx](src/hulls.tsx)        |
+| `tug-loft.glb`            | `tug` in [src/hulls.tsx](src/hulls.tsx)            |
+| `warship-loft.glb`        | `warship` in [src/hulls.tsx](src/hulls.tsx)        |
+
 - **Known gap:** `anchorLights` reads the lights' seats off the mesh, and
   for these meshes its reading misses the specs' hand-set stations (searoom's
   `hullRegistration.test.ts` records the misses). The drawings and the
