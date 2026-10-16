@@ -11,6 +11,8 @@ import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
 import {
   BearingView,
+  declaredFlashRate,
+  lightRangesFor,
   bearingTheta,
   PlanView,
   ProfileView,
@@ -176,6 +178,13 @@ function Playground() {
   const [range, setRange] = useState(1);
   const [sky, setSky] = useState(0);
   const [seascape, setSeascape] = useState(false);
+  const lightRangesNm = useMemo(
+    () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
+    [facts],
+  );
+  const [singleLantern, setSingleLantern] = useState(false);
+  const [rangeGlow, setRangeGlow] = useState(false);
+  const [flashRateOn, setFlashRateOn] = useState(false);
   const [labelsOn, setLabelsOn] = useState(true);
 
   const hull = allHulls[hullKey];
@@ -372,6 +381,27 @@ function Playground() {
               onChange={(e) => setSeascape(e.target.checked)}
             />
           </Field>
+          <Field label="single lantern">
+            <input
+              type="checkbox"
+              checked={singleLantern}
+              onChange={(e) => setSingleLantern(e.target.checked)}
+            />
+          </Field>
+          <Field label="range glow">
+            <input
+              type="checkbox"
+              checked={rangeGlow}
+              onChange={(e) => setRangeGlow(e.target.checked)}
+            />
+          </Field>
+          <Field label="declared flash rate">
+            <input
+              type="checkbox"
+              checked={flashRateOn}
+              onChange={(e) => setFlashRateOn(e.target.checked)}
+            />
+          </Field>
           <Field label="labels">
             <input
               type="checkbox"
@@ -398,6 +428,12 @@ function Playground() {
             range={rangeOn ? range : undefined}
             sky={sky}
             seascape={seascape}
+            singleLantern={singleLantern}
+            rangeGlow={rangeGlow}
+            lightRangesNm={lightRangesNm}
+            flashesPerMinute={
+              flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
+            }
             labels={labels}
           />
         </figure>

@@ -13,7 +13,8 @@ import type { SceneLabels } from './labels.js';
 import { defaultSceneLabels } from './labels.js';
 import { ThetaControl } from './ThetaControl.js';
 import { useDragRotate } from './rotate.js';
-import { Glow } from './svg.js';
+import { mergeLanterns } from './lantern.js';
+import { Glow, glowProfile } from './svg.js';
 
 const CX = 220;
 const HORIZON = 150;
@@ -33,6 +34,14 @@ type BearingSceneProps = {
   sky?: number;
   /** Opt-in night seascape: a horizon and a sea under the lights. Default: lights only on black. */
   seascape?: boolean;
+  /** Draw a combined fixture (tricolor) as one lantern in the colour facing the viewer. Default off: one dot per sector. */
+  singleLantern?: boolean;
+  /** Scale each glow by the light's range (`lightRangesNm`, by lightId) and the viewing `range`. Default off: every glow alike. */
+  rangeGlow?: boolean;
+  /** Rule 22 range in nautical miles by lightId, from lights.json visibility. Used by rangeGlow. */
+  lightRangesNm?: Record<string, number>;
+  /** Flash rate in flashes per minute for flashing lights (see declaredFlashRate). Default: the stylesheet's cycle. */
+  flashesPerMinute?: number;
   labels?: SceneLabels;
 };
 
@@ -57,6 +66,10 @@ export function BearingScene({
   range,
   sky = 0,
   seascape = false,
+  singleLantern = false,
+  rangeGlow = false,
+  lightRangesNm,
+  flashesPerMinute,
   labels = defaultSceneLabels,
 }: BearingSceneProps): ReactElement {
   const drag = useDragRotate<SVGSVGElement>(theta, onTheta);
@@ -64,7 +77,8 @@ export function BearingScene({
   const sin = Math.sin(rad);
   const cos = Math.cos(rad);
 
-  const projected = lightsInView(placed, theta).map((l) => ({
+  const visible = lightsInView(placed, theta);
+  const projected = (singleLantern ? mergeLanterns(visible, theta) : visible).map((l) => ({
     light: l,
     x: CX + (l.fx * sin - l.py * cos) * SCALE,
     y: HORIZON - l.z * ZSCALE,
@@ -89,6 +103,8 @@ export function BearingScene({
           y={p.y}
           color={p.light.color}
           flashing={p.light.character === 'flashing'}
+          flashesPerMinute={flashesPerMinute}
+          glow={rangeGlow ? glowProfile(lightRangesNm?.[p.light.lightId], range) : undefined}
           r={5.5}
         />
       ))}
