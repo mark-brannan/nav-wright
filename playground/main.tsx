@@ -11,6 +11,7 @@ import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
 import {
   BearingView,
+  bearingTheta,
   PlanView,
   ProfileView,
   SceneView,
@@ -411,6 +412,22 @@ function Playground() {
             target={{ hull, placed, heading: 270 }}
             relativeBearing={45}
             rangeM={1500}
+            labels={labels}
+          />
+        </figure>
+        <figure>
+          <figcaption>BearingView derived from the pair (what own ship sees of the target)</figcaption>
+          <BearingView
+            hull={hull}
+            placed={placed}
+            theta={bearingTheta({
+              ownHeading: 0,
+              targetHeading: 270,
+              relativeBearing: 45,
+              rangeM: 1500,
+            })}
+            onTheta={() => {}}
+            hullHint={hullHint}
             labels={labels}
           />
         </figure>
