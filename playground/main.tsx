@@ -6,6 +6,7 @@
 import { StrictMode, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { formatLook, lookProps } from './copyProps.js';
 import { decodeUrlState, encodeUrlState, type UrlState } from './urlState.js';
 import { evaluateDisplay } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
@@ -261,7 +262,7 @@ function Playground() {
   const [labelsOn, setLabelsOn] = useState(true);
   // every control above is in the URL (see urlState.ts), ?day included
   const [day, setDay] = useState(initial.day);
-  useUrlState({
+  const urlState: UrlState = {
     view,
     variant,
     theta,
@@ -274,9 +275,26 @@ function Playground() {
     singleLantern,
     rangeGlow,
     flashRateOn,
-  });
+  };
+  useUrlState(urlState);
 
   const hull = allHulls[hullKey];
+
+  const look = lookProps(
+    urlState,
+    flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined,
+  );
+  const [copied, setCopied] = useState(false);
+  const copyLook = () => {
+    if (!look) return;
+    navigator.clipboard
+      .writeText(formatLook(look))
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      })
+      .catch(() => {});
+  };
 
   const resetRule = () => {
     setLineIndex(0);
@@ -422,6 +440,23 @@ function Playground() {
               </button>
             ))}
           </div>
+          <button
+            type="button"
+            className="copy-look"
+            disabled={!look}
+            onClick={copyLook}
+            title={
+              look
+                ? `Copy this look as props for ${look.component}, ready to paste into searoom`
+                : 'The profile view has no bearing props'
+            }
+          >
+            {copied
+              ? 'Copied'
+              : look
+                ? `Copy as ${look.component} props`
+                : 'No props for this view'}
+          </button>
           {view === 'silhouette' && (
             <div className="tabs tabs-sub" role="group" aria-label="Silhouette variant">
               {VARIANTS.map((v) => (
