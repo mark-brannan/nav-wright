@@ -137,7 +137,7 @@ const own = (f: string): HullSpec | undefined => specs.find((s) => f.startsWith(
 
 /** Shipped, but taller than any frame holds: her mast stands 1.26 of her
  * length. No hull draws her (searoom's hullModels registers sail-b). */
-const TOO_TALL = new Set(['sail-small-kenney-boat-sail-a.glb']);
+const TOO_TALL = new Set(['kenney-boat-sail-a.glb']);
 
 /** Every shipped mesh with the hull it is drawn for, and Benchy on every hull. */
 function pairs(): [string, HullSpec][] {

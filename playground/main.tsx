@@ -61,7 +61,7 @@ const models = Object.fromEntries(
 const modelNames = Object.keys(models).sort();
 
 function defaultModel(hullId: string): string {
-  const loft = `${hullId}-loft.glb`;
+  const loft = `loft-${hullId}.glb`;
   return loft in models ? loft : '3dbenchy-lowpoly.glb';
 }
 

@@ -1,5 +1,5 @@
 // Lofts a 3D mesh for every hull in allHulls from its own 2D drawings and
-// writes it to models/<id>-loft.glb (nav-wright#44: "loft a custom
+// writes it to models/loft-<id>.glb (nav-wright#44: "loft a custom
 // BufferGeometry between stations" for any hull without a sourced mesh).
 //
 // The side profile gives each part's keel and deck line at every station;
@@ -48,8 +48,8 @@ const SPAR = 0.012;
  *   freeboard    height of the deck above the waterline
  *   house        height of each deckhouse above its own floor
  *   houseBeam    deckhouse width, against the 0.82 of the base loft
- * `base` writes models/<id>-loft.glb; the others
- * models/<id>-loft-<name>.glb. */
+ * `base` writes models/loft-<id>.glb; the others
+ * models/loft-<id>-<name>.glb. */
 const VARIANTS = {
   base: { beam: 1, sheer: 0, freeboard: 1, house: 1, houseBeam: 1 },
   slender: { beam: 0.8, sheer: 0.06, freeboard: 0.92, house: 0.9, houseBeam: 1.05 },
@@ -307,7 +307,7 @@ function buildHull(hull, v = VARIANTS.base) {
 mkdirSync(OUT, { recursive: true });
 for (const hull of Object.values(allHulls)) {
   for (const [name, v] of Object.entries(VARIANTS)) {
-    const stem = name === 'base' ? `${hull.spec.id}-loft` : `${hull.spec.id}-loft-${name}`;
+    const stem = name === 'base' ? `loft-${hull.spec.id}` : `loft-${hull.spec.id}-${name}`;
     const bytes = glb(
       buildHull(hull, { ...v, ...(name === 'base' ? {} : EXTRAS[hull.spec.id]) }),
       name === 'base' ? hull.spec.id : stem,

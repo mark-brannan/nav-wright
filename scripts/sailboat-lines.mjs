@@ -1,7 +1,7 @@
 // Turns a hand-traced sailboat drawing (docs/research/sailboat-lines/<id>.json)
 // into SVGs of its profile, plan, body plan and a lofted 3D view, so a traced
 // hull can be judged by eye before it goes anywhere near src/hulls.tsx, and
-// into models/<id>-lines.glb, the same loft as a mesh the 3D views can show
+// into models/<id>.glb, the same loft as a mesh the 3D views can show
 // (MODELS.md).
 //
 //   node scripts/sailboat-lines.mjs [id ...]     (default: every json there)
@@ -633,7 +633,7 @@ for (const id of ids) {
   };
   for (const [k, s] of Object.entries(out)) writeFileSync(join(DIR, `${id}-${k}.svg`), s);
   const bytes = loftGlb(m);
-  writeFileSync(join(MODELS, `${id}-lines.glb`), bytes);
+  writeFileSync(join(MODELS, `${id}.glb`), bytes);
   const spars = Object.values(m.rig)
     .flat()
     .map((p) => p[0]);
@@ -657,7 +657,7 @@ for (const id of ids) {
       return {
         id,
         name,
-        model: `${id}-lines.glb`,
+        model: `${id}.glb`,
         loaM: round(s.loaFt),
         beamM: round(s.beamFt),
         draftM: round(s.draftFt),
