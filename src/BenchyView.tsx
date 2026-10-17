@@ -7,6 +7,8 @@ import { Suspense, useState } from 'react';
 import type { ReactElement } from 'react';
 import type { FactRecord } from 'colregs-engine';
 import type { Hull } from './hulls.js';
+import type { MeshRecord } from './meshRecord.js';
+import { meshTopZ } from './modelTransform.js';
 import { LazyBenchyModel as BenchyModel } from './lazyModel.js';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
@@ -20,6 +22,7 @@ import { TiltControl } from './TiltControl.js';
 export function BenchyView({
   modelUrl,
   hull,
+  mesh,
   placed,
   facts,
   theta,
@@ -34,6 +37,10 @@ export function BenchyView({
    * bundler resolves assets and pass the result. */
   modelUrl: string;
   hull: Hull;
+  /** The catalog record of the mesh at `modelUrl` (meshCatalog): the view is
+   * framed to the mesh's own height, so a rig taller than the spec's masts
+   * stays on the canvas. Without it the frame holds FRAME_HEADROOM. */
+  mesh?: MeshRecord;
   placed: PlacedLight[];
   facts: FactRecord;
   theta: number;
@@ -72,6 +79,7 @@ export function BenchyView({
               tilt={tilt}
               onTilt={onTilt}
               hull={hull.spec}
+              topZ={mesh ? meshTopZ(mesh.proportions.lengthHeight) : undefined}
               label={labels.benchyAlt}
               fallback={<div className="scene-3d" aria-hidden="true" />}
               onError={() => setModelFailed(true)}

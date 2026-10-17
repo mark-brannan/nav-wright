@@ -21,6 +21,7 @@ import {
 import type { LightSeat } from '../src/modelTransform.js';
 import { allHulls, selectHull } from '../src/hulls.js';
 import { meshCatalog } from '../src/meshCatalog.js';
+import { framedTo, meshTopZ } from '../src/modelTransform.js';
 import type { HullSpec } from '../src/hulls.js';
 import { placeScene, profileHullModel } from '../src/sceneProfile.js';
 import { MAX_TILT, MIN_TILT } from '../src/tilt.js';
@@ -70,11 +71,12 @@ function drawn(
   file: string,
   s: HullSpec,
   L: number,
+  topZ?: number,
 ): { mesh: THREE.Vector3[]; lights: THREE.Vector3[] } {
   const scene = scenes.get(file)!;
   const placed = placeScene(scene, L, s);
   const lights = lightsOf(s);
-  const { scale, position } = viewFrame(L, s, lights);
+  const { scale, position } = viewFrame(L, framedTo(s, topZ), lights);
   const view = (v: THREE.Vector3): THREE.Vector3 =>
     v.multiplyScalar(scale).add(new THREE.Vector3(...position));
   const mesh: THREE.Vector3[] = [];
@@ -133,40 +135,44 @@ const TILTS = [MIN_TILT, -30, -5, 0, 10, 30, 60, MAX_TILT];
 const BEARINGS = Array.from({ length: 24 }, (_, i) => i * 15);
 const LENGTHS = [2, 5, 15, 40, 100, 400];
 
-/** The hull a shipped mesh is drawn for: a loft's own drawing; for the
- * rest, the hull selectHull picks for the catalog's record of her. Benchy
+/** A shipped mesh, the hull spec she is drawn for, and her top from the
+ * catalog (meshTopZ) where she stands taller than the spec's masts. */
+type Pair = [string, HullSpec, number?];
+
+/** The hull a shipped mesh is drawn for: a loft's own drawing; a traced
+ * vessel the sailing spec of her size (as the playground's vessels page); a
+ * kit mesh the hull selectHull picks for the catalog's record of her. Benchy
  * stands on every hull and is paired below. */
-function own(f: string): HullSpec | undefined {
-  const loft = f.match(/^loft-(.*?)(-slender|-sheered|-highside)?\.glb$/);
-  if (loft) return spec(loft[1]!);
+function own(f: string): Pair | undefined {
   const r = meshCatalog.find((m) => m.file === f);
-  // Benchy stands on every hull and is paired below; a traced vessel is
-  // fitted by her own hull extent and framed with her spars past it, which
-  // no spec frames (never paired before the catalog either).
-  if (!r || r.kind === 'calibration' || r.kind === 'traced') return undefined;
+  if (!r || r.kind === 'calibration') return undefined;
+  const topZ = meshTopZ(r.proportions.lengthHeight);
+  const loft = f.match(/^loft-(.*?)(-slender|-sheered|-highside)?\.glb$/);
+  if (loft) return [f, spec(loft[1]!), topZ];
+  if (r.kind === 'traced') return [f, spec(r.loaM! < 20 ? 'sail-small' : 'sail-large'), topZ];
   const propulsion = r.propulsion.includes('sail')
     ? 'propulsion:sail'
     : r.propulsion.includes('power')
       ? 'propulsion:power'
       : 'propulsion:oars';
-  return selectHull({
-    'fact:position': 'position:underway',
-    'fact:propulsion': propulsion,
-    'fact:activity': 'activity:none',
-    'fact:length_m': r.loaM ?? 12,
-  }).spec;
+  return [
+    f,
+    selectHull({
+      'fact:position': 'position:underway',
+      'fact:propulsion': propulsion,
+      'fact:activity': 'activity:none',
+      'fact:length_m': r.loaM ?? 12,
+    }).spec,
+    topZ,
+  ];
 }
 
-/** Shipped, but taller than any frame holds: her mast stands 1.26 of her
- * length. No hull draws her (searoom's hullModels registers sail-b). */
-const TOO_TALL = new Set(['kenney-boat-sail-a.glb']);
-
 /** Every shipped mesh with the hull it is drawn for, and Benchy on every hull. */
-function pairs(): [string, HullSpec][] {
-  const out: [string, HullSpec][] = specs.map((s) => [BENCHY, s]);
+function pairs(): Pair[] {
+  const out: Pair[] = specs.map((s) => [BENCHY, s]);
   for (const f of scenes.keys()) {
-    const s = own(f);
-    if (s && !TOO_TALL.has(f)) out.push([f, s]);
+    const p = own(f);
+    if (p) out.push(p);
   }
   return out;
 }
@@ -183,7 +189,7 @@ describe('view frame', () => {
 
   it('holds her on-screen length at every length', () => {
     for (const id of ['power-small', 'power-large', 'sail-large', 'tanker']) {
-      for (const file of [BENCHY, [...scenes.keys()].find((f) => own(f)?.id === id)!]) {
+      for (const file of [BENCHY, [...scenes.keys()].find((f) => own(f)?.[1].id === id)!]) {
         const ref = screenLength(drawn(file, spec(id), 15).mesh);
         for (const L of LENGTHS)
           expect(
@@ -196,7 +202,9 @@ describe('view frame', () => {
 
   it('draws Benchy the same length as the mesh she stands in for', () => {
     for (const [file, s] of pairs()) {
-      if (file === BENCHY) continue;
+      // A traced vessel is fitted by her hull's own extent; her spars reach
+      // past it, so her mesh spans more than the spec she stands on.
+      if (file === BENCHY || meshCatalog.find((m) => m.file === file)?.kind === 'traced') continue;
       const mine = drawn(file, s, 40).mesh;
       const benchy = drawn(BENCHY, s, 40).mesh;
       // Bow to stern in view units: both are fitted to the spec's span.
@@ -211,8 +219,8 @@ describe('view frame', () => {
   });
 
   it('keeps every mesh and her lights on the canvas from every bearing and tilt', () => {
-    for (const [file, s] of pairs()) {
-      const d = drawn(file, s, 30);
+    for (const [file, s, topZ] of pairs()) {
+      const d = drawn(file, s, 30, topZ);
       for (const theta of BEARINGS)
         for (const tilt of TILTS)
           expect(

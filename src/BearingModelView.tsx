@@ -14,6 +14,8 @@ import type { ReactElement } from 'react';
 import type { FactRecord } from 'colregs-engine';
 import { BearingScene, BearingView, hullHintOpacity, seaColor, skyColor } from './BearingView.js';
 import type { Hull } from './hulls.js';
+import type { MeshRecord } from './meshRecord.js';
+import { meshTopZ } from './modelTransform.js';
 import { LazyBenchyModel } from './lazyModel.js';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
@@ -36,6 +38,7 @@ export function bearingHullOpacity(hullHint: number, rangeNm?: number): number {
 export function BearingModelView({
   modelUrl,
   hull,
+  mesh,
   placed,
   facts,
   theta,
@@ -56,6 +59,10 @@ export function BearingModelView({
   /** URL of the hull's .glb; a consumer resolves one per hull (see BenchyView). */
   modelUrl: string;
   hull: Hull;
+  /** The catalog record of the mesh at `modelUrl` (meshCatalog): the view is
+   * framed to the mesh's own height, so a rig taller than the spec's masts
+   * stays on the canvas. Without it the frame holds FRAME_HEADROOM. */
+  mesh?: MeshRecord;
   placed: PlacedLight[];
   facts: FactRecord;
   /** Relative bearing of the viewer, degrees. Decides which lights show. */
@@ -153,6 +160,7 @@ export function BearingModelView({
               tilt={tilt}
               onTilt={onTilt}
               hull={hull.spec}
+              topZ={mesh ? meshTopZ(mesh.proportions.lengthHeight) : undefined}
               inViewAt={theta}
               hullOpacity={bearingHullOpacity(hullHint, range)}
               background={background}

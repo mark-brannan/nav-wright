@@ -88,5 +88,8 @@
     "three": {
       "optional": true
     }
-  }
+  },
+  "sideEffects": [
+    "**/*.css"
+  ]
 }

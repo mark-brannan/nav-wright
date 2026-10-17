@@ -520,7 +520,9 @@ export const VIEW_FRAME = {
  * place of any vessel, is about 0.75 of it, and the Kenney sailing hulls'
  * masts nearly 1.0 — and lights are seated on top of the mesh. The frame
  * cannot ask the mesh (a swap must not move it), so it holds the tallest
- * mesh shipped for a hull; test/viewFrame.test.ts checks every one.
+ * mesh shipped for a hull; test/viewFrame.test.ts checks every one. A
+ * mesh taller still, a traced rig, says so through her catalog record
+ * (meshTopZ, framedTo).
  */
 export const FRAME_HEADROOM = 0.85;
 
@@ -566,6 +568,21 @@ export function frameBox(
     min: { x: Math.min(...xs) / 2 - pad, y: 0, z: -halfBeam },
     max: { x: Math.max(...xs) / 2 + pad, y: top, z: halfBeam },
   };
+}
+
+/** The top of a mesh above the waterline in z units, from the catalog's
+ * measured length over height (docs/design/mesh-catalog.md): placed as a
+ * vessel of length L she stands 2 / lengthHeight half-lengths tall, and z
+ * counts LIGHT_Z_TO_X per half-length. */
+export function meshTopZ(lengthHeight: number): number {
+  return 2 / (lengthHeight * LIGHT_Z_TO_X);
+}
+
+/** `spec` with its mast raised to `topZ` when the mesh stands taller than
+ * the drawing, so viewFrame holds her rig; the spec itself is untouched. */
+export function framedTo<T extends FrameSpec>(spec: T, topZ?: number): T {
+  if (!finite(topZ) || !(topZ > (spec.mastTopZ ?? 0))) return spec;
+  return { ...spec, mastTopZ: topZ };
 }
 
 /** Tilts and bearings the frame is checked from: every whole bearing in

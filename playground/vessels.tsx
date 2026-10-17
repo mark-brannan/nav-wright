@@ -135,6 +135,7 @@ function Viewer({ r }: { r: MeshRecord }) {
           <BearingModelView
             modelUrl={modelUrl}
             hull={hull}
+            mesh={r}
             placed={placed}
             facts={facts}
             theta={theta}
