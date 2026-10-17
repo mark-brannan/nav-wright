@@ -1,0 +1,160 @@
+{
+  "name": "Hans Christian 38T",
+  "sources": {
+    "page": "https://sailboatdata.com/sailboat/hans-christian-38t/",
+    "drawing": "https://sailboatdata.com/wp-content/uploads/2023/03/hans_christian_38_drawing.jpg",
+    "drawingSize": [600, 745],
+    "retrieved": "2026-10-16"
+  },
+  "specs": {
+    "loaFt": 37.92,
+    "lwlFt": 33.0,
+    "beamFt": 12.33,
+    "draftFt": 6.0,
+    "rig": "cutter",
+    "hull": "long keel",
+    "designer": "Harwood Ives",
+    "I": 49.5,
+    "J": 22.0,
+    "P": 44.8,
+    "E": 15.3,
+    "sparredLengthFt": 47,
+    "sparredLengthSource": "owner's measurement on hull Symphony, 2026-10-16; LOA excludes bowsprit and stern spar"
+  },
+  "notes": [
+    "All points are pixels in the 600x745 drawing, read by hand off gridded enlargements and snapped to dark pixels where a column scan found the line. Bow is to the right in both views.",
+    "The drawing superimposes an accommodation plan (top) on a sail-plan profile (bottom), on one shared x scale: the bowsprit tip sits at x 577 in both.",
+    "Profile hull, transom top to stem head, spans x 34 to 478 = 444 px for an LOA of 37.92 ft, 11.71 px/ft. Draft reads 6.15 ft (spec 6.0), LWL 34.0 ft (spec 33.0), beam 12.4 ft (spec 12.33).",
+    "The plan's aft end at x 17 is a boomkin, not the transom: the drawing's full extent, x 17 to the bowsprit tip at x 577, is 560 px = 47.8 ft, matching the owner's ~47 ft sparred length. The profile does not draw the boomkin (its backstay lands on the transom top), so it is taken from the plan only, at deck height.",
+    "Inferred: forward of plan x 440 the drawn outline runs straight on to the bowsprit roller (pulpit and platform drawn continuous with the sheer). The deck is closed to the profile's stem head at x 478 by hand; the four points from x 455 on are a guess, not a trace."
+  ],
+  "profile": {
+    "waterlineY": 655,
+    "hull": [
+      [36, 606],
+      [60, 607],
+      [100, 610],
+      [150, 612],
+      [200, 612],
+      [250, 611],
+      [300, 608],
+      [350, 604],
+      [400, 600],
+      [450, 596],
+      [478, 595],
+      [477, 610],
+      [471, 624],
+      [462, 638],
+      [452, 648],
+      [445, 655],
+      [420, 666],
+      [400, 676],
+      [380, 684],
+      [360, 692],
+      [340, 700],
+      [320, 707],
+      [300, 715],
+      [280, 722],
+      [260, 724],
+      [240, 725],
+      [200, 726],
+      [160, 727],
+      [120, 728],
+      [100, 727],
+      [80, 727],
+      [72, 725],
+      [69, 718],
+      [68, 700],
+      [67, 672],
+      [62, 665],
+      [50, 657],
+      [42, 648],
+      [36, 635],
+      [34, 620]
+    ],
+    "boottopTopY": [
+      [40, 612],
+      [60, 621],
+      [100, 627],
+      [160, 631],
+      [200, 631],
+      [240, 629],
+      [280, 625],
+      [320, 621],
+      [360, 616],
+      [400, 610],
+      [440, 603],
+      [470, 598]
+    ],
+    "coachroof": [
+      [145, 612],
+      [152, 598],
+      [335, 596],
+      [352, 604]
+    ],
+    "rig": {
+      "mast": [
+        [291, 600],
+        [289, 15]
+      ],
+      "boom": [
+        [291, 552],
+        [112, 542]
+      ],
+      "bowsprit": [
+        [478, 594],
+        [578, 580]
+      ],
+      "forestay": [
+        [289, 18],
+        [576, 581]
+      ],
+      "innerForestay": [
+        [291, 80],
+        [474, 595]
+      ],
+      "backstay": [
+        [289, 18],
+        [45, 606]
+      ],
+      "bobstay": [
+        [576, 583],
+        [452, 650]
+      ],
+      "boomkin": [
+        [40, 607],
+        [17, 605]
+      ]
+    }
+  },
+  "plan": {
+    "centreY": 310.5,
+    "halfBreadth": [
+      [34, 21],
+      [37, 23.5],
+      [60, 35],
+      [80, 41],
+      [100, 50],
+      [120, 56],
+      [140, 61.5],
+      [160, 67],
+      [170, 69.5],
+      [200, 71.5],
+      [240, 72.5],
+      [280, 70],
+      [300, 68.5],
+      [320, 65.5],
+      [340, 62.5],
+      [360, 57.5],
+      [380, 52.5],
+      [400, 46.5],
+      [420, 40.5],
+      [440, 34.5],
+      [455, 29],
+      [465, 21],
+      [472, 12],
+      [478, 0]
+    ],
+    "inferredFromX": 455
+  }
+}
