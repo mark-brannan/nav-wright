@@ -1,0 +1,173 @@
+/* nav-wright — default stylesheet.
+   Optional. The renderer's class names and custom properties are also a
+   supported contract on their own — a consumer may skip this file entirely
+   and supply the class names and the --hull-fill/--sea-night-style custom
+   properties from their own stylesheet instead. Import this only for a
+   ready-made look; see docs/decisions.md for why it ships. */
+
+:root {
+  --sea-night: #0b1526;
+  --sea-below: #08101d;
+  --waterline: #2a3d58;
+  --hull-fill: #101c30;
+  --hull-stroke: #3d5273;
+  --rig-stroke: #33465f;
+  --grid-line: #33465f;
+  --accent-soft: #9fc7bd;
+  /* Daylight ground, for views given time="day" (an unstyled hull) */
+  --sky-day: #cfe6f7;
+  --sea-day: #5f93b8;
+  --waterline-day: #2f5f86;
+  --hull-fill-day: #e9eef3;
+  --hull-stroke-day: #2b3a4d;
+  --rig-stroke-day: #3a4a5f;
+  /* BearingView's opt-in seascape; each has the same fallback in the component */
+  --bearing-sea-near: #0a1424;
+  --bearing-sea-far: #03060b;
+  --bearing-horizon: #1b2a42;
+}
+
+.scene-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--grid-line);
+  touch-action: none;
+}
+
+.scene-svg-black {
+  border-color: #1a2436;
+}
+
+/* The 3D scene's frame: one box, one border, the canvas filling it. The
+   canvas stays in flow — react-three-fiber sets position/width/height on
+   its container inline, so it can't be absolutely positioned from here.
+   Only nav-wright/benchy renders these. */
+.scene-3d {
+  width: 100%;
+  aspect-ratio: 440 / 240;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--grid-line);
+}
+
+.scene-3d-stack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 440 / 240;
+  border-radius: 10px;
+  border: 1px solid var(--grid-line);
+  overflow: hidden;
+}
+
+.scene-3d-stack > .scene-3d {
+  height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+}
+
+.scene-3d-stack canvas {
+  /* The view orbits on drag, so the canvas takes the pointer. */
+  touch-action: none;
+  cursor: grab;
+}
+
+.scene-3d-stack canvas:active {
+  cursor: grabbing;
+}
+
+/* BearingModelView's "no lights visible" note, over the canvas. */
+.bearing-empty-overlay {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-soft);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.plan-svg {
+  max-width: 440px;
+  margin: 0 auto;
+  cursor: crosshair;
+}
+
+.bearing-empty {
+  fill: var(--accent-soft);
+  font-size: 14px;
+}
+
+.theta-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.theta-control label {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.theta-control input {
+  flex: 1;
+}
+
+.theta-readout {
+  font-variant-numeric: tabular-nums;
+  font-size: 13.5px;
+  min-width: 11em;
+}
+
+/* ThetaControl's dial: the native input is visually hidden, so its focus
+   ring is drawn on the dial. */
+.theta-dial-input:focus-visible + .theta-dial .theta-dial-ring {
+  stroke: var(--focus, #f5f5f0);
+  stroke-width: 3;
+}
+
+.theta-dial:active,
+.bearing-view .scene-svg:active {
+  cursor: grabbing !important;
+}
+
+@keyframes light-flash {
+  0%,
+  40% {
+    opacity: 1;
+  }
+  50%,
+  90% {
+    opacity: 0.08;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.light-flash {
+  animation: light-flash 0.5s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .light-flash {
+    animation: none;
+  }
+}
+
+/* The 2D bearing scene standing in on the 3D canvas while three.js or the
+   model loads: drawn borderless, filling the frame. */
+.scene-3d-stack > .scene-svg,
+.scene-3d-loading > .scene-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
