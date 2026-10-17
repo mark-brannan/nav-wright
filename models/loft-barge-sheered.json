@@ -1,0 +1,25 @@
+{
+  "file": "loft-barge-sheered.glb",
+  "name": "Barge (sheered)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "dumb barge, square ends, cargo mound",
+  "propulsion": [
+    "none"
+  ],
+  "shows": [
+    "cargo"
+  ],
+  "loaM": 40,
+  "beamM": 10.1,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    20,
+    80
+  ]
+}

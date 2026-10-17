@@ -1,0 +1,28 @@
+{
+  "file": "loft-sail-large.glb",
+  "name": "Ketch",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "sailing yacht, two masts",
+  "rig": "ketch",
+  "propulsion": [
+    "sail",
+    "power"
+  ],
+  "shows": [
+    "masts"
+  ],
+  "loaM": 30,
+  "beamM": 6.6,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    20,
+    40
+  ],
+  "aisType": 36
+}

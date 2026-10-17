@@ -1,0 +1,28 @@
+{
+  "file": "loft-fishing-gear.glb",
+  "name": "Trawler, gear out",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "trawler with a derrick boom up and the warp running astern",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "wheelhouse",
+    "gantry",
+    "fishing-gear"
+  ],
+  "loaM": 30,
+  "beamM": 6.6,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    15,
+    50
+  ],
+  "aisType": 30
+}

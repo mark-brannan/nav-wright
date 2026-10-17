@@ -19,7 +19,8 @@ import {
   viewFrame,
 } from '../src/modelTransform.js';
 import type { LightSeat } from '../src/modelTransform.js';
-import { allHulls } from '../src/hulls.js';
+import { allHulls, selectHull } from '../src/hulls.js';
+import { meshCatalog } from '../src/meshCatalog.js';
 import type { HullSpec } from '../src/hulls.js';
 import { placeScene, profileHullModel } from '../src/sceneProfile.js';
 import { MAX_TILT, MIN_TILT } from '../src/tilt.js';
@@ -132,8 +133,29 @@ const TILTS = [MIN_TILT, -30, -5, 0, 10, 30, 60, MAX_TILT];
 const BEARINGS = Array.from({ length: 24 }, (_, i) => i * 15);
 const LENGTHS = [2, 5, 15, 40, 100, 400];
 
-/** The hull a shipped mesh is drawn for: its file name starts with the id. */
-const own = (f: string): HullSpec | undefined => specs.find((s) => f.startsWith(`${s.id}-`));
+/** The hull a shipped mesh is drawn for: a loft's own drawing; for the
+ * rest, the hull selectHull picks for the catalog's record of her. Benchy
+ * stands on every hull and is paired below. */
+function own(f: string): HullSpec | undefined {
+  const loft = f.match(/^loft-(.*?)(-slender|-sheered|-highside)?\.glb$/);
+  if (loft) return spec(loft[1]!);
+  const r = meshCatalog.find((m) => m.file === f);
+  // Benchy stands on every hull and is paired below; a traced vessel is
+  // fitted by her own hull extent and framed with her spars past it, which
+  // no spec frames (never paired before the catalog either).
+  if (!r || r.kind === 'calibration' || r.kind === 'traced') return undefined;
+  const propulsion = r.propulsion.includes('sail')
+    ? 'propulsion:sail'
+    : r.propulsion.includes('power')
+      ? 'propulsion:power'
+      : 'propulsion:oars';
+  return selectHull({
+    'fact:position': 'position:underway',
+    'fact:propulsion': propulsion,
+    'fact:activity': 'activity:none',
+    'fact:length_m': r.loaM ?? 12,
+  }).spec;
+}
 
 /** Shipped, but taller than any frame holds: her mast stands 1.26 of her
  * length. No hull draws her (searoom's hullModels registers sail-b). */

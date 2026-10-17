@@ -1,5 +1,6 @@
 // Lofts a 3D mesh for every hull in allHulls from its own 2D drawings and
-// writes it to models/loft-<id>.glb (nav-wright#44: "loft a custom
+// writes it to models/loft-<id>.glb, with its catalog sidecar
+// models/loft-<id>.json beside it (nav-wright#44: "loft a custom
 // BufferGeometry between stations" for any hull without a sourced mesh).
 //
 // The side profile gives each part's keel and deck line at every station;
@@ -304,6 +305,274 @@ function buildHull(hull, v = VARIANTS.base) {
   return parts;
 }
 
+/** The sidecar each loft ships beside its mesh (docs/design/mesh-catalog.md):
+ * the nominal vessel the drawing depicts, at the length the old size band
+ * put her. `loaM` is that band's length; `beamM` is the drawing's beam at
+ * it; there is no underbody, so no draft. `fit` is the band a scene may
+ * scale her to before the UI must say "scaled". */
+const NOMINAL = {
+  open: {
+    name: 'Open boat',
+    hullForm: 'open boat, no superstructure',
+    propulsion: ['oars', 'power'],
+    shows: ['open-cockpit'],
+    loaM: 5,
+    fit: [3, 7],
+  },
+  'power-small': {
+    name: 'Small motor cruiser',
+    hullForm: 'small planing motor cruiser, cabin forward',
+    propulsion: ['power'],
+    shows: ['cabin'],
+    loaM: 12,
+    fit: [7, 20],
+    aisType: 37,
+  },
+  'power-large': {
+    name: 'Motor yacht',
+    hullForm: 'motor yacht, deckhouse and flybridge',
+    propulsion: ['power'],
+    shows: ['deckhouse'],
+    loaM: 35,
+    fit: [20, 50],
+    aisType: 37,
+  },
+  'sail-small': {
+    name: 'Sloop',
+    hullForm: 'sailing yacht, single mast',
+    rig: 'bermudan sloop',
+    propulsion: ['sail', 'power'],
+    shows: ['masts'],
+    loaM: 12,
+    fit: [5, 20],
+    aisType: 36,
+  },
+  'sail-large': {
+    name: 'Ketch',
+    hullForm: 'sailing yacht, two masts',
+    rig: 'ketch',
+    propulsion: ['sail', 'power'],
+    shows: ['masts'],
+    loaM: 30,
+    fit: [20, 40],
+    aisType: 36,
+  },
+  'square-rigger': {
+    name: 'Square-rigged ship',
+    hullForm: 'square-rigged sailing ship, three masts with yards',
+    rig: 'three-masted square rig',
+    propulsion: ['sail'],
+    shows: ['masts', 'yards', 'bowsprit'],
+    loaM: 60,
+    fit: [40, 120],
+    aisType: 36,
+  },
+  trawler: {
+    name: 'Stern trawler',
+    hullForm: 'stern trawler, wheelhouse forward, gantry aft',
+    propulsion: ['power'],
+    shows: ['wheelhouse', 'gantry'],
+    loaM: 30,
+    fit: [15, 50],
+    aisType: 30,
+  },
+  seiner: {
+    name: 'Purse seiner',
+    hullForm: 'purse seiner, wheelhouse forward, net drum and boom aft',
+    propulsion: ['power'],
+    shows: ['wheelhouse', 'boom'],
+    loaM: 30,
+    fit: [15, 50],
+    aisType: 30,
+  },
+  tug: {
+    name: 'Tug',
+    hullForm: 'harbour tug, high bow, towing winch aft',
+    propulsion: ['power'],
+    shows: ['wheelhouse', 'funnel', 'towing-gear'],
+    loaM: 30,
+    fit: [15, 45],
+    aisType: 52,
+  },
+  pusher: {
+    name: 'Push tug',
+    hullForm: 'push tug, square bow with push knees, wheelhouse raised on a pillar',
+    propulsion: ['power'],
+    shows: ['wheelhouse', 'push-knees'],
+    loaM: 30,
+    fit: [15, 45],
+    aisType: 52,
+  },
+  barge: {
+    name: 'Barge',
+    hullForm: 'dumb barge, square ends, cargo mound',
+    propulsion: ['none'],
+    shows: ['cargo'],
+    loaM: 40,
+    fit: [20, 80],
+  },
+  'partly-submerged': {
+    name: 'Dracone',
+    hullForm: 'inconspicuous, partly submerged tow: a dracone or raft of logs, barely awash',
+    propulsion: ['none'],
+    shows: [],
+    loaM: 40,
+    fit: [20, 80],
+  },
+  'pilot-boat': {
+    name: 'Pilot boat',
+    hullForm: 'fine-lined fast pilot boat, wheelhouse amidships',
+    propulsion: ['power'],
+    shows: ['wheelhouse'],
+    loaM: 18,
+    fit: [12, 25],
+    aisType: 50,
+  },
+  ferry: {
+    name: 'Ferry',
+    hullForm: 'passenger ferry, superstructure the length of the hull',
+    propulsion: ['power'],
+    shows: ['superstructure', 'funnel'],
+    loaM: 90,
+    fit: [50, 120],
+    aisType: 60,
+  },
+  'container-ship': {
+    name: 'Container ship',
+    hullForm: 'container ship, bridge aft, boxes stacked on deck',
+    propulsion: ['power'],
+    shows: ['containers', 'bridge', 'funnel'],
+    loaM: 250,
+    fit: [120, 400],
+    aisType: 70,
+  },
+  tanker: {
+    name: 'Tanker',
+    hullForm: 'full-bodied tanker, bridge aft, low pipework deck',
+    propulsion: ['power'],
+    shows: ['bridge', 'funnel'],
+    loaM: 200,
+    fit: [120, 350],
+    aisType: 80,
+  },
+  bulker: {
+    name: 'Bulk carrier',
+    hullForm: 'full-bodied bulk carrier, bridge aft, hatch covers on deck',
+    propulsion: ['power'],
+    shows: ['bridge', 'funnel', 'hatches'],
+    loaM: 200,
+    fit: [120, 300],
+    aisType: 70,
+  },
+  'cruise-ship': {
+    name: 'Cruise ship',
+    hullForm: 'cruise ship, superstructure the length of the hull, funnel aft',
+    propulsion: ['power'],
+    shows: ['superstructure', 'funnel'],
+    loaM: 250,
+    fit: [120, 350],
+    aisType: 60,
+  },
+  warship: {
+    name: 'Frigate',
+    hullForm: 'fine-lined warship, bridge forward, mast and funnel amidships',
+    propulsion: ['power'],
+    shows: ['bridge', 'masts', 'funnel'],
+    loaM: 100,
+    fit: [60, 160],
+    aisType: 35,
+  },
+  dredger: {
+    name: 'Dredger',
+    hullForm: 'pontoon-hulled dredger with a bow, crane amidships',
+    propulsion: ['power'],
+    shows: ['cranes'],
+    loaM: 60,
+    fit: [30, 100],
+    aisType: 33,
+  },
+  'mine-clearance': {
+    name: 'Minehunter',
+    hullForm: 'mine countermeasures vessel, bridge forward, sweep gear aft',
+    propulsion: ['power'],
+    shows: ['bridge', 'masts', 'sweep-gear'],
+    loaM: 50,
+    fit: [35, 70],
+    aisType: 35,
+  },
+  'fishing-gear': {
+    name: 'Trawler, gear out',
+    hullForm: 'trawler with a derrick boom up and the warp running astern',
+    propulsion: ['power'],
+    shows: ['wheelhouse', 'gantry', 'fishing-gear'],
+    loaM: 30,
+    fit: [15, 50],
+    aisType: 30,
+  },
+  aground: {
+    name: 'Coaster, aground',
+    hullForm: 'small coaster, drawn trimmed by the stern with her forefoot up on a shoal',
+    propulsion: ['power'],
+    shows: ['bridge', 'funnel'],
+    loaM: 60,
+    fit: [30, 100],
+    aisType: 70,
+  },
+  'dive-support': {
+    name: 'Dive-support vessel',
+    hullForm: 'dive-support vessel, wheelhouse forward, low working deck, A-frame over the stern',
+    propulsion: ['power'],
+    shows: ['wheelhouse', 'a-frame'],
+    loaM: 15,
+    fit: [10, 25],
+    aisType: 34,
+  },
+  'wing-in-ground': {
+    name: 'Wing-in-ground craft',
+    hullForm: 'wing-in-ground craft on the water: flat float hull, canopy, stub wings, T-tail',
+    propulsion: ['power'],
+    shows: ['wings', 'canopy'],
+    loaM: 15,
+    fit: [8, 25],
+    aisType: 20,
+  },
+  'restricted-ability': {
+    name: 'Buoy tender',
+    hullForm: 'buoy tender, bridge forward, long buoy deck aft with a heavy crane',
+    propulsion: ['power'],
+    shows: ['bridge', 'cranes'],
+    loaM: 60,
+    fit: [30, 100],
+  },
+};
+
+function sidecar(hull, stem, name, v) {
+  const n = NOMINAL[hull.spec.id];
+  if (!n) throw new Error(`no nominal record for ${hull.spec.id}`);
+  const loaM = n.loaM;
+  const beamM = Math.round(hull.spec.beam * v.beam * loaM * 10) / 10;
+  return {
+    file: `${stem}.glb`,
+    name: name === 'base' ? n.name : `${n.name} (${name})`,
+    kind: 'loft',
+    fidelity: 'typical',
+    source: {
+      url: 'https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx',
+      license: 'AGPL-3.0',
+    },
+    hullForm: n.hullForm,
+    ...(n.rig ? { rig: n.rig } : {}),
+    propulsion: n.propulsion,
+    shows: n.shows,
+    loaM,
+    beamM,
+    draftM: null,
+    nominal: true,
+    fitLengthM: n.fit,
+    ...(n.aisType ? { aisType: n.aisType } : {}),
+  };
+}
+
 mkdirSync(OUT, { recursive: true });
 for (const hull of Object.values(allHulls)) {
   for (const [name, v] of Object.entries(VARIANTS)) {
@@ -314,6 +583,10 @@ for (const hull of Object.values(allHulls)) {
       { generator: 'nav-wright scripts/loft-hulls.mjs', colours: COLOURS },
     );
     writeFileSync(join(OUT, `${stem}.glb`), bytes);
+    writeFileSync(
+      join(OUT, `${stem}.json`),
+      JSON.stringify(sidecar(hull, stem, name, v), null, 2) + '\n',
+    );
     console.log(`${stem.padEnd(28)} ${(bytes.length / 1024).toFixed(0).padStart(4)} KB`);
   }
 }

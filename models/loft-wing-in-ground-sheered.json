@@ -1,0 +1,27 @@
+{
+  "file": "loft-wing-in-ground-sheered.glb",
+  "name": "Wing-in-ground craft (sheered)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "wing-in-ground craft on the water: flat float hull, canopy, stub wings, T-tail",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "wings",
+    "canopy"
+  ],
+  "loaM": 15,
+  "beamM": 4.7,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    8,
+    25
+  ],
+  "aisType": 20
+}

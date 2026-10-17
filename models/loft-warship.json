@@ -1,0 +1,28 @@
+{
+  "file": "loft-warship.glb",
+  "name": "Frigate",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "fine-lined warship, bridge forward, mast and funnel amidships",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "bridge",
+    "masts",
+    "funnel"
+  ],
+  "loaM": 100,
+  "beamM": 20,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    60,
+    160
+  ],
+  "aisType": 35
+}

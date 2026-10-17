@@ -1,0 +1,26 @@
+{
+  "file": "loft-power-large-sheered.glb",
+  "name": "Motor yacht (sheered)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "motor yacht, deckhouse and flybridge",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "deckhouse"
+  ],
+  "loaM": 35,
+  "beamM": 8.1,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    20,
+    50
+  ],
+  "aisType": 37
+}

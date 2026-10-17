@@ -1,0 +1,27 @@
+{
+  "file": "loft-ferry.glb",
+  "name": "Ferry",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "passenger ferry, superstructure the length of the hull",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "superstructure",
+    "funnel"
+  ],
+  "loaM": 90,
+  "beamM": 21.6,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    50,
+    120
+  ],
+  "aisType": 60
+}

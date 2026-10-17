@@ -1,0 +1,29 @@
+{
+  "file": "com-pac-16.glb",
+  "name": "Com-Pac 16",
+  "kind": "traced",
+  "fidelity": "traced",
+  "source": {
+    "trace": "docs/research/sailboat-lines/com-pac-16.json",
+    "url": "https://sailboatdata.com/sailboat/com-pac-16/",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "fractional sloop, fin w/transom hung rudder",
+  "rig": "fractional sloop",
+  "propulsion": [
+    "sail",
+    "power"
+  ],
+  "shows": [
+    "sails"
+  ],
+  "loaM": 4.88,
+  "beamM": 1.83,
+  "draftM": 0.46,
+  "nominal": false,
+  "fitLengthM": [
+    4,
+    6
+  ],
+  "aisType": 36
+}

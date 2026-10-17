@@ -1,0 +1,18 @@
+{
+  "file": "3dbenchy-lowpoly.glb",
+  "name": "3DBenchy",
+  "kind": "calibration",
+  "fidelity": "calibration",
+  "source": {
+    "url": "https://github.com/CreativeTools/3DBenchy",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "calibration print, a small motor-cruiser shape",
+  "propulsion": ["power"],
+  "shows": ["wheelhouse"],
+  "loaM": null,
+  "beamM": null,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": null
+}

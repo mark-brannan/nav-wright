@@ -1,0 +1,26 @@
+{
+  "file": "loft-dredger-highside.glb",
+  "name": "Dredger (highside)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "pontoon-hulled dredger with a bow, crane amidships",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "cranes"
+  ],
+  "loaM": 60,
+  "beamM": 17.9,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    30,
+    100
+  ],
+  "aisType": 33
+}

@@ -1,7 +1,8 @@
-// Real sailing vessels, traced from published drawings
-// (docs/research/sailboat-lines): each one's lofted mesh in the 3D bearing
-// view, lit as a sailing vessel of her own length, beside the drawings the
-// mesh was lofted from.
+// Every shipped mesh, by its catalog record (docs/design/mesh-catalog.md):
+// pick one by name, see her in the 3D bearing view lit as the vessel the
+// record says she is, with the record beside her. The traced real sailing
+// vessels (docs/research/sailboat-lines) keep the drawings they were
+// lofted from under the picker.
 
 import { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -10,7 +11,8 @@ import type { FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
-import { allHulls, placeLights } from '../src/index.js';
+import { allHulls, meshCatalog, placeLights, selectHull } from '../src/index.js';
+import type { Hull, MeshRecord } from '../src/index.js';
 import { BearingModelView } from '../src/benchy.js';
 import '../src/style.css';
 import './playground.css';
@@ -18,31 +20,12 @@ import './playground.css';
 const lightsData = lightsJson as unknown as LightsData;
 const geometryData = geometryJson as unknown as GeometryData;
 
-interface Trace {
-  name: string;
-  sources: { page: string; drawing: string };
-  specs: {
-    loaFt: number;
-    lwlFt?: number;
-    beamFt: number;
-    draftFt: number;
-    rig?: string;
-    hull?: string;
-    designer?: string;
-    built?: string | number;
-  };
-}
-
-const traces = import.meta.glob<Trace>('../docs/research/sailboat-lines/*.json', {
-  import: 'default',
-  eager: true,
-});
-const drawings = import.meta.glob<string>('../docs/research/sailboat-lines/*.svg', {
+const meshes = import.meta.glob<string>('../models/*.glb', {
   query: '?url',
   import: 'default',
   eager: true,
 });
-const meshes = import.meta.glob<string>('../models/*-lines.glb', {
+const drawings = import.meta.glob<string>('../docs/research/sailboat-lines/*.svg', {
   query: '?url',
   import: 'default',
   eager: true,
@@ -52,108 +35,170 @@ const stem = (path: string) =>
     .split('/')
     .pop()!
     .replace(/\.\w+$/, '');
+const meshUrl = (file: string) => Object.entries(meshes).find(([p]) => p.endsWith(`/${file}`))?.[1];
 const drawing = (id: string, view: string) =>
   Object.entries(drawings).find(([p]) => stem(p) === `${id}-${view}`)?.[1];
-const mesh = (id: string) => Object.entries(meshes).find(([p]) => stem(p) === `${id}-lines`)?.[1];
 
-const FT = 0.3048;
 const VIEWS = ['profile', 'plan', 'bodyplan', 'loft'] as const;
 const RESEARCH =
   'https://github.com/mark-brannan/nav-wright/tree/main/docs/research/sailboat-lines';
 
-/** Traces by length, smallest first. */
-const vessels = Object.entries(traces)
-  .map(([path, trace]) => ({ id: stem(path), trace }))
-  .sort((a, b) => a.trace.specs.loaFt - b.trace.specs.loaFt);
+/** The length a scene would give her: her own, else the middle of her fit band. */
+function lengthOf(r: MeshRecord): number {
+  if (r.loaM) return r.loaM;
+  if (r.fitLengthM) return (r.fitLengthM[0] + r.fitLengthM[1]) / 2;
+  return 12;
+}
 
-function Vessel({ id, trace }: { id: string; trace: Trace }) {
-  const lengthM = trace.specs.loaFt * FT;
-  // Lights are placed from a hull spec's stations; the mesh is fitted to
-  // that same span, so a sailing hull of her size class stands in.
-  const hull = lengthM < 20 ? allHulls.sailSmall : allHulls.sailLarge;
-  const facts = useMemo(
-    (): FactRecord => ({
-      'fact:position': 'position:underway',
-      'fact:making_way': true,
-      'fact:propulsion': 'propulsion:sail',
-      'fact:activity': 'activity:none',
-      'fact:length_m': Math.round(lengthM * 10) / 10,
-    }),
-    [lengthM],
+/** Lit as what the record says she is: a sailing vessel under sail, an
+ * oared boat, else a power-driven vessel underway. */
+function factsOf(r: MeshRecord): FactRecord {
+  const propulsion = r.propulsion.includes('sail')
+    ? 'propulsion:sail'
+    : r.propulsion.includes('power')
+      ? 'propulsion:power'
+      : 'propulsion:oars';
+  return {
+    'fact:position': 'position:underway',
+    'fact:making_way': true,
+    'fact:propulsion': propulsion,
+    'fact:activity': 'activity:none',
+    'fact:length_m': Math.round(lengthOf(r) * 10) / 10,
+  };
+}
+
+/** The hull spec whose stations light her: a loft's own drawing, else the
+ * one selectHull picks for her facts. */
+function hullOf(r: MeshRecord, facts: FactRecord): Hull {
+  const loft = r.file.match(/^loft-(.*?)(-slender|-sheered|-highside)?\.glb$/);
+  const own = loft && Object.values(allHulls).find((h) => h.spec.id === loft[1]);
+  return own || selectHull(facts);
+}
+
+function Record({ r }: { r: MeshRecord }) {
+  const rows: [string, string][] = [
+    ['file', r.file],
+    ['kind / fidelity', `${r.kind} / ${r.fidelity}`],
+    ['hull form', r.hullForm],
+    ...(r.rig ? ([['rig', r.rig]] as [string, string][]) : []),
+    ['propulsion', r.propulsion.join(', ')],
+    ['shows', r.shows.join(', ') || '—'],
+    [
+      'LOA × beam × draft',
+      `${r.loaM ?? '—'} × ${r.beamM ?? '—'} × ${r.draftM ?? '—'} m${r.nominal ? ' (nominal)' : ''}`,
+    ],
+    ['fits', r.fitLengthM ? `${r.fitLengthM[0]}–${r.fitLengthM[1]} m` : '—'],
+    ['L/B, L/H', `${r.proportions.lengthBeam}, ${r.proportions.lengthHeight}`],
+    ['frame', `waterline z ${r.frame.waterlineZ}, hull x ${r.frame.hullX.join('..')}`],
+    [
+      'lights [fx, z]',
+      `masthead ${r.lights.masthead.join(', ')}; side ${r.lights.sidelight.join(', ')}; stern ${r.lights.stern.join(', ')}`,
+    ],
+    ...(r.aisType !== undefined ? ([['AIS type', String(r.aisType)]] as [string, string][]) : []),
+    ['source', `${r.source.license}, ${r.source.url}`],
+  ];
+  return (
+    <table className="mesh-record">
+      <tbody>
+        {rows.map(([k, v]) => (
+          <tr key={k}>
+            <th>{k}</th>
+            <td>{v}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
+}
+
+function Viewer({ r }: { r: MeshRecord }) {
+  const facts = useMemo(() => factsOf(r), [r]);
+  const hull = useMemo(() => hullOf(r, facts), [r, facts]);
   const placed = useMemo(() => {
     const display = evaluateDisplay(facts).displays[0];
     return display ? placeLights(display.lights, hull.spec, facts, lightsData, geometryData) : [];
   }, [facts, hull]);
   const [theta, setTheta] = useState(300);
   const [tilt, setTilt] = useState(12);
-  const modelUrl = mesh(id);
-  const s = trace.specs;
+  const modelUrl = meshUrl(r.file);
+  return (
+    <div className="vessel-views">
+      <figure className="gallery-row">
+        <figcaption>
+          <strong>BearingModelView</strong>{' '}
+          <span className="muted">
+            {r.file}, lit as a {facts['fact:length_m']} m {facts['fact:propulsion']!.slice(11)}{' '}
+            vessel underway on the {hull.spec.id} stations
+          </span>
+        </figcaption>
+        {modelUrl ? (
+          <BearingModelView
+            modelUrl={modelUrl}
+            hull={hull}
+            placed={placed}
+            facts={facts}
+            theta={theta}
+            onTheta={setTheta}
+            tilt={tilt}
+            onTilt={setTilt}
+            hullHint={1}
+            sky={0.35}
+            sea={0.5}
+          />
+        ) : (
+          <p className="muted">no mesh: npm run models</p>
+        )}
+      </figure>
+      <figure className="gallery-row">
+        <figcaption>
+          <strong>Catalog record</strong> <span className="muted">models/catalog.json</span>
+        </figcaption>
+        <Record r={r} />
+      </figure>
+    </div>
+  );
+}
+
+/** The traced vessels, with the drawings each was lofted from. */
+function Traced({ r }: { r: MeshRecord }) {
+  const id = r.file.replace(/\.glb$/, '');
   return (
     <section className="gallery-hull vessel" id={id}>
       <h2>
-        {trace.name}{' '}
+        {r.name}{' '}
         <span className="muted">
-          LOA {s.loaFt} ft ({lengthM.toFixed(1)} m), beam {s.beamFt} ft, draft {s.draftFt} ft
-          {s.rig ? `, ${s.rig}` : ''}
-          {s.hull ? `, ${s.hull}` : ''}
-          {s.designer ? `, ${s.designer}` : ''}
-          {s.built ? `, ${s.built}` : ''}
+          LOA {r.loaM} m, beam {r.beamM} m, draft {r.draftM} m, {r.hullForm}
         </span>
       </h2>
-      <div className="vessel-views">
-        <figure className="gallery-row">
-          <figcaption>
-            <strong>BearingModelView</strong>{' '}
-            <span className="muted">
-              {id}-lines.glb, lit as a {lengthM.toFixed(1)} m sailing vessel underway
-            </span>
-          </figcaption>
-          {modelUrl ? (
-            <BearingModelView
-              modelUrl={modelUrl}
-              hull={hull}
-              placed={placed}
-              facts={facts}
-              theta={theta}
-              onTheta={setTheta}
-              tilt={tilt}
-              onTilt={setTilt}
-              hullHint={1}
-              sky={0.35}
-              sea={0.5}
-            />
-          ) : (
-            <p className="muted">no mesh: run node scripts/sailboat-lines.mjs</p>
-          )}
-        </figure>
-        <figure className="gallery-row">
-          <figcaption>
-            <strong>Loft</strong> <span className="muted">the same mesh, flat-shaded</span>
-          </figcaption>
-          <img src={drawing(id, 'loft')} alt={`${trace.name} loft`} />
-        </figure>
-      </div>
+      <Viewer r={r} />
       <div className="vessel-drawings">
-        {VIEWS.filter((v) => v !== 'loft').map((v) => (
+        {VIEWS.map((v) => (
           <figure key={v} className="gallery-row">
             <figcaption>
               <strong>{v === 'bodyplan' ? 'Body plan' : v[0]!.toUpperCase() + v.slice(1)}</strong>
             </figcaption>
-            <img src={drawing(id, v)} alt={`${trace.name} ${v}`} />
+            <img src={drawing(id, v)} alt={`${r.name} ${v}`} />
           </figure>
         ))}
       </div>
       <p className="muted">
-        Traced from <a href={trace.sources.drawing}>the published drawing</a> (
-        <a href={trace.sources.page}>spec page</a>); the trace and its notes are{' '}
+        Traced from <a href={r.source.url}>the published drawing</a>; the trace and its notes are{' '}
         <a href={`${RESEARCH}/${id}.json`}>{id}.json</a>.
       </p>
     </section>
   );
 }
 
+const byName = [...meshCatalog].sort(
+  (a, b) => a.name.localeCompare(b.name) || a.file.localeCompare(b.file),
+);
+const KINDS = ['traced', 'loft', 'kit', 'calibration'] as const;
+
 function Vessels() {
+  const [file, setFile] = useState(
+    byName.find((r) => r.kind === 'traced')?.file ?? byName[0]!.file,
+  );
+  const picked = meshCatalog.find((r) => r.file === file)!;
   return (
     <div className="pg gallery">
       <header>
@@ -167,13 +212,37 @@ function Vessels() {
           </a>
         </nav>
         <span className="muted">
-          {vessels.length} real sailing vessels traced from published drawings and lofted into 3D (
-          <a href={RESEARCH}>the research</a>). Drag the bearing view to turn her.
+          {meshCatalog.length} meshes, each with its catalog record. Drag the bearing view to turn
+          her.
         </span>
       </header>
-      {vessels.map((v) => (
-        <Vessel key={v.id} id={v.id} trace={v.trace} />
-      ))}
+      <section className="gallery-hull vessel">
+        <h2>
+          <label>
+            Mesh{' '}
+            <select value={file} onChange={(e) => setFile(e.target.value)}>
+              {KINDS.map((kind) => (
+                <optgroup key={kind} label={kind}>
+                  {byName
+                    .filter((r) => r.kind === kind)
+                    .map((r) => (
+                      <option key={r.file} value={r.file}>
+                        {r.name} — {r.file}
+                      </option>
+                    ))}
+                </optgroup>
+              ))}
+            </select>
+          </label>
+        </h2>
+        <Viewer key={picked.file} r={picked} />
+      </section>
+      {byName
+        .filter((r) => r.kind === 'traced')
+        .sort((a, b) => a.loaM! - b.loaM!)
+        .map((r) => (
+          <Traced key={r.file} r={r} />
+        ))}
     </div>
   );
 }

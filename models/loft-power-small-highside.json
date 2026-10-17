@@ -1,0 +1,26 @@
+{
+  "file": "loft-power-small-highside.glb",
+  "name": "Small motor cruiser (highside)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "small planing motor cruiser, cabin forward",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "cabin"
+  ],
+  "loaM": 12,
+  "beamM": 3,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    7,
+    20
+  ],
+  "aisType": 37
+}

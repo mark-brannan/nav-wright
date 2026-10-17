@@ -1,0 +1,26 @@
+{
+  "file": "loft-open-highside.glb",
+  "name": "Open boat (highside)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "open boat, no superstructure",
+  "propulsion": [
+    "oars",
+    "power"
+  ],
+  "shows": [
+    "open-cockpit"
+  ],
+  "loaM": 5,
+  "beamM": 1.3,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    3,
+    7
+  ]
+}

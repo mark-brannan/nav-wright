@@ -1,0 +1,22 @@
+{
+  "file": "kenney-ship-medium.glb",
+  "name": "Brigantine",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Pirate Kit",
+    "kitFile": "ship-medium.glb",
+    "url": "https://kenney.nl/assets/pirate-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "carvel-planked displacement hull, raised stern",
+  "rig": "brigantine: square-rigged foremast, fore-and-aft main",
+  "propulsion": ["sail"],
+  "shows": ["sails", "masts"],
+  "loaM": 30,
+  "beamM": 8,
+  "draftM": 3.5,
+  "nominal": true,
+  "fitLengthM": [21, 40],
+  "aisType": 36
+}

@@ -1,0 +1,25 @@
+{
+  "file": "loft-barge-highside.glb",
+  "name": "Barge (highside)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "dumb barge, square ends, cargo mound",
+  "propulsion": [
+    "none"
+  ],
+  "shows": [
+    "cargo"
+  ],
+  "loaM": 40,
+  "beamM": 11,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    20,
+    80
+  ]
+}

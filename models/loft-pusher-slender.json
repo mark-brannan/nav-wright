@@ -1,0 +1,27 @@
+{
+  "file": "loft-pusher-slender.glb",
+  "name": "Push tug (slender)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "push tug, square bow with push knees, wheelhouse raised on a pillar",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "wheelhouse",
+    "push-knees"
+  ],
+  "loaM": 30,
+  "beamM": 6.2,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    15,
+    45
+  ],
+  "aisType": 52
+}

@@ -1,0 +1,22 @@
+{
+  "file": "kenney-ship-pirate-small.glb",
+  "name": "Single-masted armed sloop",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Pirate Kit",
+    "kitFile": "ship-pirate-small.glb",
+    "url": "https://kenney.nl/assets/pirate-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "carvel-planked displacement hull",
+  "rig": "single-masted fore-and-aft gaff",
+  "propulsion": ["sail"],
+  "shows": ["sails", "masts"],
+  "loaM": 14,
+  "beamM": 4.5,
+  "draftM": 2,
+  "nominal": true,
+  "fitLengthM": [10, 19],
+  "aisType": 36
+}

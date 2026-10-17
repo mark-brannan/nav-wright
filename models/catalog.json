@@ -1,0 +1,7868 @@
+[
+  {
+    "file": "3dbenchy-lowpoly.glb",
+    "name": "3DBenchy",
+    "kind": "calibration",
+    "fidelity": "calibration",
+    "source": {
+      "url": "https://github.com/CreativeTools/3DBenchy",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "calibration print, a small motor-cruiser shape",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse"
+    ],
+    "loaM": null,
+    "beamM": null,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": null,
+    "proportions": {
+      "lengthBeam": 1.929,
+      "lengthHeight": 1.207
+    },
+    "frame": {
+      "waterlineZ": -1.699,
+      "hullX": [
+        -29.176,
+        30.817
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.045,
+        2.043
+      ],
+      "sidelight": [
+        0.612,
+        1.036
+      ],
+      "stern": [
+        -1,
+        0.587
+      ]
+    }
+  },
+  {
+    "file": "catalina-30-mkii.glb",
+    "name": "Catalina 30 Mk II",
+    "kind": "traced",
+    "fidelity": "traced",
+    "source": {
+      "trace": "docs/research/sailboat-lines/catalina-30-mkii.json",
+      "url": "https://sailboatdata.com/sailboat/catalina-30-mkii/",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "masthead sloop, fin keel, spade rudder",
+    "rig": "masthead sloop",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "sails"
+    ],
+    "loaM": 9.12,
+    "beamM": 3.3,
+    "draftM": 1.6,
+    "nominal": false,
+    "fitLengthM": [
+      7,
+      11
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.735,
+      "lengthHeight": 0.659
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.198,
+        3.741
+      ],
+      "sidelight": [
+        0.35,
+        0.319
+      ],
+      "stern": [
+        -0.999,
+        0.519
+      ]
+    }
+  },
+  {
+    "file": "cheoy-lee-clipper-48-schooner.glb",
+    "name": "Cheoy Lee Clipper 48 Schooner",
+    "kind": "traced",
+    "fidelity": "traced",
+    "source": {
+      "trace": "docs/research/sailboat-lines/cheoy-lee-clipper-48-schooner.json",
+      "url": "https://sailboatdata.com/sailboat/clipper-48-schooner-cheoy-lee/",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "two-masted staysail schooner, long keel",
+    "rig": "two-masted staysail schooner",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "sails",
+      "bowsprit"
+    ],
+    "loaM": 14.61,
+    "beamM": 3.96,
+    "draftM": 1.83,
+    "nominal": false,
+    "fitLengthM": [
+      12,
+      18
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 3.622,
+      "lengthHeight": 0.882
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.261,
+        2.795
+      ],
+      "sidelight": [
+        0.462,
+        0.247
+      ],
+      "stern": [
+        -1.095,
+        0.466
+      ]
+    }
+  },
+  {
+    "file": "com-pac-16.glb",
+    "name": "Com-Pac 16",
+    "kind": "traced",
+    "fidelity": "traced",
+    "source": {
+      "trace": "docs/research/sailboat-lines/com-pac-16.json",
+      "url": "https://sailboatdata.com/sailboat/com-pac-16/",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "fractional sloop, fin w/transom hung rudder",
+    "rig": "fractional sloop",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "sails"
+    ],
+    "loaM": 4.88,
+    "beamM": 1.83,
+    "draftM": 0.46,
+    "nominal": false,
+    "fitLengthM": [
+      4,
+      6
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.473,
+      "lengthHeight": 0.745
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.374,
+        3.313
+      ],
+      "sidelight": [
+        0.402,
+        0.327
+      ],
+      "stern": [
+        -0.998,
+        0.296
+      ]
+    }
+  },
+  {
+    "file": "hans-christian-38t.glb",
+    "name": "Hans Christian 38T",
+    "kind": "traced",
+    "fidelity": "traced",
+    "source": {
+      "trace": "docs/research/sailboat-lines/hans-christian-38t.json",
+      "url": "https://sailboatdata.com/sailboat/hans-christian-38t/",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "cutter, long keel",
+    "rig": "cutter",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "sails",
+      "bowsprit"
+    ],
+    "loaM": 11.56,
+    "beamM": 3.76,
+    "draftM": 1.83,
+    "nominal": false,
+    "fitLengthM": [
+      9,
+      14
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 3.065,
+      "lengthHeight": 0.694
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.207,
+        3.556
+      ],
+      "sidelight": [
+        0.495,
+        0.295
+      ],
+      "stern": [
+        -1.077,
+        0.289
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-fan.glb",
+    "name": "Airboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-fan.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "flat-bottomed punt hull, caged air propeller aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "fan"
+    ],
+    "loaM": 5.5,
+    "beamM": 2.4,
+    "draftM": 0.2,
+    "nominal": true,
+    "fitLengthM": [
+      3.9,
+      6.9
+    ],
+    "proportions": {
+      "lengthBeam": 1.608,
+      "lengthHeight": 1.314
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.435,
+        1.435
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.582,
+        1.878
+      ],
+      "sidelight": [
+        0.816,
+        0.516
+      ],
+      "stern": [
+        -1,
+        1.878
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-fishing-small.glb",
+    "name": "Small stern trawler",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-fishing-small.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement fishing hull, wheelhouse forward, working deck aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "fishing-gear"
+    ],
+    "loaM": 12,
+    "beamM": 4.5,
+    "draftM": 2,
+    "nominal": true,
+    "fitLengthM": [
+      8,
+      18
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 2.168,
+      "lengthHeight": 1.488
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.935,
+        1.935
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.14,
+        1.657
+      ],
+      "sidelight": [
+        0.865,
+        0.637
+      ],
+      "stern": [
+        -1,
+        0.637
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-house-a.glb",
+    "name": "Motor yacht",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-house-a.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "semi-displacement motor-yacht hull, enclosed deckhouse",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cabin"
+    ],
+    "loaM": 24,
+    "beamM": 6,
+    "draftM": 1.8,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      36
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 1.734,
+      "lengthHeight": 2.138
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -2.322,
+        2.322
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.09,
+        1.154
+      ],
+      "sidelight": [
+        0.958,
+        0.531
+      ],
+      "stern": [
+        -1,
+        0.531
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-house-b.glb",
+    "name": "Motor yacht",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-house-b.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "semi-displacement motor-yacht hull, enclosed deckhouse",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cabin"
+    ],
+    "loaM": 24,
+    "beamM": 6,
+    "draftM": 1.8,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      36
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 2.073,
+      "lengthHeight": 2.526
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -2.776,
+        2.776
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.445,
+        0.977
+      ],
+      "sidelight": [
+        0.898,
+        0.369
+      ],
+      "stern": [
+        -1,
+        0.451
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-house-c.glb",
+    "name": "Motor yacht",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-house-c.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "semi-displacement motor-yacht hull, enclosed deckhouse",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cabin"
+    ],
+    "loaM": 24,
+    "beamM": 6,
+    "draftM": 1.8,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      36
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 1.924,
+      "lengthHeight": 1.716
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -2.576,
+        2.576
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.213,
+        1.438
+      ],
+      "sidelight": [
+        0.877,
+        0.42
+      ],
+      "stern": [
+        -1,
+        0.486
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-house-d.glb",
+    "name": "Motor yacht",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-house-d.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "semi-displacement motor-yacht hull, enclosed deckhouse",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cabin"
+    ],
+    "loaM": 24,
+    "beamM": 6,
+    "draftM": 1.8,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      36
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 1.734,
+      "lengthHeight": 1.35
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -2.322,
+        2.322
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.025,
+        1.827
+      ],
+      "sidelight": [
+        0.958,
+        0.531
+      ],
+      "stern": [
+        -1,
+        0.531
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-row-large.glb",
+    "name": "Rowing skiff",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-row-large.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "open clinker rowing hull, thwarts",
+    "propulsion": [
+      "oars"
+    ],
+    "shows": [
+      "oars"
+    ],
+    "loaM": 4.5,
+    "beamM": 1.5,
+    "draftM": 0.3,
+    "nominal": true,
+    "fitLengthM": [
+      3.2,
+      6.8
+    ],
+    "proportions": {
+      "lengthBeam": 1.038,
+      "lengthHeight": 3.365
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.426,
+        1.426
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.235,
+        0.733
+      ],
+      "sidelight": [
+        -0.174,
+        0.355
+      ],
+      "stern": [
+        -1,
+        0.554
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-row-small.glb",
+    "name": "Rowing dinghy",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-row-small.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "open rowing dinghy hull, transom stern",
+    "propulsion": [
+      "oars"
+    ],
+    "shows": [
+      "oars"
+    ],
+    "loaM": 3,
+    "beamM": 1.3,
+    "draftM": 0.2,
+    "nominal": true,
+    "fitLengthM": [
+      2.1,
+      4.5
+    ],
+    "proportions": {
+      "lengthBeam": 0.863,
+      "lengthHeight": 2.798
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.186,
+        1.186
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.08,
+        0.881
+      ],
+      "sidelight": [
+        -0.007,
+        0.427
+      ],
+      "stern": [
+        -1,
+        0.666
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-sail-a.glb",
+    "name": "Small bermudan sloop",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-sail-a.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "fin-keel day-sailer hull, open cockpit",
+    "rig": "bermudan sloop",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts"
+    ],
+    "loaM": 6,
+    "beamM": 2.2,
+    "draftM": 1,
+    "nominal": true,
+    "fitLengthM": [
+      4.2,
+      9
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.112,
+      "lengthHeight": 0.796
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.785,
+        1.985
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.353,
+        3.101
+      ],
+      "sidelight": [
+        0.646,
+        0.589
+      ],
+      "stern": [
+        -1,
+        0.589
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-sail-b.glb",
+    "name": "Small bermudan sloop",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-sail-b.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "fin-keel day-sailer hull, open cockpit",
+    "rig": "bermudan sloop",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts"
+    ],
+    "loaM": 6,
+    "beamM": 2.2,
+    "draftM": 1,
+    "nominal": true,
+    "fitLengthM": [
+      4.2,
+      9
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.28,
+      "lengthHeight": 0.908
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.785,
+        2.285
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.132,
+        2.716
+      ],
+      "sidelight": [
+        0.66,
+        0.545
+      ],
+      "stern": [
+        -1,
+        0.545
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-a.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-a.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 1.888,
+      "lengthHeight": 2.247
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.685,
+        1.685
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.839,
+        1.098
+      ],
+      "sidelight": [
+        0.597,
+        0.506
+      ],
+      "stern": [
+        -1,
+        1.098
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-b.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-b.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 1.844,
+      "lengthHeight": 2.066
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.646,
+        1.646
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.868,
+        1.194
+      ],
+      "sidelight": [
+        0.582,
+        0.563
+      ],
+      "stern": [
+        -1,
+        1.173
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-c.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-c.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 1.776,
+      "lengthHeight": 2.439
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.585,
+        1.585
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.014,
+        1.011
+      ],
+      "sidelight": [
+        0.556,
+        0.537
+      ],
+      "stern": [
+        -1,
+        0.7
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-d.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-d.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 1.936,
+      "lengthHeight": 3.225
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.935,
+        1.935
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.054,
+        0.765
+      ],
+      "sidelight": [
+        0.83,
+        0.637
+      ],
+      "stern": [
+        -1,
+        0.637
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-e.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-e.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 1.436,
+      "lengthHeight": 1.967
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.435,
+        1.435
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.929,
+        1.254
+      ],
+      "sidelight": [
+        0.766,
+        0.859
+      ],
+      "stern": [
+        -1,
+        1.254
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-f.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-f.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 1.305,
+      "lengthHeight": 2.392
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.435,
+        1.435
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.285,
+        1.031
+      ],
+      "sidelight": [
+        0.716,
+        0.859
+      ],
+      "stern": [
+        -1,
+        0.859
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-g.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-g.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 2.136,
+      "lengthHeight": 2.933
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.906,
+        1.906
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.199,
+        0.841
+      ],
+      "sidelight": [
+        0.636,
+        0.445
+      ],
+      "stern": [
+        -1,
+        0.8
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-h.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-h.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 2.056,
+      "lengthHeight": 2.944
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.835,
+        1.835
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.859,
+        0.838
+      ],
+      "sidelight": [
+        0.615,
+        0.525
+      ],
+      "stern": [
+        -1,
+        0.804
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-i.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-i.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 2.168,
+      "lengthHeight": 2.276
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.935,
+        1.935
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.69,
+        1.084
+      ],
+      "sidelight": [
+        0.636,
+        0.438
+      ],
+      "stern": [
+        -1,
+        0.59
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-speed-j.glb",
+    "name": "Planing sportsboat",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-speed-j.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 8,
+    "beamM": 2.6,
+    "draftM": 0.6,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      12
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 2.392,
+      "lengthHeight": 3.426
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -2.135,
+        2.135
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.881,
+        0.72
+      ],
+      "sidelight": [
+        0.678,
+        0.398
+      ],
+      "stern": [
+        -1,
+        0.701
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-tow-a.glb",
+    "name": "Towing launch",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-tow-a.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement workboat hull, wheelhouse forward, towing hook aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "towing-gear"
+    ],
+    "loaM": 14,
+    "beamM": 5,
+    "draftM": 1.8,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      21
+    ],
+    "proportions": {
+      "lengthBeam": 2.126,
+      "lengthHeight": 1.84
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -3.315,
+        2.807
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.472,
+        1.34
+      ],
+      "sidelight": [
+        0.839,
+        0.542
+      ],
+      "stern": [
+        -1,
+        0.585
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-tow-b.glb",
+    "name": "Towing launch",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-tow-b.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement workboat hull, wheelhouse forward, towing hook aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "towing-gear"
+    ],
+    "loaM": 14,
+    "beamM": 5,
+    "draftM": 1.8,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      21
+    ],
+    "proportions": {
+      "lengthBeam": 2.126,
+      "lengthHeight": 2.004
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -3.315,
+        2.807
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.355,
+        1.231
+      ],
+      "sidelight": [
+        0.839,
+        0.542
+      ],
+      "stern": [
+        -1,
+        0.585
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-tug-a.glb",
+    "name": "Harbour tug",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-tug-a.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement tug hull, high bow, towing bitts aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "funnel",
+      "towing-gear"
+    ],
+    "loaM": 28,
+    "beamM": 9,
+    "draftM": 4,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      40
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 1.944,
+      "lengthHeight": 1.551
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.735,
+        1.735
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.307,
+        1.59
+      ],
+      "sidelight": [
+        0.853,
+        0.711
+      ],
+      "stern": [
+        -1,
+        1.208
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-tug-b.glb",
+    "name": "Harbour tug",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-tug-b.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement tug hull, high bow, towing bitts aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "funnel",
+      "towing-gear"
+    ],
+    "loaM": 28,
+    "beamM": 9,
+    "draftM": 4,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      40
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 1.608,
+      "lengthHeight": 1.283
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.435,
+        1.435
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.162,
+        1.923
+      ],
+      "sidelight": [
+        0.815,
+        0.859
+      ],
+      "stern": [
+        -1,
+        1.461
+      ]
+    }
+  },
+  {
+    "file": "kenney-boat-tug-c.glb",
+    "name": "Harbour tug",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "boat-tug-c.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement tug hull, high bow, towing bitts aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "funnel",
+      "towing-gear"
+    ],
+    "loaM": 28,
+    "beamM": 9,
+    "draftM": 4,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      40
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 1.608,
+      "lengthHeight": 1.594
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1.435,
+        1.435
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.034,
+        1.547
+      ],
+      "sidelight": [
+        0.815,
+        0.859
+      ],
+      "stern": [
+        -1,
+        1.461
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-cargo-a.glb",
+    "name": "Feeder container ship",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "ship-cargo-a.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement cargo hull, bridge aft, container stacks on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "containers"
+    ],
+    "loaM": 150,
+    "beamM": 23,
+    "draftM": 8,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      225
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 2.693,
+      "lengthHeight": 3.121
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -5.274,
+        5.274
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.609,
+        0.79
+      ],
+      "sidelight": [
+        0.817,
+        0.262
+      ],
+      "stern": [
+        -1,
+        0.323
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-cargo-b.glb",
+    "name": "Feeder container ship",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "ship-cargo-b.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement cargo hull, bridge aft, container stacks on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "containers"
+    ],
+    "loaM": 150,
+    "beamM": 23,
+    "draftM": 8,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      225
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 2.693,
+      "lengthHeight": 3.196
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -5.274,
+        5.274
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.609,
+        0.772
+      ],
+      "sidelight": [
+        0.817,
+        0.262
+      ],
+      "stern": [
+        -1,
+        0.323
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-cargo-c.glb",
+    "name": "Feeder container ship",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "ship-cargo-c.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement cargo hull, bridge aft, container stacks on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "containers"
+    ],
+    "loaM": 150,
+    "beamM": 23,
+    "draftM": 8,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      225
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 2.693,
+      "lengthHeight": 4.078
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -5.274,
+        5.274
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.656,
+        0.605
+      ],
+      "sidelight": [
+        0.817,
+        0.262
+      ],
+      "stern": [
+        -1,
+        0.323
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-ghost.glb",
+    "name": "Derelict brigantine",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Pirate Kit",
+      "kitFile": "ship-ghost.glb",
+      "url": "https://kenney.nl/assets/pirate-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "carvel-planked displacement hull, raised stern",
+    "rig": "brigantine: square-rigged foremast, fore-and-aft main",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts"
+    ],
+    "loaM": 30,
+    "beamM": 8,
+    "draftM": 3.5,
+    "nominal": true,
+    "fitLengthM": [
+      21,
+      40
+    ],
+    "proportions": {
+      "lengthBeam": 2.208,
+      "lengthHeight": 1.064
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -5.3,
+        5.3
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.161,
+        2.319
+      ],
+      "sidelight": [
+        0.36,
+        0.78
+      ],
+      "stern": [
+        -1,
+        2.139
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-large.glb",
+    "name": "Brig",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "ship-large.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "carvel-planked displacement hull, raised stern",
+    "rig": "two-masted square rig",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts"
+    ],
+    "loaM": 35,
+    "beamM": 9,
+    "draftM": 4,
+    "nominal": true,
+    "fitLengthM": [
+      25,
+      40
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.729,
+      "lengthHeight": 1.315
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -6.55,
+        6.55
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.026,
+        1.876
+      ],
+      "sidelight": [
+        0.465,
+        0.621
+      ],
+      "stern": [
+        -1,
+        1.731
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-medium.glb",
+    "name": "Brigantine",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Pirate Kit",
+      "kitFile": "ship-medium.glb",
+      "url": "https://kenney.nl/assets/pirate-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "carvel-planked displacement hull, raised stern",
+    "rig": "brigantine: square-rigged foremast, fore-and-aft main",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts"
+    ],
+    "loaM": 30,
+    "beamM": 8,
+    "draftM": 3.5,
+    "nominal": true,
+    "fitLengthM": [
+      21,
+      40
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.208,
+      "lengthHeight": 1.064
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -5.3,
+        5.3
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.161,
+        2.319
+      ],
+      "sidelight": [
+        0.36,
+        0.78
+      ],
+      "stern": [
+        -1,
+        2.139
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-ocean-liner-small.glb",
+    "name": "Small passenger ferry",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "ship-ocean-liner-small.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement passenger hull, full-length superstructure, raked funnel",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "funnel"
+    ],
+    "loaM": 60,
+    "beamM": 14,
+    "draftM": 3,
+    "nominal": true,
+    "fitLengthM": [
+      50,
+      90
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 3.193,
+      "lengthHeight": 1.701
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -4.56,
+        10.64
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.585,
+        1.45
+      ],
+      "sidelight": [
+        0.636,
+        0.67
+      ],
+      "stern": [
+        -1,
+        0.67
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-ocean-liner.glb",
+    "name": "Ocean liner",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "ship-ocean-liner.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "displacement liner hull, long tiered superstructure, raked funnels",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "funnel"
+    ],
+    "loaM": 240,
+    "beamM": 30,
+    "draftM": 9,
+    "nominal": true,
+    "fitLengthM": [
+      168,
+      360
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 4.471,
+      "lengthHeight": 2.382
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -10.64,
+        10.64
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.703,
+        1.036
+      ],
+      "sidelight": [
+        0.752,
+        0.479
+      ],
+      "stern": [
+        -1,
+        0.479
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-pirate-large.glb",
+    "name": "Three-masted galleon",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Pirate Kit",
+      "kitFile": "ship-pirate-large.glb",
+      "url": "https://kenney.nl/assets/pirate-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "carvel-planked displacement hull, high stern castle",
+    "rig": "three-masted square rig, lateen mizzen",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts",
+      "bowsprit"
+    ],
+    "loaM": 45,
+    "beamM": 10,
+    "draftM": 5,
+    "nominal": true,
+    "fitLengthM": [
+      40,
+      68
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.729,
+      "lengthHeight": 1.315
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -6.55,
+        6.55
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.026,
+        1.876
+      ],
+      "sidelight": [
+        0.465,
+        0.621
+      ],
+      "stern": [
+        -1,
+        1.731
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-pirate-medium.glb",
+    "name": "Three-masted full-rigged ship",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Pirate Kit",
+      "kitFile": "ship-pirate-medium.glb",
+      "url": "https://kenney.nl/assets/pirate-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "carvel-planked displacement hull, raised quarterdeck",
+    "rig": "three-masted square rig",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts",
+      "bowsprit"
+    ],
+    "loaM": 42,
+    "beamM": 10,
+    "draftM": 4.5,
+    "nominal": true,
+    "fitLengthM": [
+      40,
+      63
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.208,
+      "lengthHeight": 1.064
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -5.3,
+        5.3
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.161,
+        2.319
+      ],
+      "sidelight": [
+        0.36,
+        0.78
+      ],
+      "stern": [
+        -1,
+        2.139
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-pirate-small.glb",
+    "name": "Single-masted armed sloop",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Pirate Kit",
+      "kitFile": "ship-pirate-small.glb",
+      "url": "https://kenney.nl/assets/pirate-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "carvel-planked displacement hull",
+    "rig": "single-masted fore-and-aft gaff",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts"
+    ],
+    "loaM": 14,
+    "beamM": 4.5,
+    "draftM": 2,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      19
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 1.833,
+      "lengthHeight": 0.883
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -4.2,
+        4.6
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.146,
+        2.793
+      ],
+      "sidelight": [
+        0.207,
+        0.729
+      ],
+      "stern": [
+        -1,
+        1.177
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-small-ghost.glb",
+    "name": "Derelict topsail schooner",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "ship-small-ghost.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "carvel-planked displacement hull",
+    "rig": "two-masted fore-and-aft gaff with square topsail",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts"
+    ],
+    "loaM": 24,
+    "beamM": 6,
+    "draftM": 3,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      36
+    ],
+    "proportions": {
+      "lengthBeam": 2.208,
+      "lengthHeight": 1.064
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -5.3,
+        5.3
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.161,
+        2.319
+      ],
+      "sidelight": [
+        0.36,
+        0.78
+      ],
+      "stern": [
+        -1,
+        2.139
+      ]
+    }
+  },
+  {
+    "file": "kenney-ship-small.glb",
+    "name": "Topsail schooner",
+    "kind": "kit",
+    "fidelity": "stylised",
+    "source": {
+      "kit": "Kenney Watercraft Kit",
+      "kitFile": "ship-small.glb",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0-1.0"
+    },
+    "hullForm": "carvel-planked displacement hull",
+    "rig": "two-masted fore-and-aft gaff with square topsail",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "masts"
+    ],
+    "loaM": 24,
+    "beamM": 6,
+    "draftM": 3,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      36
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.208,
+      "lengthHeight": 1.064
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -5.3,
+        5.3
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.161,
+        2.319
+      ],
+      "sidelight": [
+        0.36,
+        0.78
+      ],
+      "stern": [
+        -1,
+        2.139
+      ]
+    }
+  },
+  {
+    "file": "loft-aground-highside.glb",
+    "name": "Coaster, aground (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "small coaster, drawn trimmed by the stern with her forefoot up on a shoal",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 60,
+    "beamM": 15.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 3.799,
+      "lengthHeight": 2.072
+    },
+    "frame": {
+      "waterlineZ": 0.018,
+      "hullX": [
+        -0.92,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.602,
+        1.191
+      ],
+      "sidelight": [
+        0.811,
+        0.66
+      ],
+      "stern": [
+        -1,
+        0.441
+      ]
+    }
+  },
+  {
+    "file": "loft-aground-sheered.glb",
+    "name": "Coaster, aground (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "small coaster, drawn trimmed by the stern with her forefoot up on a shoal",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 60,
+    "beamM": 13.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 4.16,
+      "lengthHeight": 2.191
+    },
+    "frame": {
+      "waterlineZ": 0.018,
+      "hullX": [
+        -0.92,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.602,
+        1.126
+      ],
+      "sidelight": [
+        0.81,
+        0.576
+      ],
+      "stern": [
+        -1,
+        0.429
+      ]
+    }
+  },
+  {
+    "file": "loft-aground-slender.glb",
+    "name": "Coaster, aground (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "small coaster, drawn trimmed by the stern with her forefoot up on a shoal",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 60,
+    "beamM": 10.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 5.46,
+      "lengthHeight": 2.32
+    },
+    "frame": {
+      "waterlineZ": 0.018,
+      "hullX": [
+        -0.92,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.602,
+        1.063
+      ],
+      "sidelight": [
+        0.811,
+        0.477
+      ],
+      "stern": [
+        -1,
+        0.319
+      ]
+    }
+  },
+  {
+    "file": "loft-aground.glb",
+    "name": "Coaster, aground",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "small coaster, drawn trimmed by the stern with her forefoot up on a shoal",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 60,
+    "beamM": 13.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 4.368,
+      "lengthHeight": 2.282
+    },
+    "frame": {
+      "waterlineZ": 0.018,
+      "hullX": [
+        -0.92,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.602,
+        1.081
+      ],
+      "sidelight": [
+        0.81,
+        0.501
+      ],
+      "stern": [
+        -1,
+        0.319
+      ]
+    }
+  },
+  {
+    "file": "loft-barge-highside.glb",
+    "name": "Barge (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dumb barge, square ends, cargo mound",
+    "propulsion": [
+      "none"
+    ],
+    "shows": [
+      "cargo"
+    ],
+    "loaM": 40,
+    "beamM": 11,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      80
+    ],
+    "proportions": {
+      "lengthBeam": 4.109,
+      "lengthHeight": 6.831
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.94,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.211,
+        0.361
+      ],
+      "sidelight": [
+        0.756,
+        0.232
+      ],
+      "stern": [
+        -1,
+        0.237
+      ]
+    }
+  },
+  {
+    "file": "loft-barge-sheered.glb",
+    "name": "Barge (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dumb barge, square ends, cargo mound",
+    "propulsion": [
+      "none"
+    ],
+    "shows": [
+      "cargo"
+    ],
+    "loaM": 40,
+    "beamM": 10.1,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      80
+    ],
+    "proportions": {
+      "lengthBeam": 4.501,
+      "lengthHeight": 8.848
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.94,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.211,
+        0.279
+      ],
+      "sidelight": [
+        0.756,
+        0.197
+      ],
+      "stern": [
+        -1,
+        0.211
+      ]
+    }
+  },
+  {
+    "file": "loft-barge-slender.glb",
+    "name": "Barge (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dumb barge, square ends, cargo mound",
+    "propulsion": [
+      "none"
+    ],
+    "shows": [
+      "cargo"
+    ],
+    "loaM": 40,
+    "beamM": 7.7,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      80
+    ],
+    "proportions": {
+      "lengthBeam": 5.907,
+      "lengthHeight": 9.923
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.94,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.213,
+        0.249
+      ],
+      "sidelight": [
+        0.756,
+        0.16
+      ],
+      "stern": [
+        -1,
+        0.164
+      ]
+    }
+  },
+  {
+    "file": "loft-barge.glb",
+    "name": "Barge",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dumb barge, square ends, cargo mound",
+    "propulsion": [
+      "none"
+    ],
+    "shows": [
+      "cargo"
+    ],
+    "loaM": 40,
+    "beamM": 9.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      80
+    ],
+    "proportions": {
+      "lengthBeam": 4.726,
+      "lengthHeight": 8.967
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.94,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.458,
+        0.275
+      ],
+      "sidelight": [
+        0.958,
+        0.169
+      ],
+      "stern": [
+        -1,
+        0.169
+      ]
+    }
+  },
+  {
+    "file": "loft-bulker-highside.glb",
+    "name": "Bulk carrier (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "full-bodied bulk carrier, bridge aft, hatch covers on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel",
+      "hatches"
+    ],
+    "loaM": 200,
+    "beamM": 59.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      300
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 3.409,
+      "lengthHeight": 2.311
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.96,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.661,
+        1.067
+      ],
+      "sidelight": [
+        0.817,
+        0.317
+      ],
+      "stern": [
+        -1,
+        0.323
+      ]
+    }
+  },
+  {
+    "file": "loft-bulker-sheered.glb",
+    "name": "Bulk carrier (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "full-bodied bulk carrier, bridge aft, hatch covers on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel",
+      "hatches"
+    ],
+    "loaM": 200,
+    "beamM": 54.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      300
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 3.733,
+      "lengthHeight": 2.442
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.96,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.661,
+        1.01
+      ],
+      "sidelight": [
+        0.817,
+        0.269
+      ],
+      "stern": [
+        -1,
+        0.285
+      ]
+    }
+  },
+  {
+    "file": "loft-bulker-slender.glb",
+    "name": "Bulk carrier (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "full-bodied bulk carrier, bridge aft, hatch covers on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel",
+      "hatches"
+    ],
+    "loaM": 200,
+    "beamM": 41.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      300
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 4.9,
+      "lengthHeight": 2.56
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.96,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.661,
+        0.963
+      ],
+      "sidelight": [
+        0.817,
+        0.234
+      ],
+      "stern": [
+        -1,
+        0.217
+      ]
+    }
+  },
+  {
+    "file": "loft-bulker.glb",
+    "name": "Bulk carrier",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "full-bodied bulk carrier, bridge aft, hatch covers on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel",
+      "hatches"
+    ],
+    "loaM": 200,
+    "beamM": 52,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      300
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 3.92,
+      "lengthHeight": 2.518
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.96,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.661,
+        0.98
+      ],
+      "sidelight": [
+        0.817,
+        0.224
+      ],
+      "stern": [
+        -1,
+        0.224
+      ]
+    }
+  },
+  {
+    "file": "loft-container-ship-highside.glb",
+    "name": "Container ship (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "container ship, bridge aft, boxes stacked on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "containers",
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 250,
+    "beamM": 69,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      400
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 3.862,
+      "lengthHeight": 2.154
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.95,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.372,
+        1.145
+      ],
+      "sidelight": [
+        0.814,
+        0.475
+      ],
+      "stern": [
+        -1,
+        0.462
+      ]
+    }
+  },
+  {
+    "file": "loft-container-ship-sheered.glb",
+    "name": "Container ship (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "container ship, bridge aft, boxes stacked on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "containers",
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 250,
+    "beamM": 63,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      400
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 4.23,
+      "lengthHeight": 2.349
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.95,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.372,
+        1.05
+      ],
+      "sidelight": [
+        0.814,
+        0.407
+      ],
+      "stern": [
+        -1,
+        0.414
+      ]
+    }
+  },
+  {
+    "file": "loft-container-ship-slender.glb",
+    "name": "Container ship (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "container ship, bridge aft, boxes stacked on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "containers",
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 250,
+    "beamM": 48,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      400
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 5.551,
+      "lengthHeight": 2.451
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.95,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.372,
+        1.007
+      ],
+      "sidelight": [
+        0.813,
+        0.329
+      ],
+      "stern": [
+        -1,
+        0.319
+      ]
+    }
+  },
+  {
+    "file": "loft-container-ship.glb",
+    "name": "Container ship",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "container ship, bridge aft, boxes stacked on deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "containers",
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 250,
+    "beamM": 60,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      400
+    ],
+    "aisType": 70,
+    "proportions": {
+      "lengthBeam": 4.441,
+      "lengthHeight": 2.381
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.95,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.372,
+        1.036
+      ],
+      "sidelight": [
+        0.813,
+        0.347
+      ],
+      "stern": [
+        -1,
+        0.329
+      ]
+    }
+  },
+  {
+    "file": "loft-cruise-ship-highside.glb",
+    "name": "Cruise ship (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "cruise ship, superstructure the length of the hull, funnel aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "superstructure",
+      "funnel"
+    ],
+    "loaM": 250,
+    "beamM": 69,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      350
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 3.862,
+      "lengthHeight": 2.06
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.95,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.578,
+        1.197
+      ],
+      "sidelight": [
+        0.814,
+        0.448
+      ],
+      "stern": [
+        -1,
+        0.486
+      ]
+    }
+  },
+  {
+    "file": "loft-cruise-ship-sheered.glb",
+    "name": "Cruise ship (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "cruise ship, superstructure the length of the hull, funnel aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "superstructure",
+      "funnel"
+    ],
+    "loaM": 250,
+    "beamM": 63,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      350
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 4.23,
+      "lengthHeight": 2.205
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.95,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.578,
+        1.119
+      ],
+      "sidelight": [
+        0.814,
+        0.384
+      ],
+      "stern": [
+        -1,
+        0.435
+      ]
+    }
+  },
+  {
+    "file": "loft-cruise-ship-slender.glb",
+    "name": "Cruise ship (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "cruise ship, superstructure the length of the hull, funnel aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "superstructure",
+      "funnel"
+    ],
+    "loaM": 250,
+    "beamM": 48,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      350
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 5.551,
+      "lengthHeight": 2.317
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.95,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.578,
+        1.064
+      ],
+      "sidelight": [
+        0.813,
+        0.309
+      ],
+      "stern": [
+        -1,
+        0.343
+      ]
+    }
+  },
+  {
+    "file": "loft-cruise-ship.glb",
+    "name": "Cruise ship",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "cruise ship, superstructure the length of the hull, funnel aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "superstructure",
+      "funnel"
+    ],
+    "loaM": 250,
+    "beamM": 60,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      350
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 4.441,
+      "lengthHeight": 2.269
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.95,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.578,
+        1.087
+      ],
+      "sidelight": [
+        0.813,
+        0.326
+      ],
+      "stern": [
+        -1,
+        0.349
+      ]
+    }
+  },
+  {
+    "file": "loft-dive-support-highside.glb",
+    "name": "Dive-support vessel (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dive-support vessel, wheelhouse forward, low working deck, A-frame over the stern",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "a-frame"
+    ],
+    "loaM": 15,
+    "beamM": 3.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      25
+    ],
+    "aisType": 34,
+    "proportions": {
+      "lengthBeam": 3.865,
+      "lengthHeight": 2.139
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.972,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.398,
+        1.153
+      ],
+      "sidelight": [
+        0.822,
+        0.491
+      ],
+      "stern": [
+        -1,
+        0.758
+      ]
+    }
+  },
+  {
+    "file": "loft-dive-support-sheered.glb",
+    "name": "Dive-support vessel (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dive-support vessel, wheelhouse forward, low working deck, A-frame over the stern",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "a-frame"
+    ],
+    "loaM": 15,
+    "beamM": 3.5,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      25
+    ],
+    "aisType": 34,
+    "proportions": {
+      "lengthBeam": 4.233,
+      "lengthHeight": 2.312
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.972,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.398,
+        1.067
+      ],
+      "sidelight": [
+        0.823,
+        0.428
+      ],
+      "stern": [
+        -1,
+        0.759
+      ]
+    }
+  },
+  {
+    "file": "loft-dive-support-slender.glb",
+    "name": "Dive-support vessel (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dive-support vessel, wheelhouse forward, low working deck, A-frame over the stern",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "a-frame"
+    ],
+    "loaM": 15,
+    "beamM": 2.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      25
+    ],
+    "aisType": 34,
+    "proportions": {
+      "lengthBeam": 5.556,
+      "lengthHeight": 2.35
+    },
+    "frame": {
+      "waterlineZ": 0.008,
+      "hullX": [
+        -0.972,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.398,
+        1.05
+      ],
+      "sidelight": [
+        0.822,
+        0.375
+      ],
+      "stern": [
+        -1,
+        0.696
+      ]
+    }
+  },
+  {
+    "file": "loft-dive-support.glb",
+    "name": "Dive-support vessel",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dive-support vessel, wheelhouse forward, low working deck, A-frame over the stern",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "a-frame"
+    ],
+    "loaM": 15,
+    "beamM": 3.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      25
+    ],
+    "aisType": 34,
+    "proportions": {
+      "lengthBeam": 4.445,
+      "lengthHeight": 2.271
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -0.972,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.398,
+        1.086
+      ],
+      "sidelight": [
+        0.822,
+        0.401
+      ],
+      "stern": [
+        -1,
+        0.699
+      ]
+    }
+  },
+  {
+    "file": "loft-dredger-highside.glb",
+    "name": "Dredger (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "pontoon-hulled dredger with a bow, crane amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cranes"
+    ],
+    "loaM": 60,
+    "beamM": 17.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "aisType": 33,
+    "proportions": {
+      "lengthBeam": 3.659,
+      "lengthHeight": 2.423
+    },
+    "frame": {
+      "waterlineZ": 0.025,
+      "hullX": [
+        -0.97,
+        1.05
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.474,
+        1.018
+      ],
+      "sidelight": [
+        0.838,
+        0.308
+      ],
+      "stern": [
+        -1,
+        0.763
+      ]
+    }
+  },
+  {
+    "file": "loft-dredger-sheered.glb",
+    "name": "Dredger (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "pontoon-hulled dredger with a bow, crane amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cranes"
+    ],
+    "loaM": 60,
+    "beamM": 16.4,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "aisType": 33,
+    "proportions": {
+      "lengthBeam": 4.007,
+      "lengthHeight": 2.554
+    },
+    "frame": {
+      "waterlineZ": 0.022,
+      "hullX": [
+        -0.97,
+        1.05
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.473,
+        0.966
+      ],
+      "sidelight": [
+        0.838,
+        0.277
+      ],
+      "stern": [
+        -1,
+        0.733
+      ]
+    }
+  },
+  {
+    "file": "loft-dredger-slender.glb",
+    "name": "Dredger (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "pontoon-hulled dredger with a bow, crane amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cranes"
+    ],
+    "loaM": 60,
+    "beamM": 12.5,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "aisType": 33,
+    "proportions": {
+      "lengthBeam": 5.26,
+      "lengthHeight": 2.49
+    },
+    "frame": {
+      "waterlineZ": -0.023,
+      "hullX": [
+        -0.97,
+        1.05
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.473,
+        0.991
+      ],
+      "sidelight": [
+        0.836,
+        0.277
+      ],
+      "stern": [
+        -1,
+        0.733
+      ]
+    }
+  },
+  {
+    "file": "loft-dredger.glb",
+    "name": "Dredger",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "pontoon-hulled dredger with a bow, crane amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cranes"
+    ],
+    "loaM": 60,
+    "beamM": 15.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "aisType": 33,
+    "proportions": {
+      "lengthBeam": 4.208,
+      "lengthHeight": 2.447
+    },
+    "frame": {
+      "waterlineZ": -0.023,
+      "hullX": [
+        -0.97,
+        1.05
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.473,
+        1.008
+      ],
+      "sidelight": [
+        0.836,
+        0.285
+      ],
+      "stern": [
+        -1,
+        0.741
+      ]
+    }
+  },
+  {
+    "file": "loft-ferry-highside.glb",
+    "name": "Ferry (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "passenger ferry, superstructure the length of the hull",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "superstructure",
+      "funnel"
+    ],
+    "loaM": 90,
+    "beamM": 24.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      50,
+      120
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 3.823,
+      "lengthHeight": 2.205
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.95,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.677,
+        1.119
+      ],
+      "sidelight": [
+        0.824,
+        0.421
+      ],
+      "stern": [
+        -1,
+        0.406
+      ]
+    }
+  },
+  {
+    "file": "loft-ferry-sheered.glb",
+    "name": "Ferry (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "passenger ferry, superstructure the length of the hull",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "superstructure",
+      "funnel"
+    ],
+    "loaM": 90,
+    "beamM": 22.7,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      50,
+      120
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 4.187,
+      "lengthHeight": 2.339
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.95,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.677,
+        1.055
+      ],
+      "sidelight": [
+        0.824,
+        0.362
+      ],
+      "stern": [
+        -1,
+        0.365
+      ]
+    }
+  },
+  {
+    "file": "loft-ferry-slender.glb",
+    "name": "Ferry (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "passenger ferry, superstructure the length of the hull",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "superstructure",
+      "funnel"
+    ],
+    "loaM": 90,
+    "beamM": 17.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      50,
+      120
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 5.496,
+      "lengthHeight": 2.472
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.95,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.677,
+        0.998
+      ],
+      "sidelight": [
+        0.823,
+        0.294
+      ],
+      "stern": [
+        -1,
+        0.283
+      ]
+    }
+  },
+  {
+    "file": "loft-ferry.glb",
+    "name": "Ferry",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "passenger ferry, superstructure the length of the hull",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "superstructure",
+      "funnel"
+    ],
+    "loaM": 90,
+    "beamM": 21.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      50,
+      120
+    ],
+    "aisType": 60,
+    "proportions": {
+      "lengthBeam": 4.396,
+      "lengthHeight": 2.429
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.95,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.677,
+        1.016
+      ],
+      "sidelight": [
+        0.823,
+        0.309
+      ],
+      "stern": [
+        -1,
+        0.291
+      ]
+    }
+  },
+  {
+    "file": "loft-fishing-gear-highside.glb",
+    "name": "Trawler, gear out (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "trawler with a derrick boom up and the warp running astern",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "gantry",
+      "fishing-gear"
+    ],
+    "loaM": 30,
+    "beamM": 7.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 3.877,
+      "lengthHeight": 2.542
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.98,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.547,
+        0.97
+      ],
+      "sidelight": [
+        0.552,
+        0.425
+      ],
+      "stern": [
+        -1,
+        0.241
+      ]
+    }
+  },
+  {
+    "file": "loft-fishing-gear-sheered.glb",
+    "name": "Trawler, gear out (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "trawler with a derrick boom up and the warp running astern",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "gantry",
+      "fishing-gear"
+    ],
+    "loaM": 30,
+    "beamM": 6.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 4.246,
+      "lengthHeight": 2.674
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.98,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.547,
+        0.922
+      ],
+      "sidelight": [
+        0.552,
+        0.351
+      ],
+      "stern": [
+        -1,
+        0.2
+      ]
+    }
+  },
+  {
+    "file": "loft-fishing-gear-slender.glb",
+    "name": "Trawler, gear out (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "trawler with a derrick boom up and the warp running astern",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "gantry",
+      "fishing-gear"
+    ],
+    "loaM": 30,
+    "beamM": 5.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 5.573,
+      "lengthHeight": 2.702
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -0.98,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.547,
+        0.913
+      ],
+      "sidelight": [
+        0.552,
+        0.343
+      ],
+      "stern": [
+        -1,
+        0.184
+      ]
+    }
+  },
+  {
+    "file": "loft-fishing-gear.glb",
+    "name": "Trawler, gear out",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "trawler with a derrick boom up and the warp running astern",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "gantry",
+      "fishing-gear"
+    ],
+    "loaM": 30,
+    "beamM": 6.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 4.459,
+      "lengthHeight": 2.642
+    },
+    "frame": {
+      "waterlineZ": -0.006,
+      "hullX": [
+        -0.98,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.547,
+        0.934
+      ],
+      "sidelight": [
+        0.552,
+        0.372
+      ],
+      "stern": [
+        -1,
+        0.187
+      ]
+    }
+  },
+  {
+    "file": "loft-mine-clearance-highside.glb",
+    "name": "Minehunter (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "mine countermeasures vessel, bridge forward, sweep gear aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "masts",
+      "sweep-gear"
+    ],
+    "loaM": 50,
+    "beamM": 9.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      35,
+      70
+    ],
+    "aisType": 35,
+    "proportions": {
+      "lengthBeam": 5.027,
+      "lengthHeight": 1.988
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.992,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.405,
+        1.241
+      ],
+      "sidelight": [
+        0.64,
+        0.473
+      ],
+      "stern": [
+        -1,
+        0.589
+      ]
+    }
+  },
+  {
+    "file": "loft-mine-clearance-sheered.glb",
+    "name": "Minehunter (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "mine countermeasures vessel, bridge forward, sweep gear aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "masts",
+      "sweep-gear"
+    ],
+    "loaM": 50,
+    "beamM": 8.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      35,
+      70
+    ],
+    "aisType": 35,
+    "proportions": {
+      "lengthBeam": 5.505,
+      "lengthHeight": 2.1
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.992,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.405,
+        1.174
+      ],
+      "sidelight": [
+        0.64,
+        0.398
+      ],
+      "stern": [
+        -1,
+        0.563
+      ]
+    }
+  },
+  {
+    "file": "loft-mine-clearance-slender.glb",
+    "name": "Minehunter (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "mine countermeasures vessel, bridge forward, sweep gear aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "masts",
+      "sweep-gear"
+    ],
+    "loaM": 50,
+    "beamM": 6.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      35,
+      70
+    ],
+    "aisType": 35,
+    "proportions": {
+      "lengthBeam": 7.226,
+      "lengthHeight": 2.097
+    },
+    "frame": {
+      "waterlineZ": 0.006,
+      "hullX": [
+        -0.992,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.405,
+        1.176
+      ],
+      "sidelight": [
+        0.64,
+        0.379
+      ],
+      "stern": [
+        -1,
+        0.529
+      ]
+    }
+  },
+  {
+    "file": "loft-mine-clearance.glb",
+    "name": "Minehunter",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "mine countermeasures vessel, bridge forward, sweep gear aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "masts",
+      "sweep-gear"
+    ],
+    "loaM": 50,
+    "beamM": 8.5,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      35,
+      70
+    ],
+    "aisType": 35,
+    "proportions": {
+      "lengthBeam": 5.781,
+      "lengthHeight": 2.05
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -0.992,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.405,
+        1.203
+      ],
+      "sidelight": [
+        0.64,
+        0.408
+      ],
+      "stern": [
+        -1,
+        0.533
+      ]
+    }
+  },
+  {
+    "file": "loft-open-highside.glb",
+    "name": "Open boat (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "open boat, no superstructure",
+    "propulsion": [
+      "oars",
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 5,
+    "beamM": 1.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      3,
+      7
+    ],
+    "proportions": {
+      "lengthBeam": 3.383,
+      "lengthHeight": 6.175
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.8,
+        0.9
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.2,
+        0.399
+      ],
+      "sidelight": [
+        0.569,
+        0.26
+      ],
+      "stern": [
+        -1,
+        0.248
+      ]
+    }
+  },
+  {
+    "file": "loft-open-sheered.glb",
+    "name": "Open boat (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "open boat, no superstructure",
+    "propulsion": [
+      "oars",
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 5,
+    "beamM": 1.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      3,
+      7
+    ],
+    "proportions": {
+      "lengthBeam": 3.706,
+      "lengthHeight": 7.985
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.8,
+        0.9
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.2,
+        0.309
+      ],
+      "sidelight": [
+        0.569,
+        0.215
+      ],
+      "stern": [
+        -1,
+        0.228
+      ]
+    }
+  },
+  {
+    "file": "loft-open-slender.glb",
+    "name": "Open boat (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "open boat, no superstructure",
+    "propulsion": [
+      "oars",
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 5,
+    "beamM": 0.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      3,
+      7
+    ],
+    "proportions": {
+      "lengthBeam": 4.864,
+      "lengthHeight": 8.888
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.8,
+        0.9
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.2,
+        0.278
+      ],
+      "sidelight": [
+        0.569,
+        0.182
+      ],
+      "stern": [
+        -1,
+        0.174
+      ]
+    }
+  },
+  {
+    "file": "loft-open.glb",
+    "name": "Open boat",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "open boat, no superstructure",
+    "propulsion": [
+      "oars",
+      "power"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 5,
+    "beamM": 1.1,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      3,
+      7
+    ],
+    "proportions": {
+      "lengthBeam": 3.891,
+      "lengthHeight": 12.364
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.8,
+        0.9
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.925,
+        0.199
+      ],
+      "sidelight": [
+        0.569,
+        0.196
+      ],
+      "stern": [
+        -1,
+        0.177
+      ]
+    }
+  },
+  {
+    "file": "loft-partly-submerged-highside.glb",
+    "name": "Dracone (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "inconspicuous, partly submerged tow: a dracone or raft of logs, barely awash",
+    "propulsion": [
+      "none"
+    ],
+    "shows": [],
+    "loaM": 40,
+    "beamM": 7.4,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      80
+    ],
+    "proportions": {
+      "lengthBeam": 4.946,
+      "lengthHeight": 10.32
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -0.9,
+        0.92
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.002,
+        0.239
+      ],
+      "sidelight": [
+        0.799,
+        0.097
+      ],
+      "stern": [
+        -1,
+        0.029
+      ]
+    }
+  },
+  {
+    "file": "loft-partly-submerged-sheered.glb",
+    "name": "Dracone (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "inconspicuous, partly submerged tow: a dracone or raft of logs, barely awash",
+    "propulsion": [
+      "none"
+    ],
+    "shows": [],
+    "loaM": 40,
+    "beamM": 6.7,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      80
+    ],
+    "proportions": {
+      "lengthBeam": 5.417,
+      "lengthHeight": 11.223
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -0.9,
+        0.92
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.002,
+        0.22
+      ],
+      "sidelight": [
+        0.799,
+        0.084
+      ],
+      "stern": [
+        -1,
+        0.033
+      ]
+    }
+  },
+  {
+    "file": "loft-partly-submerged-slender.glb",
+    "name": "Dracone (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "inconspicuous, partly submerged tow: a dracone or raft of logs, barely awash",
+    "propulsion": [
+      "none"
+    ],
+    "shows": [],
+    "loaM": 40,
+    "beamM": 5.1,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      80
+    ],
+    "proportions": {
+      "lengthBeam": 7.109,
+      "lengthHeight": 11.547
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -0.9,
+        0.92
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.002,
+        0.214
+      ],
+      "sidelight": [
+        0.799,
+        0.071
+      ],
+      "stern": [
+        -1,
+        0.022
+      ]
+    }
+  },
+  {
+    "file": "loft-partly-submerged.glb",
+    "name": "Dracone",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "inconspicuous, partly submerged tow: a dracone or raft of logs, barely awash",
+    "propulsion": [
+      "none"
+    ],
+    "shows": [],
+    "loaM": 40,
+    "beamM": 6.4,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      80
+    ],
+    "proportions": {
+      "lengthBeam": 5.688,
+      "lengthHeight": 11.223
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -0.9,
+        0.92
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.002,
+        0.22
+      ],
+      "sidelight": [
+        0.799,
+        0.075
+      ],
+      "stern": [
+        -1,
+        0.018
+      ]
+    }
+  },
+  {
+    "file": "loft-pilot-boat-highside.glb",
+    "name": "Pilot boat (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "fine-lined fast pilot boat, wheelhouse amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse"
+    ],
+    "loaM": 18,
+    "beamM": 4.1,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      12,
+      25
+    ],
+    "aisType": 50,
+    "proportions": {
+      "lengthBeam": 4.401,
+      "lengthHeight": 2.818
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.86,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.037,
+        0.875
+      ],
+      "sidelight": [
+        0.411,
+        0.382
+      ],
+      "stern": [
+        -1,
+        0.343
+      ]
+    }
+  },
+  {
+    "file": "loft-pilot-boat-sheered.glb",
+    "name": "Pilot boat (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "fine-lined fast pilot boat, wheelhouse amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse"
+    ],
+    "loaM": 18,
+    "beamM": 3.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      12,
+      25
+    ],
+    "aisType": 50,
+    "proportions": {
+      "lengthBeam": 4.821,
+      "lengthHeight": 3.1
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.86,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.037,
+        0.796
+      ],
+      "sidelight": [
+        0.411,
+        0.308
+      ],
+      "stern": [
+        -1,
+        0.321
+      ]
+    }
+  },
+  {
+    "file": "loft-pilot-boat-slender.glb",
+    "name": "Pilot boat (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "fine-lined fast pilot boat, wheelhouse amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse"
+    ],
+    "loaM": 18,
+    "beamM": 2.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      12,
+      25
+    ],
+    "aisType": 50,
+    "proportions": {
+      "lengthBeam": 6.327,
+      "lengthHeight": 3.204
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.86,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.037,
+        0.77
+      ],
+      "sidelight": [
+        0.411,
+        0.27
+      ],
+      "stern": [
+        -1,
+        0.241
+      ]
+    }
+  },
+  {
+    "file": "loft-pilot-boat.glb",
+    "name": "Pilot boat",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "fine-lined fast pilot boat, wheelhouse amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse"
+    ],
+    "loaM": 18,
+    "beamM": 3.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      12,
+      25
+    ],
+    "aisType": 50,
+    "proportions": {
+      "lengthBeam": 5.062,
+      "lengthHeight": 3.101
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.86,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.037,
+        0.795
+      ],
+      "sidelight": [
+        0.411,
+        0.292
+      ],
+      "stern": [
+        -1,
+        0.246
+      ]
+    }
+  },
+  {
+    "file": "loft-power-large-highside.glb",
+    "name": "Motor yacht (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "motor yacht, deckhouse and flybridge",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "deckhouse"
+    ],
+    "loaM": 35,
+    "beamM": 8.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      50
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 3.702,
+      "lengthHeight": 2.247
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.9,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.559,
+        1.098
+      ],
+      "sidelight": [
+        0.826,
+        0.416
+      ],
+      "stern": [
+        -1,
+        0.377
+      ]
+    }
+  },
+  {
+    "file": "loft-power-large-sheered.glb",
+    "name": "Motor yacht (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "motor yacht, deckhouse and flybridge",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "deckhouse"
+    ],
+    "loaM": 35,
+    "beamM": 8.1,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      50
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 4.054,
+      "lengthHeight": 2.391
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.9,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.559,
+        1.032
+      ],
+      "sidelight": [
+        0.826,
+        0.359
+      ],
+      "stern": [
+        -1,
+        0.347
+      ]
+    }
+  },
+  {
+    "file": "loft-power-large-slender.glb",
+    "name": "Motor yacht (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "motor yacht, deckhouse and flybridge",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "deckhouse"
+    ],
+    "loaM": 35,
+    "beamM": 6.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      50
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 5.321,
+      "lengthHeight": 2.501
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.9,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.559,
+        0.986
+      ],
+      "sidelight": [
+        0.825,
+        0.292
+      ],
+      "stern": [
+        -1,
+        0.264
+      ]
+    }
+  },
+  {
+    "file": "loft-power-large.glb",
+    "name": "Motor yacht",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "motor yacht, deckhouse and flybridge",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "deckhouse"
+    ],
+    "loaM": 35,
+    "beamM": 7.7,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      50
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 4.257,
+      "lengthHeight": 2.453
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.9,
+        0.97
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.559,
+        1.005
+      ],
+      "sidelight": [
+        0.825,
+        0.307
+      ],
+      "stern": [
+        -1,
+        0.269
+      ]
+    }
+  },
+  {
+    "file": "loft-power-small-highside.glb",
+    "name": "Small motor cruiser (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "small planing motor cruiser, cabin forward",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cabin"
+    ],
+    "loaM": 12,
+    "beamM": 3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      20
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 3.576,
+      "lengthHeight": 3.338
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.85,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.013,
+        0.739
+      ],
+      "sidelight": [
+        0.52,
+        0.341
+      ],
+      "stern": [
+        -1,
+        0.314
+      ]
+    }
+  },
+  {
+    "file": "loft-power-small-sheered.glb",
+    "name": "Small motor cruiser (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "small planing motor cruiser, cabin forward",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cabin"
+    ],
+    "loaM": 12,
+    "beamM": 2.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      20
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 3.916,
+      "lengthHeight": 3.7
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.85,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.013,
+        0.667
+      ],
+      "sidelight": [
+        0.52,
+        0.279
+      ],
+      "stern": [
+        -1,
+        0.291
+      ]
+    }
+  },
+  {
+    "file": "loft-power-small-slender.glb",
+    "name": "Small motor cruiser (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "small planing motor cruiser, cabin forward",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cabin"
+    ],
+    "loaM": 12,
+    "beamM": 2.1,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      20
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 5.14,
+      "lengthHeight": 3.833
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.85,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.013,
+        0.644
+      ],
+      "sidelight": [
+        0.52,
+        0.239
+      ],
+      "stern": [
+        -1,
+        0.22
+      ]
+    }
+  },
+  {
+    "file": "loft-power-small.glb",
+    "name": "Small motor cruiser",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "small planing motor cruiser, cabin forward",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "cabin"
+    ],
+    "loaM": 12,
+    "beamM": 2.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      7,
+      20
+    ],
+    "aisType": 37,
+    "proportions": {
+      "lengthBeam": 4.112,
+      "lengthHeight": 3.7
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.85,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.013,
+        0.667
+      ],
+      "sidelight": [
+        0.52,
+        0.257
+      ],
+      "stern": [
+        -1,
+        0.224
+      ]
+    }
+  },
+  {
+    "file": "loft-pusher-highside.glb",
+    "name": "Push tug (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "push tug, square bow with push knees, wheelhouse raised on a pillar",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "push-knees"
+    ],
+    "loaM": 30,
+    "beamM": 9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      45
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 3.144,
+      "lengthHeight": 2.009
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.88,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.53,
+        1.228
+      ],
+      "sidelight": [
+        0.958,
+        0.382
+      ],
+      "stern": [
+        -1,
+        0.329
+      ]
+    }
+  },
+  {
+    "file": "loft-pusher-sheered.glb",
+    "name": "Push tug (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "push tug, square bow with push knees, wheelhouse raised on a pillar",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "push-knees"
+    ],
+    "loaM": 30,
+    "beamM": 8.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      45
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 3.443,
+      "lengthHeight": 2.11
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.88,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.53,
+        1.169
+      ],
+      "sidelight": [
+        0.958,
+        0.347
+      ],
+      "stern": [
+        -1,
+        0.304
+      ]
+    }
+  },
+  {
+    "file": "loft-pusher-slender.glb",
+    "name": "Push tug (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "push tug, square bow with push knees, wheelhouse raised on a pillar",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "push-knees"
+    ],
+    "loaM": 30,
+    "beamM": 6.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      45
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 4.519,
+      "lengthHeight": 2.18
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.88,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.53,
+        1.131
+      ],
+      "sidelight": [
+        0.958,
+        0.27
+      ],
+      "stern": [
+        -1,
+        0.231
+      ]
+    }
+  },
+  {
+    "file": "loft-pusher.glb",
+    "name": "Push tug",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "push tug, square bow with push knees, wheelhouse raised on a pillar",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "push-knees"
+    ],
+    "loaM": 30,
+    "beamM": 7.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      45
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 3.615,
+      "lengthHeight": 2.147
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.88,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.53,
+        1.149
+      ],
+      "sidelight": [
+        0.958,
+        0.277
+      ],
+      "stern": [
+        -1,
+        0.236
+      ]
+    }
+  },
+  {
+    "file": "loft-restricted-ability-highside.glb",
+    "name": "Buoy tender (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "buoy tender, bridge forward, long buoy deck aft with a heavy crane",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "cranes"
+    ],
+    "loaM": 60,
+    "beamM": 12.4,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "proportions": {
+      "lengthBeam": 3.758,
+      "lengthHeight": 1.939
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.92,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.545,
+        1.272
+      ],
+      "sidelight": [
+        0.822,
+        0.57
+      ],
+      "stern": [
+        -1,
+        0.339
+      ]
+    }
+  },
+  {
+    "file": "loft-restricted-ability-sheered.glb",
+    "name": "Buoy tender (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "buoy tender, bridge forward, long buoy deck aft with a heavy crane",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "cranes"
+    ],
+    "loaM": 60,
+    "beamM": 11.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "proportions": {
+      "lengthBeam": 4.116,
+      "lengthHeight": 2.018
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.92,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.545,
+        1.223
+      ],
+      "sidelight": [
+        0.821,
+        0.496
+      ],
+      "stern": [
+        -1,
+        0.338
+      ]
+    }
+  },
+  {
+    "file": "loft-restricted-ability-slender.glb",
+    "name": "Buoy tender (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "buoy tender, bridge forward, long buoy deck aft with a heavy crane",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "cranes"
+    ],
+    "loaM": 60,
+    "beamM": 8.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "proportions": {
+      "lengthBeam": 5.402,
+      "lengthHeight": 2.098
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.92,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.545,
+        1.176
+      ],
+      "sidelight": [
+        0.822,
+        0.409
+      ],
+      "stern": [
+        -1,
+        0.239
+      ]
+    }
+  },
+  {
+    "file": "loft-restricted-ability.glb",
+    "name": "Buoy tender",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "buoy tender, bridge forward, long buoy deck aft with a heavy crane",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "cranes"
+    ],
+    "loaM": 60,
+    "beamM": 10.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      30,
+      100
+    ],
+    "proportions": {
+      "lengthBeam": 4.322,
+      "lengthHeight": 2.074
+    },
+    "frame": {
+      "waterlineZ": 0.032,
+      "hullX": [
+        -0.92,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.545,
+        1.189
+      ],
+      "sidelight": [
+        0.822,
+        0.427
+      ],
+      "stern": [
+        -1,
+        0.233
+      ]
+    }
+  },
+  {
+    "file": "loft-sail-large-highside.glb",
+    "name": "Ketch (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "sailing yacht, two masts",
+    "rig": "ketch",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "masts"
+    ],
+    "loaM": 30,
+    "beamM": 7.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      40
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 3.717,
+      "lengthHeight": 2.295
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.9,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.125,
+        1.075
+      ],
+      "sidelight": [
+        0.501,
+        0.294
+      ],
+      "stern": [
+        -1,
+        0.283
+      ]
+    }
+  },
+  {
+    "file": "loft-sail-large-sheered.glb",
+    "name": "Ketch (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "sailing yacht, two masts",
+    "rig": "ketch",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "masts"
+    ],
+    "loaM": 30,
+    "beamM": 6.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      40
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 4.071,
+      "lengthHeight": 2.433
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.9,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.126,
+        1.014
+      ],
+      "sidelight": [
+        0.501,
+        0.24
+      ],
+      "stern": [
+        -1,
+        0.262
+      ]
+    }
+  },
+  {
+    "file": "loft-sail-large-slender.glb",
+    "name": "Ketch (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "sailing yacht, two masts",
+    "rig": "ketch",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "masts"
+    ],
+    "loaM": 30,
+    "beamM": 5.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      40
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 5.343,
+      "lengthHeight": 2.482
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.9,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.125,
+        0.994
+      ],
+      "sidelight": [
+        0.501,
+        0.211
+      ],
+      "stern": [
+        -1,
+        0.208
+      ]
+    }
+  },
+  {
+    "file": "loft-sail-large.glb",
+    "name": "Ketch",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "sailing yacht, two masts",
+    "rig": "ketch",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "masts"
+    ],
+    "loaM": 30,
+    "beamM": 6.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      20,
+      40
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 4.274,
+      "lengthHeight": 2.434
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.9,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.125,
+        1.013
+      ],
+      "sidelight": [
+        0.501,
+        0.227
+      ],
+      "stern": [
+        -1,
+        0.211
+      ]
+    }
+  },
+  {
+    "file": "loft-sail-small-highside.glb",
+    "name": "Sloop (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "sailing yacht, single mast",
+    "rig": "bermudan sloop",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "masts"
+    ],
+    "loaM": 12,
+    "beamM": 2.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      5,
+      20
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 3.717,
+      "lengthHeight": 2.295
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.9,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.125,
+        1.075
+      ],
+      "sidelight": [
+        0.501,
+        0.294
+      ],
+      "stern": [
+        -1,
+        0.283
+      ]
+    }
+  },
+  {
+    "file": "loft-sail-small-sheered.glb",
+    "name": "Sloop (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "sailing yacht, single mast",
+    "rig": "bermudan sloop",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "masts"
+    ],
+    "loaM": 12,
+    "beamM": 2.5,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      5,
+      20
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 4.071,
+      "lengthHeight": 2.433
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.9,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.126,
+        1.014
+      ],
+      "sidelight": [
+        0.501,
+        0.24
+      ],
+      "stern": [
+        -1,
+        0.262
+      ]
+    }
+  },
+  {
+    "file": "loft-sail-small-slender.glb",
+    "name": "Sloop (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "sailing yacht, single mast",
+    "rig": "bermudan sloop",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "masts"
+    ],
+    "loaM": 12,
+    "beamM": 1.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      5,
+      20
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 5.343,
+      "lengthHeight": 2.482
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.9,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.125,
+        0.994
+      ],
+      "sidelight": [
+        0.501,
+        0.211
+      ],
+      "stern": [
+        -1,
+        0.208
+      ]
+    }
+  },
+  {
+    "file": "loft-sail-small.glb",
+    "name": "Sloop",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "sailing yacht, single mast",
+    "rig": "bermudan sloop",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "masts"
+    ],
+    "loaM": 12,
+    "beamM": 2.4,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      5,
+      20
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 4.274,
+      "lengthHeight": 2.434
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.9,
+        0.98
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.125,
+        1.013
+      ],
+      "sidelight": [
+        0.501,
+        0.227
+      ],
+      "stern": [
+        -1,
+        0.211
+      ]
+    }
+  },
+  {
+    "file": "loft-seiner-highside.glb",
+    "name": "Purse seiner (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "purse seiner, wheelhouse forward, net drum and boom aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "boom"
+    ],
+    "loaM": 30,
+    "beamM": 7.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 3.486,
+      "lengthHeight": 2.345
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.88,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.133,
+        1.052
+      ],
+      "sidelight": [
+        0.574,
+        0.417
+      ],
+      "stern": [
+        -1,
+        0.455
+      ]
+    }
+  },
+  {
+    "file": "loft-seiner-sheered.glb",
+    "name": "Purse seiner (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "purse seiner, wheelhouse forward, net drum and boom aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "boom"
+    ],
+    "loaM": 30,
+    "beamM": 6.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 3.818,
+      "lengthHeight": 2.547
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.88,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.133,
+        0.969
+      ],
+      "sidelight": [
+        0.574,
+        0.345
+      ],
+      "stern": [
+        -1,
+        0.398
+      ]
+    }
+  },
+  {
+    "file": "loft-seiner-slender.glb",
+    "name": "Purse seiner (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "purse seiner, wheelhouse forward, net drum and boom aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "boom"
+    ],
+    "loaM": 30,
+    "beamM": 5.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 5.012,
+      "lengthHeight": 2.622
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.88,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.133,
+        0.941
+      ],
+      "sidelight": [
+        0.574,
+        0.293
+      ],
+      "stern": [
+        -1,
+        0.312
+      ]
+    }
+  },
+  {
+    "file": "loft-seiner.glb",
+    "name": "Purse seiner",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "purse seiner, wheelhouse forward, net drum and boom aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "boom"
+    ],
+    "loaM": 30,
+    "beamM": 6.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 4.009,
+      "lengthHeight": 2.55
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.88,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.133,
+        0.967
+      ],
+      "sidelight": [
+        0.574,
+        0.313
+      ],
+      "stern": [
+        -1,
+        0.326
+      ]
+    }
+  },
+  {
+    "file": "loft-square-rigger-highside.glb",
+    "name": "Square-rigged ship (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "square-rigged sailing ship, three masts with yards",
+    "rig": "three-masted square rig",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards",
+      "bowsprit"
+    ],
+    "loaM": 60,
+    "beamM": 13.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      40,
+      120
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 3.901,
+      "lengthHeight": 2.037
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.9,
+        1.065
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.068,
+        1.211
+      ],
+      "sidelight": [
+        0.447,
+        0.329
+      ],
+      "stern": [
+        -1,
+        0.37
+      ]
+    }
+  },
+  {
+    "file": "loft-square-rigger-sheered.glb",
+    "name": "Square-rigged ship (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "square-rigged sailing ship, three masts with yards",
+    "rig": "three-masted square rig",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards",
+      "bowsprit"
+    ],
+    "loaM": 60,
+    "beamM": 12.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      40,
+      120
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 4.276,
+      "lengthHeight": 2.156
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.9,
+        1.066
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.067,
+        1.144
+      ],
+      "sidelight": [
+        0.447,
+        0.272
+      ],
+      "stern": [
+        -1,
+        0.333
+      ]
+    }
+  },
+  {
+    "file": "loft-square-rigger-slender.glb",
+    "name": "Square-rigged ship (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "square-rigged sailing ship, three masts with yards",
+    "rig": "three-masted square rig",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards",
+      "bowsprit"
+    ],
+    "loaM": 60,
+    "beamM": 9.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      40,
+      120
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 5.611,
+      "lengthHeight": 2.197
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.9,
+        1.066
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.027,
+        1.123
+      ],
+      "sidelight": [
+        0.447,
+        0.234
+      ],
+      "stern": [
+        -1,
+        0.265
+      ]
+    }
+  },
+  {
+    "file": "loft-square-rigger.glb",
+    "name": "Square-rigged ship",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "square-rigged sailing ship, three masts with yards",
+    "rig": "three-masted square rig",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards",
+      "bowsprit"
+    ],
+    "loaM": 60,
+    "beamM": 12,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      40,
+      120
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 4.488,
+      "lengthHeight": 2.156
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.9,
+        1.065
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.028,
+        1.144
+      ],
+      "sidelight": [
+        0.447,
+        0.251
+      ],
+      "stern": [
+        -1,
+        0.273
+      ]
+    }
+  },
+  {
+    "file": "loft-tanker-highside.glb",
+    "name": "Tanker (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "full-bodied tanker, bridge aft, low pipework deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 200,
+    "beamM": 59.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      350
+    ],
+    "aisType": 80,
+    "proportions": {
+      "lengthBeam": 3.409,
+      "lengthHeight": 2.32
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.96,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.518,
+        1.063
+      ],
+      "sidelight": [
+        0.817,
+        0.317
+      ],
+      "stern": [
+        -1,
+        0.323
+      ]
+    }
+  },
+  {
+    "file": "loft-tanker-sheered.glb",
+    "name": "Tanker (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "full-bodied tanker, bridge aft, low pipework deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 200,
+    "beamM": 54.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      350
+    ],
+    "aisType": 80,
+    "proportions": {
+      "lengthBeam": 3.733,
+      "lengthHeight": 2.47
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.96,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.518,
+        0.999
+      ],
+      "sidelight": [
+        0.817,
+        0.269
+      ],
+      "stern": [
+        -1,
+        0.285
+      ]
+    }
+  },
+  {
+    "file": "loft-tanker-slender.glb",
+    "name": "Tanker (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "full-bodied tanker, bridge aft, low pipework deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 200,
+    "beamM": 41.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      350
+    ],
+    "aisType": 80,
+    "proportions": {
+      "lengthBeam": 4.9,
+      "lengthHeight": 2.569
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.96,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.518,
+        0.96
+      ],
+      "sidelight": [
+        0.817,
+        0.234
+      ],
+      "stern": [
+        -1,
+        0.217
+      ]
+    }
+  },
+  {
+    "file": "loft-tanker.glb",
+    "name": "Tanker",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "full-bodied tanker, bridge aft, low pipework deck",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "funnel"
+    ],
+    "loaM": 200,
+    "beamM": 52,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      120,
+      350
+    ],
+    "aisType": 80,
+    "proportions": {
+      "lengthBeam": 3.92,
+      "lengthHeight": 2.518
+    },
+    "frame": {
+      "waterlineZ": 0.065,
+      "hullX": [
+        -0.96,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.518,
+        0.98
+      ],
+      "sidelight": [
+        0.817,
+        0.224
+      ],
+      "stern": [
+        -1,
+        0.224
+      ]
+    }
+  },
+  {
+    "file": "loft-trawler-highside.glb",
+    "name": "Stern trawler (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "stern trawler, wheelhouse forward, gantry aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "gantry"
+    ],
+    "loaM": 30,
+    "beamM": 7.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 3.813,
+      "lengthHeight": 2.534
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.96,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.553,
+        0.973
+      ],
+      "sidelight": [
+        0.556,
+        0.399
+      ],
+      "stern": [
+        -1,
+        0.256
+      ]
+    }
+  },
+  {
+    "file": "loft-trawler-sheered.glb",
+    "name": "Stern trawler (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "stern trawler, wheelhouse forward, gantry aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "gantry"
+    ],
+    "loaM": 30,
+    "beamM": 6.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 4.176,
+      "lengthHeight": 2.67
+    },
+    "frame": {
+      "waterlineZ": 0.041,
+      "hullX": [
+        -0.96,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.56,
+        0.924
+      ],
+      "sidelight": [
+        0.556,
+        0.328
+      ],
+      "stern": [
+        -1,
+        0.243
+      ]
+    }
+  },
+  {
+    "file": "loft-trawler-slender.glb",
+    "name": "Stern trawler (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "stern trawler, wheelhouse forward, gantry aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "gantry"
+    ],
+    "loaM": 30,
+    "beamM": 5.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 5.481,
+      "lengthHeight": 2.716
+    },
+    "frame": {
+      "waterlineZ": 0.014,
+      "hullX": [
+        -0.96,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.56,
+        0.908
+      ],
+      "sidelight": [
+        0.556,
+        0.314
+      ],
+      "stern": [
+        -1,
+        0.191
+      ]
+    }
+  },
+  {
+    "file": "loft-trawler.glb",
+    "name": "Stern trawler",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "stern trawler, wheelhouse forward, gantry aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "gantry"
+    ],
+    "loaM": 30,
+    "beamM": 6.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      50
+    ],
+    "aisType": 30,
+    "proportions": {
+      "lengthBeam": 4.385,
+      "lengthHeight": 2.661
+    },
+    "frame": {
+      "waterlineZ": 0.01,
+      "hullX": [
+        -0.96,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.56,
+        0.927
+      ],
+      "sidelight": [
+        0.556,
+        0.34
+      ],
+      "stern": [
+        -1,
+        0.186
+      ]
+    }
+  },
+  {
+    "file": "loft-tug-highside.glb",
+    "name": "Tug (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "harbour tug, high bow, towing winch aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "funnel",
+      "towing-gear"
+    ],
+    "loaM": 30,
+    "beamM": 8.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      45
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 3.56,
+      "lengthHeight": 2.763
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.86,
+        0.94
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.349,
+        0.893
+      ],
+      "sidelight": [
+        0.709,
+        0.481
+      ],
+      "stern": [
+        -1,
+        0.333
+      ]
+    }
+  },
+  {
+    "file": "loft-tug-sheered.glb",
+    "name": "Tug (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "harbour tug, high bow, towing winch aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "funnel",
+      "towing-gear"
+    ],
+    "loaM": 30,
+    "beamM": 7.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      45
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 3.899,
+      "lengthHeight": 3.522
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.86,
+        0.94
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.348,
+        0.7
+      ],
+      "sidelight": [
+        0.709,
+        0.406
+      ],
+      "stern": [
+        -1,
+        0.32
+      ]
+    }
+  },
+  {
+    "file": "loft-tug-slender.glb",
+    "name": "Tug (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "harbour tug, high bow, towing winch aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "funnel",
+      "towing-gear"
+    ],
+    "loaM": 30,
+    "beamM": 5.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      45
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 5.118,
+      "lengthHeight": 3.742
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.86,
+        0.94
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.342,
+        0.659
+      ],
+      "sidelight": [
+        0.709,
+        0.337
+      ],
+      "stern": [
+        -1,
+        0.228
+      ]
+    }
+  },
+  {
+    "file": "loft-tug.glb",
+    "name": "Tug",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "harbour tug, high bow, towing winch aft",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wheelhouse",
+      "funnel",
+      "towing-gear"
+    ],
+    "loaM": 30,
+    "beamM": 7.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      15,
+      45
+    ],
+    "aisType": 52,
+    "proportions": {
+      "lengthBeam": 4.094,
+      "lengthHeight": 3.581
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.86,
+        0.94
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.348,
+        0.689
+      ],
+      "sidelight": [
+        0.709,
+        0.358
+      ],
+      "stern": [
+        -1,
+        0.229
+      ]
+    }
+  },
+  {
+    "file": "loft-warship-highside.glb",
+    "name": "Frigate (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "fine-lined warship, bridge forward, mast and funnel amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "masts",
+      "funnel"
+    ],
+    "loaM": 100,
+    "beamM": 23,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      60,
+      160
+    ],
+    "aisType": 35,
+    "proportions": {
+      "lengthBeam": 4.671,
+      "lengthHeight": 2.224
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.93,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.542,
+        1.109
+      ],
+      "sidelight": [
+        0.384,
+        0.425
+      ],
+      "stern": [
+        -1,
+        0.36
+      ]
+    }
+  },
+  {
+    "file": "loft-warship-sheered.glb",
+    "name": "Frigate (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "fine-lined warship, bridge forward, mast and funnel amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "masts",
+      "funnel"
+    ],
+    "loaM": 100,
+    "beamM": 21,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      60,
+      160
+    ],
+    "aisType": 35,
+    "proportions": {
+      "lengthBeam": 5.116,
+      "lengthHeight": 2.364
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.93,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.542,
+        1.043
+      ],
+      "sidelight": [
+        0.384,
+        0.339
+      ],
+      "stern": [
+        -1,
+        0.34
+      ]
+    }
+  },
+  {
+    "file": "loft-warship-slender.glb",
+    "name": "Frigate (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "fine-lined warship, bridge forward, mast and funnel amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "masts",
+      "funnel"
+    ],
+    "loaM": 100,
+    "beamM": 16,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      60,
+      160
+    ],
+    "aisType": 35,
+    "proportions": {
+      "lengthBeam": 6.714,
+      "lengthHeight": 2.476
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.93,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.542,
+        0.996
+      ],
+      "sidelight": [
+        0.384,
+        0.297
+      ],
+      "stern": [
+        -1,
+        0.249
+      ]
+    }
+  },
+  {
+    "file": "loft-warship.glb",
+    "name": "Frigate",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "fine-lined warship, bridge forward, mast and funnel amidships",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "bridge",
+      "masts",
+      "funnel"
+    ],
+    "loaM": 100,
+    "beamM": 20,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      60,
+      160
+    ],
+    "aisType": 35,
+    "proportions": {
+      "lengthBeam": 5.371,
+      "lengthHeight": 2.429
+    },
+    "frame": {
+      "waterlineZ": 0.049,
+      "hullX": [
+        -0.93,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.542,
+        1.015
+      ],
+      "sidelight": [
+        0.384,
+        0.324
+      ],
+      "stern": [
+        -1,
+        0.253
+      ]
+    }
+  },
+  {
+    "file": "loft-wing-in-ground-highside.glb",
+    "name": "Wing-in-ground craft (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "wing-in-ground craft on the water: flat float hull, canopy, stub wings, T-tail",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wings",
+      "canopy"
+    ],
+    "loaM": 15,
+    "beamM": 5.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      8,
+      25
+    ],
+    "aisType": 20,
+    "proportions": {
+      "lengthBeam": 2.783,
+      "lengthHeight": 3.125
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.96,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.749,
+        0.789
+      ],
+      "sidelight": [
+        0.21,
+        0.235
+      ],
+      "stern": [
+        -1,
+        0.789
+      ]
+    }
+  },
+  {
+    "file": "loft-wing-in-ground-sheered.glb",
+    "name": "Wing-in-ground craft (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "wing-in-ground craft on the water: flat float hull, canopy, stub wings, T-tail",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wings",
+      "canopy"
+    ],
+    "loaM": 15,
+    "beamM": 4.7,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      8,
+      25
+    ],
+    "aisType": 20,
+    "proportions": {
+      "lengthBeam": 3.049,
+      "lengthHeight": 3.182
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.961,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.748,
+        0.775
+      ],
+      "sidelight": [
+        0.21,
+        0.185
+      ],
+      "stern": [
+        -1,
+        0.775
+      ]
+    }
+  },
+  {
+    "file": "loft-wing-in-ground-slender.glb",
+    "name": "Wing-in-ground craft (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "wing-in-ground craft on the water: flat float hull, canopy, stub wings, T-tail",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wings",
+      "canopy"
+    ],
+    "loaM": 15,
+    "beamM": 3.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      8,
+      25
+    ],
+    "aisType": 20,
+    "proportions": {
+      "lengthBeam": 4.001,
+      "lengthHeight": 3.413
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.96,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.75,
+        0.723
+      ],
+      "sidelight": [
+        0.21,
+        0.17
+      ],
+      "stern": [
+        -1,
+        0.723
+      ]
+    }
+  },
+  {
+    "file": "loft-wing-in-ground.glb",
+    "name": "Wing-in-ground craft",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "wing-in-ground craft on the water: flat float hull, canopy, stub wings, T-tail",
+    "propulsion": [
+      "power"
+    ],
+    "shows": [
+      "wings",
+      "canopy"
+    ],
+    "loaM": 15,
+    "beamM": 4.5,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      8,
+      25
+    ],
+    "aisType": 20,
+    "proportions": {
+      "lengthBeam": 3.2,
+      "lengthHeight": 3.408
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.96,
+        0.96
+      ]
+    },
+    "lights": {
+      "masthead": [
+        -0.75,
+        0.724
+      ],
+      "sidelight": [
+        0.21,
+        0.186
+      ],
+      "stern": [
+        -1,
+        0.724
+      ]
+    }
+  },
+  {
+    "file": "thomas-w-lawson.glb",
+    "name": "Thomas W. Lawson",
+    "kind": "traced",
+    "fidelity": "traced",
+    "source": {
+      "trace": "docs/research/sailboat-lines/thomas-w-lawson.json",
+      "url": "https://archive.org/details/sim_nautical-research-journal_1953-04_5_4",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "seven-masted gaff schooner, steel full-bodied cargo",
+    "rig": "seven-masted gaff schooner",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "bowsprit"
+    ],
+    "loaM": 122.93,
+    "beamM": 15.24,
+    "draftM": 8.08,
+    "nominal": false,
+    "fitLengthM": [
+      98,
+      154
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 8.067,
+      "lengthHeight": 2.535
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.719,
+        0.973
+      ],
+      "sidelight": [
+        0.869,
+        0.18
+      ],
+      "stern": [
+        -1.072,
+        0.186
+      ]
+    }
+  },
+  {
+    "file": "westsail-32.glb",
+    "name": "Westsail 32",
+    "kind": "traced",
+    "fidelity": "traced",
+    "source": {
+      "trace": "docs/research/sailboat-lines/westsail-32.json",
+      "url": "https://sailboatdata.com/sailboat/westsail-32/",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "cutter, long keel, transom-hung rudder",
+    "rig": "cutter",
+    "propulsion": [
+      "sail",
+      "power"
+    ],
+    "shows": [
+      "sails",
+      "bowsprit"
+    ],
+    "loaM": 9.75,
+    "beamM": 3.35,
+    "draftM": 1.52,
+    "nominal": false,
+    "fitLengthM": [
+      8,
+      12
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 2.882,
+      "lengthHeight": 0.672
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.214,
+        3.669
+      ],
+      "sidelight": [
+        0.6,
+        0.299
+      ],
+      "stern": [
+        -1.145,
+        0.546
+      ]
+    }
+  },
+  {
+    "file": "wyoming.glb",
+    "name": "Wyoming",
+    "kind": "traced",
+    "fidelity": "traced",
+    "source": {
+      "trace": "docs/research/sailboat-lines/wyoming.json",
+      "url": "https://maine-maritime-museum-store.myshopify.com/products/wyoming",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "six-masted gaff schooner, wooden full-bodied cargo",
+    "rig": "six-masted gaff schooner",
+    "propulsion": [
+      "sail"
+    ],
+    "shows": [
+      "sails",
+      "bowsprit"
+    ],
+    "loaM": 106.68,
+    "beamM": 15.24,
+    "draftM": 8.38,
+    "nominal": false,
+    "fitLengthM": [
+      85,
+      133
+    ],
+    "aisType": 36,
+    "proportions": {
+      "lengthBeam": 7.006,
+      "lengthHeight": 2.298
+    },
+    "frame": {
+      "waterlineZ": 0,
+      "hullX": [
+        -1,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.73,
+        1.073
+      ],
+      "sidelight": [
+        0.846,
+        0.152
+      ],
+      "stern": [
+        -1.091,
+        0.222
+      ]
+    }
+  }
+]

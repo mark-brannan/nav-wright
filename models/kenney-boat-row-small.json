@@ -1,0 +1,20 @@
+{
+  "file": "kenney-boat-row-small.glb",
+  "name": "Rowing dinghy",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "boat-row-small.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "open rowing dinghy hull, transom stern",
+  "propulsion": ["oars"],
+  "shows": ["oars"],
+  "loaM": 3,
+  "beamM": 1.3,
+  "draftM": 0.2,
+  "nominal": true,
+  "fitLengthM": [2.1, 4.5]
+}

@@ -1,0 +1,27 @@
+{
+  "file": "loft-seiner-slender.glb",
+  "name": "Purse seiner (slender)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "purse seiner, wheelhouse forward, net drum and boom aft",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "wheelhouse",
+    "boom"
+  ],
+  "loaM": 30,
+  "beamM": 5.3,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    15,
+    50
+  ],
+  "aisType": 30
+}

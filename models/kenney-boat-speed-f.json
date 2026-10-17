@@ -1,0 +1,21 @@
+{
+  "file": "kenney-boat-speed-f.glb",
+  "name": "Planing sportsboat",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "boat-speed-f.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "deep-vee planing hull, open cockpit behind a windscreen",
+  "propulsion": ["power"],
+  "shows": ["open-cockpit"],
+  "loaM": 8,
+  "beamM": 2.6,
+  "draftM": 0.6,
+  "nominal": true,
+  "fitLengthM": [7, 12],
+  "aisType": 37
+}

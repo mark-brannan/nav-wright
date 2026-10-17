@@ -1,0 +1,28 @@
+{
+  "file": "loft-container-ship.glb",
+  "name": "Container ship",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "container ship, bridge aft, boxes stacked on deck",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "containers",
+    "bridge",
+    "funnel"
+  ],
+  "loaM": 250,
+  "beamM": 60,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    120,
+    400
+  ],
+  "aisType": 70
+}

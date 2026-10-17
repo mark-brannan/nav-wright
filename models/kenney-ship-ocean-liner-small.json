@@ -1,0 +1,21 @@
+{
+  "file": "kenney-ship-ocean-liner-small.glb",
+  "name": "Small passenger ferry",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "ship-ocean-liner-small.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "displacement passenger hull, full-length superstructure, raked funnel",
+  "propulsion": ["power"],
+  "shows": ["funnel"],
+  "loaM": 60,
+  "beamM": 14,
+  "draftM": 3,
+  "nominal": true,
+  "fitLengthM": [50, 90],
+  "aisType": 60
+}

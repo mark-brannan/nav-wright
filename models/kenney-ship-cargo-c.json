@@ -1,0 +1,21 @@
+{
+  "file": "kenney-ship-cargo-c.glb",
+  "name": "Feeder container ship",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "ship-cargo-c.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "displacement cargo hull, bridge aft, container stacks on deck",
+  "propulsion": ["power"],
+  "shows": ["containers"],
+  "loaM": 150,
+  "beamM": 23,
+  "draftM": 8,
+  "nominal": true,
+  "fitLengthM": [120, 225],
+  "aisType": 70
+}

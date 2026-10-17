@@ -1,0 +1,22 @@
+{
+  "file": "kenney-ship-pirate-large.glb",
+  "name": "Three-masted galleon",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Pirate Kit",
+    "kitFile": "ship-pirate-large.glb",
+    "url": "https://kenney.nl/assets/pirate-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "carvel-planked displacement hull, high stern castle",
+  "rig": "three-masted square rig, lateen mizzen",
+  "propulsion": ["sail"],
+  "shows": ["sails", "masts", "bowsprit"],
+  "loaM": 45,
+  "beamM": 10,
+  "draftM": 5,
+  "nominal": true,
+  "fitLengthM": [40, 68],
+  "aisType": 36
+}

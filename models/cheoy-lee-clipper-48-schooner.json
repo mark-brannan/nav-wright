@@ -1,0 +1,30 @@
+{
+  "file": "cheoy-lee-clipper-48-schooner.glb",
+  "name": "Cheoy Lee Clipper 48 Schooner",
+  "kind": "traced",
+  "fidelity": "traced",
+  "source": {
+    "trace": "docs/research/sailboat-lines/cheoy-lee-clipper-48-schooner.json",
+    "url": "https://sailboatdata.com/sailboat/clipper-48-schooner-cheoy-lee/",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "two-masted staysail schooner, long keel",
+  "rig": "two-masted staysail schooner",
+  "propulsion": [
+    "sail",
+    "power"
+  ],
+  "shows": [
+    "sails",
+    "bowsprit"
+  ],
+  "loaM": 14.61,
+  "beamM": 3.96,
+  "draftM": 1.83,
+  "nominal": false,
+  "fitLengthM": [
+    12,
+    18
+  ],
+  "aisType": 36
+}

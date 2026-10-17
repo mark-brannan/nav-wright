@@ -1,0 +1,22 @@
+{
+  "file": "kenney-ship-pirate-medium.glb",
+  "name": "Three-masted full-rigged ship",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Pirate Kit",
+    "kitFile": "ship-pirate-medium.glb",
+    "url": "https://kenney.nl/assets/pirate-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "carvel-planked displacement hull, raised quarterdeck",
+  "rig": "three-masted square rig",
+  "propulsion": ["sail"],
+  "shows": ["sails", "masts", "bowsprit"],
+  "loaM": 42,
+  "beamM": 10,
+  "draftM": 4.5,
+  "nominal": true,
+  "fitLengthM": [40, 63],
+  "aisType": 36
+}

@@ -21,9 +21,11 @@ export { mergeLanterns } from './lantern.js';
 export { PX, PZ, allHulls, selectHull } from './hulls.js';
 export type { Hull, HullSpec } from './hulls.js';
 
-// The hand-traced real sailing vessels and the mesh file each one ships
-export { tracedVessels } from './tracedVessels.js';
-export type { TracedVessel } from './tracedVessels.js';
+// The mesh catalog: one record per shipped .glb, what it depicts and where
+// her lights mount (docs/design/mesh-catalog.md)
+export { meshCatalog } from './meshCatalog.js';
+export { meshRecordSchema, meshSidecarSchema } from './meshRecord.js';
+export type { MeshRecord, MeshSidecar } from './meshRecord.js';
 
 // Hull styles: every style paints every hull; a view given none draws the
 // base drawing

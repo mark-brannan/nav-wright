@@ -1,0 +1,29 @@
+{
+  "file": "loft-square-rigger-slender.glb",
+  "name": "Square-rigged ship (slender)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "square-rigged sailing ship, three masts with yards",
+  "rig": "three-masted square rig",
+  "propulsion": [
+    "sail"
+  ],
+  "shows": [
+    "masts",
+    "yards",
+    "bowsprit"
+  ],
+  "loaM": 60,
+  "beamM": 9.6,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    40,
+    120
+  ],
+  "aisType": 36
+}

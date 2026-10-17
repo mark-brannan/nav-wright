@@ -1,0 +1,21 @@
+{
+  "file": "kenney-boat-tug-b.glb",
+  "name": "Harbour tug",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "boat-tug-b.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "displacement tug hull, high bow, towing bitts aft",
+  "propulsion": ["power"],
+  "shows": ["wheelhouse", "funnel", "towing-gear"],
+  "loaM": 28,
+  "beamM": 9,
+  "draftM": 4,
+  "nominal": true,
+  "fitLengthM": [20, 40],
+  "aisType": 52
+}

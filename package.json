@@ -2,7 +2,7 @@
   "name": "nav-wright",
   "version": "0.1.9",
   "type": "module",
-  "description": "Renderer for vessels, navigation lights, and rules-of-the-road scenes — SVG profile, bearing and plan views, and an optional 3D view",
+  "description": "Renderer for vessels, navigation lights, and rules-of-the-road scenes \u2014 SVG profile, bearing and plan views, and an optional 3D view",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -45,12 +45,14 @@
     "build": "tsc -p tsconfig.build.json && cp src/style.css dist/style.css",
     "prepublishOnly": "npm run build",
     "prepare": "npm run build",
-    "models": "npm run build && node scripts/loft-hulls.mjs",
+    "models": "npm run build && node scripts/loft-hulls.mjs && node scripts/sailboat-lines.mjs && node scripts/mesh-catalog.mjs",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "catalog": "npm run build && node scripts/mesh-catalog.mjs"
   },
   "dependencies": {
-    "colregs-engine": "^0.1.9"
+    "colregs-engine": "^0.1.9",
+    "zod": "^4.6.7"
   },
   "peerDependencies": {
     "@react-three/drei": "^10.7.9",

@@ -1,0 +1,26 @@
+{
+  "file": "loft-restricted-ability.glb",
+  "name": "Buoy tender",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "buoy tender, bridge forward, long buoy deck aft with a heavy crane",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "bridge",
+    "cranes"
+  ],
+  "loaM": 60,
+  "beamM": 10.8,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    30,
+    100
+  ]
+}

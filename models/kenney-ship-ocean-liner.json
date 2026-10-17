@@ -1,0 +1,21 @@
+{
+  "file": "kenney-ship-ocean-liner.glb",
+  "name": "Ocean liner",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "ship-ocean-liner.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "displacement liner hull, long tiered superstructure, raked funnels",
+  "propulsion": ["power"],
+  "shows": ["funnel"],
+  "loaM": 240,
+  "beamM": 30,
+  "draftM": 9,
+  "nominal": true,
+  "fitLengthM": [168, 360],
+  "aisType": 60
+}

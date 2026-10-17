@@ -1,0 +1,22 @@
+{
+  "file": "kenney-ship-large.glb",
+  "name": "Brig",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "ship-large.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "carvel-planked displacement hull, raised stern",
+  "rig": "two-masted square rig",
+  "propulsion": ["sail"],
+  "shows": ["sails", "masts"],
+  "loaM": 35,
+  "beamM": 9,
+  "draftM": 4,
+  "nominal": true,
+  "fitLengthM": [25, 40],
+  "aisType": 36
+}

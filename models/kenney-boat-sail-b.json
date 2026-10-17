@@ -1,0 +1,22 @@
+{
+  "file": "kenney-boat-sail-b.glb",
+  "name": "Small bermudan sloop",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "boat-sail-b.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "fin-keel day-sailer hull, open cockpit",
+  "rig": "bermudan sloop",
+  "propulsion": ["sail"],
+  "shows": ["sails", "masts"],
+  "loaM": 6,
+  "beamM": 2.2,
+  "draftM": 1,
+  "nominal": true,
+  "fitLengthM": [4.2, 9],
+  "aisType": 36
+}
