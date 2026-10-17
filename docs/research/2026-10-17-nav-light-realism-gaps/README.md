@@ -2,7 +2,7 @@
 
 Review note, 2026-10-17, Fable session. Read against: the [2026-10-11 write-up](https://github.com/mark-brannan/claude_prompts_scratch/blob/main/state/global/research/2026-10-11-nav-light-reflections-spec.md), nav-wright #47 #93 #117 #118, PRs #100 #110 #116, `src/placement.ts` (`bearingInArc`, inclusive boundaries), `src/svg.tsx` (`glowProfile`, `Glow`), `src/BenchyModel.tsx` (`SceneLight`), `src/lantern.ts`, colregs `data/geometry.json` (`sectors`, `intensity`, `colors`). Mockups: [index.html](index.html) (live, the yaw dot moves), stills `1-aft-limit.png` to `6-shadow-sectors.png` beside it.
 
-Annex I text cited below (§5, §9(a)(ii), §9(b), §10) is from memory of the 1972 Convention as amended; colregs `geometry.json` carries only §9(a)(i), §7 and §8. Verify against the corpus before any of it becomes a requirement.
+Annex I text cited below (§5, §8, §9(a)(ii), §9(b), §10) was checked on 2026-10-17 against its US codification, 33 CFR Part 84 (§§ 84.05, 84.14, 84.15, 84.16); every degree and percentage matches. colregs `geometry.json` carries only §9(a)(i), §7 and §8, so none of it is machine-readable yet (colregs#228).
 
 ## A. In the write-up, glossed or dropped on the way to #118
 
