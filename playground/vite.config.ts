@@ -13,7 +13,11 @@ export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
-      input: { index: page('index.html'), gallery: page('gallery.html') },
+      input: {
+        index: page('index.html'),
+        gallery: page('gallery.html'),
+        scenes: page('scenes.html'),
+      },
     },
   },
 });

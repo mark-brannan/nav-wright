@@ -33,18 +33,87 @@ body {
   color: #ff8a80;
   font-size: 12px;
 }
-.primary {
-  max-width: 1000px;
-  margin: 0 auto 16px;
-}
-.primary.compare {
-  max-width: none;
+.stage {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: stretch;
+}
+/* The side column adds nothing to the row's height: the main view sets it,
+   and Benchy and the arc view split it between them. */
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  contain: size;
+  min-width: 0;
+}
+.side figure {
+  margin: 0;
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.stage figcaption {
+  color: #9fc7bd;
+  margin-bottom: 4px;
+}
+.side .model-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+.side .scene-3d-stack {
+  height: 100%;
+  aspect-ratio: auto;
+  flex: 1;
+}
+.arc-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.arc-body .plan-svg {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  aspect-ratio: 1;
+  flex: none;
+}
+.arc-readout {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.arc-readout strong {
+  font-size: 28px;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 800px) {
+  .stage {
+    grid-template-columns: 1fr;
+  }
+  .side {
+    contain: none;
+  }
+  .side figure {
+    flex: none;
+    height: 240px;
+  }
+}
+.tabs {
+  display: flex;
   gap: 12px;
 }
-.primary figure {
-  margin: 0;
+.tabs a[aria-current='page'] {
+  color: #d8e1ee;
+  font-weight: 600;
+  text-decoration: none;
 }
 .controls {
   display: grid;
@@ -143,4 +212,70 @@ legend {
   .gallery-views {
     grid-template-columns: 1fr;
   }
+}
+.radio {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+/* The primary pane: the 3D model by default, the silhouette and 2D views a
+   tab away. */
+.primary {
+  margin-bottom: 16px;
+}
+.primary figure {
+  margin: 0;
+  min-width: 0;
+}
+.primary figcaption {
+  color: #9fc7bd;
+  margin-bottom: 4px;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.tabs button {
+  background: #0f1a2b;
+  color: inherit;
+  border: 1px solid #33465f;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+.tabs button[aria-pressed='true'] {
+  background: #1d3a4f;
+  border-color: #9fc7bd;
+  color: #e9f3f0;
+}
+.tabs-sub button {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+.silhouettes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px;
+}
+.views-heading {
+  font-size: 15px;
+  color: #9fc7bd;
+  margin: 24px 0 0;
+}
+@media (max-width: 480px) {
+  .silhouettes {
+    grid-template-columns: 1fr;
+  }
+}
+
+.compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px;
 }

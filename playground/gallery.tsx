@@ -212,6 +212,13 @@ function Gallery() {
     <div className="pg gallery">
       <header>
         <h1>nav-wright gallery</h1>
+        <nav className="tabs">
+          <a href="./index.html">Playground</a>
+          <a href="./gallery.html" aria-current="page">
+            Gallery
+          </a>
+          <a href="./scenes.html">Scenes</a>
+        </nav>
         <span className="muted">
           {hullKeys.length} hulls × {hullStyleIds.length} styles, plus the base drawing. Profile,
           plan, and the bearing view from θ (drag the plan or the bearing view).

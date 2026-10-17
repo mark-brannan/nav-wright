@@ -17,7 +17,7 @@ export interface BenchyLabels extends SceneLabels {
 export const defaultBenchyLabels: BenchyLabels = {
   ...defaultSceneLabels,
   benchyAlt: 'Benchy view: the vessel as a 3D model with her lights, free to orbit',
-  benchyTiltLabel: 'Tilt',
+  benchyTiltLabel: 'Elevation',
   benchyTiltValue: (tilt) =>
     tilt < 0 ? `${-tilt} degrees below the waterline` : `${tilt} degrees above the waterline`,
 };

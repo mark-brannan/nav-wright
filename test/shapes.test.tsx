@@ -363,3 +363,16 @@ describe('day views', () => {
     }
   });
 });
+
+describe('profile side', () => {
+  const hull = selectHull({ 'fact:propulsion': 'propulsion:power' } as FactRecord);
+  const svg = (side: 'starboard' | 'port') =>
+    renderToStaticMarkup(
+      <ProfileView hull={hull} placed={[]} facts={{} as FactRecord} side={side} />,
+    );
+
+  it('mirrors the starboard drawing for the port side', () => {
+    expect(svg('starboard')).not.toContain('scale(-1 1)');
+    expect(svg('port')).toContain('scale(-1 1)');
+  });
+});
