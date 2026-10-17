@@ -1,0 +1,607 @@
+{
+  "name": "Thomas W. Lawson",
+  "sources": {
+    "page": "https://archive.org/details/sim_nautical-research-journal_1953-04_5_4",
+    "drawing": "Nautical Research Journal, April 1953 (vol. 5 no. 4): H. S. Scott, 'Schooner Thomas W. Lawson, Rigging & Details from Original Builders Plans', sheet two of two (1-17-1953), a fold-out on scan leaves 7 and 8 of the item above, stitched",
+    "drawingSize": [6377, 4228],
+    "planPage": "https://archive.org/details/marine-engineering_1902-11",
+    "planDrawing": "Marine Engineering, November 1902, pp. 562-563, 'Deck plan of the seven-masted schooner Thomas W. Lawson', across scan leaves 17 and 18 of the item above",
+    "planDrawingSize": [2645, 3818],
+    "sectionsPage": "https://maine-maritime-museum-store.myshopify.com/products/mertie-b-crowley-r32",
+    "sectionsDrawing": "https://cdn.shopify.com/s/files/1/0020/7962/1185/products/Parker_Lines_Mertie_B._Crowley_R32_resize.jpg",
+    "sectionsDrawingSize": [2048, 1024],
+    "midshipPage": "https://archive.org/details/marine-engineering_1901-10",
+    "midshipDrawing": "Marine Engineering, October 1901, p. 426, 'Midship section of seven-masted steel schooner' (scan leaf 21 of the item above)",
+    "midshipDrawingSize": [2556, 3818],
+    "sailPlanCheck": "Marine Engineering, October 1901, p. 427, 'Sail plan of seven-masted steel schooner' (scan leaf 22 of the item above): the 1901 design, a cross-check only",
+    "photoPage": "Thomas Crane Public Library, Quincy, via Digital Commonwealth, item tm70nj681: near-broadside, port side, bare masts; a check only",
+    "retrieved": "2026-10-17"
+  },
+  "specs": {
+    "loaFt": 403.33,
+    "loaSource": "403 ft 4 in hull length overall as built, Marine Engineering Nov 1902 p. 564; the 1901 design was 395 ft",
+    "lwlFt": 368,
+    "beamFt": 50,
+    "draftFt": 26.5,
+    "draftSource": "26 ft 6 in loaded, Marine Engineering 1902; the 1901 design gave 25 ft 6 in",
+    "depthFt": 35.25,
+    "depthSource": "35 ft 3 in official; the 1901 midship section dimensions 36 ft 0.5 in, keel plate to top of upper-deck beam",
+    "lengthOnDeckFt": 394.3,
+    "lbpFt": 369.25,
+    "rig": "seven-masted gaff schooner",
+    "hull": "steel full-bodied cargo",
+    "designer": "B. B. Crowninshield",
+    "builder": "Fore River Ship and Engine Co., Quincy, Mass., hull 110",
+    "launched": "1902",
+    "grossTons": 5218,
+    "sailAreaSqFt": 43000,
+    "masts": ["fore", "main", "mizzen", "No. 4", "No. 5", "No. 6", "spanker"],
+    "lowerMastFt": 135,
+    "lowerMastDiameterIn": 32,
+    "topmastFt": [58, 59.5, 66],
+    "topmastSource": "58 ft (Marine Engineering 1902); 59 ft 6 in Nos 2-7 and 66 ft No. 1 (Scott's spar table)",
+    "bowspritFt": 85,
+    "jibBoomFt": 38,
+    "boomFt": [45, 75],
+    "gaffFt": [43.5, 45.5],
+    "sparredLengthFt": 475,
+    "sparredLengthSource": "475 ft tip to tip, Wikipedia 'Thomas W. Lawson (ship)'"
+  },
+  "notes": [
+    "Licence: Scott's 1953 sheet (drawing) is a published reconstruction from the Fore River builder's plans, used as a tracing reference only and not committed; the Mertie B. Crowley lines (sectionsDrawing) are a copyrighted plan from the Maine Maritime Museum, likewise not committed. Marine Engineering 1901 and 1902 are public domain; neither they nor the photo are committed.",
+    "Profile points are pixels in Scott's sheet after stitching its two scan leaves: leaf 8 is laid onto leaf 7 by matching frame station 10 (leaf 8 x 101.5 = leaf 7 x 3227) and the load waterline (leaf 8 y 2855 = leaf 7 y 2822), with a 0.43 degree rotation (leaf 8's waterline and keel run 6 px lower over 800 px); patch correlation along the 600 px overlap agrees to 2-4 px. Leaf 7 pixels are unchanged. Bow is to the right in every view.",
+    "Calibration: the hull outline runs from the taffrail at x 673 to the stem head at x 4692, 4019 px = 403.33 ft at 9.96 px/ft. Three of the sheet's own measures agree with that: frame stations every 10 frames are 215.6 px apart (21.6 ft, i.e. 26 in frames); after perpendicular (rudder post, x 818) to the stem at the load waterline (x 4482) is 3664 px = 367.9 ft against 369.25 ft between perpendiculars; and topmast heel to truck is 593 px = 59.5 ft, Scott's own topmast length. The drawn scale bar (1/16 in = 1 ft, 0 at x 914.5, 130 ft at x 2176.5) reads 9.71 px/ft, 2.6% smaller: on the bar the hull spans 413.9 ft. The bar is taken to be redrawn or reproduced off-scale; the trace uses 403.33 ft.",
+    "Traced: load waterline y 2821 (Scott's L.W.L.), keel bottom y 3082 (draft 26.2 ft, spec 26.5 loaded), rail-height sheer from the counter to the knee, the elliptical counter and the rudder abaft the stern post, and the stem by its inner edge. The poop and forecastle rails are not drawn on this sheet ('Poop & Fo'c'sle rail not shown, see sheet one'); the houses use the rail lines Scott does draw. The boot-top is taken flat 1 ft above the waterline.",
+    "Rig traced: seven lower masts from deck to cap (y 1695), topmasts from heel (y 1830) to truck (y 1237.5), each as a straight line through the truck and the mast's centre at y 2430 (rake about 3 degrees). Lower mast above deck 103 ft, so the published 135 ft puts the heel 3.6 ft above the keel, on the 4 ft double bottom. Mast spacing at deck 459-488 px (46-49 ft). Gaffs and booms jaw-to-peak and jaw-to-end off the drawing: Nos 1-6 booms 44-46 ft (spec 45), spanker boom 72 ft (75), gaffs 44-47 ft (43.5-45.5). Stays: spring stays cap to cap, topmast stays truck to the next cap forward, and five head stays to the bowsprit and jib-boom.",
+    "Bowsprit: drawn from the bitts at the stem head (x 4440) to the cap (x 4850), 44 ft outboard of 85 ft; the inboard 41 ft runs under the forecastle deck and is not drawn. The jib-boom is taken from the cap to its end, 40 ft against 38 ft. The fore topmast is drawn like the others although Scott's table gives it 66 ft against 59.5 ft; the sheet draws all seven trucks at one height.",
+    "Plan: Marine Engineering Nov 1902 deck plan, outer shell line, centreline y 3211 on leaf 17 and 3210 on leaf 18 (the two halves of the fold share it). Parallel middle body 277 plan px = 25 ft half-breadth, the scale for breadths (0.899 profile px per plan px). Lengthwise the plan is fitted to the profile by the mast positions it marks on the centreline (leaf 18 x 325, 845, 1355, 1888 to profile 2660, 3140, 3615, 4095, its stem point x 2440 to the stem head) and on leaf 17 by its taffrail (x 338 to 673) at 0.918 profile px per plan px; the plan's length scale runs 2% long against its breadth scale, read as the engraving's, not corrected. Nothing forward of the stem head is inferred.",
+    "Houses (profile x): poop 715-1348 (Scott's portholed break; the plan's poop ends at 1373), after engine house 1625-1772, midships house 2071-2296, pump room 2600-2637, topgallant forecastle 3945-4650 (forward engine house, windlass and crew under it). House heights of 8 ft over the deck are inferred; lengths are Scott's, checked against the plan.",
+    "Sections: inferred. No lines plan of the Lawson is known online. Midships is her own section (Marine Engineering Oct 1901 p. 426): 50 ft beam, plumb sides, 36 ft 0.5 in keel plate to upper-deck beam, a flat floor rising about 1.3 ft from keel to bilge, and a hard bilge turning from 10.5 ft above the keel at the side to the floor 8 ft inboard; it is used at t 0.22 and 0.80, the ends of a long parallel body. The run (t 0.056-0.183) and entrance (t 0.856-0.913) use five aft and four forward stations of the six-masted Mertie B. Crowley read off her body plan (the same readings the Wyoming trace uses, already taken plumb above their widest point aft). Crowley's t, run 0.075-0.296 and entrance 0.826-0.921, is compressed into the Lawson's shorter ends so that the parallel body runs as long as her deck plan's (full 50 ft from about 70 ft to 334 ft from the stern). The Crowley's wooden ends are kept: with the Lawson's own deck plan and profile stretched over them the loft waterline closes inside the deck at both ends as on her deck plan, so no station was made fuller.",
+    "Checks: 1901 design sail plan (Marine Engineering Oct 1901 p. 427) has the same seven equal masts, equal trucks and a 395 ft hull; the near-broadside photo (bow left, bare masts) shows the masts evenly spaced, about 99 px apart, with the foremast 1.24 spacings abaft the stem head against 1.23 on Scott's sheet, and the hull about 8.7 spacings long against 8.5. Lofted LWL 373 ft (official 368) includes the rudder blade abaft the stern post.",
+    "houseBreadth: the poop and the topgallant forecastle run the full beam (deck plan, Marine Engineering Nov 1902); the three deckhouses between them are drawn at the script's default 62% of the beam, not measured."
+  ],
+  "profile": {
+    "waterlineY": 2821,
+    "hull": [
+      [673, 2632],
+      [740, 2637],
+      [830, 2642],
+      [920, 2648],
+      [1040, 2653],
+      [1250, 2662],
+      [1400, 2670],
+      [1690, 2676],
+      [1890, 2680],
+      [2090, 2682],
+      [2290, 2682],
+      [2490, 2680],
+      [2740, 2674],
+      [2990, 2660],
+      [3290, 2652],
+      [3490, 2640],
+      [3740, 2624],
+      [3890, 2611],
+      [4100, 2590],
+      [4300, 2568],
+      [4500, 2553],
+      [4692, 2540],
+      [4680, 2560],
+      [4650, 2590],
+      [4610, 2630],
+      [4570, 2680],
+      [4540, 2720],
+      [4510, 2760],
+      [4482, 2800],
+      [4470, 2821],
+      [4461, 2840],
+      [4443, 2880],
+      [4422, 2920],
+      [4398, 2960],
+      [4369, 3000],
+      [4349, 3020],
+      [4323, 3040],
+      [4289, 3060],
+      [4250, 3074],
+      [4200, 3080],
+      [4100, 3082],
+      [3000, 3082],
+      [2000, 3082],
+      [818, 3082],
+      [800, 3080],
+      [766, 3060],
+      [752, 3040],
+      [745, 3020],
+      [741, 3000],
+      [739, 2980],
+      [740, 2960],
+      [743, 2940],
+      [747, 2920],
+      [753, 2900],
+      [759, 2880],
+      [768, 2860],
+      [776, 2840],
+      [785, 2821],
+      [795, 2800],
+      [805, 2775],
+      [805, 2760],
+      [784, 2740],
+      [760, 2720],
+      [737, 2700],
+      [712, 2680],
+      [700, 2662],
+      [686, 2645]
+    ],
+    "boottopTopY": [
+      [680, 2811],
+      [4700, 2811]
+    ],
+    "houses": [
+      [
+        [715, 2637],
+        [715, 2598],
+        [1348, 2600],
+        [1348, 2667.2]
+      ],
+      [
+        [1625, 2674.7],
+        [1625, 2638.8],
+        [1772, 2641.6],
+        [1772, 2677.6]
+      ],
+      [
+        [2071, 2681.8],
+        [2071, 2645.8],
+        [2296, 2645.9],
+        [2296, 2681.9]
+      ],
+      [
+        [2600, 2677.4],
+        [2600, 2640.2],
+        [2637, 2638.9],
+        [2637, 2676.5]
+      ],
+      [
+        [3945, 2605.5],
+        [3945, 2570],
+        [4650, 2505],
+        [4650, 2553]
+      ]
+    ],
+    "houseBreadth": [1, 0.62, 0.62, 0.62, 1],
+    "rig": {
+      "foreMast": [
+        [4103.8, 2634],
+        [4077.0, 1695]
+      ],
+      "foreTopmast": [
+        [4080.9, 1830],
+        [4064.0, 1237.5]
+      ],
+      "mainMast": [
+        [3616.9, 2673.1],
+        [3593.1, 1695]
+      ],
+      "mainTopmast": [
+        [3596.4, 1830],
+        [3582.0, 1237.5]
+      ],
+      "mizzenMast": [
+        [3144.7, 2702.0],
+        [3112.6, 1695]
+      ],
+      "mizzenTopmast": [
+        [3116.9, 1830],
+        [3098.0, 1237.5]
+      ],
+      "mast": [
+        [2671.1, 2717.7],
+        [2631.6, 1695]
+      ],
+      "topmast": [
+        [2636.9, 1830],
+        [2614.0, 1237.5]
+      ],
+      "fifthMast": [
+        [2211.9, 2726.0],
+        [2173.9, 1695]
+      ],
+      "fifthTopmast": [
+        [2178.9, 1830],
+        [2157.0, 1237.5]
+      ],
+      "sixthMast": [
+        [1720.1, 2720.6],
+        [1695.1, 1695]
+      ],
+      "sixthTopmast": [
+        [1698.4, 1830],
+        [1684.0, 1237.5]
+      ],
+      "spankerMast": [
+        [1260.9, 2709.4],
+        [1217.6, 1695]
+      ],
+      "spankerTopmast": [
+        [1223.3, 1830],
+        [1198.0, 1237.5]
+      ],
+      "foreGaff": [
+        [4084.6, 1960],
+        [3668, 1780]
+      ],
+      "foreBoom": [
+        [4101.0, 2535],
+        [3660, 2536]
+      ],
+      "mainGaff": [
+        [3599.6, 1960],
+        [3198, 1772]
+      ],
+      "mainBoom": [
+        [3616.1, 2640],
+        [3190, 2596]
+      ],
+      "mizzenGaff": [
+        [3121.0, 1960],
+        [2715, 1765]
+      ],
+      "mizzenBoom": [
+        [3143.5, 2665],
+        [2705, 2622]
+      ],
+      "gaff": [
+        [2641.9, 1960],
+        [2228, 1765]
+      ],
+      "boom": [
+        [2669.2, 2668],
+        [2215, 2628]
+      ],
+      "fifthGaff": [
+        [2183.5, 1955],
+        [1825, 1772]
+      ],
+      "fifthBoom": [
+        [2209.5, 2660],
+        [1800, 2600]
+      ],
+      "sixthGaff": [
+        [1701.3, 1950],
+        [1310, 1775]
+      ],
+      "sixthBoom": [
+        [1717.9, 2630],
+        [1290, 2593]
+      ],
+      "spankerGaff": [
+        [1227.8, 1935],
+        [855, 1660]
+      ],
+      "spankerBoom": [
+        [1255.8, 2590],
+        [530, 2530]
+      ],
+      "bowsprit": [
+        [4440, 2588],
+        [4850, 2428]
+      ],
+      "jibboom": [
+        [4835, 2433],
+        [5229, 2307]
+      ],
+      "dolphinStriker": [
+        [4850, 2430],
+        [4917, 2571]
+      ],
+      "bobstay": [
+        [4850, 2430],
+        [4482, 2800]
+      ],
+      "springStay12": [
+        [3593.1, 1695],
+        [4077.0, 1695]
+      ],
+      "topmastStay2": [
+        [3582.0, 1237.5],
+        [4077.3, 1705]
+      ],
+      "springStay23": [
+        [3112.6, 1695],
+        [3593.1, 1695]
+      ],
+      "topmastStay3": [
+        [3098.0, 1237.5],
+        [3593.4, 1705]
+      ],
+      "springStay34": [
+        [2631.6, 1695],
+        [3112.6, 1695]
+      ],
+      "topmastStay4": [
+        [2614.0, 1237.5],
+        [3112.9, 1705]
+      ],
+      "springStay45": [
+        [2173.9, 1695],
+        [2631.6, 1695]
+      ],
+      "topmastStay5": [
+        [2157.0, 1237.5],
+        [2632.0, 1705]
+      ],
+      "springStay56": [
+        [1695.1, 1695],
+        [2173.9, 1695]
+      ],
+      "topmastStay6": [
+        [1684.0, 1237.5],
+        [2174.2, 1705]
+      ],
+      "springStay67": [
+        [1217.6, 1695],
+        [1695.1, 1695]
+      ],
+      "topmastStay7": [
+        [1198.0, 1237.5],
+        [1695.4, 1705]
+      ],
+      "foreRoyalStay": [
+        [4064.0, 1237.5],
+        [5229, 2307]
+      ],
+      "foreTopmastStay": [
+        [4065.8, 1300],
+        [5040, 2368]
+      ],
+      "flyingJibStay": [
+        [4077.3, 1705],
+        [5180, 2322]
+      ],
+      "jibStay": [
+        [4077.6, 1715],
+        [4850, 2428]
+      ],
+      "foreStay": [
+        [4077.9, 1725],
+        [4620, 2546]
+      ]
+    }
+  },
+  "plan": {
+    "centreY": 3211,
+    "halfBreadth": [
+      [673, 0.0],
+      [679.4, 41.4],
+      [693.2, 73.8],
+      [711.6, 100.7],
+      [748.3, 138.5],
+      [794.2, 170.0],
+      [840.1, 194.3],
+      [886.0, 212.3],
+      [932.0, 226.2],
+      [977.9, 232.0],
+      [1023.8, 236.5],
+      [1069.7, 239.7],
+      [1115.6, 241.5],
+      [1161.5, 243.7],
+      [1207.4, 245.1],
+      [1276.3, 247.8],
+      [1372.7, 249.1],
+      [4000.4, 249.1],
+      [4060.8, 244.6],
+      [4108.0, 241.0],
+      [4162.1, 235.6],
+      [4216.1, 230.2],
+      [4270.2, 222.2],
+      [4324.3, 213.2],
+      [4378.4, 198.8],
+      [4432.4, 181.7],
+      [4486.5, 160.1],
+      [4540.6, 133.1],
+      [4594.7, 100.7],
+      [4648.7, 63.0],
+      [4675.8, 37.8],
+      [4692, 0.0]
+    ],
+    "inferredFromX": 4692
+  },
+  "sections": {
+    "source": "Midships: Thomas W. Lawson midship section, Marine Engineering Oct 1901 p. 426 (midshipDrawing), in feet from its dimensions, half-breadth from the centreline and height up from the keel plate. Run and entrance: body plan of the six-masted schooner Mertie B. Crowley (sectionsDrawing), in her body-plan pixels, half-breadth from her centreline and height up from her base line (y 950). Each station is normalised on its own, so the units need not agree. All inferred: see notes.",
+    "stations": [
+      {
+        "t": 0.056,
+        "from": "Mertie B. Crowley station 25",
+        "pts": [
+          [101, 173],
+          [101, 150],
+          [101, 130],
+          [88, 111],
+          [64, 100],
+          [42, 92],
+          [28, 84],
+          [21, 73],
+          [16, 59],
+          [13, 45],
+          [8, 24],
+          [4, 8],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.074,
+        "from": "Mertie B. Crowley station 24",
+        "pts": [
+          [106, 170],
+          [106, 130],
+          [106, 110],
+          [99, 98],
+          [88, 89],
+          [65, 77],
+          [47, 65],
+          [33, 52],
+          [22, 38],
+          [11, 21],
+          [4, 7],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.093,
+        "from": "Mertie B. Crowley station 23",
+        "pts": [
+          [114, 169],
+          [114, 130],
+          [114, 110],
+          [114, 105],
+          [111, 88],
+          [88, 67],
+          [65, 53],
+          [47, 38],
+          [31, 24],
+          [17, 12],
+          [5, 2],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.128,
+        "from": "Mertie B. Crowley station 21",
+        "pts": [
+          [128, 163],
+          [128, 130],
+          [128, 110],
+          [128, 67],
+          [116, 45],
+          [101, 32],
+          [78, 18],
+          [53, 8],
+          [24, 2],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.183,
+        "from": "Mertie B. Crowley station 18",
+        "pts": [
+          [133, 154],
+          [133, 130],
+          [133, 110],
+          [133, 56],
+          [125, 30],
+          [114, 19],
+          [93, 8],
+          [62, 2],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.22,
+        "from": "Thomas W. Lawson midship section, Marine Engineering Oct 1901",
+        "pts": [
+          [25.0, 40.2],
+          [25.0, 30.0],
+          [25.0, 20.0],
+          [25.0, 10.5],
+          [24.57, 9.0],
+          [23.9, 7.6],
+          [23.2, 6.6],
+          [22.3, 5.7],
+          [21.2, 4.7],
+          [20.0, 3.8],
+          [18.8, 3.0],
+          [17.1, 2.2],
+          [12.0, 1.35],
+          [6.0, 0.75],
+          [1.0, 0.25],
+          [0.3, 0.0]
+        ]
+      },
+      {
+        "t": 0.8,
+        "from": "Thomas W. Lawson midship section, Marine Engineering Oct 1901",
+        "pts": [
+          [25.0, 40.2],
+          [25.0, 30.0],
+          [25.0, 20.0],
+          [25.0, 10.5],
+          [24.57, 9.0],
+          [23.9, 7.6],
+          [23.2, 6.6],
+          [22.3, 5.7],
+          [21.2, 4.7],
+          [20.0, 3.8],
+          [18.8, 3.0],
+          [17.1, 2.2],
+          [12.0, 1.35],
+          [6.0, 0.75],
+          [1.0, 0.25],
+          [0.3, 0.0]
+        ]
+      },
+      {
+        "t": 0.856,
+        "from": "Mertie B. Crowley station 5",
+        "pts": [
+          [129, 176],
+          [129, 134],
+          [121, 100],
+          [113, 70],
+          [107, 45],
+          [97, 29],
+          [84, 16],
+          [59, 7],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.875,
+        "from": "Mertie B. Crowley station 4",
+        "pts": [
+          [126, 180],
+          [123, 150],
+          [118, 125],
+          [104, 100],
+          [94, 79],
+          [84, 55],
+          [71, 34],
+          [55, 16],
+          [31, 5],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.894,
+        "from": "Mertie B. Crowley station 3",
+        "pts": [
+          [117, 185],
+          [113, 173],
+          [104, 150],
+          [92, 134],
+          [81, 112],
+          [70, 78],
+          [62, 57],
+          [47, 33],
+          [33, 16],
+          [15, 4],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.913,
+        "from": "Mertie B. Crowley station 2",
+        "pts": [
+          [101, 192],
+          [91, 175],
+          [75, 155],
+          [62, 134],
+          [47, 110],
+          [34, 79],
+          [25, 54],
+          [15, 34],
+          [5, 12],
+          [2, 0]
+        ]
+      }
+    ]
+  }
+}

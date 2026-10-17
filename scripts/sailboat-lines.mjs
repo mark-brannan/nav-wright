@@ -21,16 +21,19 @@ const DIR = join(
   'sailboat-lines',
 );
 
-/** Canoe-body depth below the waterline at its deepest, as a fraction of draft. */
-const CANOE_DEPTH = 0.4;
-/** Keel half-thickness at the garboard and at the bottom, ft. */
-const KEEL_TOP = 0.55;
-const KEEL_BOTTOM = 0.3;
-/** Bilge roundness: 2 is elliptical, higher is boxier. */
-const BILGE = 2.4;
+/**
+ * Loft defaults, for a yacht; a trace's `loft` overrides any of them. canoeDepth
+ * is the canoe body's depth below the waterline at its deepest, as a fraction
+ * of draft; keelTop and keelBottom the keel's half-thickness in ft at the
+ * garboard and at the bottom; bilge the section roundness (2 is elliptical,
+ * higher is boxier); fullness the exponent on the canoe body's depth along the
+ * waterline (1 is a sine, lower holds full depth further toward the ends).
+ */
+const LOFT = { canoeDepth: 0.4, keelTop: 0.55, keelBottom: 0.3, bilge: 2.4, fullness: 0.7 };
 const STATIONS = 48;
-/** Rig entries drawn as spars; the rest are wire. */
-const SPARS = new Set(['mast', 'boom', 'bowsprit', 'boomkin']);
+/** Rig entries drawn as spars; the rest are wire. Masts are the keys ending in "mast". */
+const SPAR = /(mast|boom|bowsprit|boomkin|gaff|yard)$/i;
+const MAST = /mast$/i;
 const SECTION = 28;
 
 const f = (n) => (Math.round(n * 100) / 100).toString();
@@ -82,14 +85,44 @@ function model(trace) {
   const wet = xs.filter((x) => bottom(x) < 0);
   const [wlAft, wlFwd] = [wet[0], wet[wet.length - 1]];
   const draft = -Math.min(...xs.map(bottom));
+  const L = { ...LOFT, ...trace.loft };
   const canoe = (x) => {
     const t = (x - wlAft) / (wlFwd - wlAft);
-    const dip = t <= 0 || t >= 1 ? 0 : CANOE_DEPTH * draft * Math.sin(Math.PI * t) ** 0.7;
+    const dip = t <= 0 || t >= 1 ? 0 : L.canoeDepth * draft * Math.sin(Math.PI * t) ** L.fullness;
     return Math.max(bottom(x), -dip);
+  };
+
+  // Traced stations, when the trace has a body plan to work from: each is
+  // normalised to its own sheer half-breadth and its own sheer-to-keel depth,
+  // then stretched over this hull's profile and plan at the same fraction of
+  // its length. The keel and canoe-body defaults are then not used.
+  const stations = (trace.sections?.stations ?? [])
+    .map(({ t, pts }) => {
+      const zs = pts.map((p) => p[1]);
+      const [lo, hi] = [Math.min(...zs), Math.max(...zs)];
+      const sheer = pts.find((p) => p[1] === hi)[0];
+      const shape = pts
+        .map(([h, z]) => [(z - lo) / (hi - lo), h / sheer])
+        .sort((a, b) => a[0] - b[0]);
+      return { x: t * loa, shape };
+    })
+    .sort((a, b) => a.x - b.x);
+  const traced = (x, z) => {
+    const zt = top(x);
+    const zb = bottom(x);
+    if (z > zt || z < zb) return 0;
+    const zeta = (z - zb) / Math.max(zt - zb, 1e-6);
+    const n = stations.length - 1;
+    const after = stations.findIndex((s) => s.x > x);
+    const [i, j] = after < 0 ? [n, n] : after === 0 ? [0, 0] : [after - 1, after];
+    const k = i === j ? 0 : (x - stations[i].x) / (stations[j].x - stations[i].x);
+    const eta = (1 - k) * interp(stations[i].shape, zeta) + k * interp(stations[j].shape, zeta);
+    return beam(x) * eta;
   };
 
   /** Half-breadth of the section at station x, height z. */
   const y = (x, z) => {
+    if (stations.length) return traced(x, z);
     const zt = top(x);
     const zc = canoe(x);
     const zb = bottom(x);
@@ -97,10 +130,10 @@ function model(trace) {
     const keel =
       zc - zb < 0.05
         ? 0
-        : KEEL_BOTTOM + (KEEL_TOP - KEEL_BOTTOM) * Math.min(1, (z - zb) / (zc - zb));
+        : L.keelBottom + (L.keelTop - L.keelBottom) * Math.min(1, (z - zb) / (zc - zb));
     if (z < zc) return Math.min(keel, beam(x));
     const u = Math.min(1, (zt - z) / Math.max(zt - zc, 1e-6));
-    return Math.max(keel, beam(x) * (1 - u ** BILGE) ** (1 / BILGE));
+    return Math.max(keel, beam(x) * (1 - u ** L.bilge) ** (1 / L.bilge));
   };
 
   /** Section outline from sheer to keel bottom, starboard half. */
@@ -108,14 +141,26 @@ function model(trace) {
     const zt = top(x);
     const zb = bottom(x);
     return Array.from({ length: SECTION + 1 }, (_, j) => {
-      const z = zt - ((zt - zb) * j) / SECTION;
+      // Traced stations crowd the samples toward the keel, where a ship's flat
+      // floor turns into its bilge within a few percent of the depth.
+      const z = stations.length
+        ? zt - (zt - zb) * (1 - (1 - j / SECTION) ** 1.6)
+        : zt - ((zt - zb) * j) / SECTION;
       return [y(x, z), z];
     });
   };
 
   const rig = Object.fromEntries(Object.entries(profile.rig).map(([k, v]) => [k, v.map(P)]));
   const boottop = profile.boottopTopY.map(P);
-  const coachroof = profile.coachroof.map(P);
+  // A yacht's coachroof, or a ship's several deckhouses: each four points,
+  // aft foot, aft top, forward top, forward foot.
+  const houses = (profile.houses ?? [profile.coachroof]).map((h) => h.map(P));
+  // Each house's width as a fraction of the deck's: a poop or a topgallant
+  // forecastle runs the full beam, a coachroof or a deckhouse less.
+  const houseBreadth = houses.map((_, i) => profile.houseBreadth?.[i] ?? 0.62);
+  // Line weights, labels and the camera grow with the boat past 60 ft, so a
+  // ship reads at the same size as a yacht; smaller boats draw as before.
+  const u = Math.max(1, loa / 60);
   return {
     trace,
     loa,
@@ -129,7 +174,11 @@ function model(trace) {
     section,
     rig,
     boottop,
-    coachroof,
+    houses,
+    houseBreadth,
+    L,
+    traced: stations.length,
+    u,
     wlAft,
     wlFwd,
     draft,
@@ -154,8 +203,8 @@ const C = {
 const pathOf = (pts, close = true) =>
   pts.map(([a, b], i) => `${i ? 'L' : 'M'}${f(a)},${f(b)}`).join(' ') + (close ? ' Z' : '');
 
-function svg(w, h, body, title) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(w)} ${f(h)}" width="${f(w * 24)}" height="${f(h * 24)}" font-family="system-ui, sans-serif">
+function svg(w, h, body, title, u = 1) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(w)} ${f(h)}" width="${f((w * 24) / u)}" height="${f((h * 24) / u)}" font-family="system-ui, sans-serif">
 <title>${title}</title>
 <rect width="100%" height="100%" fill="${C.bg}"/>
 ${body}
@@ -164,12 +213,12 @@ ${body}
 }
 
 const label = (x, y, text, size = 1.1) =>
-  `<text x="${f(x)}" y="${f(y)}" font-size="${size}" fill="${C.ink}">${text}</text>`;
+  `<text x="${f(x)}" y="${f(y)}" font-size="${f(size)}" fill="${C.ink}">${text}</text>`;
 
 /** Side elevation, bow right; one SVG unit is one foot. */
 function profileSvg(m) {
-  const pad = 2;
-  const zMax = Math.max(...m.rig.mast.map((p) => p[1]));
+  const pad = 2 * m.u;
+  const zMax = Math.max(...Object.values(m.rig).flatMap((s) => s.map((p) => p[1])));
   const spars = Object.values(m.rig)
     .flat()
     .map((p) => p[0]);
@@ -179,7 +228,7 @@ function profileSvg(m) {
   const Y = (z) => zMax + pad - z;
   const T = (pts) => pts.map(([x, z]) => [X(x), Y(z)]);
   const w = xMax + 2 * pad;
-  const h = zMax + m.draft + 2 * pad + 1;
+  const h = zMax + m.draft + 2 * pad + m.u;
   // Topsides from the sheer down to the boot-top; bottom paint below it.
   const n = 80;
   const span = Array.from({ length: n + 1 }, (_, i) => (m.loa * i) / n).map((x) =>
@@ -189,31 +238,31 @@ function profileSvg(m) {
   const topsides = [...span.map((x) => [x, m.top(x)]), ...span.reverse().map((x) => [x, boot(x)])];
   const rig = Object.entries(m.rig)
     .map(([k, [a, b]]) => {
-      const sw = SPARS.has(k) ? 0.35 : 0.08;
+      const sw = (SPAR.test(k) ? 0.35 : 0.08) * m.u;
       return `<line x1="${f(X(a[0]))}" y1="${f(Y(a[1]))}" x2="${f(X(b[0]))}" y2="${f(Y(b[1]))}" stroke="${C.rig}" stroke-width="${sw}" stroke-linecap="round"/>`;
     })
     .join('\n');
   const body = `
 <rect x="0" y="${f(Y(0))}" width="${f(w)}" height="${f(h - Y(0))}" fill="${C.water}" opacity="0.12"/>
 ${rig}
-<path d="${pathOf(T(m.hull))}" fill="${C.bottom}" stroke="${C.ink}" stroke-width="0.12"/>
+<path d="${pathOf(T(m.hull))}" fill="${C.bottom}" stroke="${C.ink}" stroke-width="${f(0.12 * m.u)}"/>
 <path d="${pathOf(T(topsides))}" fill="${C.topsides}"/>
-<path d="${pathOf(T(m.coachroof), false)}" fill="${C.house}" stroke="${C.ink}" stroke-width="0.1"/>
-<line x1="0" y1="${f(Y(0))}" x2="${f(w)}" y2="${f(Y(0))}" stroke="${C.water}" stroke-width="0.1"/>
-${label(pad, h - 0.6, `${m.trace.name} — profile, traced. LOA ${m.loa} ft, draft ${f(m.draft)} ft traced (${m.trace.specs.draftFt} spec)`)}`;
-  return svg(w, h, body, `${m.trace.name} profile`);
+${m.houses.map((hs) => `<path d="${pathOf(T(hs), false)}" fill="${C.house}" stroke="${C.ink}" stroke-width="${f(0.1 * m.u)}"/>`).join('\n')}
+<line x1="0" y1="${f(Y(0))}" x2="${f(w)}" y2="${f(Y(0))}" stroke="${C.water}" stroke-width="${f(0.1 * m.u)}"/>
+${label(pad, h - 0.6 * m.u, `${m.trace.name} — profile, traced. LOA ${m.loa} ft, draft ${f(m.draft)} ft traced (${m.trace.specs.draftFt} spec)`, 1.1 * m.u)}`;
+  return svg(w, h, body, `${m.trace.name} profile`, m.u);
 }
 
 /** Deck plan, bow right, with the waterline from the loft dashed inside it. */
 function planSvg(m) {
-  const pad = 2;
+  const pad = 2 * m.u;
   const spars = Object.values(m.rig)
     .flat()
     .map((p) => p[0]);
   const xMin = Math.min(0, ...spars);
   const bMax = Math.max(...m.half.map((p) => p[1]));
   const w = Math.max(...spars) - xMin + 2 * pad;
-  const h = 2 * bMax + 2 * pad + 2;
+  const h = 2 * bMax + 2 * pad + 2 * m.u;
   const X = (x) => x - xMin + pad;
   const Y = (y) => bMax + pad - y;
   const n = 120;
@@ -227,44 +276,50 @@ function planSvg(m) {
     ...wlXs.map((x) => [X(x), Y(m.y(x, 0))]),
     ...[...wlXs].reverse().map((x) => [X(x), Y(-m.y(x, 0))]),
   ];
-  const [cr0, , , cr1] = m.coachroof;
-  const crXs = Array.from({ length: 21 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 20);
-  const house = [
-    ...crXs.map((x) => [X(x), Y(0.62 * m.beam(x))]),
-    ...[...crXs].reverse().map((x) => [X(x), Y(-0.62 * m.beam(x))]),
-  ];
+  const houses = m.houses.map(([cr0, , , cr1], i) => {
+    const k = m.houseBreadth[i];
+    const crXs = Array.from({ length: 21 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 20);
+    return [
+      ...crXs.map((x) => [X(x), Y(k * m.beam(x))]),
+      ...[...crXs].reverse().map((x) => [X(x), Y(-k * m.beam(x))]),
+    ];
+  });
   const centreSpars = ['bowsprit', 'boomkin']
     .filter((k) => m.rig[k])
     .map((k) => {
       const [a, b] = m.rig[k];
-      return `<line x1="${f(X(a[0]))}" y1="${f(Y(0))}" x2="${f(X(b[0]))}" y2="${f(Y(0))}" stroke="${C.rig}" stroke-width="0.4" stroke-linecap="round"/>`;
+      return `<line x1="${f(X(a[0]))}" y1="${f(Y(0))}" x2="${f(X(b[0]))}" y2="${f(Y(0))}" stroke="${C.rig}" stroke-width="${f(0.4 * m.u)}" stroke-linecap="round"/>`;
     })
     .join('\n');
-  const mastX = m.rig.mast[0][0];
+  const masts = Object.keys(m.rig)
+    .filter((k) => MAST.test(k))
+    .map((k) => m.rig[k][0][0]);
   const inferred =
     (m.trace.plan.inferredFromX -
       m.trace.profile.hull.reduce((a, p) => Math.min(a, p[0]), Infinity)) *
     m.ftPerPx;
   const body = `
-<line x1="0" y1="${f(Y(0))}" x2="${f(w)}" y2="${f(Y(0))}" stroke="${C.grid}" stroke-width="0.08" stroke-dasharray="0.6 0.3"/>
+<line x1="0" y1="${f(Y(0))}" x2="${f(w)}" y2="${f(Y(0))}" stroke="${C.grid}" stroke-width="${f(0.08 * m.u)}" stroke-dasharray="${f(0.6 * m.u)} ${f(0.3 * m.u)}"/>
 ${centreSpars}
-<path d="${pathOf(deck)}" fill="${C.deck}" stroke="${C.ink}" stroke-width="0.14"/>
-<path d="${pathOf(wlLine)}" fill="none" stroke="${C.water}" stroke-width="0.1" stroke-dasharray="0.4 0.25"/>
-<path d="${pathOf(house)}" fill="${C.house}" stroke="${C.ink}" stroke-width="0.08"/>
-<circle cx="${f(X(mastX))}" cy="${f(Y(0))}" r="0.35" fill="${C.rig}"/>
-<line x1="${f(X(inferred))}" y1="${f(Y(bMax))}" x2="${f(X(inferred))}" y2="${f(Y(-bMax))}" stroke="#c07a00" stroke-width="0.06" stroke-dasharray="0.3 0.3"/>
-${label(X(inferred) + 0.3, Y(bMax) + 0.4, 'inferred →', 0.8)}
-${label(pad, h - 0.6, `plan, traced. Beam ${f(2 * bMax)} ft traced (${m.trace.specs.beamFt} spec); dashed blue = loft waterline`)}`;
-  return svg(w, h, body, `${m.trace.name} plan`);
+<path d="${pathOf(deck)}" fill="${C.deck}" stroke="${C.ink}" stroke-width="${f(0.14 * m.u)}"/>
+<path d="${pathOf(wlLine)}" fill="none" stroke="${C.water}" stroke-width="${f(0.1 * m.u)}" stroke-dasharray="${f(0.4 * m.u)} ${f(0.25 * m.u)}"/>
+${houses.map((hs) => `<path d="${pathOf(hs)}" fill="${C.house}" stroke="${C.ink}" stroke-width="${f(0.08 * m.u)}"/>`).join('\n')}
+${masts.map((x) => `<circle cx="${f(X(x))}" cy="${f(Y(0))}" r="${f(0.35 * m.u)}" fill="${C.rig}"/>`).join('\n')}
+<line x1="${f(X(inferred))}" y1="${f(Y(bMax))}" x2="${f(X(inferred))}" y2="${f(Y(-bMax))}" stroke="#c07a00" stroke-width="${f(0.06 * m.u)}" stroke-dasharray="${f(0.3 * m.u)} ${f(0.3 * m.u)}"/>
+${label(X(inferred) + 0.3 * m.u, Y(bMax) + 0.4 * m.u, 'inferred →', 0.8 * m.u)}
+${label(pad, h - 0.6 * m.u, `plan, traced. Beam ${f(2 * bMax)} ft traced (${m.trace.specs.beamFt} spec); dashed blue = loft waterline`, 1.1 * m.u)}`;
+  return svg(w, h, body, `${m.trace.name} plan`, m.u);
 }
 
 /** Classic body plan: aft stations on the left half, forward on the right. */
 function bodyPlanSvg(m) {
-  const pad = 2;
+  // This view is only a beam wide, so it takes its weights from the beam.
+  m = { ...m, u: Math.max(1, Math.max(...m.half.map((p) => p[1])) / 10) };
+  const pad = 2 * m.u;
   const bMax = Math.max(...m.half.map((p) => p[1]));
   const zTop = Math.max(...Array.from({ length: 50 }, (_, i) => m.top((m.loa * (i + 0.5)) / 50)));
   const w = 2 * bMax + 2 * pad;
-  const h = zTop + m.draft + 2 * pad + 2;
+  const h = zTop + m.draft + 2 * pad + 2 * m.u;
   const X = (y) => bMax + pad + y;
   const Y = (z) => zTop + pad - z;
   const n = 10;
@@ -274,15 +329,15 @@ function bodyPlanSvg(m) {
     const side = x < m.loa / 2 ? -1 : 1;
     const pts = m.section(x).map(([y, z]) => [X(side * y), Y(z)]);
     lines.push(
-      `<path d="${pathOf(pts, false)}" fill="none" stroke="${side < 0 ? C.bottom : C.topsides}" stroke-width="0.09"/>`,
+      `<path d="${pathOf(pts, false)}" fill="none" stroke="${side < 0 ? C.bottom : C.topsides}" stroke-width="${f(0.09 * m.u)}"/>`,
     );
   }
   const body = `
-<line x1="${f(X(0))}" y1="0" x2="${f(X(0))}" y2="${f(h)}" stroke="${C.grid}" stroke-width="0.06"/>
-<line x1="0" y1="${f(Y(0))}" x2="${f(w)}" y2="${f(Y(0))}" stroke="${C.water}" stroke-width="0.08"/>
+<line x1="${f(X(0))}" y1="0" x2="${f(X(0))}" y2="${f(h)}" stroke="${C.grid}" stroke-width="${f(0.06 * m.u)}"/>
+<line x1="0" y1="${f(Y(0))}" x2="${f(w)}" y2="${f(Y(0))}" stroke="${C.water}" stroke-width="${f(0.08 * m.u)}"/>
 ${lines.join('\n')}
-${label(pad, h - 0.6, 'body plan, lofted: aft ← | → fwd, 10 stations', 0.9)}`;
-  return svg(w, h, body, `${m.trace.name} body plan`);
+${label(pad, h - 0.6 * m.u, 'body plan, lofted: aft ← | → fwd, 10 stations', 0.9 * m.u)}`;
+  return svg(w, h, body, `${m.trace.name} body plan`, m.u);
 }
 
 /** Flat-shaded perspective of the loft, painter-sorted. */
@@ -299,7 +354,7 @@ function loftSvg(m, { yaw = -0.62, pitch = 0.32 } = {}) {
     // Camera above the water, looking down by `pitch`: far points rise on screen.
     const zr = z * Math.cos(pitch) + yr * Math.sin(pitch);
     const depth = yr * Math.cos(pitch) - z * Math.sin(pitch);
-    const s = 90 / (90 + depth);
+    const s = (90 * m.u) / (90 * m.u + depth);
     return [xr * s, -zr * s, depth];
   };
   const light = (() => {
@@ -348,69 +403,71 @@ function loftSvg(m, { yaw = -0.62, pitch = 0.32 } = {}) {
       C.deck,
     );
   }
-  // Coachroof as a lofted box.
-  const [cr0, crTop0, crTop1, cr1] = m.coachroof;
-  const hx = Array.from({ length: 13 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 12);
-  for (let i = 0; i < 12; i++) {
-    const [xa, xb] = [hx[i], hx[i + 1]];
-    const za = m.top(xa);
-    const zb = m.top(xb);
-    const ta = interp([crTop0, crTop1], xa);
-    const tb = interp([crTop0, crTop1], xb);
-    const [wa, wb] = [0.62 * m.beam(xa), 0.62 * m.beam(xb)];
-    push(
-      [
-        [xa, wa, ta],
-        [xb, wb, tb],
-        [xb, -wb, tb],
-        [xa, -wa, ta],
-      ],
-      C.house,
-    );
-    for (const s of [1, -1])
+  // Each house as a lofted box.
+  for (const [h, [cr0, crTop0, crTop1, cr1]] of m.houses.entries()) {
+    const k = m.houseBreadth[h];
+    const hx = Array.from({ length: 13 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 12);
+    for (let i = 0; i < 12; i++) {
+      const [xa, xb] = [hx[i], hx[i + 1]];
+      const za = m.top(xa);
+      const zb = m.top(xb);
+      const ta = interp([crTop0, crTop1], xa);
+      const tb = interp([crTop0, crTop1], xb);
+      const [wa, wb] = [k * m.beam(xa), k * m.beam(xb)];
       push(
         [
-          [xa, s * wa, za],
-          [xb, s * wb, zb],
-          [xb, s * wb, tb],
-          [xa, s * wa, ta],
+          [xa, wa, ta],
+          [xb, wb, tb],
+          [xb, -wb, tb],
+          [xa, -wa, ta],
         ],
         C.house,
       );
+      for (const s of [1, -1])
+        push(
+          [
+            [xa, s * wa, za],
+            [xb, s * wb, zb],
+            [xb, s * wb, tb],
+            [xa, s * wa, ta],
+          ],
+          C.house,
+        );
+    }
   }
   faces.sort((a, b) => b.d - a.d);
   const all = faces.flatMap((q) => q.p);
   const rigLines = Object.entries(m.rig).map(([k, [a, b]]) => {
     const [p, q] = [cam([a[0], 0, a[1]]), cam([b[0], 0, b[1]])];
     all.push(p, q);
-    return { p, q, w: SPARS.has(k) ? 0.3 : 0.07 };
+    return { p, q, w: (SPAR.test(k) ? 0.3 : 0.07) * m.u };
   });
   const xs = all.map((p) => p[0]);
   const ys = all.map((p) => p[1]);
-  const pad = 2;
+  const pad = 2 * m.u;
   const [x0, y0] = [Math.min(...xs) - pad, Math.min(...ys) - pad];
   const w = Math.max(...xs) - x0 + pad;
-  const h = Math.max(...ys) - y0 + pad + 1.5;
+  const h = Math.max(...ys) - y0 + pad + 1.5 * m.u;
   const P = ([x, y]) => `${f(x - x0)},${f(y - y0)}`;
   // Waterplane: a translucent sheet drawn over the underbody.
   const sea = [
-    [-4, -10, 0],
-    [m.loa + 10, -10, 0],
-    [m.loa + 10, 10, 0],
-    [-4, 10, 0],
+    [-4 * m.u, -10 * m.u, 0],
+    [m.loa + 10 * m.u, -10 * m.u, 0],
+    [m.loa + 10 * m.u, 10 * m.u, 0],
+    [-4 * m.u, 10 * m.u, 0],
   ].map(cam);
   // From above, the sea hides all that is under it and nothing above it.
   const back = faces.filter((q) => q.wet);
   const front = faces.filter((q) => !q.wet);
   const poly = (q) =>
-    `<polygon points="${q.p.map(P).join(' ')}" fill="${q.fill}" stroke="${q.fill}" stroke-width="0.03"/>`;
+    `<polygon points="${q.p.map(P).join(' ')}" fill="${q.fill}" stroke="${q.fill}" stroke-width="${f(0.03 * m.u)}"/>`;
   const body = `
 ${back.map(poly).join('\n')}
 <polygon points="${sea.map(P).join(' ')}" fill="${C.water}" opacity="0.45"/>
 ${front.map(poly).join('\n')}
 ${rigLines.map(({ p, q, w: sw }) => `<line x1="${f(p[0] - x0)}" y1="${f(p[1] - y0)}" x2="${f(q[0] - x0)}" y2="${f(q[1] - y0)}" stroke="${C.rig}" stroke-width="${sw}" stroke-linecap="round"/>`).join('\n')}
-${label(pad, h - 0.6, `lofted from profile + plan; canoe body ${CANOE_DEPTH * 100}% of draft (assumed), ${STATIONS} stations`, 0.9)}`;
-  return svg(w, h, body, `${m.trace.name} loft`);
+${label(pad, h - 0.6 * m.u, m.traced ? `lofted from profile + plan + ${m.traced} traced sections, ${STATIONS} stations` : `lofted from profile + plan; canoe body ${f(m.L.canoeDepth * 100)}% of draft (assumed), ${STATIONS} stations`, 0.9 * m.u)}`;
+  return svg(w, h, body, `${m.trace.name} loft`, m.u);
 }
 
 const ids = process.argv.slice(2).length
@@ -432,6 +489,6 @@ for (const id of ids) {
     .map((p) => p[0]);
   const sparred = Math.max(m.loa, ...spars) - Math.min(0, ...spars);
   console.log(
-    `${id}: sparred ${f(sparred)} ft (owner ${m.trace.specs.sparredLengthFt ?? '-'}), LWL ${f(m.wlFwd - m.wlAft)} ft (spec ${m.trace.specs.lwlFt}), draft ${f(m.draft)} ft (spec ${m.trace.specs.draftFt}), ${f(1 / m.ftPerPx)} px/ft`,
+    `${id}: sparred ${f(sparred)} ft (spec ${m.trace.specs.sparredLengthFt ?? '-'}), LWL ${f(m.wlFwd - m.wlAft)} ft (spec ${m.trace.specs.lwlFt}), draft ${f(m.draft)} ft (spec ${m.trace.specs.draftFt}), ${f(1 / m.ftPerPx)} px/ft`,
   );
 }

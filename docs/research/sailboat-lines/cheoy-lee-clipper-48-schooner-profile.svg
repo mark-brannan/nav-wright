@@ -4,9 +4,9 @@
 
 <rect x="0" y="56.3" width="61.34" height="9.21" fill="#3d7ea6" opacity="0.12"/>
 <line x1="21.55" y1="52.54" x2="19.64" y2="2" stroke="#5a6470" stroke-width="0.35" stroke-linecap="round"/>
-<line x1="34.42" y1="52.07" x2="32.87" y2="14.16" stroke="#5a6470" stroke-width="0.08" stroke-linecap="round"/>
+<line x1="34.42" y1="52.07" x2="32.87" y2="14.16" stroke="#5a6470" stroke-width="0.35" stroke-linecap="round"/>
 <line x1="21.31" y1="48.01" x2="2" y2="47.42" stroke="#5a6470" stroke-width="0.35" stroke-linecap="round"/>
-<line x1="34.3" y1="47.89" x2="21.43" y2="48.01" stroke="#5a6470" stroke-width="0.08" stroke-linecap="round"/>
+<line x1="34.3" y1="47.89" x2="21.43" y2="48.01" stroke="#5a6470" stroke-width="0.35" stroke-linecap="round"/>
 <line x1="52.18" y1="50.4" x2="59.34" y2="49.56" stroke="#5a6470" stroke-width="0.35" stroke-linecap="round"/>
 <line x1="32.99" y1="14.16" x2="59.22" y2="49.56" stroke="#5a6470" stroke-width="0.08" stroke-linecap="round"/>
 <line x1="32.99" y1="17.26" x2="51.95" y2="50.4" stroke="#5a6470" stroke-width="0.08" stroke-linecap="round"/>

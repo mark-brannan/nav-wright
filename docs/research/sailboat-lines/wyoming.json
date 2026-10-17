@@ -1,0 +1,544 @@
+{
+  "name": "Wyoming",
+  "sources": {
+    "page": "https://maine-maritime-museum-store.myshopify.com/products/wyoming",
+    "drawing": "https://cdn.shopify.com/s/files/1/0020/7962/1185/products/Wyoming_profile_sail_plan_resize.jpg",
+    "drawingSize": [2048, 1024],
+    "planPage": "https://cowboystatedaily.com/2023/10/28/at-450-feet-long-with-126-foot-masts-the-wyoming-was-largest-wooden-ship-ever/",
+    "planDrawing": "https://cowboystatedaily.imgix.net/Wyoming-schooner-drawing-profile-10.28.23.jpg",
+    "planDrawingSize": [1600, 900],
+    "sectionsPage": "https://maine-maritime-museum-store.myshopify.com/products/mertie-b-crowley-r32",
+    "sectionsDrawing": "https://cdn.shopify.com/s/files/1/0020/7962/1185/products/Parker_Lines_Mertie_B._Crowley_R32_resize.jpg",
+    "sectionsDrawingSize": [2048, 1024],
+    "midshipPage": "https://archive.org/details/internationalma151910newy",
+    "midshipDrawing": "International Marine Engineering, January 1910, p. 3, 'Midship section of the Wyoming' (scan leaf 11 of the volume above)",
+    "midshipDrawingSize": [2699, 4021],
+    "photoPage": "https://www.digitalcommonwealth.org/search/commonwealth:m613n776m",
+    "retrieved": "2026-10-17"
+  },
+  "specs": {
+    "loaFt": 350,
+    "beamFt": 50,
+    "draftFt": 27.5,
+    "lightDraftFt": 12.5,
+    "rig": "six-masted gaff schooner",
+    "hull": "wooden full-bodied cargo",
+    "designer": "Bant Hanson",
+    "builder": "Percy & Small, Bath, Maine",
+    "launched": "1909-12-15",
+    "registeredLengthFt": 329.5,
+    "keelFt": 304,
+    "depthOfHoldFt": 30.0,
+    "registeredDepthFt": 30.4,
+    "grossTons": 3730,
+    "netTons": 3036,
+    "masts": ["fore", "main", "mizzen", "jigger", "driver", "spanker"],
+    "lowerMastFt": 126,
+    "lowerMastFtLee": 123,
+    "topmastFt": 56,
+    "mastSpacingFt": 44.5,
+    "spankerBoomFt": 80,
+    "jibBoomFt": 75,
+    "bowspritFt": 52,
+    "afterHouseFt": [30, 36],
+    "midshipHouseFt": [20, 28],
+    "forwardHouseFt": [18, 28],
+    "forwardHouseFtLee": [28, 28],
+    "sparredLengthFt": 450,
+    "sparredLengthSource": "the commonly published figure (Wikipedia, 'Wyoming (schooner)'; Cowboy State Daily headline above), jib-boom end to spanker-boom end; not found in IME 1910 or on Lee's drawings, which give 350 ft over the rail"
+  },
+  "notes": [
+    "Licence: the sail plan (drawing), the inboard profile and deck plan (planDrawing) and the Mertie B. Crowley lines (sectionsDrawing) are copyrighted reconstructions (Capt. Douglas K. Lee 1996; the Crowley lines from the Maine Maritime Museum's plan collection), used here as tracing references only; none of them is committed. IME 1910 is public domain and the photo is only a check; neither is committed either.",
+    "Profile points are pixels in the 2048x1024 sail plan after levelling: the scan is sheared, its load waterline running from y 748 at x 175 to y 760 at x 1740, so every y here is the source y minus 0.0074*(x - 1024). x is unchanged. In those pixels the load waterline is y 754, the light waterline y 814 and the keel bottom y 867-868. Bow is to the right in every view.",
+    "Calibration: the drawing's 0-100 ft scale bar reads 4.11 px/ft (0 at x 697, 10 ft at 740, 100 ft at 1110). The hull outline runs from the taffrail at x 191 to x 1630, 1439 px = 350 ft at 4.111 px/ft, so the published length and the scale bar agree to 0.1%. That agreement is partly by construction: see the next note.",
+    "Scale bar against LOA: the rail meets the bowsprit (the stem head proper) at about x 1560, only 333 ft from the taffrail by the bar. Lee's 350 ft is 'length over the rail' (his inboard profile states it), and on that drawing his own bar puts 350 ft from the taffrail onto the knee of the head at rail height (x 63 to 1315 at 3.575 px/ft). The outline here follows the same reading: its foremost point at deck height is on the knee, at the bar's 350 ft. The rest of the head, the trailboards and billet that run forward under the bowsprit to about x 1680, is not in the outline.",
+    "Checks against the bar: keel, forefoot x 1513 to sternpost x 272, 302 ft (304 published); draft 27.7 ft (27.5); light-waterline draft 13.0 ft (12.5); traced LWL 322 ft (none published). Lee's drawing and IME both give the 27 ft 6 in loaded draft; Wikipedia's 30.4 ft is the registered depth.",
+    "Sheer: the hull's top is the lowest long line of the rail band, read off horizontally averaged darkness every 40 px and by eye between; booms and sails cross the band, so it is good to about 3 px (0.7 ft). The rail rises 8 ft from midships to the taffrail and 17 ft to the bow; Lee's inboard profile agrees to within about 2 ft at both ends and midships.",
+    "Inferred: the outline from the waterline up to the 350 ft point follows the knee's outer face by eye, through the bobstays and the trailboard carving; the stem below the waterline is a straight rake (0.52 px of x per px of height) clearly drawn to the forefoot. The counter, transom knuckle and rudder are traced; the rudder hangs on a sternpost at x 272 and lies inside the outline's span. No boot-top is drawn, so boottopTopY sits on the load waterline.",
+    "Houses: after house x 300-452 (37 ft; 36 published), midship house x 1140-1226 (21 ft; 20) just aft of the mainmast, forward house x 1338-1453 (28 ft; Lee's 28, IME's 18) around the foremast. Positions read on the sail plan and checked on Lee's inboard profile mapped by the masts; house tops are the roof lines about 3 ft above the rail.",
+    "Plan (transfer): the outer rail line of Lee's deck plan in planDrawing, half the full width per column, from the elliptical stern's rail at x 70 (the yawl boat drawn on davits aft of it, x 40-62, is left out) to the bow point at x 1303. It is mapped by x' = 191 + (x - 70)*1.1671 and half-breadth*1.1671, putting the plan's ends on the profile's; Lee's inboard profile, drawn on the same sheet, maps onto the sail plan's masts by 1.1677, so the transfer is consistent. The plan's centreline drifts from y 683.5 at x 91 to y 668 at x 1303 (the sheet is rotated 0.73 degrees, like the profile above it); centreY records the mean. Traced beam 49.4 ft (50 published).",
+    "Plan, read by eye: x 200-300 where labels touch the edge (interpolated), forward of x 1200 where catheads and bowsprit shrouds cross the outline, and the stern's first point (half-breadth 52 at x 70, the flat of the elliptical stern). inferredFromX sits at the stem point because nothing past it is guessed beyond the transfer.",
+    "Rig (fore to aft: foremast, mast = main, mizzenmast, jiggermast, drivermast, spankermast): lower masts from the rail to the caps at y 330, topmasts from their heels at y 385 to the trucks at y 128, all on one line raked 2.0 degrees aft (0.0343 px of x per px of height), read where the topmasts stand clear of the ratlines. Lower masts stand 89-96 ft above the rail, consistent with 123-126 ft heel to cap; topmast 62.5 ft heel to truck against 56 published (the pole above the topmast head is included). Trucks stand 152 ft above the load waterline.",
+    "Mast spacing: 194-197 px = 47.2-47.9 ft on the sail plan, against IME's 44 ft 6 in. Lee's inboard profile gives 46.8 ft and the photo (photoPage, a near-broadside, measured roughly off a 1596 px copy) about 0.134 of the hull length, 47 ft, with the aftmost and foremost masts at about 0.18 and 0.86 of the hull from the stern against 0.184 and 0.862 here. The masts are traced where Lee drew them. The photo shows more rake than 2 degrees, but from an unknown angle, so Lee's rake stands.",
+    "Spars: spanker boom 80.0 ft (80), the other five booms about 41 ft along the sails' feet; spanker gaff 51 ft, the other gaffs 43 ft, all throats about 83 ft above the load waterline. Bowsprit 52.4 ft (52) from its heel over the stem head to the cap at x 1752; jib-boom 74.4 ft (75) to x 1945. Sparred length, spanker-boom end to jib-boom end, 442 ft against the 450 ft commonly published.",
+    "Wire: five springstays cap to cap; five topmast stays from each topmast head down to the next cap forward; forestay from the fore cap to the bowsprit over the stem head; jib stay to the bowsprit cap; flying-jib stay from the fore topmast head to the jib-boom end; one bobstay from the bowsprit cap to the stem just above the waterline. Not traced: sails, sheets, shrouds and ratlines, halyards, the dolphin striker and its stays, jib-boom guys, flags and the yawl boat.",
+    "Sections: Mertie B. Crowley's station lines stand in the sheer plan at x 181 (station 26) to 1800 (station 1), 56.3 px apart except a long gap between '14a' (x 856) and 14 (x 1067), where her lines were lengthened with parallel body. Each station's t is its x from her taffrail (x 103) over her length to the knee at rail height (x 1885), read the same way as Wyoming's 350 ft. Stations 25, 24, 23, 21 and 18 aft and 5, 4, 3 and 2 forward are read by eye at 5-6x off the body plan, about 2 px (0.4 ft at her scale); each runs from where it meets the sheer curve drawn across the body plan down to the keel.",
+    "Midship (replaced): Crowley's midship curve, shared by her stations 16 to 8, differs from Wyoming's IME section: it tumbles home 4.5% and turns a bilge of about a fifth of the half-beam, where IME draws near-plumb sides (1.2% tumblehome), a flat floor rising about 4 degrees and a bilge of under a tenth of the half-beam. IME's section is used at t 0.36 and 0.731, the ends of Crowley's parallel body. IME is scaled by its two waterlines (15 ft = 503 px, 33.5 px/ft), giving a 24.95 ft half-breadth outside the planking. Its open fly rail on stanchions (top at height 1262, tumbled in to half-breadth 789) is carried as solid side at the planksheer's breadth (826).",
+    "Inferred: Crowley's quarters tumble home (station 25 by 6.9%, 24 by 5.7%, 23 by 8.8%, 21 by 10.9%, 18 by 6.8% of their widest). Stretched over Wyoming's fuller deck plan that put a 52 ft beam under water at the quarter, wider than her midships, so above its widest point each aft station is taken plumb: Wyoming's own deck plan sets the rail breadth there. Lofted maximum beam 49.97 ft. Forward stations flare and are used as read.",
+    "Loft: the generator crowds a traced hull's section samples toward the keel (heights spaced by (1 - j/28)^1.6), so the flat floor and hard bilge come through; untraced hulls are sampled as before. Before station 25 (the counter and rudder) the loft holds station 25's shape, which makes the rudder 1 to 3 ft thick."
+  ],
+  "profile": {
+    "waterlineY": 754,
+    "hull": [
+      [191, 692],
+      [230, 693],
+      [260, 695],
+      [300, 699],
+      [340, 702],
+      [420, 707],
+      [500, 712],
+      [580, 718],
+      [660, 722],
+      [740, 725],
+      [820, 726],
+      [900, 725],
+      [980, 721],
+      [1060, 715],
+      [1140, 707],
+      [1220, 699],
+      [1300, 690],
+      [1380, 680],
+      [1460, 670],
+      [1540, 662],
+      [1600, 658],
+      [1630, 657],
+      [1622, 670],
+      [1610, 686],
+      [1596, 704],
+      [1583, 724],
+      [1572, 745],
+      [1569, 757],
+      [1559, 780],
+      [1544, 810],
+      [1529, 840],
+      [1513, 868],
+      [1400, 868],
+      [1000, 868],
+      [600, 868],
+      [300, 867],
+      [272, 867],
+      [264, 868],
+      [253, 862],
+      [246, 848],
+      [242, 822],
+      [244, 796],
+      [249, 773],
+      [256, 757],
+      [262, 751],
+      [240, 741],
+      [220, 729],
+      [212, 720],
+      [204, 710],
+      [196, 700],
+      [191, 695]
+    ],
+    "boottopTopY": [
+      [191, 754],
+      [1630, 754]
+    ],
+    "houses": [
+      [
+        [300, 699],
+        [300, 686],
+        [452, 690],
+        [452, 709]
+      ],
+      [
+        [1140, 707],
+        [1140, 684],
+        [1226, 682],
+        [1226, 698]
+      ],
+      [
+        [1338, 685],
+        [1338, 665],
+        [1453, 662],
+        [1453, 671]
+      ]
+    ],
+    "rig": {
+      "spankermast": [
+        [456, 709],
+        [443, 330]
+      ],
+      "drivermast": [
+        [650, 722],
+        [637, 330]
+      ],
+      "jiggermast": [
+        [845, 726],
+        [831, 330]
+      ],
+      "mizzenmast": [
+        [1040, 716],
+        [1027, 330]
+      ],
+      "mast": [
+        [1234, 697],
+        [1221, 330]
+      ],
+      "foremast": [
+        [1431, 674],
+        [1419, 330]
+      ],
+      "spankerTopmast": [
+        [445, 385],
+        [436, 128]
+      ],
+      "driverTopmast": [
+        [638, 385],
+        [630, 128]
+      ],
+      "jiggerTopmast": [
+        [833, 385],
+        [824, 128]
+      ],
+      "mizzenTopmast": [
+        [1029, 385],
+        [1020, 128]
+      ],
+      "mainTopmast": [
+        [1223, 385],
+        [1214, 128]
+      ],
+      "foreTopmast": [
+        [1421, 385],
+        [1412, 128]
+      ],
+      "spankerGaff": [
+        [438, 415],
+        [243, 336]
+      ],
+      "driverGaff": [
+        [630, 415],
+        [468, 347]
+      ],
+      "jiggerGaff": [
+        [828, 412],
+        [665, 347]
+      ],
+      "mizzenGaff": [
+        [1023, 412],
+        [860, 347]
+      ],
+      "mainGaff": [
+        [1218, 413],
+        [1055, 347]
+      ],
+      "foreGaff": [
+        [1415, 415],
+        [1252, 347]
+      ],
+      "spankerBoom": [
+        [452, 674],
+        [126, 629]
+      ],
+      "driverBoom": [
+        [643, 692],
+        [478, 672]
+      ],
+      "jiggerBoom": [
+        [838, 688],
+        [672, 676]
+      ],
+      "mizzenBoom": [
+        [1033, 688],
+        [865, 676]
+      ],
+      "mainBoom": [
+        [1228, 672],
+        [1060, 670]
+      ],
+      "foreBoom": [
+        [1424, 660],
+        [1252, 656]
+      ],
+      "bowsprit": [
+        [1540, 660],
+        [1752, 621]
+      ],
+      "jibboom": [
+        [1648, 640],
+        [1945, 566]
+      ],
+      "spankerSpringstay": [
+        [443, 330],
+        [637, 330]
+      ],
+      "driverSpringstay": [
+        [637, 330],
+        [831, 330]
+      ],
+      "jiggerSpringstay": [
+        [831, 330],
+        [1027, 330]
+      ],
+      "mizzenSpringstay": [
+        [1027, 330],
+        [1221, 330]
+      ],
+      "mainSpringstay": [
+        [1221, 330],
+        [1419, 330]
+      ],
+      "spankerTopmastStay": [
+        [436, 140],
+        [637, 330]
+      ],
+      "driverTopmastStay": [
+        [630, 140],
+        [831, 330]
+      ],
+      "jiggerTopmastStay": [
+        [824, 140],
+        [1027, 330]
+      ],
+      "mizzenTopmastStay": [
+        [1020, 140],
+        [1221, 330]
+      ],
+      "mainTopmastStay": [
+        [1214, 140],
+        [1419, 330]
+      ],
+      "forestay": [
+        [1419, 330],
+        [1612, 652]
+      ],
+      "jibStay": [
+        [1419, 330],
+        [1750, 622]
+      ],
+      "flyingJibStay": [
+        [1412, 140],
+        [1943, 567]
+      ],
+      "bobstay": [
+        [1748, 624],
+        [1576, 744]
+      ]
+    }
+  },
+  "plan": {
+    "centreY": 676,
+    "halfBreadth": [
+      [191.0, 60.7],
+      [193.3, 66.5],
+      [198.0, 75.9],
+      [202.7, 78.2],
+      [212.0, 79.9],
+      [226.0, 81.1],
+      [249.4, 82.9],
+      [272.7, 84.6],
+      [296.0, 85.8],
+      [319.4, 87.5],
+      [389.4, 91.6],
+      [482.8, 95.7],
+      [576.1, 98.0],
+      [669.5, 100.4],
+      [762.9, 101.0],
+      [856.2, 101.5],
+      [1299.7, 101.0],
+      [1346.4, 100.4],
+      [1393.1, 98.6],
+      [1416.4, 96.3],
+      [1439.8, 93.9],
+      [1463.1, 88.7],
+      [1486.5, 84.6],
+      [1509.8, 74.7],
+      [1539.0, 60.1],
+      [1568.1, 42.6],
+      [1597.3, 23.3],
+      [1614.8, 11.7],
+      [1630.0, 0.0]
+    ],
+    "inferredFromX": 1630
+  },
+  "sections": {
+    "source": "Body plan of the six-masted schooner Mertie B. Crowley (sectionsDrawing), Wyoming's near-sister in size and type, as the stand-in for every station but midships; midships is the IME 1910 midship section of Wyoming herself (midshipDrawing). Units: Crowley body-plan pixels, half-breadth from its centreline (x 1064 aft half, 1066 forward half) and height up from its base line (y 950); the two midship stations are in IME page pixels, half-breadth from x 1189 and height up from the keel bottom at y 2545. Each station is normalised on its own, so the units need not agree.",
+    "stations": [
+      {
+        "t": 0.075,
+        "from": "Mertie B. Crowley station 25",
+        "pts": [
+          [101, 173],
+          [101, 150],
+          [101, 130],
+          [88, 111],
+          [64, 100],
+          [42, 92],
+          [28, 84],
+          [21, 73],
+          [16, 59],
+          [13, 45],
+          [8, 24],
+          [4, 8],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.107,
+        "from": "Mertie B. Crowley station 24",
+        "pts": [
+          [106, 170],
+          [106, 130],
+          [106, 110],
+          [99, 98],
+          [88, 89],
+          [65, 77],
+          [47, 65],
+          [33, 52],
+          [22, 38],
+          [11, 21],
+          [4, 7],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.139,
+        "from": "Mertie B. Crowley station 23",
+        "pts": [
+          [114, 169],
+          [114, 130],
+          [114, 110],
+          [114, 105],
+          [111, 88],
+          [88, 67],
+          [65, 53],
+          [47, 38],
+          [31, 24],
+          [17, 12],
+          [5, 2],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.201,
+        "from": "Mertie B. Crowley station 21",
+        "pts": [
+          [128, 163],
+          [128, 130],
+          [128, 110],
+          [128, 67],
+          [116, 45],
+          [101, 32],
+          [78, 18],
+          [53, 8],
+          [24, 2],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.296,
+        "from": "Mertie B. Crowley station 18",
+        "pts": [
+          [133, 154],
+          [133, 130],
+          [133, 110],
+          [133, 56],
+          [125, 30],
+          [114, 19],
+          [93, 8],
+          [62, 2],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.36,
+        "from": "IME 1910 midship section (Crowley stations 16 to 8 share it)",
+        "pts": [
+          [826, 1262],
+          [821, 1165],
+          [829, 1045],
+          [835, 845],
+          [836, 545],
+          [836, 215],
+          [826, 160],
+          [811, 133],
+          [786, 110],
+          [761, 98],
+          [511, 93],
+          [261, 67],
+          [36, 45],
+          [22, 44],
+          [22, 0]
+        ]
+      },
+      {
+        "t": 0.731,
+        "from": "IME 1910 midship section (Crowley stations 16 to 8 share it)",
+        "pts": [
+          [826, 1262],
+          [821, 1165],
+          [829, 1045],
+          [835, 845],
+          [836, 545],
+          [836, 215],
+          [826, 160],
+          [811, 133],
+          [786, 110],
+          [761, 98],
+          [511, 93],
+          [261, 67],
+          [36, 45],
+          [22, 44],
+          [22, 0]
+        ]
+      },
+      {
+        "t": 0.826,
+        "from": "Mertie B. Crowley station 5",
+        "pts": [
+          [129, 176],
+          [129, 134],
+          [121, 100],
+          [113, 70],
+          [107, 45],
+          [97, 29],
+          [84, 16],
+          [59, 7],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.858,
+        "from": "Mertie B. Crowley station 4",
+        "pts": [
+          [126, 180],
+          [123, 150],
+          [118, 125],
+          [104, 100],
+          [94, 79],
+          [84, 55],
+          [71, 34],
+          [55, 16],
+          [31, 5],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.889,
+        "from": "Mertie B. Crowley station 3",
+        "pts": [
+          [117, 185],
+          [113, 173],
+          [104, 150],
+          [92, 134],
+          [81, 112],
+          [70, 78],
+          [62, 57],
+          [47, 33],
+          [33, 16],
+          [15, 4],
+          [2, 0]
+        ]
+      },
+      {
+        "t": 0.921,
+        "from": "Mertie B. Crowley station 2",
+        "pts": [
+          [101, 192],
+          [91, 175],
+          [75, 155],
+          [62, 134],
+          [47, 110],
+          [34, 79],
+          [25, 54],
+          [15, 34],
+          [5, 12],
+          [2, 0]
+        ]
+      }
+    ]
+  }
+}
