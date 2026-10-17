@@ -21,6 +21,10 @@ export { mergeLanterns } from './lantern.js';
 export { PX, PZ, allHulls, selectHull } from './hulls.js';
 export type { Hull, HullSpec } from './hulls.js';
 
+// The hand-traced real sailing vessels and the mesh file each one ships
+export { tracedVessels } from './tracedVessels.js';
+export type { TracedVessel } from './tracedVessels.js';
+
 // Hull styles: every style paints every hull; a view given none draws the
 // base drawing
 export { hullStyleIds, hullStyles } from './hullStyles.js';
