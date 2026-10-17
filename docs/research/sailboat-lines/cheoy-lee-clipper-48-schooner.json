@@ -1,0 +1,205 @@
+{
+  "name": "Cheoy Lee Clipper 48 Schooner",
+  "sources": {
+    "page": "https://sailboatdata.com/sailboat/clipper-48-schooner-cheoy-lee/",
+    "drawing": "https://sailboatdata.com/wp-content/uploads/2023/03/cheoy_lee_clipper_48_sch_drawing.jpg",
+    "drawingSize": [520, 499],
+    "hullPage": "https://sailboatdata.com/sailboat/clipper-48-ketch-cheoy-lee/",
+    "hullDrawing": "https://sailboatdata.com/wp-content/uploads/2023/03/clipper_48_drawing.jpg",
+    "hullDrawingSize": [598, 1087],
+    "retrieved": "2026-10-16"
+  },
+  "specs": {
+    "loaFt": 47.92,
+    "lwlFt": 34.0,
+    "beamFt": 13.0,
+    "draftFt": 6.0,
+    "rig": "two-masted staysail schooner",
+    "hull": "long keel",
+    "designer": "A. E. Luders",
+    "builder": "Cheoy Lee Shipyard",
+    "firstBuilt": 1979,
+    "displacementLb": 31000,
+    "ballastLb": 13000
+  },
+  "notes": [
+    "All points are pixels in the 520x499 schooner sail plan, read by hand off gridded enlargements and snapped to dark pixels where a column or row scan found the line. Bow is to the right.",
+    "The schooner drawing is a sail-plan profile only: no accommodation plan, and the hull is drawn only down to the waterline (the dark topsides stop on a waterline rule at y 477.5). The underwater body and the plan are therefore taken from the Clipper 48 ketch drawing (hullDrawing), the same Luders hull with identical published LOA, LWL, beam and draft; the schooner page itself says 'See CLIPPER 48 (CHEOY LEE) for more details'. Spec I, J, P and E are not published for either rig, so none are recorded.",
+    "Profile above water, transom top x 34 to stem head x 436 = 402 px for an LOA of 47.92 ft, 8.39 px/ft. Traced LWL 34.7 ft (spec 34.0), draft 6.21 ft (spec 6.0), beam 13.2 ft (spec 13.0).",
+    "Sheer is the line about 4-5 px above the top of the dark topsides (deck edge); a toe rail or low bulwark cap runs about 0.5 ft above it aft and is not traced. The topsides are dark right down to the waterline in both drawings, with no boot-top drawn, so boottopTopY is set on the waterline: topsides colour to the waterline, bottom paint below.",
+    "Keel and rudder (inferred by transfer): traced off the ketch drawing's profile (waterline y 501, outer keel line flat at y 554 from x 146 to 230, rising straight to the forefoot at x 427; rudder trailing edge a straight rake from (124,501) to (145,554)), then mapped into schooner pixels with the waterline ends matched (ketch x 124..427 onto schooner x 88..381, factor 0.967) and the LOA-based vertical factor 402/409 = 0.983 about the waterline. These points run below the schooner image's bottom edge (y 499) by design.",
+    "Plan (inferred by transfer): half-breadths are the outer deck line of the ketch drawing's 'PLAN A', which is drawn at its own larger scale. Its ends, rounded transom x 12 to stem point x 581 (569 px), are taken as transom top and stem head, so the plan is scaled by 402/569 = 0.7065 into schooner pixels in both x and half-breadth. The resulting 13.2 ft beam against the published 13.0 is the check on that reading. Plan A's centreline drifts from y 649 aft to 654 forward (a slight scan rotation), so half-breadths are half the full width where both edges are clean, and top edge to y 654 forward of x 490 where the 'PLAN A' label hides the lower edge. centreY records the ketch drawing's mean centreline. Nothing within the plan is guessed beyond that transfer, so inferredFromX sits at the stem head.",
+    "Rig: mainmast (aft, taller, named 'mast' because the script places the plan's mast dot from rig.mast) and foremast both rake aft about 2 degrees. Main boom overhangs the transom to x 15. A boom along the foot of the main staysail runs from the foremast heel aft to the mainmast; the main staysail stay runs from the mainmast hounds to the foremast heel. A springstay joins the two mastheads. Forestay from the foremast head to the bowsprit end; inner forestay from the foremast to the stem head. Under the bowsprit a dolphin striker, a martingale from its foot to the bowsprit end, and a bobstay from its foot to the stem about 1 ft above the waterline. The backstay lands on deck at x 57, inside the boom's overhang. Dotted sail outlines, the mainsail leech and the sheets are not traced."
+  ],
+  "profile": {
+    "waterlineY": 477.5,
+    "hull": [
+      [34, 435],
+      [50, 438],
+      [70, 441],
+      [100, 445.5],
+      [120, 446.5],
+      [140, 447.5],
+      [160, 447.5],
+      [180, 446.5],
+      [200, 446],
+      [225, 445],
+      [250, 444],
+      [280, 442.5],
+      [300, 440.5],
+      [320, 439],
+      [340, 437],
+      [360, 435],
+      [380, 433.5],
+      [400, 431.5],
+      [420, 429],
+      [436, 428],
+      [431, 434],
+      [420, 442],
+      [410, 448],
+      [400, 456],
+      [390, 465],
+      [383, 474],
+      [381, 477.5],
+      [374.2, 479.5],
+      [364.6, 485.4],
+      [354.9, 490.3],
+      [345.2, 493.2],
+      [335.6, 496.2],
+      [325.9, 499.6],
+      [316.2, 501.6],
+      [306.5, 504.5],
+      [296.9, 507],
+      [287.2, 509.4],
+      [277.5, 511.9],
+      [267.9, 513.4],
+      [258.2, 515.3],
+      [238.9, 519.8],
+      [219.5, 523.7],
+      [209.8, 525.2],
+      [200.2, 526.2],
+      [190.5, 528.1],
+      [171.2, 528.6],
+      [142.2, 529.6],
+      [109.3, 529.6],
+      [88, 477.5],
+      [80, 473],
+      [70, 469],
+      [60, 462],
+      [50, 453],
+      [40, 445],
+      [36, 440]
+    ],
+    "boottopTopY": [
+      [88, 477.5],
+      [381, 477.5]
+    ],
+    "coachroof": [
+      [148, 447],
+      [152, 433],
+      [330, 430],
+      [338, 437]
+    ],
+    "rig": {
+      "mast": [
+        [179, 446],
+        [163, 22]
+      ],
+      "foremast": [
+        [287, 442],
+        [274, 124]
+      ],
+      "boom": [
+        [177, 408],
+        [15, 403]
+      ],
+      "staysailBoom": [
+        [286, 407],
+        [178, 408]
+      ],
+      "bowsprit": [
+        [436, 428],
+        [496, 421]
+      ],
+      "forestay": [
+        [275, 124],
+        [495, 421]
+      ],
+      "innerForestay": [
+        [275, 150],
+        [434, 428]
+      ],
+      "staysailStay": [
+        [168, 158],
+        [286, 407]
+      ],
+      "springstay": [
+        [164, 26],
+        [274, 124]
+      ],
+      "backstay": [
+        [163, 25],
+        [57, 442]
+      ],
+      "dolphinStriker": [
+        [437, 431],
+        [445, 450]
+      ],
+      "martingale": [
+        [494, 422],
+        [445, 450]
+      ],
+      "bobstay": [
+        [445, 450],
+        [391, 468]
+      ]
+    }
+  },
+  "plan": {
+    "centreY": 651,
+    "halfBreadth": [
+      [34, 7.1],
+      [36.1, 20.5],
+      [39.7, 26.8],
+      [43.2, 31.4],
+      [46.7, 33.9],
+      [53.8, 35.7],
+      [60.8, 37.1],
+      [67.9, 38.2],
+      [75, 39.6],
+      [82, 41],
+      [89.1, 42.7],
+      [96.2, 44.2],
+      [103.2, 45.9],
+      [110.3, 46.6],
+      [117.4, 48],
+      [124.4, 49.1],
+      [131.5, 50.2],
+      [138.6, 50.9],
+      [152.7, 52.3],
+      [166.8, 53.7],
+      [181, 55.1],
+      [195.1, 55.5],
+      [209.2, 55.5],
+      [223.3, 55.5],
+      [237.5, 54.8],
+      [251.6, 54.4],
+      [265.7, 53],
+      [279.9, 51.6],
+      [294, 49.5],
+      [308.1, 46.6],
+      [322.3, 44.2],
+      [336.4, 41.7],
+      [350.5, 38.2],
+      [364.6, 33.6],
+      [378.8, 29.7],
+      [392.9, 24],
+      [407, 18.4],
+      [421.2, 11.3],
+      [428.2, 8.5],
+      [431.8, 6.4],
+      [436, 0]
+    ],
+    "inferredFromX": 436
+  }
+}
