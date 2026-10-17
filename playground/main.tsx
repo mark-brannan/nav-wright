@@ -6,6 +6,7 @@
 import { StrictMode, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { decodeUrlState, encodeUrlState, type UrlState } from './urlState.js';
 import { evaluateDisplay } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
@@ -30,7 +31,6 @@ import {
 import {
   BearingModelView,
   BenchyView,
-  DEFAULT_TILT,
   MAX_TILT,
   MIN_TILT,
   SILHOUETTE_VARIANTS,
@@ -102,15 +102,12 @@ const VARIANT_LABELS: Record<VariantKey, string> = {
 };
 
 const query = new URLSearchParams(location.search);
-const pick = <T extends string>(value: string | null, options: readonly T[], fallback: T): T =>
-  options.includes(value as T) ? (value as T) : fallback;
-const initialView = pick(query.get('view'), Object.keys(VIEWS) as ViewKey[], '3d');
-const initialVariant = pick(query.get('variant'), VARIANTS, 'all');
-const queryTheta = Number(query.get('theta'));
-const initialTheta =
-  query.has('theta') && Number.isFinite(queryTheta)
-    ? (((Math.round(queryTheta * 2) / 2) % 360) + 360) % 360
-    : 45;
+const initial = decodeUrlState(location.search, {
+  views: Object.keys(VIEWS),
+  variants: VARIANTS,
+});
+const initialView = initial.view as ViewKey;
+const initialVariant = initial.variant as VariantKey;
 
 /** Her heading's swing in a seaway, degrees: two sines a little out of step,
  *  so it never settles into a metronome. */
@@ -135,18 +132,12 @@ function useYaw(on: boolean, amplitude: number, periodS: number): number {
   return yaw;
 }
 
-/** Keep view, variant and theta in the address bar, leaving other keys (day)
+/** Keep every control in the address bar, leaving other keys (yaw, compare)
  * alone. Debounced: theta changes on every degree of a drag. */
-function useUrlState(view: ViewKey, variant: VariantKey, theta: number) {
+function useUrlState(state: UrlState) {
   useEffect(() => {
     const t = setTimeout(() => {
-      const params = new URLSearchParams(location.search);
-      const set = (k: string, v: string, fallback: string) =>
-        v === fallback ? params.delete(k) : params.set(k, v);
-      set('view', view, '3d');
-      set('variant', variant, 'all');
-      set('theta', String(theta), '45');
-      const search = params.toString();
+      const search = encodeUrlState(state, location.search);
       try {
         history.replaceState(null, '', search ? `?${search}` : location.pathname);
       } catch {
@@ -154,7 +145,8 @@ function useUrlState(view: ViewKey, variant: VariantKey, theta: number) {
       }
     }, 250);
     return () => clearTimeout(t);
-  }, [view, variant, theta]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, Object.values(state));
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -223,10 +215,9 @@ function Playground() {
   // Drawing a set no rule calls for is unlawful: no line matches it.
   const [drawnOverride, setDrawnOverride] = useState<string[] | null>(null);
   const [model, setModel] = useState(defaultModel(allHulls.powerSmall.spec.id));
-  const [theta, setTheta] = useState(initialTheta);
+  const [theta, setTheta] = useState(initial.theta);
   const [view, setView] = useState<ViewKey>(initialView);
   const [variant, setVariant] = useState<VariantKey>(initialVariant);
-  useUrlState(view, variant, theta);
   // ?yaw and ?compare, so a render has a link
   const [profileOn, setProfileOn] = useState(true);
   const [fwdTail, setFwdTail] = useState(2);
@@ -254,22 +245,36 @@ function Playground() {
         : undefined,
     [profileOn, fwdTail, aftInside, aftAtLimit, aftTail],
   );
-  const [tilt, setTilt] = useState(DEFAULT_TILT);
-  const [hullHint, setHullHint] = useState(0.5);
+  const [tilt, setTilt] = useState(initial.tilt);
+  const [hullHint, setHullHint] = useState(initial.hullHint);
   // Range to her in nm; fades the hull hint (full strength at 0.5 nm and nearer)
-  const [range, setRange] = useState(() => Number(query.get('range') ?? 0.5));
-  const [sky, setSky] = useState(0);
-  const [sea, setSea] = useState(0.1);
+  const [range, setRange] = useState(initial.range);
+  const [sky, setSky] = useState(initial.sky);
+  const [sea, setSea] = useState(initial.sea);
   const lightRangesNm = useMemo(
     () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
     [facts],
   );
-  const [singleLantern, setSingleLantern] = useState(false);
-  const [rangeGlow, setRangeGlow] = useState(false);
-  const [flashRateOn, setFlashRateOn] = useState(false);
+  const [singleLantern, setSingleLantern] = useState(initial.singleLantern);
+  const [rangeGlow, setRangeGlow] = useState(initial.rangeGlow);
+  const [flashRateOn, setFlashRateOn] = useState(initial.flashRateOn);
   const [labelsOn, setLabelsOn] = useState(true);
-  // ?day opens in daylight, so a day view has a link
-  const [day, setDay] = useState(() => new URLSearchParams(location.search).has('day'));
+  // every control above is in the URL (see urlState.ts), ?day included
+  const [day, setDay] = useState(initial.day);
+  useUrlState({
+    view,
+    variant,
+    theta,
+    tilt,
+    hullHint,
+    range,
+    sky,
+    sea,
+    day,
+    singleLantern,
+    rangeGlow,
+    flashRateOn,
+  });
 
   const hull = allHulls[hullKey];
 
