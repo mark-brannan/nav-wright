@@ -146,6 +146,19 @@ export function skyColor(brightness: number): string {
   ).join('')}`;
 }
 
+/** The sea at full brightness: a blue-gray. Black is brightness 0. */
+export const SEA_LIGHT: readonly [number, number, number] = [0x3c, 0x55, 0x6e];
+
+/** Sea colour for a brightness 0..1 (clamped): black to SEA_LIGHT. */
+export function seaColor(brightness: number): string {
+  const t = Number.isFinite(brightness) ? Math.min(1, Math.max(0, brightness)) : 0;
+  return `#${SEA_LIGHT.map((c) =>
+    Math.round(c * t)
+      .toString(16)
+      .padStart(2, '0'),
+  ).join('')}`;
+}
+
 /** Moonlight reaches this far: the hull hint is at full strength here and nearer. */
 export const HULL_HINT_NEAR_NM = 0.5;
 /** ... and is gone by this range. */

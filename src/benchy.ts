@@ -16,7 +16,7 @@ export { BearingModelView, bearingHullOpacity } from './BearingModelView.js';
 
 // Camera elevation: the range TiltControl and a consumer's URL state
 // clamp against
-export { DEFAULT_TILT, MAX_TILT } from './tilt.js';
+export { DEFAULT_TILT, MAX_TILT, MIN_TILT } from './tilt.js';
 
 // The controls, for a consumer laying out its own chrome
 export { TiltControl } from './TiltControl.js';

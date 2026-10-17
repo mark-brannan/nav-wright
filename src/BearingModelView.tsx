@@ -12,7 +12,7 @@
 import { Suspense, useState } from 'react';
 import type { ReactElement } from 'react';
 import type { FactRecord } from 'colregs-engine';
-import { BearingScene, BearingView, hullHintOpacity, skyColor } from './BearingView.js';
+import { BearingScene, BearingView, hullHintOpacity, seaColor, skyColor } from './BearingView.js';
 import type { Hull } from './hulls.js';
 import { LazyBenchyModel } from './lazyModel.js';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
@@ -42,6 +42,7 @@ export function BearingModelView({
   hullHint,
   range,
   sky = 0,
+  sea = 0,
   labels = defaultBenchyLabels,
 }: {
   /** URL of the hull's .glb; a consumer resolves one per hull (see BenchyView). */
@@ -62,6 +63,8 @@ export function BearingModelView({
   range?: number;
   /** Background, 0 (black) .. 1 (a lighter night blue). See skyColor. */
   sky?: number;
+  /** The sea, always drawn: 0 (black) .. 1 (a blue-gray). See seaColor. */
+  sea?: number;
   labels?: BenchyLabels;
 }): ReactElement {
   const [modelFailed, setModelFailed] = useState(false);
@@ -121,6 +124,7 @@ export function BearingModelView({
               hullOpacity={bearingHullOpacity(hullHint, range)}
               background={background}
               night
+              sea={seaColor(sea)}
               label={labels.bearingAlt(Math.round(theta))}
               fallback={blank}
               loading={standIn}

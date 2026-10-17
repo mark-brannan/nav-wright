@@ -22,7 +22,7 @@ import type { LightSeat } from '../src/modelTransform.js';
 import { allHulls } from '../src/hulls.js';
 import type { HullSpec } from '../src/hulls.js';
 import { placeScene, profileHullModel } from '../src/sceneProfile.js';
-import { MAX_TILT } from '../src/tilt.js';
+import { MAX_TILT, MIN_TILT } from '../src/tilt.js';
 
 // three's texture path reaches for browser globals under Node; the frame is
 // geometry only.
@@ -128,7 +128,7 @@ function reach(points: THREE.Vector3[], theta: number, tilt: number): number {
   return r;
 }
 
-const TILTS = [0, 10, 30, 60, MAX_TILT];
+const TILTS = [MIN_TILT, -30, -5, 0, 10, 30, 60, MAX_TILT];
 const BEARINGS = Array.from({ length: 24 }, (_, i) => i * 15);
 const LENGTHS = [2, 5, 15, 40, 100, 400];
 
@@ -215,7 +215,7 @@ describe('view frame', () => {
               new THREE.Vector3(x, y, z).multiplyScalar(scale).add(new THREE.Vector3(...position)),
             );
       for (let theta = 0.5; theta < 360; theta += 7)
-        for (let tilt = 0.5; tilt <= MAX_TILT; tilt += 4)
+        for (let tilt = MIN_TILT + 0.5; tilt <= MAX_TILT; tilt += 4)
           expect(reach(corners, theta, tilt), `${s.id} θ ${theta} tilt ${tilt}`).toBeLessThan(1);
     }
   });
@@ -257,9 +257,10 @@ describe('view frame', () => {
     expect(bz).toBeCloseTo(VIEW_FRAME.distance, 9);
   });
 
-  it('clamps tilt to the waterline and to MAX_TILT', () => {
-    expect(orbitPosition(45, -20)).toEqual(orbitPosition(45, 0));
+  it('clamps tilt to MIN_TILT and MAX_TILT, and lets the camera go below the waterline', () => {
+    expect(orbitPosition(45, -120)).toEqual(orbitPosition(45, MIN_TILT));
     expect(orbitPosition(45, 120)).toEqual(orbitPosition(45, MAX_TILT));
+    expect(orbitPosition(45, -20)[1]).toBeLessThan(0);
   });
 
   it('reports a drag just short of dead ahead as theta 0, never 360', () => {

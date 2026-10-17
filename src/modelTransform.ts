@@ -9,7 +9,7 @@
 
 import type { PlacedLight } from './placement.js';
 import { lightsInView } from './placement.js';
-import { MAX_TILT } from './tilt.js';
+import { MAX_TILT, MIN_TILT } from './tilt.js';
 
 export interface Vec3 {
   x: number;
@@ -563,7 +563,7 @@ export function frameBox(
 }
 
 /** Tilts and bearings the frame is checked from: every whole bearing in
- * steps of FRAME_STEP degrees and every tilt in [0, MAX_TILT]. */
+ * steps of FRAME_STEP degrees and every tilt in [MIN_TILT, MAX_TILT]. */
 const FRAME_STEP = 3;
 
 /**
@@ -582,15 +582,15 @@ export function frameDistance(box: ModelBox, target: Vec3): number {
         corners.push({ x: x - target.x, y: y - target.y, z: z - target.z });
   let need = 0;
   const tilts: number[] = [];
-  for (let t = 0; t < MAX_TILT; t += FRAME_STEP) tilts.push(t);
+  for (let t = MIN_TILT; t < MAX_TILT; t += FRAME_STEP) tilts.push(t);
   tilts.push(MAX_TILT);
   for (let theta = 0; theta < 360; theta += FRAME_STEP) {
     for (const tilt of tilts) {
       // u: origin to camera; r and v: the screen's right and up.
       const [ux, uy, uz] = orbitPosition(theta, tilt, 1);
-      const rl = Math.hypot(uz, ux);
-      const rx = uz / rl;
-      const rz = -ux / rl;
+      // From theta, not from u, which is zero here at the poles.
+      const rx = Math.sin(theta * DEG);
+      const rz = -Math.cos(theta * DEG);
       // v = u x r, the screen's up.
       const vx = uy * rz;
       const vy = uz * rx - ux * rz;
@@ -640,14 +640,14 @@ export function lightRadius(lengthMeters: number): number {
  * `theta` and elevation `tilt` (degrees), `distance` from the origin.
  * theta 0 = seen from ahead (+X, the bow), 90 = from her starboard beam
  * (+Z), matching the bearing view's aspects; tilt is clamped to
- * [0, MAX_TILT]. */
+ * [MIN_TILT, MAX_TILT]. */
 export function orbitPosition(
   theta: number,
   tilt: number,
   distance: number = VIEW_FRAME.distance,
 ): [number, number, number] {
   const DEG = Math.PI / 180;
-  const polar = (90 - Math.min(MAX_TILT, Math.max(0, tilt))) * DEG;
+  const polar = (90 - Math.min(MAX_TILT, Math.max(MIN_TILT, tilt))) * DEG;
   const rad = theta * DEG;
   return [
     distance * Math.sin(polar) * Math.cos(rad),

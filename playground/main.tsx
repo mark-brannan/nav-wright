@@ -25,7 +25,14 @@ import {
   placeShapes,
   selectHull,
 } from '../src/index.js';
-import { BenchyView, DEFAULT_TILT, defaultBenchyLabels } from '../src/benchy.js';
+import {
+  BearingModelView,
+  BenchyView,
+  DEFAULT_TILT,
+  MAX_TILT,
+  MIN_TILT,
+  defaultBenchyLabels,
+} from '../src/benchy.js';
 import '../src/style.css';
 import './playground.css';
 import { hullFacts } from './hullFacts.js';
@@ -137,10 +144,13 @@ function Playground() {
   const [theta, setTheta] = useState(45);
   const [tilt, setTilt] = useState(DEFAULT_TILT);
   const [hullHint, setHullHint] = useState(0.5);
-  const [rangeOn, setRangeOn] = useState(false);
-  const [range, setRange] = useState(1);
+  // Range to her in nm; fades the hull hint (full strength at 0.5 nm and nearer)
+  const [range, setRange] = useState(0.5);
   const [sky, setSky] = useState(0);
-  const [seascape, setSeascape] = useState(false);
+  const [sea, setSea] = useState(0.5);
+  // Lights switched off here are dropped from every view: what is drawn is
+  // decoupled from what the lawful display calls for.
+  const [lightsOff, setLightsOff] = useState<string[]>([]);
   const lightRangesNm = useMemo(
     () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
     [facts],
@@ -159,6 +169,7 @@ function Playground() {
     setFacts(hullFacts[k]);
     setDisplayIndex(0);
     setAdditionsOn([]);
+    setLightsOff([]);
     setModel(defaultModel(allHulls[k].spec.id));
   };
 
@@ -171,6 +182,7 @@ function Playground() {
     setFacts(next as FactRecord);
     setDisplayIndex(0);
     setAdditionsOn([]);
+    setLightsOff([]);
   };
 
   // Day states fact:time, which is what makes the engine return shapes.
@@ -191,11 +203,15 @@ function Playground() {
   const current = Math.min(displayIndex, Math.max(0, displays.length - 1));
   const display = displays[current];
 
-  const placed = useMemo(() => {
+  const lawful = useMemo(() => {
     if (!display) return [];
     const extra = additions.filter((a) => additionsOn.includes(a.id)).flatMap((a) => a.lights);
     return placeLights([...display.lights, ...extra], hull.spec, facts, lightsData, geometryData);
   }, [display, additions, additionsOn, hull, facts]);
+  const placed = useMemo(
+    () => lawful.filter((l) => !lightsOff.includes(l.key)),
+    [lawful, lightsOff],
+  );
 
   const placedShapes = useMemo(() => {
     if (!display) return [];
@@ -237,6 +253,25 @@ function Playground() {
         <span className="muted">selectHull(facts) → {selectHull(facts).spec.id}</span>
         <a href="./gallery.html">Gallery: every hull in every style</a>
       </header>
+
+      <section className="primary">
+        <BearingModelView
+          key={model}
+          modelUrl={models[model]!}
+          hull={hull}
+          placed={placed}
+          facts={facts}
+          theta={theta}
+          onTheta={setTheta}
+          tilt={tilt}
+          onTilt={setTilt}
+          hullHint={hullHint}
+          range={range}
+          sky={sky}
+          sea={sea}
+          labels={labels}
+        />
+      </section>
 
       <section className="controls">
         <fieldset>
@@ -338,32 +373,13 @@ function Playground() {
             <Range value={theta} min={0} max={359} onChange={setTheta} />
           </Field>
           <Field label="tilt (3D)">
-            <Range value={tilt} min={0} max={85} onChange={setTilt} />
+            <Range value={tilt} min={MIN_TILT} max={MAX_TILT} onChange={setTilt} />
           </Field>
           <Field label="hullHint">
             <Range value={hullHint} min={0} max={1} step={0.05} onChange={setHullHint} />
           </Field>
-          <Field label="range set">
-            <input
-              type="checkbox"
-              checked={rangeOn}
-              onChange={(e) => setRangeOn(e.target.checked)}
-            />
-          </Field>
-          {rangeOn && (
-            <Field label="range nm">
-              <Range value={range} min={0} max={5} step={0.1} onChange={setRange} />
-            </Field>
-          )}
-          <Field label="sky">
-            <Range value={sky} min={0} max={1} step={0.05} onChange={setSky} />
-          </Field>
-          <Field label="seascape">
-            <input
-              type="checkbox"
-              checked={seascape}
-              onChange={(e) => setSeascape(e.target.checked)}
-            />
+          <Field label="range nm (fades hull)">
+            <Range value={range} min={0} max={5} step={0.1} onChange={setRange} />
           </Field>
           <Field label="single lantern">
             <input
@@ -386,9 +402,6 @@ function Playground() {
               onChange={(e) => setFlashRateOn(e.target.checked)}
             />
           </Field>
-          <Field label="day">
-            <input type="checkbox" checked={day} onChange={(e) => setDay(e.target.checked)} />
-          </Field>
           <Field label="labels">
             <input
               type="checkbox"
@@ -396,6 +409,40 @@ function Playground() {
               onChange={(e) => setLabelsOn(e.target.checked)}
             />
           </Field>
+        </fieldset>
+
+        <fieldset>
+          <legend>Sky, sea and day</legend>
+          <Field label="sky">
+            <Range value={sky} min={0} max={1} step={0.05} onChange={setSky} />
+          </Field>
+          <Field label="sea">
+            <Range value={sea} min={0} max={1} step={0.05} onChange={setSea} />
+          </Field>
+          <Field label="day">
+            <input type="checkbox" checked={day} onChange={(e) => setDay(e.target.checked)} />
+          </Field>
+        </fieldset>
+
+        <fieldset>
+          <legend>Lights drawn</legend>
+          {lawful.length === 0 && <p className="muted">no lights</p>}
+          {lawful.map((l) => (
+            <Field key={l.key} label={`${l.lightId.replace('light:', '')} (${l.key})`}>
+              <input
+                type="checkbox"
+                checked={!lightsOff.includes(l.key)}
+                onChange={(e) =>
+                  setLightsOff(
+                    e.target.checked ? lightsOff.filter((k) => k !== l.key) : [...lightsOff, l.key],
+                  )
+                }
+              />
+            </Field>
+          ))}
+          <p className="muted">
+            {placed.length} of {lawful.length} drawn; the lawful display is unchanged
+          </p>
         </fieldset>
       </section>
 
@@ -419,9 +466,9 @@ function Playground() {
             theta={theta}
             onTheta={setTheta}
             hullHint={hullHint}
-            range={rangeOn ? range : undefined}
+            range={range}
             sky={sky}
-            seascape={seascape}
+            seascape
             singleLantern={singleLantern}
             rangeGlow={rangeGlow}
             lightRangesNm={lightRangesNm}
@@ -484,10 +531,9 @@ function Playground() {
           />
         </figure>
         <figure>
-          <figcaption>BenchyView ({model})</figcaption>
+          <figcaption>Benchy View (3dbenchy-lowpoly.glb)</figcaption>
           <BenchyView
-            key={model}
-            modelUrl={models[model]!}
+            modelUrl={models['3dbenchy-lowpoly.glb']!}
             hull={hull}
             placed={placed}
             facts={facts}

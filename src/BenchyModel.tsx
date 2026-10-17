@@ -40,7 +40,7 @@ import {
 } from './modelTransform.js';
 import type { HullStations } from './modelTransform.js';
 import { placeScene, profileHullModel } from './sceneProfile.js';
-import { DEFAULT_TILT, MAX_TILT } from './tilt.js';
+import { DEFAULT_TILT } from './tilt.js';
 
 const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN, bowX: NaN };
 
@@ -59,6 +59,7 @@ function Hull({
   anchored,
   inViewAt,
   opacity,
+  sea,
   onReady,
 }: {
   modelUrl: string;
@@ -70,6 +71,8 @@ function Hull({
   inViewAt?: number;
   /** Mesh opacity, 0 (hidden) .. 1. The lights are never faded. */
   opacity: number;
+  /** The sea's colour; undefined draws no sea. */
+  sea?: string;
   /** Called once the model has loaded and the lights are on it. */
   onReady: () => void;
 }): ReactElement {
@@ -130,6 +133,7 @@ function Hull({
 
   return (
     <group scale={fit.scale} position={fit.position}>
+      {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
       <primitive object={depth} visible={faded && opacity > 0} />
       <primitive object={group} visible={opacity > 0} />
       {seen.map(({ light, position }) => (
@@ -137,6 +141,27 @@ function Hull({
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
     </group>
+  );
+}
+
+/** The sea: one wide plane at the waterline, seen from both sides so a camera
+ * below it looks up through the surface. Translucent, so the hull and her
+ * lights still read from underneath; it writes no depth, so it never hides
+ * what the faded hull's prepass has drawn. */
+function Sea({ color, lengthMeters }: { color: string; lengthMeters: number }): ReactElement {
+  const size = lengthMeters * 200;
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+      <planeGeometry args={[size, size]} />
+      <meshBasicMaterial
+        color={color}
+        side={THREE.DoubleSide}
+        transparent
+        opacity={0.9}
+        depthWrite={false}
+        toneMapped={false}
+      />
+    </mesh>
   );
 }
 
@@ -263,8 +288,9 @@ function Pending({ onPending }: { onPending: (p: boolean) => void }): null {
 const DAY_BACKGROUND = '#0a1622';
 
 const DEG = Math.PI / 180;
-const MIN_POLAR = (90 - MAX_TILT) * DEG;
-const MAX_POLAR = 90 * DEG;
+// Straight down to straight up: tilt runs -90..90 (see tilt.ts).
+const MIN_POLAR = 0;
+const MAX_POLAR = 180 * DEG;
 
 /** Drives the camera from `theta` (relative bearing of the viewer, the
  * same angle the bearing view's slider carries) and `tilt` (elevation
@@ -337,6 +363,7 @@ export function BenchyModel({
   hullOpacity = 1,
   background = DAY_BACKGROUND,
   night = false,
+  sea,
   label,
   fallback = <div className="scene-3d" />,
   loading,
@@ -374,6 +401,8 @@ export function BenchyModel({
    * orbit centre pinned to the vessel, the camera's azimuth is the viewer's
    * relative bearing and nothing else. */
   night?: boolean;
+  /** The sea's colour: a plane at the waterline, visible from below as well. Undefined draws none. */
+  sea?: string;
   /** Accessible name for the canvas. Comes from the caller's SceneLabels —
    * these views render without an IntlProvider, by design (searoom#20). */
   label?: string;
@@ -433,6 +462,7 @@ export function BenchyModel({
             anchored={anchored}
             inViewAt={inViewAt === undefined ? undefined : seenFrom}
             opacity={Math.min(1, Math.max(0, hullOpacity))}
+            sea={sea}
             onReady={ready}
           />
         </Suspense>

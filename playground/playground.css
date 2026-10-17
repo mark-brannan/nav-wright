@@ -33,6 +33,10 @@ body {
   color: #ff8a80;
   font-size: 12px;
 }
+.primary {
+  max-width: 1000px;
+  margin: 0 auto 16px;
+}
 .controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
