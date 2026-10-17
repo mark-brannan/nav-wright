@@ -2776,9 +2776,9 @@
 <polygon points="42.81,62.29 44.41,62.09 44.41,62.09 42.81,62.33" fill="rgb(10,25,41)" stroke="rgb(10,25,41)" stroke-width="0.03"/>
 <polygon points="42.81,62.25 44.41,62.09 44.41,62.09 42.81,62.29" fill="rgb(10,25,41)" stroke="rgb(10,25,41)" stroke-width="0.03"/>
 <line x1="15.74" y1="58.9" x2="12.93" y2="2" stroke="#5a6470" stroke-width="0.3" stroke-linecap="round"/>
-<line x1="26.35" y1="60.51" x2="25.62" y2="16.06" stroke="#5a6470" stroke-width="0.07" stroke-linecap="round"/>
+<line x1="26.35" y1="60.51" x2="25.62" y2="16.06" stroke="#5a6470" stroke-width="0.3" stroke-linecap="round"/>
 <line x1="15.47" y1="54.55" x2="2.13" y2="51.85" stroke="#5a6470" stroke-width="0.3" stroke-linecap="round"/>
-<line x1="26.33" y1="56.2" x2="15.56" y2="54.56" stroke="#5a6470" stroke-width="0.07" stroke-linecap="round"/>
+<line x1="26.33" y1="56.2" x2="15.56" y2="54.56" stroke="#5a6470" stroke-width="0.3" stroke-linecap="round"/>
 <line x1="44.45" y1="62.09" x2="53.25" y2="62.65" stroke="#5a6470" stroke-width="0.3" stroke-linecap="round"/>
 <line x1="25.74" y1="16.04" x2="53.1" y2="62.63" stroke="#5a6470" stroke-width="0.07" stroke-linecap="round"/>
 <line x1="25.68" y1="20.18" x2="44.17" y2="62.04" stroke="#5a6470" stroke-width="0.07" stroke-linecap="round"/>
