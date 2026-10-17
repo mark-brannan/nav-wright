@@ -65,11 +65,17 @@ export interface HullSpan {
  * A degenerate model (no length) or a nonsense vessel length leaves the
  * scale at 1 rather than collapsing or inverting the mesh, and centred
  * fore-aft: there is no length for a span to be a fraction of.
+ *
+ * `waterlineZ` is the model's own waterline height, in its coordinates,
+ * for a mesh with an underbody: that height lands on the water and the
+ * keel below it. Absent, the lowest point does, as a mesh drawn down to
+ * the waterline wants.
  */
 export function placeHullModel(
   raw: ModelBox,
   lengthMeters: number,
   span?: HullSpan,
+  waterlineZ?: number,
 ): ModelPlacement {
   const rawLength = raw.max.x - raw.min.x;
   const fits = rawLength > 0 && Number.isFinite(lengthMeters) && lengthMeters > 0;
@@ -90,7 +96,7 @@ export function placeHullModel(
   const shiftX = spanned
     ? (span.sternX * lengthMeters) / 2 - scale * raw.min.x
     : -(scale * (raw.min.x + raw.max.x)) / 2;
-  const keelY = scale * raw.min.z;
+  const keelY = scale * (Number.isFinite(waterlineZ) ? (waterlineZ as number) : raw.min.z);
   const centreZ = (-scale * (raw.min.y + raw.max.y)) / 2;
 
   return {

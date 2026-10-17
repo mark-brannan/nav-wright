@@ -1,6 +1,8 @@
 // Turns a hand-traced sailboat drawing (docs/research/sailboat-lines/<id>.json)
 // into SVGs of its profile, plan, body plan and a lofted 3D view, so a traced
-// hull can be judged by eye before it goes anywhere near src/hulls.tsx.
+// hull can be judged by eye before it goes anywhere near src/hulls.tsx, and
+// into models/<id>-lines.glb, the same loft as a mesh the 3D views can show
+// (MODELS.md).
 //
 //   node scripts/sailboat-lines.mjs [id ...]     (default: every json there)
 //
@@ -12,7 +14,9 @@
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { glb } from './glb.mjs';
 
+const MODELS = join(dirname(fileURLToPath(import.meta.url)), '..', 'models');
 const DIR = join(
   dirname(fileURLToPath(import.meta.url)),
   '..',
@@ -152,9 +156,12 @@ function model(trace) {
 
   const rig = Object.fromEntries(Object.entries(profile.rig).map(([k, v]) => [k, v.map(P)]));
   const boottop = profile.boottopTopY.map(P);
-  // A yacht's coachroof, or a ship's several deckhouses: each four points,
-  // aft foot, aft top, forward top, forward foot.
+  // A yacht's coachroof, or a ship's several deckhouses: each a polyline from
+  // the aft foot over the top to the forward foot. The feet give its ends,
+  // the points between them its top.
   const houses = (profile.houses ?? [profile.coachroof]).map((h) => h.map(P));
+  const houseX = houses.map((h) => [h[0][0], h[h.length - 1][0]]);
+  const houseTop = houses.map((h) => h.slice(1, -1).sort((a, b) => a[0] - b[0]));
   // Each house's width as a fraction of the deck's: a poop or a topgallant
   // forecastle runs the full beam, a coachroof or a deckhouse less.
   const houseBreadth = houses.map((_, i) => profile.houseBreadth?.[i] ?? 0.62);
@@ -175,6 +182,8 @@ function model(trace) {
     rig,
     boottop,
     houses,
+    houseX,
+    houseTop,
     houseBreadth,
     L,
     traced: stations.length,
@@ -276,9 +285,9 @@ function planSvg(m) {
     ...wlXs.map((x) => [X(x), Y(m.y(x, 0))]),
     ...[...wlXs].reverse().map((x) => [X(x), Y(-m.y(x, 0))]),
   ];
-  const houses = m.houses.map(([cr0, , , cr1], i) => {
+  const houses = m.houseX.map(([x0, x1], i) => {
     const k = m.houseBreadth[i];
-    const crXs = Array.from({ length: 21 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 20);
+    const crXs = Array.from({ length: 21 }, (_, i) => x0 + ((x1 - x0) * i) / 20);
     return [
       ...crXs.map((x) => [X(x), Y(k * m.beam(x))]),
       ...[...crXs].reverse().map((x) => [X(x), Y(-k * m.beam(x))]),
@@ -404,15 +413,15 @@ function loftSvg(m, { yaw = -0.62, pitch = 0.32 } = {}) {
     );
   }
   // Each house as a lofted box.
-  for (const [h, [cr0, crTop0, crTop1, cr1]] of m.houses.entries()) {
+  for (const [h, [x0, x1]] of m.houseX.entries()) {
     const k = m.houseBreadth[h];
-    const hx = Array.from({ length: 13 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 12);
+    const hx = Array.from({ length: 13 }, (_, i) => x0 + ((x1 - x0) * i) / 12);
     for (let i = 0; i < 12; i++) {
       const [xa, xb] = [hx[i], hx[i + 1]];
       const za = m.top(xa);
       const zb = m.top(xb);
-      const ta = interp([crTop0, crTop1], xa);
-      const tb = interp([crTop0, crTop1], xb);
+      const ta = interp(m.houseTop[h], xa);
+      const tb = interp(m.houseTop[h], xb);
       const [wa, wb] = [k * m.beam(xa), k * m.beam(xb)];
       push(
         [
@@ -470,6 +479,145 @@ ${label(pad, h - 0.6 * m.u, m.traced ? `lofted from profile + plan + ${m.traced}
   return svg(w, h, body, `${m.trace.name} loft`, m.u);
 }
 
+// ---- mesh ------------------------------------------------------------------
+
+/** Mesh colours, 0..1: the drawing's paints. */
+const MESH = {
+  topsides: [0.08, 0.19, 0.31],
+  bottom: [0.61, 0.23, 0.18],
+  deck: [0.85, 0.81, 0.72],
+  house: [0.94, 0.91, 0.86],
+  rig: [0.35, 0.39, 0.44],
+};
+
+/** A box of half-width w along the segment A..B, both 3D points in feet. */
+function bar(part, A, B, w) {
+  const d = [B[0] - A[0], B[1] - A[1], B[2] - A[2]];
+  const len = Math.hypot(...d);
+  if (len < 1e-6) return;
+  const u = d.map((c) => c / len);
+  // Two unit vectors across the bar: athwartships when it lies in the
+  // centreline plane, else whatever is perpendicular.
+  const pick = Math.abs(u[1]) < 0.9 ? [0, 1, 0] : [1, 0, 0];
+  const n1 = [
+    u[1] * pick[2] - u[2] * pick[1],
+    u[2] * pick[0] - u[0] * pick[2],
+    u[0] * pick[1] - u[1] * pick[0],
+  ];
+  const l1 = Math.hypot(...n1);
+  const a = n1.map((c) => (c / l1) * w);
+  const n2 = [u[1] * a[2] - u[2] * a[1], u[2] * a[0] - u[0] * a[2], u[0] * a[1] - u[1] * a[0]];
+  const l2 = Math.hypot(...n2);
+  const b = n2.map((c) => (c / l2) * w);
+  const ring = (P) =>
+    [
+      [1, 1],
+      [-1, 1],
+      [-1, -1],
+      [1, -1],
+    ].map(([sa, sb]) => P.map((c, k) => c + sa * a[k] + sb * b[k]));
+  const ra = ring(A);
+  const rb = ring(B);
+  for (let k = 0; k < 4; k++) part.quad(ra[k], rb[k], rb[(k + 1) % 4], ra[(k + 1) % 4]);
+  part.quad(ra[3], ra[2], ra[1], ra[0]);
+  part.quad(rb[0], rb[1], rb[2], rb[3]);
+}
+
+class Part {
+  constructor(scale) {
+    this.pos = [];
+    this.s = scale;
+  }
+  tri(a, b, c) {
+    for (const p of [a, b, c]) this.pos.push(...this.s(p));
+  }
+  quad(a, b, c, d) {
+    this.tri(a, b, c);
+    this.tri(a, c, d);
+  }
+}
+
+/**
+ * The loft as a glTF binary in the Benchy convention (MODELS.md): Z up, bow
+ * on +X, half-length units, the waterline at z = 0 and the keel below it.
+ * True aspect, feet all round, so a 12 ft beam is 12 ft and the mast stands
+ * where the drawing puts it. The root node's extras carry `waterlineZ`, so
+ * placement floats her instead of standing her on her keel, and `hullX`, the
+ * hull's own extent, so a bowsprit or a boomkin does not shorten her when
+ * the mesh is fitted to a length.
+ */
+function loftGlb(m) {
+  const k = 2 / m.loa;
+  const toModel = ([x, y, z]) => [(x - m.loa / 2) * k, y * k, z * k];
+  const parts = Object.fromEntries(Object.keys(MESH).map((n) => [n, new Part(toModel)]));
+  const stations = Array.from({ length: STATIONS + 1 }, (_, i) =>
+    Math.min(Math.max((m.loa * i) / STATIONS, 0.02), m.loa - 0.02),
+  );
+  const rings = stations.map((x) => m.section(x).map(([y, z]) => [x, y, z]));
+  for (const side of [1, -1])
+    for (let i = 0; i < STATIONS; i++)
+      for (let j = 0; j < SECTION; j++) {
+        const q = [rings[i][j], rings[i + 1][j], rings[i + 1][j + 1], rings[i][j + 1]].map(
+          ([x, y, z]) => [x, side * y, z],
+        );
+        const zMid = q.reduce((s, p) => s + p[2], 0) / 4;
+        const xMid = q.reduce((s, p) => s + p[0], 0) / 4;
+        const wet = zMid < interp(m.boottop, xMid);
+        (wet ? parts.bottom : parts.topsides).quad(...(side > 0 ? q : [...q].reverse()));
+      }
+  for (let i = 0; i < STATIONS; i++) {
+    const [a, b] = [rings[i][0], rings[i + 1][0]];
+    parts.deck.quad(
+      [a[0], -a[1], a[2]],
+      [b[0], -b[1], b[2]],
+      [b[0], b[1], b[2]],
+      [a[0], a[1], a[2]],
+    );
+  }
+  // The ends: a transom or a counter's tip is a flat face across the end
+  // ring; a stem's ring has no breadth and closes on itself.
+  for (const ring of [rings[0], rings[STATIONS]]) {
+    if (Math.max(...ring.map(([, y]) => y)) < 0.01) continue;
+    const x = ring[0][0];
+    const wet = interp(m.boottop, x);
+    for (let j = 0; j < SECTION; j++) {
+      const [a, b] = [ring[j], ring[j + 1]];
+      const part = (a[2] + b[2]) / 2 < wet ? parts.bottom : parts.topsides;
+      part.quad([x, a[1], a[2]], [x, b[1], b[2]], [x, -b[1], b[2]], [x, -a[1], a[2]]);
+    }
+  }
+  for (const [h, [x0, x1]] of m.houseX.entries()) {
+    const kb = m.houseBreadth[h];
+    const n = 12;
+    const hx = Array.from({ length: n + 1 }, (_, i) => x0 + ((x1 - x0) * i) / n);
+    const box = (x) => ({ w: kb * m.beam(x), floor: m.top(x), top: interp(m.houseTop[h], x) });
+    for (let i = 0; i < n; i++) {
+      const [xa, xb] = [hx[i], hx[i + 1]];
+      const A = box(xa);
+      const B = box(xb);
+      parts.house.quad([xa, -A.w, A.top], [xb, -B.w, B.top], [xb, B.w, B.top], [xa, A.w, A.top]);
+      for (const s of [1, -1])
+        parts.house.quad(
+          [xa, s * A.w, A.floor],
+          [xb, s * B.w, B.floor],
+          [xb, s * B.w, B.top],
+          [xa, s * A.w, A.top],
+        );
+    }
+    for (const x of [hx[0], hx[n]]) {
+      const E = box(x);
+      parts.house.quad([x, -E.w, E.floor], [x, E.w, E.floor], [x, E.w, E.top], [x, -E.w, E.top]);
+    }
+  }
+  for (const [name, [a, b]] of Object.entries(m.rig))
+    bar(parts.rig, [a[0], 0, a[1]], [b[0], 0, b[1]], (SPAR.test(name) ? 0.18 : 0.04) * m.u);
+  return glb(parts, m.trace.name, {
+    generator: 'nav-wright scripts/sailboat-lines.mjs',
+    colours: MESH,
+    extras: { waterlineZ: 0, hullX: [-1, 1], loaFt: m.loa },
+  });
+}
+
 const ids = process.argv.slice(2).length
   ? process.argv.slice(2)
   : readdirSync(DIR)
@@ -484,11 +632,13 @@ for (const id of ids) {
     loft: loftSvg(m),
   };
   for (const [k, s] of Object.entries(out)) writeFileSync(join(DIR, `${id}-${k}.svg`), s);
+  const bytes = loftGlb(m);
+  writeFileSync(join(MODELS, `${id}-lines.glb`), bytes);
   const spars = Object.values(m.rig)
     .flat()
     .map((p) => p[0]);
   const sparred = Math.max(m.loa, ...spars) - Math.min(0, ...spars);
   console.log(
-    `${id}: sparred ${f(sparred)} ft (spec ${m.trace.specs.sparredLengthFt ?? '-'}), LWL ${f(m.wlFwd - m.wlAft)} ft (spec ${m.trace.specs.lwlFt}), draft ${f(m.draft)} ft (spec ${m.trace.specs.draftFt}), ${f(1 / m.ftPerPx)} px/ft`,
+    `${id}: sparred ${f(sparred)} ft (spec ${m.trace.specs.sparredLengthFt ?? '-'}), LWL ${f(m.wlFwd - m.wlAft)} ft (spec ${m.trace.specs.lwlFt}), draft ${f(m.draft)} ft (spec ${m.trace.specs.draftFt}), ${f(1 / m.ftPerPx)} px/ft, ${(bytes.length / 1024).toFixed(0)} KB glb`,
   );
 }

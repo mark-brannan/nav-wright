@@ -218,6 +218,7 @@ function Gallery() {
             Gallery
           </a>
           <a href="./scenes.html">Scenes</a>
+          <a href="./vessels.html">Vessels</a>
         </nav>
         <span className="muted">
           {hullKeys.length} hulls × {hullStyleIds.length} styles, plus the base drawing. Profile,

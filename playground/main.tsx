@@ -428,6 +428,7 @@ function Playground() {
           </a>
           <a href="./gallery.html">Gallery</a>
           <a href="./scenes.html">Scenes</a>
+          <a href="./vessels.html">Vessels</a>
         </nav>
       </header>
 
