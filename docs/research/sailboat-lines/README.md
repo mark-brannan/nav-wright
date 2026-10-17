@@ -15,16 +15,20 @@ node scripts/sailboat-lines.mjs
 | Catalina 30 Mk II             | [json](catalina-30-mkii.json)              | ![](catalina-30-mkii-profile.svg)              | ![](catalina-30-mkii-plan.svg)              | ![](catalina-30-mkii-bodyplan.svg)              | ![](catalina-30-mkii-loft.svg)              |
 | Westsail 32                   | [json](westsail-32.json)                   | ![](westsail-32-profile.svg)                   | ![](westsail-32-plan.svg)                   | ![](westsail-32-bodyplan.svg)                   | ![](westsail-32-loft.svg)                   |
 | Cheoy Lee Clipper 48 schooner | [json](cheoy-lee-clipper-48-schooner.json) | ![](cheoy-lee-clipper-48-schooner-profile.svg) | ![](cheoy-lee-clipper-48-schooner-plan.svg) | ![](cheoy-lee-clipper-48-schooner-bodyplan.svg) | ![](cheoy-lee-clipper-48-schooner-loft.svg) |
+| Wyoming                       | [json](wyoming.json)                       | ![](wyoming-profile.svg)                       | ![](wyoming-plan.svg)                       | ![](wyoming-bodyplan.svg)                       | ![](wyoming-loft.svg)                       |
+| Thomas W. Lawson              | [json](thomas-w-lawson.json)               | ![](thomas-w-lawson-profile.svg)               | ![](thomas-w-lawson-plan.svg)               | ![](thomas-w-lawson-bodyplan.svg)               | ![](thomas-w-lawson-loft.svg)               |
 
 ## Sources
 
-| Boat                          | Spec page                                                          | Drawing                                                                                                                                                                                     |
-| ----------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Hans Christian 38T            | <https://sailboatdata.com/sailboat/hans-christian-38t/>            | <https://sailboatdata.com/wp-content/uploads/2023/03/hans_christian_38_drawing.jpg>                                                                                                         |
-| Com-Pac 16                    | <https://sailboatdata.com/sailboat/com-pac-16/>                    | <https://sailboatdata.com/wp-content/uploads/2023/03/ComPac_16_drawing.jpeg>                                                                                                                |
-| Catalina 30 Mk II             | <https://sailboatdata.com/sailboat/catalina-30-mkii/>              | <https://sailboatdata.com/wp-content/uploads/2023/03/catalina_30_mkii_drawing.jpg>                                                                                                          |
-| Westsail 32                   | <https://sailboatdata.com/sailboat/westsail-32/>                   | <https://sailboatdata.com/wp-content/uploads/2023/03/westsail_32_drawing-1.jpg>                                                                                                             |
-| Cheoy Lee Clipper 48 schooner | <https://sailboatdata.com/sailboat/clipper-48-schooner-cheoy-lee/> | <https://sailboatdata.com/wp-content/uploads/2023/03/cheoy_lee_clipper_48_sch_drawing.jpg>, keel and plan from <https://sailboatdata.com/wp-content/uploads/2023/03/clipper_48_drawing.jpg> |
+| Boat                          | Spec page                                                               | Drawing                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ----------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hans Christian 38T            | <https://sailboatdata.com/sailboat/hans-christian-38t/>                 | <https://sailboatdata.com/wp-content/uploads/2023/03/hans_christian_38_drawing.jpg>                                                                                                                                                                                                                                                                                                                                                                       |
+| Com-Pac 16                    | <https://sailboatdata.com/sailboat/com-pac-16/>                         | <https://sailboatdata.com/wp-content/uploads/2023/03/ComPac_16_drawing.jpeg>                                                                                                                                                                                                                                                                                                                                                                              |
+| Catalina 30 Mk II             | <https://sailboatdata.com/sailboat/catalina-30-mkii/>                   | <https://sailboatdata.com/wp-content/uploads/2023/03/catalina_30_mkii_drawing.jpg>                                                                                                                                                                                                                                                                                                                                                                        |
+| Westsail 32                   | <https://sailboatdata.com/sailboat/westsail-32/>                        | <https://sailboatdata.com/wp-content/uploads/2023/03/westsail_32_drawing-1.jpg>                                                                                                                                                                                                                                                                                                                                                                           |
+| Cheoy Lee Clipper 48 schooner | <https://sailboatdata.com/sailboat/clipper-48-schooner-cheoy-lee/>      | <https://sailboatdata.com/wp-content/uploads/2023/03/cheoy_lee_clipper_48_sch_drawing.jpg>, keel and plan from <https://sailboatdata.com/wp-content/uploads/2023/03/clipper_48_drawing.jpg>                                                                                                                                                                                                                                                               |
+| Wyoming                       | <https://maine-maritime-museum-store.myshopify.com/products/wyoming>    | Capt. Douglas K. Lee's 1996 sail plan <https://cdn.shopify.com/s/files/1/0020/7962/1185/products/Wyoming_profile_sail_plan_resize.jpg>; his deck plan <https://cowboystatedaily.imgix.net/Wyoming-schooner-drawing-profile-10.28.23.jpg>; midship section, International Marine Engineering, Jan 1910 <https://archive.org/details/internationalma151910newy>; end stations from the six-master _Mertie B. Crowley_'s lines (Maine Maritime Museum store) |
+| Thomas W. Lawson              | <https://archive.org/details/sim_nautical-research-journal_1953-04_5_4> | H. S. Scott's 1953 rigging sheet from the Fore River builder's plans, Nautical Research Journal, Apr 1953, pp. 7–8; deck plan, Marine Engineering, Nov 1902 <https://archive.org/details/marine-engineering_1902-11>; midship section, Marine Engineering, Oct 1901 <https://archive.org/details/marine-engineering_1901-10>; end stations from the _Mertie B. Crowley_                                                                                   |
 
 The drawings are not committed; the json records each URL and the size it had.
 sailboatdata.com sits behind Cloudflare: a plain `curl` gets a challenge page.
@@ -80,13 +84,15 @@ curl -sSL --compressed -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit
 
 ## Range of sizes and forms
 
-| Boat                          | LOA      | Form                                         | LWL traced / spec | Beam             | Draft          |
-| ----------------------------- | -------- | -------------------------------------------- | ----------------- | ---------------- | -------------- |
-| Com-Pac 16                    | 16.0 ft  | shoal keel, outboard rudder (not traced)     | 14.44 / 14.0 ft   | 6.48 / 6.0 ft    | 1.72 / 1.5 ft  |
-| Catalina 30 Mk II             | 29.92 ft | fin keel, spade rudder                       | 25.3 / 25.0 ft    | 10.94 / 10.83 ft | 5.55 / 5.25 ft |
-| Westsail 32                   | 32.0 ft  | double-ender, long keel, transom-hung rudder | 27.1 / 27.5 ft    | 11.1 / 11.0 ft   | 4.77 / 5.0 ft  |
-| Hans Christian 38T            | 37.92 ft | long keel, cutter                            | 33.75 / 33.0 ft   | 12.38 / 12.33 ft | 6.23 / 6.0 ft  |
-| Cheoy Lee Clipper 48 schooner | 47.92 ft | long keel, two masts                         | 34.74 / 34.0 ft   | 13.23 / 13.0 ft  | 6.21 / 6.0 ft  |
+| Boat                          | LOA                  | Form                                         | LWL traced / spec                | Beam             | Draft           |
+| ----------------------------- | -------------------- | -------------------------------------------- | -------------------------------- | ---------------- | --------------- |
+| Com-Pac 16                    | 16.0 ft              | shoal keel, outboard rudder (not traced)     | 14.44 / 14.0 ft                  | 6.48 / 6.0 ft    | 1.72 / 1.5 ft   |
+| Catalina 30 Mk II             | 29.92 ft             | fin keel, spade rudder                       | 25.3 / 25.0 ft                   | 10.94 / 10.83 ft | 5.55 / 5.25 ft  |
+| Westsail 32                   | 32.0 ft              | double-ender, long keel, transom-hung rudder | 27.1 / 27.5 ft                   | 11.1 / 11.0 ft   | 4.77 / 5.0 ft   |
+| Hans Christian 38T            | 37.92 ft             | long keel, cutter                            | 33.75 / 33.0 ft                  | 12.38 / 12.33 ft | 6.23 / 6.0 ft   |
+| Cheoy Lee Clipper 48 schooner | 47.92 ft             | long keel, two masts                         | 34.74 / 34.0 ft                  | 13.23 / 13.0 ft  | 6.21 / 6.0 ft   |
+| Wyoming                       | 350 ft over the rail | wooden six-masted cargo schooner, 1909       | 322 ft / none published          | 49.97 / 50 ft    | 27.73 / 27.5 ft |
+| Thomas W. Lawson              | 403.33 ft            | steel seven-masted cargo schooner, 1902      | 373.08 / 368 ft, rudder included | 50 / 50 ft       | 26.19 / 26.5 ft |
 
 LWL here is the hull body's. The script's printout runs to the lowest point
 of any section, so a rudder hung aft stretches it: Catalina 26.63 ft, Westsail
@@ -105,6 +111,23 @@ of any section, so a rudder hung aft stretches it: Catalina 26.63 ft, Westsail
   and mapped onto it through the stern and bow points.
 - **Cheoy Lee Clipper 48 schooner**: the schooner drawing stops at the
   waterline and has no plan, so keel, rudder and plan come from the ketch
-  drawing of the same Luders hull. The script's spar list names only `mast`,
-  so the foremast and staysail boom draw as wire. Neither the Thomas W.
-  Lawson nor the schooner Wyoming has a sailboatdata page.
+  drawing of the same Luders hull.
+- **Wyoming** and **Thomas W. Lawson**, the two largest schooners built, are
+  the top of the range. Neither has a sailboatdata page; their drawings are
+  period journals, a museum reconstruction and a 1953 rigging sheet. Each is
+  lofted from traced stations (`sections`) rather than the canoe-body
+  default: her own published midship section, and the six-master _Mertie B.
+  Crowley_'s lines fore and aft of it, since no lines plan of either ship is
+  free online. Wyoming's are held by Maine Maritime Museum (Lee's set), the
+  Lawson's by Royal Museums Greenwich (MSA0301) and Mystic Seaport (12.60).
+  - **Wyoming**: 350 ft is length over the rail, reaching onto the knee of
+    the head; the carved head forward of it is left out. Lee's drawings and a
+    broadside photo space the masts about 47 ft apart against the 1910
+    journal's 44 ft 6 in; Lee's spacing is kept. The Crowley's after
+    stations tumble home enough to put a 52 ft beam under water, so above
+    their widest point they are taken plumb.
+  - **Thomas W. Lawson**: Scott's sheet is a fold-out over two scan leaves,
+    stitched at frame station 10. Its drawn scale bar reads 2.6% off;
+    length between perpendiculars (367.9 / 369.25 ft) and the topmast
+    (59.5 / 59.5 ft) agree with the 403 ft 4 in calibration, so that holds.
+    The poop and topgallant forecastle run the full beam (`houseBreadth`).

@@ -155,6 +155,9 @@ function model(trace) {
   // A yacht's coachroof, or a ship's several deckhouses: each four points,
   // aft foot, aft top, forward top, forward foot.
   const houses = (profile.houses ?? [profile.coachroof]).map((h) => h.map(P));
+  // Each house's width as a fraction of the deck's: a poop or a topgallant
+  // forecastle runs the full beam, a coachroof or a deckhouse less.
+  const houseBreadth = houses.map((_, i) => profile.houseBreadth?.[i] ?? 0.62);
   // Line weights, labels and the camera grow with the boat past 60 ft, so a
   // ship reads at the same size as a yacht; smaller boats draw as before.
   const u = Math.max(1, loa / 60);
@@ -172,6 +175,7 @@ function model(trace) {
     rig,
     boottop,
     houses,
+    houseBreadth,
     L,
     traced: stations.length,
     u,
@@ -272,11 +276,12 @@ function planSvg(m) {
     ...wlXs.map((x) => [X(x), Y(m.y(x, 0))]),
     ...[...wlXs].reverse().map((x) => [X(x), Y(-m.y(x, 0))]),
   ];
-  const houses = m.houses.map(([cr0, , , cr1]) => {
+  const houses = m.houses.map(([cr0, , , cr1], i) => {
+    const k = m.houseBreadth[i];
     const crXs = Array.from({ length: 21 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 20);
     return [
-      ...crXs.map((x) => [X(x), Y(0.62 * m.beam(x))]),
-      ...[...crXs].reverse().map((x) => [X(x), Y(-0.62 * m.beam(x))]),
+      ...crXs.map((x) => [X(x), Y(k * m.beam(x))]),
+      ...[...crXs].reverse().map((x) => [X(x), Y(-k * m.beam(x))]),
     ];
   });
   const centreSpars = ['bowsprit', 'boomkin']
@@ -308,6 +313,8 @@ ${label(pad, h - 0.6 * m.u, `plan, traced. Beam ${f(2 * bMax)} ft traced (${m.tr
 
 /** Classic body plan: aft stations on the left half, forward on the right. */
 function bodyPlanSvg(m) {
+  // This view is only a beam wide, so it takes its weights from the beam.
+  m = { ...m, u: Math.max(1, Math.max(...m.half.map((p) => p[1])) / 10) };
   const pad = 2 * m.u;
   const bMax = Math.max(...m.half.map((p) => p[1]));
   const zTop = Math.max(...Array.from({ length: 50 }, (_, i) => m.top((m.loa * (i + 0.5)) / 50)));
@@ -397,7 +404,8 @@ function loftSvg(m, { yaw = -0.62, pitch = 0.32 } = {}) {
     );
   }
   // Each house as a lofted box.
-  for (const [cr0, crTop0, crTop1, cr1] of m.houses) {
+  for (const [h, [cr0, crTop0, crTop1, cr1]] of m.houses.entries()) {
+    const k = m.houseBreadth[h];
     const hx = Array.from({ length: 13 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 12);
     for (let i = 0; i < 12; i++) {
       const [xa, xb] = [hx[i], hx[i + 1]];
@@ -405,7 +413,7 @@ function loftSvg(m, { yaw = -0.62, pitch = 0.32 } = {}) {
       const zb = m.top(xb);
       const ta = interp([crTop0, crTop1], xa);
       const tb = interp([crTop0, crTop1], xb);
-      const [wa, wb] = [0.62 * m.beam(xa), 0.62 * m.beam(xb)];
+      const [wa, wb] = [k * m.beam(xa), k * m.beam(xb)];
       push(
         [
           [xa, wa, ta],
@@ -481,6 +489,6 @@ for (const id of ids) {
     .map((p) => p[0]);
   const sparred = Math.max(m.loa, ...spars) - Math.min(0, ...spars);
   console.log(
-    `${id}: sparred ${f(sparred)} ft (owner ${m.trace.specs.sparredLengthFt ?? '-'}), LWL ${f(m.wlFwd - m.wlAft)} ft (spec ${m.trace.specs.lwlFt}), draft ${f(m.draft)} ft (spec ${m.trace.specs.draftFt}), ${f(1 / m.ftPerPx)} px/ft`,
+    `${id}: sparred ${f(sparred)} ft (spec ${m.trace.specs.sparredLengthFt ?? '-'}), LWL ${f(m.wlFwd - m.wlAft)} ft (spec ${m.trace.specs.lwlFt}), draft ${f(m.draft)} ft (spec ${m.trace.specs.draftFt}), ${f(1 / m.ftPerPx)} px/ft`,
   );
 }
