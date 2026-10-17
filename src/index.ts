@@ -28,6 +28,13 @@ export type { Fill, Hatch, HullStyle, HullStyleDay, HullStyleId, Paint } from '.
 
 // Light placement and arc geometry
 export { bearingInArc, lightsInView, placeLights } from './placement.js';
+export {
+  ANNEX_I_PROFILE,
+  K_PRESCRIBED,
+  rangeVisibility,
+  sectorIntensity,
+} from './sectorProfile.js';
+export type { EdgeProfile, LightIntensity, SectorProfile } from './sectorProfile.js';
 export type { PlacedLight } from './placement.js';
 
 // Day shapes (Rule 20(d), Annex I 6): placement from colregs' shapes.json and

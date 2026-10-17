@@ -29,6 +29,7 @@ import * as THREE from 'three';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import { lightFill } from './svg.js';
 import type { PlacedLight } from './placement.js';
+import type { LightIntensity } from './sectorProfile.js';
 import {
   VIEW_FRAME,
   anchorLights,
@@ -66,6 +67,7 @@ function Hull({
   opacity,
   flat = false,
   sea,
+  lightIntensity,
   onReady,
 }: {
   modelUrl: string;
@@ -81,6 +83,8 @@ function Hull({
   flat?: boolean;
   /** The sea's colour; undefined draws no sea. */
   sea?: string;
+  /** See BenchyModel. */
+  lightIntensity?: LightIntensity;
   /** Called once the model has loaded and the lights are on it. */
   onReady: () => void;
 }): ReactElement {
@@ -131,21 +135,36 @@ function Hull({
   // Every light is seated first, on the whole hull, and only then culled to
   // its arc: a seat never depends on which other lights are lit, so none
   // jumps as the viewer walks round her.
-  const seen = useMemo(
-    () =>
-      inViewAt === undefined
-        ? placed.map((light, i) => ({ light, position: positions?.[i] }))
-        : seatsSeenFrom(placed, positions, inViewAt),
-    [placed, positions, inViewAt],
-  );
+  const seen = useMemo((): {
+    light: PlacedLight;
+    position?: [number, number, number];
+    intensity?: number;
+  }[] => {
+    if (inViewAt === undefined)
+      return placed.map((light, i) => ({ light, position: positions?.[i] }));
+    if (!lightIntensity) return seatsSeenFrom(placed, positions, inViewAt);
+    return placed
+      .map((light, i) => ({
+        light,
+        position: positions?.[i],
+        intensity: lightIntensity(light, inViewAt),
+      }))
+      .filter((s) => s.intensity > 0);
+  }, [placed, positions, inViewAt, lightIntensity]);
 
   return (
     <group scale={fit.scale} position={fit.position}>
       {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
       <primitive object={depth} visible={faded && opacity > 0} />
       <primitive object={group} visible={opacity > 0} />
-      {seen.map(({ light, position }) => (
-        <SceneLight key={light.key} light={light} lengthMeters={lengthMeters} position={position} />
+      {seen.map(({ light, position, intensity }) => (
+        <SceneLight
+          key={light.key}
+          light={light}
+          lengthMeters={lengthMeters}
+          position={position}
+          intensity={intensity}
+        />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
       {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
@@ -168,6 +187,7 @@ function BlockHull({
   opacity,
   soft,
   sea,
+  lightIntensity,
   onReady,
 }: {
   lengthMeters: number;
@@ -179,6 +199,7 @@ function BlockHull({
   opacity: number;
   soft: boolean;
   sea?: string;
+  lightIntensity?: LightIntensity;
   onReady: () => void;
 }): ReactElement {
   useLayoutEffect(onReady, [onReady]);
@@ -203,13 +224,22 @@ function BlockHull({
     () => placed.map((l) => lightPosition(l, lengthMeters)),
     [placed, lengthMeters],
   );
-  const seen = useMemo(
-    () =>
-      inViewAt === undefined
-        ? placed.map((light, i) => ({ light, position: positions[i] }))
-        : seatsSeenFrom(placed, positions, inViewAt),
-    [placed, positions, inViewAt],
-  );
+  const seen = useMemo((): {
+    light: PlacedLight;
+    position?: [number, number, number];
+    intensity?: number;
+  }[] => {
+    if (inViewAt === undefined)
+      return placed.map((light, i) => ({ light, position: positions[i] }));
+    if (!lightIntensity) return seatsSeenFrom(placed, positions, inViewAt);
+    return placed
+      .map((light, i) => ({
+        light,
+        position: positions[i],
+        intensity: lightIntensity(light, inViewAt),
+      }))
+      .filter((s) => s.intensity > 0);
+  }, [placed, positions, inViewAt, lightIntensity]);
 
   // Hard edges: a depth prepass, so the union draws each pixel once. Soft:
   // shells whose alphas compound to `opacity` where all of them overlap.
@@ -230,8 +260,14 @@ function BlockHull({
             />
           </mesh>
         ))}
-      {seen.map(({ light, position }) => (
-        <SceneLight key={light.key} light={light} lengthMeters={lengthMeters} position={position} />
+      {seen.map(({ light, position, intensity }) => (
+        <SceneLight
+          key={light.key}
+          light={light}
+          lengthMeters={lengthMeters}
+          position={position}
+          intensity={intensity}
+        />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
       {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
@@ -308,12 +344,15 @@ function SceneLight({
   light,
   lengthMeters,
   position,
+  intensity = 1,
 }: {
   light: PlacedLight;
   lengthMeters: number;
   /** Where to seat it; falls back to the analytic position when the mesh
    * could not be profiled. */
   position?: [number, number, number];
+  /** 0..1, dims the bead and the halo together. */
+  intensity?: number;
 }): ReactElement {
   const halo = useRef<THREE.Mesh>(null);
   const r = lightRadius(lengthMeters);
@@ -333,6 +372,7 @@ function SceneLight({
         <meshBasicMaterial
           color={lightFill(light.color)}
           transparent
+          opacity={intensity}
           depthTest={false}
           depthWrite={false}
           toneMapped={false}
@@ -344,7 +384,7 @@ function SceneLight({
         <meshBasicMaterial
           color={lightFill(light.color)}
           transparent
-          opacity={0.35}
+          opacity={0.35 * intensity}
           blending={THREE.AdditiveBlending}
           depthTest={false}
           depthWrite={false}
@@ -399,6 +439,9 @@ function Pending({ onPending }: { onPending: (p: boolean) => void }): null {
 const DAY_BACKGROUND = '#0a1622';
 
 const DEG = Math.PI / 180;
+
+/** Within the orbit's whole-degree rounding of each other, across north. */
+const near = (a: number, b: number) => Math.abs(((a - b + 540) % 360) - 180) <= 0.5 + 1e-9;
 // Straight down to straight up: tilt runs -90..90 (see tilt.ts).
 const MIN_POLAR = 0;
 const MAX_POLAR = 180 * DEG;
@@ -426,13 +469,15 @@ function OrbitRig({
 }): ReactElement {
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const camera = useThree((s) => s.camera);
-  // The last angles this component itself reported. Without them, our own
-  // report comes back as a prop and re-seats the camera mid-drag.
-  const reported = useRef<{ theta: number; tilt: number } | null>(null);
+  // The last angles this component itself reported, or seated the camera at.
+  // Without them, our own report comes back as a prop and re-seats the
+  // camera mid-drag, and a seat at 112.5 echoes back rounded to 113.
+  const reported = useRef<{ theta: number; tilt: number; seat?: boolean } | null>(null);
 
   useEffect(() => {
     const r = reported.current;
-    if (r && Math.abs(r.theta - theta) < 0.5 && Math.abs(r.tilt - tilt) < 0.5) return;
+    if (r && !r.seat && near(r.theta, theta) && near(r.tilt, tilt)) return;
+    reported.current = { theta, tilt, seat: true };
     // At theta 90 the bow falls to the right of the frame, as it does in
     // the 2D profile.
     camera.position.set(...orbitPosition(theta, tilt));
@@ -454,10 +499,12 @@ function OrbitRig({
         if (!c) return;
         const next = orbitAngles(c.getAzimuthalAngle(), c.getPolarAngle());
         const prev = reported.current;
-        if (prev && prev.theta === next.theta && prev.tilt === next.tilt) return;
+        const sameTheta = prev !== null && near(prev.theta, next.theta);
+        const sameTilt = prev !== null && near(prev.tilt, next.tilt);
+        if (sameTheta && sameTilt) return;
         reported.current = next;
-        if (next.theta !== prev?.theta) onTheta?.(next.theta);
-        if (next.tilt !== prev?.tilt) onTilt?.(next.tilt);
+        if (!sameTheta) onTheta?.(next.theta);
+        if (!sameTilt) onTilt?.(next.tilt);
       }}
     />
   );
@@ -480,6 +527,7 @@ export function BenchyModel({
   sea,
   silhouette,
   blockSpec,
+  lightIntensity,
   label,
   fallback = <div className="scene-3d" />,
   loading,
@@ -519,6 +567,9 @@ export function BenchyModel({
   night?: boolean;
   /** The sea's colour: a plane at the waterline, visible from below as well. Undefined draws none. */
   sea?: string;
+  /** With `inViewAt`: how bright each light reads, 0..1, from a bearing,
+   *  in place of the hard in-arc cut. A light at 0 is not drawn. */
+  lightIntensity?: LightIntensity;
   /** Draw her flat, in one unlit colour, from the waterline's level (tilt
    * 0): her own mesh, or a block built from her spec (`blockSpec`). See
    * SilhouetteVariant. Undefined draws the shaded, orbitable model. */
@@ -593,6 +644,7 @@ export function BenchyModel({
               opacity={opacity}
               soft={silhouette === 'soft'}
               sea={sea}
+              lightIntensity={lightIntensity}
               onReady={ready}
             />
           ) : (
@@ -606,6 +658,7 @@ export function BenchyModel({
               opacity={opacity}
               flat={level}
               sea={sea}
+              lightIntensity={lightIntensity}
               onReady={ready}
             />
           )}

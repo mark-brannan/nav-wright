@@ -9,7 +9,7 @@ import { createRoot } from 'react-dom/client';
 import { evaluateDisplay } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
-import type { PlacedLight, PlacedShape, ShapesData } from '../src/index.js';
+import type { PlacedLight, PlacedShape, SectorProfile, ShapesData } from '../src/index.js';
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
 import shapesJson from 'colregs/data/shapes.json' with { type: 'json' };
@@ -109,8 +109,31 @@ const initialVariant = pick(query.get('variant'), VARIANTS, 'all');
 const queryTheta = Number(query.get('theta'));
 const initialTheta =
   query.has('theta') && Number.isFinite(queryTheta)
-    ? ((Math.round(queryTheta) % 360) + 360) % 360
+    ? (((Math.round(queryTheta * 2) / 2) % 360) + 360) % 360
     : 45;
+
+/** Her heading's swing in a seaway, degrees: two sines a little out of step,
+ *  so it never settles into a metronome. */
+function useYaw(on: boolean, amplitude: number, periodS: number): number {
+  const [yaw, setYaw] = useState(0);
+  useEffect(() => {
+    if (!on) {
+      setYaw(0);
+      return;
+    }
+    let frame = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = (now - start) / 1000;
+      const w = (2 * Math.PI) / periodS;
+      setYaw(amplitude * (0.75 * Math.sin(w * t) + 0.25 * Math.sin(1.618 * w * t + 1)));
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [on, amplitude, periodS]);
+  return yaw;
+}
 
 /** Keep view, variant and theta in the address bar, leaving other keys (day)
  * alone. Debounced: theta changes on every degree of a drag. */
@@ -204,10 +227,37 @@ function Playground() {
   const [view, setView] = useState<ViewKey>(initialView);
   const [variant, setVariant] = useState<VariantKey>(initialVariant);
   useUrlState(view, variant, theta);
+  // ?yaw and ?compare, so a render has a link
+  const [profileOn, setProfileOn] = useState(true);
+  const [fwdTail, setFwdTail] = useState(2);
+  const [aftInside, setAftInside] = useState(5);
+  const [aftAtLimit, setAftAtLimit] = useState(0.5);
+  const [aftTail, setAftTail] = useState(5);
+  const [dropout, setDropout] = useState(true);
+  const [yawOn, setYawOn] = useState(() => query.has('yaw'));
+  const [yawAmp, setYawAmp] = useState(7);
+  const [yawPeriod, setYawPeriod] = useState(8);
+  const [compare, setCompare] = useState(() => query.has('compare'));
+  const yaw = useYaw(yawOn, yawAmp, yawPeriod);
+  const shownTheta = (((theta + yaw) % 360) + 360) % 360;
+  // a drag reports the yawed bearing; keep the course, not the swing
+  const dragTheta = (t: number) => {
+    if (Math.abs(t - shownTheta) > 0.75) setTheta((((t - yaw) % 360) + 360) % 360);
+  };
+  const sectorProfile = useMemo(
+    (): SectorProfile | undefined =>
+      profileOn
+        ? {
+            forward: { inside: 0, atLimit: 1, outside: fwdTail },
+            aft: { inside: aftInside, atLimit: aftAtLimit, outside: aftTail },
+          }
+        : undefined,
+    [profileOn, fwdTail, aftInside, aftAtLimit, aftTail],
+  );
   const [tilt, setTilt] = useState(DEFAULT_TILT);
   const [hullHint, setHullHint] = useState(0.5);
   // Range to her in nm; fades the hull hint (full strength at 0.5 nm and nearer)
-  const [range, setRange] = useState(0.5);
+  const [range, setRange] = useState(() => Number(query.get('range') ?? 0.5));
   const [sky, setSky] = useState(0);
   const [sea, setSea] = useState(0.1);
   const lightRangesNm = useMemo(
@@ -382,26 +432,57 @@ function Playground() {
             </div>
           )}
           {view === '3d' && (
-            <figure>
-              <figcaption>BearingModelView ({model})</figcaption>
-              <BearingModelView
-                key={model}
-                modelUrl={models[model]!}
-                hull={hull}
-                placed={placed}
-                facts={facts}
-                theta={theta}
-                onTheta={setTheta}
-                tilt={tilt}
-                onTilt={setTilt}
-                hullHint={hullHint}
-                range={range}
-                sky={sky}
-                sea={sea}
-                labels={labels}
-                controls={false}
-              />
-            </figure>
+            <div className={compare ? 'compare' : undefined}>
+              {compare && (
+                <figure>
+                  <figcaption>today: hard cut, no dropout</figcaption>
+                  <BearingModelView
+                    key={`${model}-today`}
+                    modelUrl={models[model]!}
+                    hull={hull}
+                    placed={placed}
+                    facts={facts}
+                    theta={shownTheta}
+                    onTheta={dragTheta}
+                    tilt={tilt}
+                    onTilt={setTilt}
+                    hullHint={hullHint}
+                    range={range}
+                    sky={sky}
+                    sea={sea}
+                    labels={labels}
+                    controls={false}
+                  />
+                </figure>
+              )}
+              <figure>
+                <figcaption>
+                  {compare
+                    ? `sector profile ${profileOn ? 'on' : 'off'}, range dropout ${dropout ? 'on' : 'off'}`
+                    : `BearingModelView (${model})`}
+                </figcaption>
+                <BearingModelView
+                  key={model}
+                  modelUrl={models[model]!}
+                  hull={hull}
+                  placed={placed}
+                  facts={facts}
+                  theta={shownTheta}
+                  onTheta={dragTheta}
+                  tilt={tilt}
+                  onTilt={setTilt}
+                  hullHint={hullHint}
+                  range={range}
+                  sky={sky}
+                  sea={sea}
+                  sectorProfile={sectorProfile}
+                  rangeDropout={dropout}
+                  lightRangesNm={lightRangesNm}
+                  labels={labels}
+                  controls={false}
+                />
+              </figure>
+            </div>
           )}
           {view === 'silhouette' && (
             <div className={variant === 'all' ? 'silhouettes' : undefined}>
@@ -603,9 +684,56 @@ function Playground() {
         </fieldset>
 
         <fieldset>
+          <legend>Sector profile, 3D (#118)</legend>
+          <Field label="profile">
+            <input
+              type="checkbox"
+              checked={profileOn}
+              onChange={(e) => setProfileOn(e.target.checked)}
+            />
+          </Field>
+          <Field label="bow tail °">
+            <Range value={fwdTail} min={0} max={3} step={0.5} onChange={setFwdTail} />
+          </Field>
+          <Field label="aft taper °">
+            <Range value={aftInside} min={0} max={10} step={0.5} onChange={setAftInside} />
+          </Field>
+          <Field label="aft at limit">
+            <Range value={aftAtLimit} min={0} max={1} step={0.05} onChange={setAftAtLimit} />
+          </Field>
+          <Field label="aft tail °">
+            <Range value={aftTail} min={0} max={5} step={0.5} onChange={setAftTail} />
+          </Field>
+          <Field label="range dropout">
+            <input
+              type="checkbox"
+              checked={dropout}
+              onChange={(e) => setDropout(e.target.checked)}
+            />
+          </Field>
+          <Field label="yaw">
+            <input type="checkbox" checked={yawOn} onChange={(e) => setYawOn(e.target.checked)} />
+          </Field>
+          <Field label="yaw ± °">
+            <Range value={yawAmp} min={0} max={15} step={0.5} onChange={setYawAmp} />
+          </Field>
+          <Field label="yaw period s">
+            <Range value={yawPeriod} min={2} max={20} step={0.5} onChange={setYawPeriod} />
+          </Field>
+          <Field label="compare with today">
+            <input
+              type="checkbox"
+              checked={compare}
+              onChange={(e) => setCompare(e.target.checked)}
+            />
+          </Field>
+          <p className="muted">bearing shown {shownTheta.toFixed(1)}°</p>
+        </fieldset>
+
+        <fieldset>
           <legend>View</legend>
           <Field label="theta">
-            <Range value={theta} min={0} max={359} onChange={setTheta} />
+            <Range value={theta} min={0} max={359.5} step={0.5} onChange={setTheta} />
           </Field>
           <Field label="single lantern">
             <input
