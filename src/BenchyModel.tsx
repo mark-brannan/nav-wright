@@ -144,10 +144,10 @@ function Hull({
   );
 }
 
-/** The sea: one wide plane at the waterline, seen from both sides so a camera
- * below it looks up through the surface. Translucent, so the hull and her
- * lights still read from underneath; it writes no depth, so it never hides
- * what the faded hull's prepass has drawn. */
+/** The sea: one wide plane at the waterline, drawn from above only, so a
+ * camera below it sees no water: the surface is clipped, not looked through.
+ * Translucent, so the hull and her lights still read from above; it writes no
+ * depth, so it never hides what the faded hull's prepass has drawn. */
 function Sea({ color, lengthMeters }: { color: string; lengthMeters: number }): ReactElement {
   const size = lengthMeters * 200;
   return (
@@ -155,7 +155,7 @@ function Sea({ color, lengthMeters }: { color: string; lengthMeters: number }): 
       <planeGeometry args={[size, size]} />
       <meshBasicMaterial
         color={color}
-        side={THREE.DoubleSide}
+        side={THREE.FrontSide}
         transparent
         opacity={0.9}
         depthWrite={false}

@@ -15,10 +15,9 @@ import {
   BearingView,
   declaredFlashRate,
   lightRangesFor,
-  bearingTheta,
   PlanView,
+  ThetaControl,
   ProfileView,
-  SceneView,
   allHulls,
   defaultSceneLabels,
   placeLights,
@@ -147,7 +146,7 @@ function Playground() {
   // Range to her in nm; fades the hull hint (full strength at 0.5 nm and nearer)
   const [range, setRange] = useState(0.5);
   const [sky, setSky] = useState(0);
-  const [sea, setSea] = useState(0.5);
+  const [sea, setSea] = useState(0.1);
   // Lights switched off here are dropped from every view: what is drawn is
   // decoupled from what the lawful display calls for.
   const [lightsOff, setLightsOff] = useState<string[]>([]);
@@ -251,26 +250,53 @@ function Playground() {
       <header>
         <h1>nav-wright playground</h1>
         <span className="muted">selectHull(facts) → {selectHull(facts).spec.id}</span>
-        <a href="./gallery.html">Gallery: every hull in every style</a>
+        <nav className="tabs">
+          <a href="./index.html" aria-current="page">
+            Playground
+          </a>
+          <a href="./gallery.html">Gallery</a>
+          <a href="./scenes.html">Scenes</a>
+        </nav>
       </header>
 
-      <section className="primary">
-        <BearingModelView
-          key={model}
-          modelUrl={models[model]!}
-          hull={hull}
-          placed={placed}
-          facts={facts}
-          theta={theta}
-          onTheta={setTheta}
-          tilt={tilt}
-          onTilt={setTilt}
-          hullHint={hullHint}
-          range={range}
-          sky={sky}
-          sea={sea}
-          labels={labels}
-        />
+      <section className="stage">
+        <div className="primary">
+          <BearingModelView
+            key={model}
+            modelUrl={models[model]!}
+            hull={hull}
+            placed={placed}
+            facts={facts}
+            theta={theta}
+            onTheta={setTheta}
+            tilt={tilt}
+            onTilt={setTilt}
+            hullHint={hullHint}
+            range={range}
+            sky={sky}
+            sea={sea}
+            labels={labels}
+            controls={false}
+          />
+        </div>
+        <aside className="side">
+          <ThetaControl theta={theta} onTheta={setTheta} labels={labels} plan={hull.plan} />
+          <figure>
+            <figcaption>Benchy View (3dbenchy-lowpoly.glb)</figcaption>
+            <BenchyView
+              modelUrl={models['3dbenchy-lowpoly.glb']!}
+              hull={hull}
+              placed={placed}
+              facts={facts}
+              theta={theta}
+              onTheta={setTheta}
+              tilt={tilt}
+              onTilt={setTilt}
+              labels={labels}
+              controls={false}
+            />
+          </figure>
+        </aside>
       </section>
 
       <section className="controls">
@@ -281,6 +307,15 @@ function Playground() {
           </Field>
           <Field label="3D model">
             <Select value={model} options={modelNames} onChange={setModel} />
+          </Field>
+          <Field label="camera elevation">
+            <Range value={tilt} min={MIN_TILT} max={MAX_TILT} onChange={setTilt} />
+          </Field>
+          <Field label="hullHint">
+            <Range value={hullHint} min={0} max={1} step={0.05} onChange={setHullHint} />
+          </Field>
+          <Field label="range nm (fades hull)">
+            <Range value={range} min={0} max={5} step={0.1} onChange={setRange} />
           </Field>
         </fieldset>
 
@@ -371,15 +406,6 @@ function Playground() {
           <legend>View</legend>
           <Field label="theta">
             <Range value={theta} min={0} max={359} onChange={setTheta} />
-          </Field>
-          <Field label="tilt (3D)">
-            <Range value={tilt} min={MIN_TILT} max={MAX_TILT} onChange={setTilt} />
-          </Field>
-          <Field label="hullHint">
-            <Range value={hullHint} min={0} max={1} step={0.05} onChange={setHullHint} />
-          </Field>
-          <Field label="range nm (fades hull)">
-            <Range value={range} min={0} max={5} step={0.1} onChange={setRange} />
           </Field>
           <Field label="single lantern">
             <input
@@ -476,6 +502,7 @@ function Playground() {
               flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
             }
             labels={labels}
+            controls={false}
           />
         </figure>
         <figure>
@@ -488,60 +515,6 @@ function Playground() {
             labels={labels}
             time={day ? 'day' : 'night'}
             shapes={placedShapes}
-          />
-        </figure>
-        <figure>
-          <figcaption>SceneView (crossing: target 045° relative, heading 270°, 1500 m)</figcaption>
-          <SceneView
-            own={{ hull, placed, heading: 0, speedMps: 5 }}
-            target={{ hull, placed, heading: 270, speedMps: 5 }}
-            relativeBearing={45}
-            rangeM={1500}
-            cpa={{ cpaM: 0, tcpaS: 212 }}
-            labels={labels}
-          />
-        </figure>
-        <figure>
-          <figcaption>SceneView with env: narrow channel and traffic lane</figcaption>
-          <SceneView
-            own={{ hull, placed, heading: 0, speedMps: 5 }}
-            target={{ hull, placed, heading: 270, speedMps: 5 }}
-            relativeBearing={45}
-            rangeM={1500}
-            env={{ narrowChannel: true, trafficLane: true }}
-            labels={labels}
-          />
-        </figure>
-        <figure>
-          <figcaption>
-            BearingView derived from the pair (what own ship sees of the target)
-          </figcaption>
-          <BearingView
-            hull={hull}
-            placed={placed}
-            theta={bearingTheta({
-              ownHeading: 0,
-              targetHeading: 270,
-              relativeBearing: 45,
-              rangeM: 1500,
-            })}
-            onTheta={() => {}}
-            hullHint={hullHint}
-            labels={labels}
-          />
-        </figure>
-        <figure>
-          <figcaption>Benchy View (3dbenchy-lowpoly.glb)</figcaption>
-          <BenchyView
-            modelUrl={models['3dbenchy-lowpoly.glb']!}
-            hull={hull}
-            placed={placed}
-            facts={facts}
-            theta={theta}
-            onTheta={setTheta}
-            tilt={tilt}
-            onTilt={setTilt}
-            labels={labels}
           />
         </figure>
       </section>

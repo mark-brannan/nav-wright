@@ -42,8 +42,9 @@ export function BearingModelView({
   hullHint,
   range,
   sky = 0,
-  sea = 0,
+  sea = 0.1,
   labels = defaultBenchyLabels,
+  controls = true,
 }: {
   /** URL of the hull's .glb; a consumer resolves one per hull (see BenchyView). */
   modelUrl: string;
@@ -63,9 +64,11 @@ export function BearingModelView({
   range?: number;
   /** Background, 0 (black) .. 1 (a lighter night blue). See skyColor. */
   sky?: number;
-  /** The sea, always drawn: 0 (black) .. 1 (a blue-gray). See seaColor. */
+  /** The sea, always drawn above the waterline: 0 (black) .. 1 (deep navy). See seaColor. */
   sea?: number;
   labels?: BenchyLabels;
+  /** Draw the dial and elevation slider under the picture. False when the page places its own. */
+  controls?: boolean;
 }): ReactElement {
   const [modelFailed, setModelFailed] = useState(false);
 
@@ -79,6 +82,7 @@ export function BearingModelView({
       range={range}
       sky={sky}
       labels={labels}
+      controls={controls}
     />
   );
   if (modelFailed) return flat;
@@ -133,8 +137,10 @@ export function BearingModelView({
           </Suspense>
           {noneInView && <p className="bearing-empty-overlay">{labels.bearingNoLights}</p>}
         </div>
-        <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
-        {onTilt && <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />}
+        {controls && (
+          <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
+        )}
+        {controls && onTilt && <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />}
       </div>
     </ModelErrorBoundary>
   );
