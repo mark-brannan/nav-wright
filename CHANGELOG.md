@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.10](https://github.com/mark-brannan/nav-wright/compare/v0.1.9...v0.1.10) (2026-10-17)
+
+
+### Added
+
+* **models:** export tracedVessels, the manifest of traced vessels and their meshes ([#140](https://github.com/mark-brannan/nav-wright/issues/140)) ([24d0b73](https://github.com/mark-brannan/nav-wright/commit/24d0b7394097a305d006aa09b447b020d3c31af9))
+* **models:** loft the traced sailing vessels into 3D, and a vessels page to show them ([#137](https://github.com/mark-brannan/nav-wright/issues/137)) ([3e82e73](https://github.com/mark-brannan/nav-wright/commit/3e82e73ef1186351edbc2a3d314d050726f64cf3))
+
 ## [0.1.9](https://github.com/mark-brannan/nav-wright/compare/v0.1.8...v0.1.9) (2026-10-17)
 
 
