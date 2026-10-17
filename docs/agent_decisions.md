@@ -36,3 +36,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261017t034939z
 - The silhouette keeps the 3D view's perspective camera at tilt 0 rather than an orthographic one. Undo: give BenchyModel an orthographic camera when silhouette is set ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
+
+### 20261017t034943z
+- Playground defaults the silhouette variant to All three side by side, and puts theta in the URL alongside view and variant. Undo: change initialVariant and drop set('theta', ...) in playground/main.tsx ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
