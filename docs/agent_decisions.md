@@ -27,3 +27,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261017t034925z
 - The spec block is built from the spec plus the placed lights: deck raised to the sidelights, a mast per light station and a yard to each outboard light, since the spec alone cannot hold Annex I heights or yard lights. Undo: rework specBlock in src/specBlock.ts ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
+
+### 20261017t034930z
+- Silhouette B and C draw lights at their analytic spec positions (lightPosition), not re-seated by anchorLights. Undo: seat block lights with anchorLights in BlockHull's positions memo ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
