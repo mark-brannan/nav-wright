@@ -141,7 +141,11 @@ function model(trace) {
     const zt = top(x);
     const zb = bottom(x);
     return Array.from({ length: SECTION + 1 }, (_, j) => {
-      const z = zt - ((zt - zb) * j) / SECTION;
+      // Traced stations crowd the samples toward the keel, where a ship's flat
+      // floor turns into its bilge within a few percent of the depth.
+      const z = stations.length
+        ? zt - (zt - zb) * (1 - (1 - j / SECTION) ** 1.6)
+        : zt - ((zt - zb) * j) / SECTION;
       return [y(x, z), z];
     });
   };
@@ -169,6 +173,7 @@ function model(trace) {
     boottop,
     houses,
     L,
+    traced: stations.length,
     u,
     wlAft,
     wlFwd,
@@ -453,7 +458,7 @@ ${back.map(poly).join('\n')}
 <polygon points="${sea.map(P).join(' ')}" fill="${C.water}" opacity="0.45"/>
 ${front.map(poly).join('\n')}
 ${rigLines.map(({ p, q, w: sw }) => `<line x1="${f(p[0] - x0)}" y1="${f(p[1] - y0)}" x2="${f(q[0] - x0)}" y2="${f(q[1] - y0)}" stroke="${C.rig}" stroke-width="${sw}" stroke-linecap="round"/>`).join('\n')}
-${label(pad, h - 0.6 * m.u, `lofted from profile + plan; canoe body ${f(m.L.canoeDepth * 100)}% of draft (assumed), ${STATIONS} stations`, 0.9 * m.u)}`;
+${label(pad, h - 0.6 * m.u, m.traced ? `lofted from profile + plan + ${m.traced} traced sections, ${STATIONS} stations` : `lofted from profile + plan; canoe body ${f(m.L.canoeDepth * 100)}% of draft (assumed), ${STATIONS} stations`, 0.9 * m.u)}`;
   return svg(w, h, body, `${m.trace.name} loft`, m.u);
 }
 
