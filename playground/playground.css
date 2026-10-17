@@ -280,16 +280,18 @@ legend {
   gap: 12px;
 }
 
-/* The vessels page: the 3D view beside its loft, the drawings under them. */
+/* The vessels page: the 3D view beside its loft, the drawings under them.
+   minmax(0, 1fr), not 1fr: a track that can grow from its content resizes
+   the canvas in it, which regrows the track, every frame. */
 .vessel-views {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 8px;
   align-items: start;
 }
 .vessel-drawings {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr);
   gap: 8px;
   align-items: start;
 }
@@ -302,6 +304,6 @@ legend {
 @media (max-width: 720px) {
   .vessel-views,
   .vessel-drawings {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
