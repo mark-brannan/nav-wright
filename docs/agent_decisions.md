@@ -24,3 +24,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261017t034921z
 - The 3D view gets an opt-in seascape: a flat sea disc at the waterline in the 2D seascape's near colour #0a1424, driven by the playground's one seascape checkbox. Undo: drop the seascape prop and the Sea mesh from BearingModelView/BenchyModel ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
+
+### 20261017t034925z
+- The spec block is built from the spec plus the placed lights: deck raised to the sidelights, a mast per light station and a yard to each outboard light, since the spec alone cannot hold Annex I heights or yard lights. Undo: rework specBlock in src/specBlock.ts ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
