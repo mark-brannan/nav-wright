@@ -15,7 +15,7 @@
     {
       "name": "masthead-edge-225",
       "url": "https://mark-brannan.github.io/nav-wright/?theta=225&range=0.5",
-      "description": "Power vessel at 225 degrees, the aft edge of the masthead light's arc: only the stern light is left."
+      "description": "Power vessel at 225 degrees, abaft the masthead light's arc (its edge is 247.5): only the stern light is left."
     },
     {
       "name": "stern-dead-astern",
@@ -40,7 +40,7 @@
     {
       "name": "all-lights-lost-far",
       "url": "https://mark-brannan.github.io/nav-wright/?theta=30&range=4.5",
-      "description": "Four and a half miles off: every light past its range, only the masthead glow is left to see."
+      "description": "Four and a half miles off: every light is past its range (masthead 3 nm, side and stern 2 nm for the default 12 m hull); only the hull hint is left."
     },
     {
       "name": "single-lantern-ahead",
