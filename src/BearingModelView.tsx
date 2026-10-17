@@ -20,6 +20,7 @@ import type { PlacedLight } from './placement.js';
 import { lightsInView } from './placement.js';
 import type { BenchyLabels } from './benchyLabels.js';
 import { defaultBenchyLabels } from './benchyLabels.js';
+import type { SilhouetteVariant } from './silhouette.js';
 import { DEFAULT_TILT } from './tilt.js';
 import { ThetaControl } from './ThetaControl.js';
 import { TiltControl } from './TiltControl.js';
@@ -42,6 +43,8 @@ export function BearingModelView({
   hullHint,
   range,
   sky = 0,
+  seascape = false,
+  silhouette,
   labels = defaultBenchyLabels,
 }: {
   /** URL of the hull's .glb; a consumer resolves one per hull (see BenchyView). */
@@ -62,6 +65,12 @@ export function BearingModelView({
   range?: number;
   /** Background, 0 (black) .. 1 (a lighter night blue). See skyColor. */
   sky?: number;
+  /** A sea at the waterline, as BearingView's seascape. Default: none. */
+  seascape?: boolean;
+  /** Draw her as a flat silhouette from the waterline's level (tilt 0)
+   * rather than a shaded model; see SilhouetteVariant. The hull hint, range,
+   * sky and sea apply alike. Default: the model. */
+  silhouette?: SilhouetteVariant;
   labels?: BenchyLabels;
 }): ReactElement {
   const [modelFailed, setModelFailed] = useState(false);
@@ -75,6 +84,7 @@ export function BearingModelView({
       hullHint={hullHint}
       range={range}
       sky={sky}
+      seascape={seascape}
       labels={labels}
     />
   );
@@ -91,6 +101,7 @@ export function BearingModelView({
       hullHint={hullHint}
       range={range}
       sky={sky}
+      seascape={seascape}
       labels={labels}
     />
   );
@@ -121,6 +132,9 @@ export function BearingModelView({
               hullOpacity={bearingHullOpacity(hullHint, range)}
               background={background}
               night
+              silhouette={silhouette}
+              blockSpec={hull.spec}
+              seascape={seascape}
               label={labels.bearingAlt(Math.round(theta))}
               fallback={blank}
               loading={standIn}
@@ -130,7 +144,7 @@ export function BearingModelView({
           {noneInView && <p className="bearing-empty-overlay">{labels.bearingNoLights}</p>}
         </div>
         <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
-        {onTilt && <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />}
+        {onTilt && !silhouette && <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />}
       </div>
     </ModelErrorBoundary>
   );

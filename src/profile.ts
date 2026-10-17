@@ -35,3 +35,7 @@ export type {
 } from './modelTransform.js';
 
 export { profileHullModel } from './sceneProfile.js';
+
+// The spec block: a blocky hull built from the spec, which every light sits on
+export { BLOCK_MAST, blockTriangles, growPrism, insidePrism, specBlock } from './specBlock.js';
+export type { BlockLight, BlockPrism, BlockSpec } from './specBlock.js';
