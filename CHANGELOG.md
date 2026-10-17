@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.9](https://github.com/mark-brannan/nav-wright/compare/v0.1.8...v0.1.9) (2026-10-17)
+
+
+### Added
+
+* **goldens:** commit the render command's scene PNGs, scored by golden-diff ([#130](https://github.com/mark-brannan/nav-wright/issues/130)) ([#136](https://github.com/mark-brannan/nav-wright/issues/136)) ([06f1d2e](https://github.com/mark-brannan/nav-wright/commit/06f1d2e4142e65e5a5250019f2002800c2b9bfc0))
+* **playground:** a checked-in list of named scenes as playground URLs ([#134](https://github.com/mark-brannan/nav-wright/issues/134)) ([91dab64](https://github.com/mark-brannan/nav-wright/commit/91dab6474a6837f295e662dd8a65188024324fb3))
+* **playground:** copy the current look as BearingModelView / BearingView props ([#124](https://github.com/mark-brannan/nav-wright/issues/124)) ([#133](https://github.com/mark-brannan/nav-wright/issues/133)) ([0b511c4](https://github.com/mark-brannan/nav-wright/commit/0b511c4a8bffee01b0d7e2c8b7d1880fb6a11f88))
+* **playground:** every control saved in the URL and restored on load ([#123](https://github.com/mark-brannan/nav-wright/issues/123)) ([#131](https://github.com/mark-brannan/nav-wright/issues/131)) ([385daa2](https://github.com/mark-brannan/nav-wright/commit/385daa288aecd5bc35326733fbe8aaf2da06731a))
+* **render:** npm run render, scene list to PNGs and a contact sheet ([#128](https://github.com/mark-brannan/nav-wright/issues/128)) ([#135](https://github.com/mark-brannan/nav-wright/issues/135)) ([ca4d611](https://github.com/mark-brannan/nav-wright/commit/ca4d61188368e32b76b57655dbe2f99bf8738787))
+
 ## [0.1.8](https://github.com/mark-brannan/nav-wright/compare/v0.1.7...v0.1.8) (2026-10-17)
 
 
