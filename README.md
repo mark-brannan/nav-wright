@@ -214,3 +214,9 @@ The latest `main` is hosted at <https://mark-brannan.github.io/nav-wright/>.
 per scene in `renders/` (gitignored) plus `renders/contact-sheet.png`. The
 first run needs a browser: `npx playwright install chromium`. CI runs it on
 every pull request and uploads `renders/` as an artifact.
+
+The scene PNGs are committed in `goldens/` as well (not the contact sheet).
+A pull request that changes any of them gets a score per image (changed
+pixels, SSIM, changed regions) from the shared `golden-diff` workflow, as a
+comment and in its checks. To move a golden on purpose, run `npm run render`
+and copy `renders/<name>.png` over `goldens/<name>.png`.
