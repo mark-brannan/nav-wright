@@ -208,3 +208,9 @@ from a git ref via `prepare`, which is how the `github:` pin above works.
 
 `npm run dev` opens the playground: every hull in every view, with each prop as a control.
 The latest `main` is hosted at <https://mark-brannan.github.io/nav-wright/>.
+
+`npm run render` builds the playground and photographs every scene in
+`playground/namedScenes.json` in headless Chromium, WebGL included: one PNG
+per scene in `renders/` (gitignored) plus `renders/contact-sheet.png`. The
+first run needs a browser: `npx playwright install chromium`. CI runs it on
+every pull request and uploads `renders/` as an artifact.

@@ -4,3 +4,4 @@ dist/
 _site/
 tsconfig.tsbuildinfo
 playground-dist/
+renders/
