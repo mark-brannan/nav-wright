@@ -2,11 +2,18 @@
 
 import type { ReactElement } from 'react';
 
+/** Rule 21 light colours as sRGB, derived from colregs `geometry.json`
+ *  `colors.chromaticity_corners` (Annex I §7, CIE 2.2 1975). Each is the
+ *  brightest sRGB colour (largest channel at 1) nearest the polygon's centroid
+ *  among those inside it, or, where sRGB cannot reach the polygon, nearest to
+ *  it: white and green land inside; red and yellow lie outside sRGB, so these
+ *  are the closest a screen can show. test/lightColours.test.ts checks every
+ *  value against the polygons. */
 export const LIGHT_COLORS: Record<string, string> = {
-  white: '#f5f5f0',
-  red: '#ff4d42',
-  green: '#3fd05e',
-  yellow: '#ffd23f',
+  white: '#ffb888',
+  red: '#ff0000',
+  green: '#00ff96',
+  yellow: '#ff6f00',
 };
 
 export function lightFill(color: string): string {

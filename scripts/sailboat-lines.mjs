@@ -61,8 +61,12 @@ function slice(poly, x) {
 
 function model(trace) {
   const { profile, plan } = trace;
-  const stemX = Math.max(...profile.hull.map((p) => p[0]));
-  const transomX = Math.min(...profile.hull.map((p) => p[0]));
+  // LOA spans the hull's ends unless the trace names them: an outboard rudder
+  // or a boomkin drawn into the outline would otherwise stretch the scale.
+  const [transomX, stemX] = profile.loaFromX ?? [
+    Math.min(...profile.hull.map((p) => p[0])),
+    Math.max(...profile.hull.map((p) => p[0])),
+  ];
   const ftPerPx = trace.specs.loaFt / (stemX - transomX);
   const wl = profile.waterlineY;
   const P = ([x, y]) => [(x - transomX) * ftPerPx, (wl - y) * ftPerPx];
