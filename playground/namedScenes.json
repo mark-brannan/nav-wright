@@ -1,0 +1,66 @@
+{
+  "base": "https://mark-brannan.github.io/nav-wright/",
+  "note": "Draft list of named scenes. Each url is a playground link (the query string is the state from urlState.ts); edit it as data. The hull and the lit lines are not in the URL yet, so a scene opens on the playground's default hull; the description says which look it stands for.",
+  "scenes": [
+    {
+      "name": "ahead-all-round",
+      "url": "https://mark-brannan.github.io/nav-wright/?theta=0&range=0.5",
+      "description": "Dead ahead at half a mile: both sidelights and the masthead light, full strength."
+    },
+    {
+      "name": "sidelight-edge-112-5",
+      "url": "https://mark-brannan.github.io/nav-wright/?theta=112.5&range=0.5",
+      "description": "Power vessel at 112.5 degrees, the aft edge of the sidelight sector: the side light is about to drop out."
+    },
+    {
+      "name": "masthead-edge-225",
+      "url": "https://mark-brannan.github.io/nav-wright/?theta=225&range=0.5",
+      "description": "Power vessel at 225 degrees, the aft edge of the masthead light's arc: only the stern light is left."
+    },
+    {
+      "name": "stern-dead-astern",
+      "url": "https://mark-brannan.github.io/nav-wright/?theta=180&range=0.5",
+      "description": "Dead astern at half a mile: the stern light alone."
+    },
+    {
+      "name": "abeam-starboard",
+      "url": "https://mark-brannan.github.io/nav-wright/?theta=90&range=0.5",
+      "description": "Abeam to starboard: green side light and masthead light."
+    },
+    {
+      "name": "abeam-port",
+      "url": "https://mark-brannan.github.io/nav-wright/?theta=270&range=0.5",
+      "description": "Abeam to port: red side light and masthead light."
+    },
+    {
+      "name": "sidelight-range-dropout",
+      "url": "https://mark-brannan.github.io/nav-wright/?theta=60&range=2.2",
+      "description": "Sidelight at the edge of its range: the side light fades while the masthead light still carries."
+    },
+    {
+      "name": "all-lights-lost-far",
+      "url": "https://mark-brannan.github.io/nav-wright/?theta=30&range=4.5",
+      "description": "Four and a half miles off: every light past its range, only the masthead glow is left to see."
+    },
+    {
+      "name": "single-lantern-ahead",
+      "url": "https://mark-brannan.github.io/nav-wright/?theta=0&range=0.5&lantern",
+      "description": "Dead ahead with the combined lantern (one lamp for both side lights) instead of two."
+    },
+    {
+      "name": "day-bearing-view",
+      "url": "https://mark-brannan.github.io/nav-wright/?view=bearing&theta=45&day",
+      "description": "Daylight, bearing view at 45 degrees: the hull shape with no lights doing the work."
+    },
+    {
+      "name": "night-silhouette-soft",
+      "url": "https://mark-brannan.github.io/nav-wright/?view=silhouette&variant=soft&theta=135&sea=0.3",
+      "description": "Night silhouette, soft style, 135 degrees: the hull as a shape against the water."
+    },
+    {
+      "name": "profile-with-glow",
+      "url": "https://mark-brannan.github.io/nav-wright/?view=profile&theta=90&glow",
+      "description": "Profile view abeam with the range glow on: how far each light reaches."
+    }
+  ]
+}
