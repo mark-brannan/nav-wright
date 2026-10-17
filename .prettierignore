@@ -1,5 +1,6 @@
 dist
 playground-dist
+renders
 node_modules
 package-lock.json
 CHANGELOG.md
