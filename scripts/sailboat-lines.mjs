@@ -156,9 +156,12 @@ function model(trace) {
 
   const rig = Object.fromEntries(Object.entries(profile.rig).map(([k, v]) => [k, v.map(P)]));
   const boottop = profile.boottopTopY.map(P);
-  // A yacht's coachroof, or a ship's several deckhouses: each four points,
-  // aft foot, aft top, forward top, forward foot.
+  // A yacht's coachroof, or a ship's several deckhouses: each a polyline from
+  // the aft foot over the top to the forward foot. The feet give its ends,
+  // the points between them its top.
   const houses = (profile.houses ?? [profile.coachroof]).map((h) => h.map(P));
+  const houseX = houses.map((h) => [h[0][0], h[h.length - 1][0]]);
+  const houseTop = houses.map((h) => h.slice(1, -1).sort((a, b) => a[0] - b[0]));
   // Each house's width as a fraction of the deck's: a poop or a topgallant
   // forecastle runs the full beam, a coachroof or a deckhouse less.
   const houseBreadth = houses.map((_, i) => profile.houseBreadth?.[i] ?? 0.62);
@@ -179,6 +182,8 @@ function model(trace) {
     rig,
     boottop,
     houses,
+    houseX,
+    houseTop,
     houseBreadth,
     L,
     traced: stations.length,
@@ -280,9 +285,9 @@ function planSvg(m) {
     ...wlXs.map((x) => [X(x), Y(m.y(x, 0))]),
     ...[...wlXs].reverse().map((x) => [X(x), Y(-m.y(x, 0))]),
   ];
-  const houses = m.houses.map(([cr0, , , cr1], i) => {
+  const houses = m.houseX.map(([x0, x1], i) => {
     const k = m.houseBreadth[i];
-    const crXs = Array.from({ length: 21 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 20);
+    const crXs = Array.from({ length: 21 }, (_, i) => x0 + ((x1 - x0) * i) / 20);
     return [
       ...crXs.map((x) => [X(x), Y(k * m.beam(x))]),
       ...[...crXs].reverse().map((x) => [X(x), Y(-k * m.beam(x))]),
@@ -408,15 +413,15 @@ function loftSvg(m, { yaw = -0.62, pitch = 0.32 } = {}) {
     );
   }
   // Each house as a lofted box.
-  for (const [h, [cr0, crTop0, crTop1, cr1]] of m.houses.entries()) {
+  for (const [h, [x0, x1]] of m.houseX.entries()) {
     const k = m.houseBreadth[h];
-    const hx = Array.from({ length: 13 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / 12);
+    const hx = Array.from({ length: 13 }, (_, i) => x0 + ((x1 - x0) * i) / 12);
     for (let i = 0; i < 12; i++) {
       const [xa, xb] = [hx[i], hx[i + 1]];
       const za = m.top(xa);
       const zb = m.top(xb);
-      const ta = interp([crTop0, crTop1], xa);
-      const tb = interp([crTop0, crTop1], xb);
+      const ta = interp(m.houseTop[h], xa);
+      const tb = interp(m.houseTop[h], xb);
       const [wa, wb] = [k * m.beam(xa), k * m.beam(xb)];
       push(
         [
@@ -536,8 +541,10 @@ class Part {
  * The loft as a glTF binary in the Benchy convention (MODELS.md): Z up, bow
  * on +X, half-length units, the waterline at z = 0 and the keel below it.
  * True aspect, feet all round, so a 12 ft beam is 12 ft and the mast stands
- * where the drawing puts it; the root node's extras carry `waterlineZ` so
- * placement floats her instead of standing her on her keel.
+ * where the drawing puts it. The root node's extras carry `waterlineZ`, so
+ * placement floats her instead of standing her on her keel, and `hullX`, the
+ * hull's own extent, so a bowsprit or a boomkin does not shorten her when
+ * the mesh is fitted to a length.
  */
 function loftGlb(m) {
   const k = 2 / m.loa;
@@ -567,20 +574,23 @@ function loftGlb(m) {
       [a[0], a[1], a[2]],
     );
   }
-  // The ends: the keel is closed by the sections meeting; the sheer is not.
-  for (const [h, [cr0, crTop0, crTop1, cr1]] of m.houses.entries()) {
+  // The ends: a transom or a counter's tip is a flat face across the end
+  // ring; a stem's ring has no breadth and closes on itself.
+  for (const ring of [rings[0], rings[STATIONS]]) {
+    if (Math.max(...ring.map(([, y]) => y)) < 0.01) continue;
+    const x = ring[0][0];
+    const wet = interp(m.boottop, x);
+    for (let j = 0; j < SECTION; j++) {
+      const [a, b] = [ring[j], ring[j + 1]];
+      const part = (a[2] + b[2]) / 2 < wet ? parts.bottom : parts.topsides;
+      part.quad([x, a[1], a[2]], [x, b[1], b[2]], [x, -b[1], b[2]], [x, -a[1], a[2]]);
+    }
+  }
+  for (const [h, [x0, x1]] of m.houseX.entries()) {
     const kb = m.houseBreadth[h];
     const n = 12;
-    const hx = Array.from({ length: n + 1 }, (_, i) => cr0[0] + ((cr1[0] - cr0[0]) * i) / n);
-    const box = (x) => {
-      const w = kb * m.beam(x);
-      const floor = m.top(x);
-      const top = interp(
-        [crTop0, crTop1].sort((p, q) => p[0] - q[0]),
-        x,
-      );
-      return { w, floor, top };
-    };
+    const hx = Array.from({ length: n + 1 }, (_, i) => x0 + ((x1 - x0) * i) / n);
+    const box = (x) => ({ w: kb * m.beam(x), floor: m.top(x), top: interp(m.houseTop[h], x) });
     for (let i = 0; i < n; i++) {
       const [xa, xb] = [hx[i], hx[i + 1]];
       const A = box(xa);
@@ -604,7 +614,7 @@ function loftGlb(m) {
   return glb(parts, m.trace.name, {
     generator: 'nav-wright scripts/sailboat-lines.mjs',
     colours: MESH,
-    extras: { waterlineZ: 0, loaFt: m.loa },
+    extras: { waterlineZ: 0, hullX: [-1, 1], loaFt: m.loa },
   });
 }
 

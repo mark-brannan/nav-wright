@@ -36,6 +36,7 @@ describe('traced sailing-vessel meshes', () => {
       expect(bytes.readUInt32LE(8)).toBe(bytes.length);
       const json = JSON.parse(bytes.toString('utf8', 20, 20 + bytes.readUInt32LE(12)));
       expect(json.nodes[0].extras.waterlineZ).toBe(0);
+      expect(json.nodes[0].extras.hullX).toEqual([-1, 1]);
       const extents = json.accessors.filter((a: { min?: number[] }) => a.min);
       expect(Math.min(...extents.map((a: { min: number[] }) => a.min[2]))).toBeLessThan(0);
       expect(Math.max(...extents.map((a: { max: number[] }) => a.max[2]))).toBeGreaterThan(0);

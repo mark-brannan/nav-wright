@@ -51,9 +51,12 @@ faceted, five flat materials, no textures.
 - **License:** the trace's, this package's.
 - **Orientation:** the Benchy convention, Z up, bow on local `+X`,
   half-length units. The root node's glTF extras carry `waterlineZ: 0`, the
-  model's own waterline, which `placeHullModel` floats her on; a mesh
-  without one rests its lowest point on the water, as the lofts above
-  (drawn down to the waterline) want.
+  model's own waterline, which `placeHullModel` floats her on, and
+  `hullX: [-1, 1]`, the hull's own extent, which the fit to a length uses
+  instead of the mesh's bounding box, so a bowsprit or boomkin does not
+  shorten her. A mesh without them rests its lowest point on the water
+  and is fitted by its box, as the lofts above (drawn down to the
+  waterline, no spars) want.
 - **Regenerate** after changing a trace: `node scripts/sailboat-lines.mjs`.
   Deterministic.
 - **Shipped in the package** under `./models/*`, e.g.
