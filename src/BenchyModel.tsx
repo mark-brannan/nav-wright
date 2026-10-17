@@ -27,6 +27,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
+import { lightFill } from './svg.js';
 import type { PlacedLight } from './placement.js';
 import {
   VIEW_FRAME,
@@ -322,7 +323,7 @@ function SceneLight({
         <sphereGeometry args={[r, 12, 12]} />
         {/* transparent so it joins the faded hull's pass and renderOrder puts it after */}
         <meshBasicMaterial
-          color={light.color}
+          color={lightFill(light.color)}
           transparent
           depthTest={false}
           depthWrite={false}
@@ -333,7 +334,7 @@ function SceneLight({
       <mesh ref={halo} renderOrder={3}>
         <sphereGeometry args={[r * 2.6, 12, 12]} />
         <meshBasicMaterial
-          color={light.color}
+          color={lightFill(light.color)}
           transparent
           opacity={0.35}
           blending={THREE.AdditiveBlending}
