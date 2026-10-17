@@ -1,12 +1,16 @@
 # Sailboat lines from published drawings
 
 Realistic sailing-vessel outlines, traced by hand from a published sail-plan
-drawing and lofted into 3D. The trace is the data; everything else is
+drawing and lofted into 3D. The trace is the data; everything else, these
+SVGs and the shipped mesh `models/<id>-lines.glb` (MODELS.md), is
 regenerated from it:
 
 ```bash
 node scripts/sailboat-lines.mjs
 ```
+
+The playground's vessels page (`npm run dev`, then `/vessels.html`) shows
+each mesh in the 3D bearing view beside these drawings.
 
 | Boat                          | Trace                                      | Profile                                        | Plan                                        | Body plan                                       | Loft                                        |
 | ----------------------------- | ------------------------------------------ | ---------------------------------------------- | ------------------------------------------- | ----------------------------------------------- | ------------------------------------------- |

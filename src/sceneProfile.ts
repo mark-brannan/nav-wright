@@ -50,11 +50,40 @@ function worldMesh(root: THREE.Object3D): { xyz: Float32Array; index: number[] }
   return { xyz, index };
 }
 
+/** What a mesh says about its own frame, from a node's glTF extras (three
+ * lands them in `userData`; scripts/sailboat-lines.mjs writes them): its
+ * waterline height, and the fore-aft extent of the hull itself when spars
+ * reach past it. Each is undefined when no node names it. */
+export interface ModelFrame {
+  waterlineZ?: number;
+  hullX?: [number, number];
+}
+
+export function modelFrame(scene: THREE.Object3D): ModelFrame {
+  const frame: ModelFrame = {};
+  scene.traverse((o) => {
+    const { waterlineZ, hullX } = o.userData as { waterlineZ?: unknown; hullX?: unknown };
+    if (frame.waterlineZ === undefined && typeof waterlineZ === 'number')
+      frame.waterlineZ = waterlineZ;
+    if (
+      frame.hullX === undefined &&
+      Array.isArray(hullX) &&
+      hullX.length === 2 &&
+      hullX.every((v) => typeof v === 'number' && Number.isFinite(v)) &&
+      hullX[1] > hullX[0]
+    )
+      frame.hullX = [hullX[0], hullX[1]];
+  });
+  return frame;
+}
+
 /**
  * A clone of `scene`, placed as a vessel of `lengthMeters` the way
- * placeHullModel() defines: bow on +X, keel on the waterline, fitted to the
- * hull `span` if one is given (else centred fore-aft over the full length).
- * The clone leaves `scene` itself untouched.
+ * placeHullModel() defines: bow on +X, afloat on the waterline (the keel on
+ * it unless the model names its own waterline, see modelFrame), fitted to
+ * the hull `span` if one is given (else centred fore-aft over the full
+ * length). The fit is by the hull's own extent when the model names one, so
+ * a bowsprit does not shorten her. The clone leaves `scene` itself untouched.
  */
 export function placeScene(
   scene: THREE.Object3D,
@@ -63,10 +92,15 @@ export function placeScene(
 ): THREE.Object3D {
   const g = scene.clone(true);
   const raw = new THREE.Box3().setFromObject(scene);
+  const { waterlineZ, hullX } = modelFrame(scene);
   const { scale, rotationX, position } = placeHullModel(
-    { min: { ...raw.min }, max: { ...raw.max } },
+    {
+      min: { ...raw.min, x: hullX ? hullX[0] : raw.min.x },
+      max: { ...raw.max, x: hullX ? hullX[1] : raw.max.x },
+    },
     lengthMeters,
     span,
+    waterlineZ,
   );
 
   g.rotation.x = rotationX;
