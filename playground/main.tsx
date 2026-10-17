@@ -139,6 +139,8 @@ function Playground() {
   const [facts, setFacts] = useState<FactRecord>(hullFacts.powerSmall);
   const [displayIndex, setDisplayIndex] = useState(0);
   const [additionsOn, setAdditionsOn] = useState<string[]>([]);
+  // Editing the lights (or the optional additions) leaves the lawful set: no display is selected.
+  const [custom, setCustom] = useState(false);
   const [model, setModel] = useState(defaultModel(allHulls.powerSmall.spec.id));
   const [theta, setTheta] = useState(45);
   const [tilt, setTilt] = useState(DEFAULT_TILT);
@@ -169,6 +171,7 @@ function Playground() {
     setDisplayIndex(0);
     setAdditionsOn([]);
     setLightsOff([]);
+    setCustom(false);
     setModel(defaultModel(allHulls[k].spec.id));
   };
 
@@ -182,6 +185,7 @@ function Playground() {
     setDisplayIndex(0);
     setAdditionsOn([]);
     setLightsOff([]);
+    setCustom(false);
   };
 
   // Day states fact:time, which is what makes the engine return shapes.
@@ -296,6 +300,18 @@ function Playground() {
               controls={false}
             />
           </figure>
+          <figure>
+            <figcaption>Plan view</figcaption>
+            <PlanView
+              hull={hull}
+              placed={placed}
+              theta={theta}
+              onTheta={setTheta}
+              labels={labels}
+              time={day ? 'day' : 'night'}
+              shapes={placedShapes}
+            />
+          </figure>
         </aside>
       </section>
 
@@ -369,33 +385,38 @@ function Playground() {
         <fieldset>
           <legend>Display</legend>
           {evaln.err && <p className="err">{evaln.err}</p>}
-          {displays.length > 1 && (
-            <Field label="lawful display">
-              <Select
-                value={String(current)}
-                options={displays.map((_, i) => String(i))}
-                onChange={(v) => setDisplayIndex(Number(v))}
+          {displays.map((d, i) => (
+            <label key={i} className="radio">
+              <input
+                type="radio"
+                name="lawful-display"
+                checked={!custom && i === current}
+                onChange={() => {
+                  setDisplayIndex(i);
+                  setAdditionsOn([]);
+                  setLightsOff([]);
+                  setCustom(false);
+                }}
               />
-            </Field>
-          )}
-          {display && (
-            <p className="muted">
-              {display.entries.join(', ')}
-              {display.chosen.length > 0 && ` (${display.chosen.join(', ')})`}
-            </p>
-          )}
+              <span>
+                {d.entries.join(', ')}
+                {d.chosen.length > 0 && ` (${d.chosen.join(', ')})`}
+              </span>
+            </label>
+          ))}
           {additions.map((a) => (
             <Field key={a.id} label={`+ ${a.id}`}>
               <input
                 type="checkbox"
                 checked={additionsOn.includes(a.id)}
-                onChange={(e) =>
+                onChange={(e) => {
+                  setCustom(true);
                   setAdditionsOn(
                     e.target.checked
                       ? [...additionsOn, a.id]
                       : additionsOn.filter((x) => x !== a.id),
-                  )
-                }
+                  );
+                }}
               />
             </Field>
           ))}
@@ -458,11 +479,12 @@ function Playground() {
               <input
                 type="checkbox"
                 checked={!lightsOff.includes(l.key)}
-                onChange={(e) =>
+                onChange={(e) => {
+                  setCustom(true);
                   setLightsOff(
                     e.target.checked ? lightsOff.filter((k) => k !== l.key) : [...lightsOff, l.key],
-                  )
-                }
+                  );
+                }}
               />
             </Field>
           ))}
@@ -473,17 +495,20 @@ function Playground() {
       </section>
 
       <section className="views">
-        <figure>
-          <figcaption>ProfileView</figcaption>
-          <ProfileView
-            hull={hull}
-            placed={placed}
-            facts={dayFacts}
-            labels={labels}
-            time={day ? 'day' : 'night'}
-            shapes={placedShapes}
-          />
-        </figure>
+        {(['starboard', 'port'] as const).map((side) => (
+          <figure key={side}>
+            <figcaption>Profile, {side}</figcaption>
+            <ProfileView
+              hull={hull}
+              placed={placed}
+              facts={dayFacts}
+              labels={labels}
+              time={day ? 'day' : 'night'}
+              shapes={placedShapes}
+              side={side}
+            />
+          </figure>
+        ))}
         <figure>
           <figcaption>BearingView</figcaption>
           <BearingView
@@ -503,18 +528,6 @@ function Playground() {
             }
             labels={labels}
             controls={false}
-          />
-        </figure>
-        <figure>
-          <figcaption>PlanView</figcaption>
-          <PlanView
-            hull={hull}
-            placed={placed}
-            theta={theta}
-            onTheta={setTheta}
-            labels={labels}
-            time={day ? 'day' : 'night'}
-            shapes={placedShapes}
           />
         </figure>
       </section>

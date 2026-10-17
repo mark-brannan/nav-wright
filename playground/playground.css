@@ -159,3 +159,10 @@ legend {
     grid-template-columns: 1fr;
   }
 }
+.radio {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  margin: 4px 0;
+  font-size: 13px;
+}
