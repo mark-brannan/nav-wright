@@ -1,0 +1,117 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nav light realism gaps</title>
+<style>
+:root{--bg:#06080c;--fg:#d7dde6;--mut:#8a94a3;--line:#1c2430}
+body{margin:0;padding:16px;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif;max-width:900px}
+h1{font-size:18px;margin:0 0 4px}h2{font-size:15px;margin:28px 0 6px}
+p{margin:4px 0 10px;color:var(--mut)}
+.row{display:grid;grid-template-columns:150px 1fr;gap:8px;align-items:center;margin:6px 0}
+.lbl{color:var(--mut);font-size:12px}
+canvas{width:100%;height:auto;display:block;border:1px solid var(--line);background:#000;image-rendering:auto}
+.axis{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);padding:0 2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.small{font-size:12px}
+</style></head><body>
+<h1>Nav light realism gaps</h1>
+<p>Each strip is what an observer sees as the bearing (or elevation, or range) sweeps. Top row: what nav-wright draws today. Middle: the Annex I profile. Bottom: a real, imperfect display. Additive colour on black; brightness is relative intensity.</p>
+
+<h2>1. Sidelight aft limit, 112.5° abaft the beam (bearing 95° → 130°)</h2>
+<p>Red sidelight + white masthead + white sternlight. Annex I §9(a)(ii): full to 5° inside the limit, may halve at the limit, cut-off up to 5° outside. Today all three are at full on the boundary degree and none past it.</p>
+<div class="row"><span class="lbl">today (hard cull)</span><canvas id="a1" width="720" height="34"></canvas></div>
+<div class="row"><span class="lbl">Annex I §9(a)(ii)</span><canvas id="a2" width="720" height="34"></canvas></div>
+<div class="row"><span class="lbl">dirty: screen 4° off, salted lens</span><canvas id="a3" width="720" height="34"></canvas></div>
+<div class="row"><span></span><div class="axis"><span>95°</span><span>107.5°</span><span>112.5°</span><span>117.5°</span><span>130°</span></div></div>
+
+<h2>2. Bow crossover (bearing 12° on the port bow → 12° on the starboard bow)</h2>
+<p>§9(a)(i): cut-off 1° to 3° <em>outside</em> the sector, so both colours show in a 2° to 6° band dead ahead. A tricolour lantern (§5: one filament, a narrow division) bleeds wider. She yaws, so the band sweeps across you: the dot is what you see now.</p>
+<div class="row"><span class="lbl">today (swap at 0°)</span><canvas id="b1" width="720" height="34"></canvas></div>
+<div class="row"><span class="lbl">Annex I, 2° cut-off</span><canvas id="b2" width="720" height="34"></canvas></div>
+<div class="row"><span class="lbl">dirty tricolour, yawing ±6°</span><canvas id="b3" width="720" height="34"></canvas></div>
+<div class="row"><span></span><div class="axis"><span>12° port</span><span>0°</span><span>12° stbd</span></div></div>
+
+<h2>3. Range: a 20 m vessel, masthead 5 nm, sidelight 2 nm (0.25 → 7 nm)</h2>
+<p>Today <code>glowProfile</code> sizes the glow by the light's <em>reach</em> and floors opacity at 0.35 beyond it, so a sidelight is still drawn at 7 nm. Real: glare shrinks with distance squared, red loses its colour before it goes, and past its luminous range it is gone while the masthead still shows.</p>
+<div class="row"><span class="lbl">today</span><canvas id="c1" width="720" height="60"></canvas></div>
+<div class="row"><span class="lbl">realistic</span><canvas id="c2" width="720" height="60"></canvas></div>
+<div class="row"><span></span><div class="axis"><span>0.25</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7 nm</span></div></div>
+
+<h2>4. The sheen on the water, seen 1° on her starboard bow</h2>
+<p>Each wave facet reflects a ray that left the lantern at its own bearing, so the column is a bearing integral: near you it is the colour you see direct; near her it mixes across the edge. The same is true at every sector edge, not only the bow.</p>
+<div class="grid2">
+<div><div class="lbl">today: clean mirror</div><canvas id="d1" width="300" height="220"></canvas></div>
+<div><div class="lbl">realistic: broken, stretched, mixed near her</div><canvas id="d2" width="300" height="220"></canvas></div>
+</div>
+
+<h2>5. Vertical sector (observer elevation −30° → +30°)</h2>
+<p>§10: power-driven, full within ±5°, 60% at ±7.5°; sailing vessel, 50% at ±25°. Today tilt never changes a light. A heeled yacht shows one sidelight bright and the other dim or gone; a bridge looking down at a boat alongside sees little.</p>
+<div class="row"><span class="lbl">today</span><canvas id="e1" width="720" height="34"></canvas></div>
+<div class="row"><span class="lbl">§10(a) power-driven</span><canvas id="e2" width="720" height="34"></canvas></div>
+<div class="row"><span class="lbl">§10(b) sailing, heeled 20°</span><canvas id="e3" width="720" height="34"></canvas></div>
+<div class="row"><span></span><div class="axis"><span>−30°</span><span>−5°</span><span>0°</span><span>+5°</span><span>+30°</span></div></div>
+
+<h2>6. All-round light shadow sectors (one full turn)</h2>
+<p>§9(b): an all-round light may be obscured by the mast within sectors up to 6°. A radar dome or a furled sail does far more. Today an all-round is a full circle.</p>
+<div class="row"><span class="lbl">today</span><canvas id="f1" width="720" height="34"></canvas></div>
+<div class="row"><span class="lbl">§9(b): mast, 6°</span><canvas id="f2" width="720" height="34"></canvas></div>
+<div class="row"><span class="lbl">dirty: mast + radome + rolled jib</span><canvas id="f3" width="720" height="34"></canvas></div>
+<div class="row"><span></span><div class="axis"><span>0°</span><span>90°</span><span>180°</span><span>270°</span><span>360°</span></div></div>
+
+<script>
+const RED=[1,.26,.2],GRN=[.25,.85,.37],WHT=[1,.82,.62],DIM=[.75,.7,.62];
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const sm=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+function strip(id,lights,x0,x1){const c=document.getElementById(id),g=c.getContext('2d'),w=c.width,h=c.height;
+ const img=g.createImageData(w,h);for(let x=0;x<w;x++){const b=x0+(x1-x0)*x/(w-1);let r=0,gg=0,bb=0;
+ for(const [col,f] of lights){const i=f(b);r+=col[0]*i;gg+=col[1]*i;bb+=col[2]*i}
+ for(let y=0;y<h;y++){const o=(y*w+x)*4;img.data[o]=255*clamp(r,0,1);img.data[o+1]=255*clamp(gg,0,1);img.data[o+2]=255*clamp(bb,0,1);img.data[o+3]=255}}
+ g.putImageData(img,0,0);return g}
+// 1. aft limit
+const L=112.5;
+strip('a1',[[RED,b=>b<=L?1:0],[WHT,b=>b<=L?.7:0],[WHT,b=>b>=L?.7:0]],95,130);
+const inner=(b,lim,sgn)=>{const d=sgn*(lim-b);if(d>=5)return 1;if(d>=0)return .5+.5*d/5;return .5*clamp(1+d/5,0,1)};
+strip('a2',[[RED,b=>inner(b,L,1)],[WHT,b=>.7*inner(b,L,1)],[WHT,b=>.7*inner(b,L,-1)]],95,130);
+strip('a3',[[RED,b=>.65*sm(124,112,b)],[WHT,b=>.7*inner(b,L,1)],[WHT,b=>.7*inner(b,L,-1)]],95,130);
+// 2. bow
+strip('b1',[[RED,b=>b<=0?1:0],[GRN,b=>b>=0?1:0]],-12,12);
+strip('b2',[[RED,b=>sm(2,0,b)],[GRN,b=>sm(-2,0,b)]],-12,12);
+const b3=strip('b3',[[RED,b=>.9*sm(5,-1,b)],[GRN,b=>.9*sm(-5,1,b)]],-12,12);
+(function yaw(){const t=performance.now()/1000;const b=6*Math.sin(t*0.9)+1.5*Math.sin(t*3.1);
+ const x=720*(b+12)/24;b3.clearRect(0,0,720,34);
+ strip('b3',[[RED,q=>.9*sm(5,-1,q)],[GRN,q=>.9*sm(-5,1,q)]],-12,12);
+ const r=.9*sm(5,-1,b),g=.9*sm(-5,1,b);b3.fillStyle='#000';b3.beginPath();b3.arc(x,17,11,0,7);b3.fill();
+ b3.fillStyle=`rgb(${255*r},${255*(.26*r+.85*g)},${255*(.2*r+.37*g)})`;b3.beginPath();b3.arc(x,17,8,0,7);b3.fill();
+ requestAnimationFrame(yaw)})();
+// 3. range
+function dot(g,x,y,col,rad,alpha,core){const grd=g.createRadialGradient(x,y,0,x,y,rad);
+ grd.addColorStop(0,`rgba(${255*col[0]},${255*col[1]},${255*col[2]},${alpha})`);grd.addColorStop(.35,`rgba(${255*col[0]},${255*col[1]},${255*col[2]},${alpha*.5})`);grd.addColorStop(1,'rgba(0,0,0,0)');
+ g.fillStyle=grd;g.beginPath();g.arc(x,y,rad,0,7);g.fill();if(core){g.fillStyle=`rgba(255,255,255,${.85*alpha})`;g.beginPath();g.arc(x,y,core,0,7);g.fill()}}
+const ranges=[.25,1,2,3,4,5,6,7],xs=i=>720*(i+.5)/8;
+const todayP=(reach,d)=>({scale:clamp(Math.sqrt(reach/3),.55,1.5),op:clamp(1.25-.75*d/reach,.35,1)});
+{const g=document.getElementById('c1').getContext('2d');ranges.forEach((d,i)=>{let p=todayP(5,d);dot(g,xs(i),18,WHT,14*p.scale,p.op,2.4);p=todayP(2,d);dot(g,xs(i),44,RED,14*p.scale,p.op,2.4)})}
+{const g=document.getElementById('c2').getContext('2d');ranges.forEach((d,i)=>{
+ const rad=clamp(9/d,2,28);const wa=d<4?1:sm(6.5,4,d);dot(g,xs(i),18,WHT,rad,wa,d<1?3:1.2);
+ const ra=d<1.4?1:sm(2.6,1.4,d);const k=clamp((d-1.2)/1.2,0,1);const col=[RED[0]*(1-k)+DIM[0]*k,RED[1]*(1-k)+DIM[1]*k,RED[2]*(1-k)+DIM[2]*k];
+ dot(g,xs(i),44,col,rad,ra*.9,d<1?3:0)})}
+// 4. sheen
+function sheen(id,broken){const c=document.getElementById(id),g=c.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,300,220);
+ g.fillStyle='#0a1424';g.fillRect(0,60,300,160);g.strokeStyle='#1b2a42';g.beginPath();g.moveTo(0,60);g.lineTo(300,60);g.stroke();
+ const mix=t=>{const r=.5+.5*t,gg=.9-.5*t;return[r,gg*.85,.2]};
+ if(!broken){g.fillStyle='rgba(60,210,95,.55)';g.fillRect(146,62,8,150);dot(g,150,58,GRN,18,1,3);return}
+ let s=7;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+ for(let y=64;y<220;y+=3){const t=clamp((y-64)/150,0,1);const near=1-t;const col=mix(near);
+  const n=2+Math.floor(rnd()*3);for(let k=0;k<n;k++){const wdt=4+t*26*rnd();const x=150+(rnd()-.5)*(10+t*50);
+  g.fillStyle=`rgba(${255*col[0]},${255*col[1]},${255*col[2]},${.25+.45*rnd()*(1-t*.5)})`;g.fillRect(x-wdt/2,y,wdt,2)}}
+ dot(g,150,58,mix(.9),20,1,3);dot(g,150,58,GRN,20,.5,0)}
+sheen('d1',false);sheen('d2',true);
+// 5. vertical
+strip('e1',[[RED,e=>1]],-30,30);
+const vp=e=>{const a=Math.abs(e);if(a<=5)return 1;if(a<=7.5)return 1-.4*(a-5)/2.5;return .6*sm(14,7.5,a)};
+strip('e2',[[RED,vp]],-30,30);
+const vs=e=>{const a=Math.abs(e-20);if(a<=5)return 1;if(a<=25)return 1-.5*(a-5)/20;return .5*sm(40,25,a)};
+strip('e3',[[RED,vs]],-30,30);
+// 6. shadow
+strip('f1',[[WHT,b=>.8]],0,360);
+strip('f2',[[WHT,b=>.8*(1-.95*sm(2,0,Math.abs(b-180)-3))]],0,360);
+strip('f3',[[WHT,b=>.8*(1-.95*sm(2,0,Math.abs(b-180)-3))*(1-.9*sm(3,0,Math.abs(b-22)-9))*(1-.6*sm(4,0,Math.abs(b-300)-14))]],0,360);
+</script></body></html>
