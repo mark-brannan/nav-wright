@@ -39,3 +39,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261017t034943z
 - Playground defaults the silhouette variant to All three side by side, and puts theta in the URL alongside view and variant. Undo: change initialVariant and drop set('theta', ...) in playground/main.tsx ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
+
+### 20261017t034947z
+- Silhouette A uses whichever mesh the playground's 3D model picker holds (the hull's loft by default). Undo: pass a different modelUrl to the mesh silhouette in playground/main.tsx ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
