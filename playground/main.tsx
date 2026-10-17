@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client';
 import { evaluateDisplay } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
-import type { ShapesData } from '../src/index.js';
+import type { PlacedLight, PlacedShape, ShapesData } from '../src/index.js';
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
 import shapesJson from 'colregs/data/shapes.json' with { type: 'json' };
@@ -16,13 +16,14 @@ import {
   declaredFlashRate,
   lightRangesFor,
   PlanView,
-  ThetaControl,
   ProfileView,
   allHulls,
+  bearingLabel,
   defaultSceneLabels,
   placeLights,
   placeShapes,
   selectHull,
+  wrapDegrees,
 } from '../src/index.js';
 import {
   BearingModelView,
@@ -137,10 +138,11 @@ function Range({
 function Playground() {
   const [hullKey, setHullKey] = useState<HullKey>('powerSmall');
   const [facts, setFacts] = useState<FactRecord>(hullFacts.powerSmall);
-  const [displayIndex, setDisplayIndex] = useState(0);
-  const [additionsOn, setAdditionsOn] = useState<string[]>([]);
-  // Editing the lights (or the optional additions) leaves the lawful set: no display is selected.
-  const [custom, setCustom] = useState(false);
+  // The rule line last picked; the lights it calls for are drawn until one is toggled.
+  const [lineIndex, setLineIndex] = useState(0);
+  // The drawn lights once one is toggled by hand (null: follow the picked line).
+  // Drawing a set no rule calls for is unlawful: no line matches it.
+  const [drawnOverride, setDrawnOverride] = useState<string[] | null>(null);
   const [model, setModel] = useState(defaultModel(allHulls.powerSmall.spec.id));
   const [theta, setTheta] = useState(45);
   const [tilt, setTilt] = useState(DEFAULT_TILT);
@@ -149,9 +151,6 @@ function Playground() {
   const [range, setRange] = useState(0.5);
   const [sky, setSky] = useState(0);
   const [sea, setSea] = useState(0.1);
-  // Lights switched off here are dropped from every view: what is drawn is
-  // decoupled from what the lawful display calls for.
-  const [lightsOff, setLightsOff] = useState<string[]>([]);
   const lightRangesNm = useMemo(
     () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
     [facts],
@@ -165,13 +164,15 @@ function Playground() {
 
   const hull = allHulls[hullKey];
 
+  const resetRule = () => {
+    setLineIndex(0);
+    setDrawnOverride(null);
+  };
+
   const pickHull = (k: HullKey) => {
     setHullKey(k);
     setFacts(hullFacts[k]);
-    setDisplayIndex(0);
-    setAdditionsOn([]);
-    setLightsOff([]);
-    setCustom(false);
+    resetRule();
     setModel(defaultModel(allHulls[k].spec.id));
   };
 
@@ -182,10 +183,7 @@ function Playground() {
     else if (next['fact:making_way'] === undefined) next['fact:making_way'] = true;
     for (const k of Object.keys(next)) if (next[k] === undefined) delete next[k];
     setFacts(next as FactRecord);
-    setDisplayIndex(0);
-    setAdditionsOn([]);
-    setLightsOff([]);
-    setCustom(false);
+    resetRule();
   };
 
   // Day states fact:time, which is what makes the engine return shapes.
@@ -203,31 +201,69 @@ function Playground() {
 
   const displays = evaln.ok?.displays ?? [];
   const additions = evaln.ok?.optionalAdditions ?? [];
-  const current = Math.min(displayIndex, Math.max(0, displays.length - 1));
-  const display = displays[current];
 
-  const lawful = useMemo(() => {
-    if (!display) return [];
-    const extra = additions.filter((a) => additionsOn.includes(a.id)).flatMap((a) => a.lights);
-    return placeLights([...display.lights, ...extra], hull.spec, facts, lightsData, geometryData);
-  }, [display, additions, additionsOn, hull, facts]);
-  const placed = useMemo(
-    () => lawful.filter((l) => !lightsOff.includes(l.key)),
-    [lawful, lightsOff],
+  // One line per rule set that could apply: each display, and each display
+  // with any combination of its optional additions. Placed per line, because
+  // a light's position depends on what else is on the mast.
+  const lines = useMemo(() => {
+    const out: {
+      label: string;
+      placed: PlacedLight[];
+      shapes: PlacedShape[];
+      keys: Set<string>;
+    }[] = [];
+    for (const d of displays) {
+      for (let mask = 0; mask < 1 << additions.length; mask++) {
+        const extra = additions.filter((_, i) => mask & (1 << i));
+        const placed = placeLights(
+          [...d.lights, ...extra.flatMap((a) => a.lights)],
+          hull.spec,
+          facts,
+          lightsData,
+          geometryData,
+        );
+        const shapes = placeShapes(
+          [...d.shapes, ...extra.flatMap((a) => a.shapes)],
+          hull.spec,
+          dayFacts,
+          shapesData,
+          geometryData,
+        );
+        const rules = [...d.entries, ...extra.map((a) => a.id)].join(' + ');
+        out.push({
+          label: `${rules}${d.chosen.length > 0 ? ` (${d.chosen.join(', ')})` : ''}${extra.length > 0 ? ' (optional)' : ''}`,
+          placed,
+          shapes,
+          keys: new Set(placed.map((l) => l.key)),
+        });
+      }
+    }
+    return out;
+  }, [displays, additions, hull, facts, dayFacts]);
+
+  const picked = lines[Math.min(lineIndex, Math.max(0, lines.length - 1))];
+  // Every light any rule draws, the picked line's first, in its own placement.
+  const allLights = useMemo(() => {
+    const byKey = new Map<string, PlacedLight>();
+    for (const l of [...(picked ? [picked] : []), ...lines].flatMap((line) => line.placed))
+      if (!byKey.has(l.key)) byKey.set(l.key, l);
+    return [...byKey.values()];
+  }, [picked, lines]);
+  const drawnKeys = useMemo(
+    () => new Set(drawnOverride ?? (picked ? [...picked.keys] : [])),
+    [drawnOverride, picked],
   );
-
-  const placedShapes = useMemo(() => {
-    if (!display) return [];
-    // a 'may' shape (Rule 28's cylinder) is an optional addition, like a 'may' light
-    const extra = additions.filter((a) => additionsOn.includes(a.id)).flatMap((a) => a.shapes);
-    return placeShapes(
-      [...display.shapes, ...extra],
-      hull.spec,
-      dayFacts,
-      shapesData,
-      geometryData,
-    );
-  }, [display, additions, additionsOn, hull, dayFacts]);
+  const placed = useMemo(
+    () => allLights.filter((l) => drawnKeys.has(l.key)),
+    [allLights, drawnKeys],
+  );
+  // The line whose lights are exactly the ones drawn; none means unlawful.
+  const matched = lines.findIndex(
+    (line) => line.keys.size === drawnKeys.size && [...line.keys].every((k) => drawnKeys.has(k)),
+  );
+  const unlawful = matched < 0;
+  const inEffect = matched >= 0 ? lines[matched]! : picked;
+  const placedShapes = inEffect?.shapes ?? [];
 
   // "Labels off" blanks every label string, to see the views without text.
   const labels = useMemo(() => {
@@ -284,9 +320,8 @@ function Playground() {
           />
         </div>
         <aside className="side">
-          <ThetaControl theta={theta} onTheta={setTheta} labels={labels} plan={hull.plan} />
           <figure>
-            <figcaption>Benchy View (3dbenchy-lowpoly.glb)</figcaption>
+            <figcaption>Benchy</figcaption>
             <BenchyView
               modelUrl={models['3dbenchy-lowpoly.glb']!}
               hull={hull}
@@ -301,16 +336,23 @@ function Playground() {
             />
           </figure>
           <figure>
-            <figcaption>Plan view</figcaption>
-            <PlanView
-              hull={hull}
-              placed={placed}
-              theta={theta}
-              onTheta={setTheta}
-              labels={labels}
-              time={day ? 'day' : 'night'}
-              shapes={placedShapes}
-            />
+            <figcaption>Arc/Bearing View</figcaption>
+            <div className="arc-body">
+              <PlanView
+                hull={hull}
+                placed={placed}
+                theta={theta}
+                onTheta={setTheta}
+                labels={labels}
+                time={day ? 'day' : 'night'}
+                shapes={placedShapes}
+              />
+              <p className="arc-readout" aria-live="polite">
+                <span className="muted">{labels.bearingThetaLabel}</span>
+                <strong>{Math.round(wrapDegrees(theta)) % 360}°</strong>
+                <span>{labels.aspect[bearingLabel(Math.round(wrapDegrees(theta)) % 360)]}</span>
+              </p>
+            </div>
           </figure>
         </aside>
       </section>
@@ -385,42 +427,29 @@ function Playground() {
         <fieldset>
           <legend>Display</legend>
           {evaln.err && <p className="err">{evaln.err}</p>}
-          {displays.map((d, i) => (
-            <label key={i} className="radio">
+          {lines.map((line, i) => (
+            <label key={line.label} className="radio">
               <input
                 type="radio"
-                name="lawful-display"
-                checked={!custom && i === current}
+                name="rule-in-effect"
+                checked={i === matched}
                 onChange={() => {
-                  setDisplayIndex(i);
-                  setAdditionsOn([]);
-                  setLightsOff([]);
-                  setCustom(false);
+                  setLineIndex(i);
+                  setDrawnOverride(null);
                 }}
               />
-              <span>
-                {d.entries.join(', ')}
-                {d.chosen.length > 0 && ` (${d.chosen.join(', ')})`}
-              </span>
+              <span>{line.label}</span>
             </label>
           ))}
-          {additions.map((a) => (
-            <Field key={a.id} label={`+ ${a.id}`}>
-              <input
-                type="checkbox"
-                checked={additionsOn.includes(a.id)}
-                onChange={(e) => {
-                  setCustom(true);
-                  setAdditionsOn(
-                    e.target.checked
-                      ? [...additionsOn, a.id]
-                      : additionsOn.filter((x) => x !== a.id),
-                  );
-                }}
-              />
-            </Field>
-          ))}
-          <p className="muted">{placed.length} lights placed</p>
+          <label className="radio">
+            <input type="radio" name="rule-in-effect" checked={unlawful} onChange={() => {}} />
+            <span>unlawful / unconstrained</span>
+          </label>
+          <p className="muted">
+            {unlawful
+              ? 'Selected: the lights drawn match no rule. Toggle them under Lights drawn.'
+              : 'Picking a rule draws its lights.'}
+          </p>
         </fieldset>
 
         <fieldset>
@@ -473,23 +502,27 @@ function Playground() {
 
         <fieldset>
           <legend>Lights drawn</legend>
-          {lawful.length === 0 && <p className="muted">no lights</p>}
-          {lawful.map((l) => (
-            <Field key={l.key} label={`${l.lightId.replace('light:', '')} (${l.key})`}>
+          {allLights.length === 0 && <p className="muted">no lights</p>}
+          {allLights.map((l) => (
+            <Field
+              key={l.key}
+              label={`${l.lightId.replace('light:', '')} · ${l.sourceEntry}${l.color ? ` · ${l.color}` : ''}`}
+            >
               <input
                 type="checkbox"
-                checked={!lightsOff.includes(l.key)}
-                onChange={(e) => {
-                  setCustom(true);
-                  setLightsOff(
-                    e.target.checked ? lightsOff.filter((k) => k !== l.key) : [...lightsOff, l.key],
-                  );
-                }}
+                checked={drawnKeys.has(l.key)}
+                onChange={(e) =>
+                  setDrawnOverride(
+                    e.target.checked
+                      ? [...drawnKeys, l.key]
+                      : [...drawnKeys].filter((k) => k !== l.key),
+                  )
+                }
               />
             </Field>
           ))}
           <p className="muted">
-            {placed.length} of {lawful.length} drawn; the lawful display is unchanged
+            {placed.length} of {allLights.length} drawn
           </p>
         </fieldset>
       </section>
