@@ -4,6 +4,8 @@
 paths:
   - "playground/**"   # the vite playground and gallery
   - "src/**"          # the 3D model views the playground renders
+  - "models/**"       # the lofted hulls (.glb)
+  - "goldens/**"      # rendered scenes
 checkout: ~/nav-wright                              # the user's local clone
 install: npm ci
 serve: npm run dev -- --strictPort --port {port}    # {port} = 10000 + PR number
