@@ -27,6 +27,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
+import { lightFill } from './svg.js';
 import type { PlacedLight } from './placement.js';
 import {
   VIEW_FRAME,
@@ -40,6 +41,10 @@ import {
 } from './modelTransform.js';
 import type { HullStations } from './modelTransform.js';
 import { placeScene, profileHullModel } from './sceneProfile.js';
+import { blockTriangles, growPrism, specBlock } from './specBlock.js';
+import type { BlockSpec } from './specBlock.js';
+import type { SilhouetteVariant } from './silhouette.js';
+import { SILHOUETTE_COLOR } from './silhouette.js';
 import { DEFAULT_TILT } from './tilt.js';
 
 const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN, bowX: NaN };
@@ -59,6 +64,7 @@ function Hull({
   anchored,
   inViewAt,
   opacity,
+  flat = false,
   sea,
   onReady,
 }: {
@@ -71,6 +77,8 @@ function Hull({
   inViewAt?: number;
   /** Mesh opacity, 0 (hidden) .. 1. The lights are never faded. */
   opacity: number;
+  /** One unlit colour on every face: the silhouette's mesh variant. */
+  flat?: boolean;
   /** The sea's colour; undefined draws no sea. */
   sea?: string;
   /** Called once the model has loaded and the lights are on it. */
@@ -89,13 +97,13 @@ function Hull({
   // nearest surface over the sky, not every face behind it.
   const { group, materials, depth } = useMemo(() => {
     const g = placeScene(scene, lengthMeters, { sternX, bowX });
-    const materials = ownMaterials(g);
+    const materials = flat ? flatMaterial(g) : ownMaterials(g);
     const depth = g.clone(true);
     depth.traverse((o) => {
       if ((o as THREE.Mesh).isMesh) (o as THREE.Mesh).material = DEPTH_ONLY;
     });
     return { group: g, materials, depth };
-  }, [scene, lengthMeters, sternX, bowX]);
+  }, [scene, lengthMeters, sternX, bowX, flat]);
   // The clones are this hull's alone; the loader's cache never sees them.
   useEffect(() => () => materials.forEach((m) => m.dispose()), [materials]);
   const faded = opacity < 1;
@@ -140,9 +148,101 @@ function Hull({
         <SceneLight key={light.key} light={light} lengthMeters={lengthMeters} position={position} />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
+      {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
     </group>
   );
 }
+
+/** The silhouette's block variants: the hull built from her spec (see
+ * specBlock), drawn flat, with her lights at their spec stations, where the
+ * block is sure to hold them. `soft` feathers its edges: SOFT_LAYERS shells,
+ * each a little larger, that sum to `opacity` inside the block and fade to
+ * nothing SOFT_REACH beyond it. Needs no model, so it is ready at once. */
+function BlockHull({
+  lengthMeters,
+  spec,
+  hull,
+  placed,
+  anchored,
+  inViewAt,
+  opacity,
+  soft,
+  sea,
+  onReady,
+}: {
+  lengthMeters: number;
+  spec: BlockSpec;
+  hull: HullStations;
+  placed: PlacedLight[];
+  anchored: boolean;
+  inViewAt?: number;
+  opacity: number;
+  soft: boolean;
+  sea?: string;
+  onReady: () => void;
+}): ReactElement {
+  useLayoutEffect(onReady, [onReady]);
+  const fit = useMemo(() => viewFrame(lengthMeters, hull, placed), [lengthMeters, hull, placed]);
+  const geometries = useMemo(() => {
+    const prisms = specBlock(spec, placed, lengthMeters);
+    const reach = (SOFT_REACH * lengthMeters) / 2;
+    const layers = soft
+      ? Array.from({ length: SOFT_LAYERS }, (_, k) =>
+          prisms.map((p) => growPrism(p, (reach * k) / SOFT_LAYERS)),
+        )
+      : [prisms];
+    return layers.map((layer) => {
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(blockTriangles(layer), 3));
+      return g;
+    });
+  }, [spec, placed, lengthMeters, soft]);
+  useEffect(() => () => geometries.forEach((g) => g.dispose()), [geometries]);
+
+  const positions = useMemo(
+    () => placed.map((l) => lightPosition(l, lengthMeters)),
+    [placed, lengthMeters],
+  );
+  const seen = useMemo(
+    () =>
+      inViewAt === undefined
+        ? placed.map((light, i) => ({ light, position: positions[i] }))
+        : seatsSeenFrom(placed, positions, inViewAt),
+    [placed, positions, inViewAt],
+  );
+
+  // Hard edges: a depth prepass, so the union draws each pixel once. Soft:
+  // shells whose alphas compound to `opacity` where all of them overlap.
+  const faded = opacity < 1;
+  const alpha = soft ? 1 - Math.pow(1 - Math.min(opacity, 0.999), 1 / SOFT_LAYERS) : opacity;
+  return (
+    <group scale={fit.scale} position={fit.position}>
+      {!soft && faded && opacity > 0 && <mesh geometry={geometries[0]} material={DEPTH_ONLY} />}
+      {opacity > 0 &&
+        geometries.map((g, i) => (
+          <mesh key={i} geometry={g}>
+            <meshBasicMaterial
+              color={SILHOUETTE_COLOR}
+              transparent={soft || faded}
+              opacity={alpha}
+              depthWrite={!soft && !faded}
+              toneMapped={false}
+            />
+          </mesh>
+        ))}
+      {seen.map(({ light, position }) => (
+        <SceneLight key={light.key} light={light} lengthMeters={lengthMeters} position={position} />
+      ))}
+      {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
+      {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
+    </group>
+  );
+}
+
+/** Shells in the soft variant, and how far the outermost reaches past the
+ * block, as a fraction of her half-length. */
+const SOFT_LAYERS = 8;
+const SOFT_REACH = 0.08;
 
 /** The sea: one wide plane at the waterline, drawn from above only, so a
  * camera below it sees no water: the surface is clipped, not looked through.
@@ -163,6 +263,17 @@ function Sea({ color, lengthMeters }: { color: string; lengthMeters: number }): 
       />
     </mesh>
   );
+}
+
+/** One unlit material on every mesh under `root`, returned in a list so it
+ * can be faded and disposed like ownMaterials'. */
+function flatMaterial(root: THREE.Object3D): THREE.Material[] {
+  const flat = new THREE.MeshBasicMaterial({ color: SILHOUETTE_COLOR, toneMapped: false });
+  root.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (mesh.isMesh) mesh.material = flat;
+  });
+  return [flat];
 }
 
 /** Writes depth, draws nothing: the faded hull's prepass. */
@@ -220,7 +331,7 @@ function SceneLight({
         <sphereGeometry args={[r, 12, 12]} />
         {/* transparent so it joins the faded hull's pass and renderOrder puts it after */}
         <meshBasicMaterial
-          color={light.color}
+          color={lightFill(light.color)}
           transparent
           depthTest={false}
           depthWrite={false}
@@ -231,7 +342,7 @@ function SceneLight({
       <mesh ref={halo} renderOrder={3}>
         <sphereGeometry args={[r * 2.6, 12, 12]} />
         <meshBasicMaterial
-          color={light.color}
+          color={lightFill(light.color)}
           transparent
           opacity={0.35}
           blending={THREE.AdditiveBlending}
@@ -303,12 +414,15 @@ function OrbitRig({
   tilt,
   onTilt,
   pan,
+  level = false,
 }: {
   theta: number;
   onTheta?: (t: number) => void;
   tilt: number;
   onTilt?: (t: number) => void;
   pan: boolean;
+  /** Pin the camera to the waterline's level (tilt 0): the silhouette. */
+  level?: boolean;
 }): ReactElement {
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const camera = useThree((s) => s.camera);
@@ -333,7 +447,7 @@ function OrbitRig({
       enableZoom
       minDistance={VIEW_FRAME.minDistance}
       maxDistance={VIEW_FRAME.maxDistance}
-      minPolarAngle={MIN_POLAR}
+      minPolarAngle={level ? MAX_POLAR : MIN_POLAR}
       maxPolarAngle={MAX_POLAR}
       onChange={() => {
         const c = controls.current;
@@ -364,6 +478,8 @@ export function BenchyModel({
   background = DAY_BACKGROUND,
   night = false,
   sea,
+  silhouette,
+  blockSpec,
   label,
   fallback = <div className="scene-3d" />,
   loading,
@@ -403,6 +519,13 @@ export function BenchyModel({
   night?: boolean;
   /** The sea's colour: a plane at the waterline, visible from below as well. Undefined draws none. */
   sea?: string;
+  /** Draw her flat, in one unlit colour, from the waterline's level (tilt
+   * 0): her own mesh, or a block built from her spec (`blockSpec`). See
+   * SilhouetteVariant. Undefined draws the shaded, orbitable model. */
+  silhouette?: SilhouetteVariant;
+  /** The spec the block variants are built from; a HullSpec fits. Without
+   * it they draw the mesh. */
+  blockSpec?: BlockSpec;
   /** Accessible name for the canvas. Comes from the caller's SceneLabels —
    * these views render without an IntlProvider, by design (searoom#20). */
   label?: string;
@@ -425,6 +548,10 @@ export function BenchyModel({
   }
   const [pending, setPending] = useState(true);
   const ready = useMemo(() => () => setPending(false), []);
+  const level = silhouette !== undefined;
+  const block = (silhouette === 'block' || silhouette === 'soft') && blockSpec !== undefined;
+  const opacity = Math.min(1, Math.max(0, hullOpacity));
+  const seenAt = inViewAt === undefined ? undefined : seenFrom;
   return (
     <ModelErrorBoundary fallback={fallback} onError={onError}>
       <Canvas
@@ -449,22 +576,39 @@ export function BenchyModel({
             if (inViewAt !== undefined) setSeenFrom(t);
             onTheta?.(t);
           }}
-          tilt={tilt}
-          onTilt={onTilt}
-          pan={!night}
+          tilt={level ? 0 : tilt}
+          onTilt={level ? undefined : onTilt}
+          pan={!night && !level}
+          level={level}
         />
         <Suspense fallback={<Pending onPending={setPending} />}>
-          <Hull
-            modelUrl={modelUrl}
-            lengthMeters={lengthMeters}
-            hull={hull}
-            placed={placed}
-            anchored={anchored}
-            inViewAt={inViewAt === undefined ? undefined : seenFrom}
-            opacity={Math.min(1, Math.max(0, hullOpacity))}
-            sea={sea}
-            onReady={ready}
-          />
+          {block ? (
+            <BlockHull
+              lengthMeters={lengthMeters}
+              spec={blockSpec}
+              hull={hull}
+              placed={placed}
+              anchored={anchored}
+              inViewAt={seenAt}
+              opacity={opacity}
+              soft={silhouette === 'soft'}
+              sea={sea}
+              onReady={ready}
+            />
+          ) : (
+            <Hull
+              modelUrl={modelUrl}
+              lengthMeters={lengthMeters}
+              hull={hull}
+              placed={placed}
+              anchored={anchored}
+              inViewAt={seenAt}
+              opacity={opacity}
+              flat={level}
+              sea={sea}
+              onReady={ready}
+            />
+          )}
         </Suspense>
       </Canvas>
       {pending && loading && (

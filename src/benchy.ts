@@ -14,6 +14,10 @@
 export { BenchyView } from './BenchyView.js';
 export { BearingModelView, bearingHullOpacity } from './BearingModelView.js';
 
+// The silhouette: BearingModelView's flat variants
+export { SILHOUETTE_VARIANTS } from './silhouette.js';
+export type { SilhouetteVariant } from './silhouette.js';
+
 // Camera elevation: the range TiltControl and a consumer's URL state
 // clamp against
 export { DEFAULT_TILT, MAX_TILT, MIN_TILT } from './tilt.js';

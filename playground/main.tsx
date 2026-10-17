@@ -1,7 +1,9 @@
 // nav-wright's own page: every hull, every view, every prop as a plain
 // control, fed by colregs-engine directly. Imports ../src, not dist.
+// The 3D model is the primary view; the silhouette and the 2D views are
+// one click away, and every view is in the grid below.
 
-import { StrictMode, useMemo, useState } from 'react';
+import { StrictMode, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { evaluateDisplay } from 'colregs-engine';
@@ -31,8 +33,10 @@ import {
   DEFAULT_TILT,
   MAX_TILT,
   MIN_TILT,
+  SILHOUETTE_VARIANTS,
   defaultBenchyLabels,
 } from '../src/benchy.js';
+import type { SilhouetteVariant } from '../src/benchy.js';
 import '../src/style.css';
 import './playground.css';
 import { hullFacts } from './hullFacts.js';
@@ -77,6 +81,58 @@ const ACTIVITIES = [
   'activity:diving',
 ];
 const POSITIONS = ['position:underway', 'position:anchored', 'position:aground', 'position:moored'];
+
+// The primary pane: which view, and for the silhouette which variant (or all
+// three side by side). Both live in the URL, with theta, so a link opens the
+// same picture: ?view=silhouette&variant=soft&theta=90.
+const VIEWS = {
+  '3d': '3D model',
+  silhouette: 'Silhouette',
+  profile: 'Profile (2D)',
+  bearing: 'Bearing (2D)',
+} as const;
+type ViewKey = keyof typeof VIEWS;
+const VARIANTS = ['all', ...SILHOUETTE_VARIANTS] as const;
+type VariantKey = (typeof VARIANTS)[number];
+const VARIANT_LABELS: Record<VariantKey, string> = {
+  all: 'All three',
+  mesh: 'A: mesh',
+  block: 'B: spec block',
+  soft: 'C: soft',
+};
+
+const query = new URLSearchParams(location.search);
+const pick = <T extends string>(value: string | null, options: readonly T[], fallback: T): T =>
+  options.includes(value as T) ? (value as T) : fallback;
+const initialView = pick(query.get('view'), Object.keys(VIEWS) as ViewKey[], '3d');
+const initialVariant = pick(query.get('variant'), VARIANTS, 'all');
+const queryTheta = Number(query.get('theta'));
+const initialTheta =
+  query.has('theta') && Number.isFinite(queryTheta)
+    ? ((Math.round(queryTheta) % 360) + 360) % 360
+    : 45;
+
+/** Keep view, variant and theta in the address bar, leaving other keys (day)
+ * alone. Debounced: theta changes on every degree of a drag. */
+function useUrlState(view: ViewKey, variant: VariantKey, theta: number) {
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const params = new URLSearchParams(location.search);
+      const set = (k: string, v: string, fallback: string) =>
+        v === fallback ? params.delete(k) : params.set(k, v);
+      set('view', view, '3d');
+      set('variant', variant, 'all');
+      set('theta', String(theta), '45');
+      const search = params.toString();
+      try {
+        history.replaceState(null, '', search ? `?${search}` : location.pathname);
+      } catch {
+        // a browser rate-limiting replaceState: the next change catches up
+      }
+    }, 250);
+    return () => clearTimeout(t);
+  }, [view, variant, theta]);
+}
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -144,7 +200,10 @@ function Playground() {
   // Drawing a set no rule calls for is unlawful: no line matches it.
   const [drawnOverride, setDrawnOverride] = useState<string[] | null>(null);
   const [model, setModel] = useState(defaultModel(allHulls.powerSmall.spec.id));
-  const [theta, setTheta] = useState(45);
+  const [theta, setTheta] = useState(initialTheta);
+  const [view, setView] = useState<ViewKey>(initialView);
+  const [variant, setVariant] = useState<VariantKey>(initialVariant);
+  useUrlState(view, variant, theta);
   const [tilt, setTilt] = useState(DEFAULT_TILT);
   const [hullHint, setHullHint] = useState(0.5);
   // Range to her in nm; fades the hull hint (full strength at 0.5 nm and nearer)
@@ -301,23 +360,114 @@ function Playground() {
 
       <section className="stage">
         <div className="primary">
-          <BearingModelView
-            key={model}
-            modelUrl={models[model]!}
-            hull={hull}
-            placed={placed}
-            facts={facts}
-            theta={theta}
-            onTheta={setTheta}
-            tilt={tilt}
-            onTilt={setTilt}
-            hullHint={hullHint}
-            range={range}
-            sky={sky}
-            sea={sea}
-            labels={labels}
-            controls={false}
-          />
+          <div className="tabs" role="group" aria-label="View">
+            {(Object.keys(VIEWS) as ViewKey[]).map((v) => (
+              <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
+                {VIEWS[v]}
+              </button>
+            ))}
+          </div>
+          {view === 'silhouette' && (
+            <div className="tabs tabs-sub" role="group" aria-label="Silhouette variant">
+              {VARIANTS.map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  aria-pressed={variant === v}
+                  onClick={() => setVariant(v)}
+                >
+                  {VARIANT_LABELS[v]}
+                </button>
+              ))}
+            </div>
+          )}
+          {view === '3d' && (
+            <figure>
+              <figcaption>BearingModelView ({model})</figcaption>
+              <BearingModelView
+                key={model}
+                modelUrl={models[model]!}
+                hull={hull}
+                placed={placed}
+                facts={facts}
+                theta={theta}
+                onTheta={setTheta}
+                tilt={tilt}
+                onTilt={setTilt}
+                hullHint={hullHint}
+                range={range}
+                sky={sky}
+                sea={sea}
+                labels={labels}
+                controls={false}
+              />
+            </figure>
+          )}
+          {view === 'silhouette' && (
+            <div className={variant === 'all' ? 'silhouettes' : undefined}>
+              {(variant === 'all' ? SILHOUETTE_VARIANTS : [variant as SilhouetteVariant]).map(
+                (v) => (
+                  <figure key={v}>
+                    <figcaption>
+                      Silhouette {VARIANT_LABELS[v]}
+                      {v === 'mesh' && ` (${model})`}
+                    </figcaption>
+                    <BearingModelView
+                      key={v === 'mesh' ? model : v}
+                      modelUrl={models[model]!}
+                      hull={hull}
+                      placed={placed}
+                      facts={facts}
+                      theta={theta}
+                      onTheta={setTheta}
+                      hullHint={hullHint}
+                      range={range}
+                      sky={sky}
+                      sea={sea}
+                      silhouette={v}
+                      labels={labels}
+                      controls={false}
+                    />
+                  </figure>
+                ),
+              )}
+            </div>
+          )}
+          {view === 'profile' && (
+            <figure>
+              <figcaption>ProfileView</figcaption>
+              <ProfileView
+                hull={hull}
+                placed={placed}
+                facts={dayFacts}
+                labels={labels}
+                time={day ? 'day' : 'night'}
+                shapes={placedShapes}
+              />
+            </figure>
+          )}
+          {view === 'bearing' && (
+            <figure>
+              <figcaption>BearingView</figcaption>
+              <BearingView
+                hull={hull}
+                placed={placed}
+                theta={theta}
+                onTheta={setTheta}
+                hullHint={hullHint}
+                range={range}
+                sky={sky}
+                seascape={false}
+                singleLantern={singleLantern}
+                rangeGlow={rangeGlow}
+                lightRangesNm={lightRangesNm}
+                flashesPerMinute={
+                  flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
+                }
+                labels={labels}
+              />
+            </figure>
+          )}
         </div>
         <aside className="side">
           <figure>
@@ -527,6 +677,7 @@ function Playground() {
         </fieldset>
       </section>
 
+      <h2 className="views-heading">Every view</h2>
       <section className="views">
         {(['starboard', 'port'] as const).map((side) => (
           <figure key={side}>

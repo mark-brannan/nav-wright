@@ -20,6 +20,7 @@ import type { PlacedLight } from './placement.js';
 import { lightsInView } from './placement.js';
 import type { BenchyLabels } from './benchyLabels.js';
 import { defaultBenchyLabels } from './benchyLabels.js';
+import type { SilhouetteVariant } from './silhouette.js';
 import { DEFAULT_TILT } from './tilt.js';
 import { ThetaControl } from './ThetaControl.js';
 import { TiltControl } from './TiltControl.js';
@@ -43,6 +44,7 @@ export function BearingModelView({
   range,
   sky = 0,
   sea = 0.1,
+  silhouette,
   labels = defaultBenchyLabels,
   controls = true,
 }: {
@@ -66,6 +68,10 @@ export function BearingModelView({
   sky?: number;
   /** The sea, always drawn above the waterline: 0 (black) .. 1 (deep navy). See seaColor. */
   sea?: number;
+  /** Draw her as a flat silhouette from the waterline's level (tilt 0)
+   * rather than a shaded model; see SilhouetteVariant. The hull hint, range,
+   * sky and sea apply alike. Default: the model. */
+  silhouette?: SilhouetteVariant;
   labels?: BenchyLabels;
   /** Draw the dial and elevation slider under the picture. False when the page places its own. */
   controls?: boolean;
@@ -129,6 +135,8 @@ export function BearingModelView({
               background={background}
               night
               sea={seaColor(sea)}
+              silhouette={silhouette}
+              blockSpec={hull.spec}
               label={labels.bearingAlt(Math.round(theta))}
               fallback={blank}
               loading={standIn}
@@ -140,7 +148,9 @@ export function BearingModelView({
         {controls && (
           <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
         )}
-        {controls && onTilt && <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />}
+        {controls && onTilt && !silhouette && (
+          <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />
+        )}
       </div>
     </ModelErrorBoundary>
   );
