@@ -33,3 +33,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261017t034934z
 - Silhouette C feathers with 8 outward shells reaching 0.08 half-length, the block itself at full hull-hint opacity; no screen-space blur. Undo: change SOFT_LAYERS/SOFT_REACH in src/BenchyModel.tsx, or swap in a blur pass ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
+
+### 20261017t034939z
+- The silhouette keeps the 3D view's perspective camera at tilt 0 rather than an orthographic one. Undo: give BenchyModel an orthographic camera when silhouette is set ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
