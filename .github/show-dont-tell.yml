@@ -1,0 +1,9 @@
+# Rendered paths: a PR touching any of these must show a picture or a preview
+# URL in its body (mark-brannan/.github show-dont-tell workflow), and carry a
+# "## Try it" block that serves the PR's head in one paste.
+paths:
+  - "playground/**"   # the vite playground and gallery
+  - "src/**"          # the 3D model views the playground renders
+checkout: ~/nav-wright                              # the user's local clone
+install: npm ci
+serve: npm run dev -- --strictPort --port {port}    # {port} = 10000 + PR number
