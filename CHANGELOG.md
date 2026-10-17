@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.8](https://github.com/mark-brannan/nav-wright/compare/v0.1.7...v0.1.8) (2026-10-17)
+
+
+### Added
+
+* **bearing:** sector-edge profile, range dropout and yaw on the 3D bearing view ([#118](https://github.com/mark-brannan/nav-wright/issues/118)) ([#121](https://github.com/mark-brannan/nav-wright/issues/121)) ([36cf77e](https://github.com/mark-brannan/nav-wright/commit/36cf77e073907289c3b6a6918a876933b4cee0de))
+* **bearing:** tilt below the waterline, sea in 3D, 3D bearing view primary in the playground ([#116](https://github.com/mark-brannan/nav-wright/issues/116)) ([32ebbf9](https://github.com/mark-brannan/nav-wright/commit/32ebbf91d4af250921e6ec2a9e478a1881ab6096))
+* **lights:** Annex I section 7 chromaticity for light colours, shared with the 3D view ([#47](https://github.com/mark-brannan/nav-wright/issues/47)) ([#110](https://github.com/mark-brannan/nav-wright/issues/110)) ([2f8faac](https://github.com/mark-brannan/nav-wright/commit/2f8faac30e8f19f6a00492f563f5ac2d2d5cbc9a))
+* **playground:** 3D model as the primary view, and a silhouette with three variants ([#120](https://github.com/mark-brannan/nav-wright/issues/120)) ([ed45089](https://github.com/mark-brannan/nav-wright/commit/ed450891a0f4568be4e24d440647d8df1b3a4a57))
+
 ## [0.1.7](https://github.com/mark-brannan/nav-wright/compare/v0.1.6...v0.1.7) (2026-10-16)
 
 
