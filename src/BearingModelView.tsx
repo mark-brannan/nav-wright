@@ -9,7 +9,7 @@
 // fallback would not. While three.js or the model loads, the 2D bearing
 // scene stands in on the canvas, so the lights are never a blank wait.
 
-import { Suspense, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
 import type { FactRecord } from 'colregs-engine';
 import { BearingScene, BearingView, hullHintOpacity, seaColor, skyColor } from './BearingView.js';
@@ -17,7 +17,9 @@ import type { Hull } from './hulls.js';
 import { LazyBenchyModel } from './lazyModel.js';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
-import { lightsInView } from './placement.js';
+import { bearingInArc, lightsInView } from './placement.js';
+import type { LightIntensity, SectorProfile } from './sectorProfile.js';
+import { rangeVisibility, sectorIntensity } from './sectorProfile.js';
 import type { BenchyLabels } from './benchyLabels.js';
 import { defaultBenchyLabels } from './benchyLabels.js';
 import { DEFAULT_TILT } from './tilt.js';
@@ -43,6 +45,9 @@ export function BearingModelView({
   range,
   sky = 0,
   sea = 0,
+  sectorProfile,
+  rangeDropout = false,
+  lightRangesNm,
   labels = defaultBenchyLabels,
 }: {
   /** URL of the hull's .glb; a consumer resolves one per hull (see BenchyView). */
@@ -65,9 +70,25 @@ export function BearingModelView({
   sky?: number;
   /** The sea, always drawn: 0 (black) .. 1 (a blue-gray). See seaColor. */
   sea?: number;
+  /** Annex I §9(a) edge profiles (see sectorProfile.ts): each light fades
+   *  across its arc limits instead of cutting hard. 3D only; the 2D
+   *  fallback keeps the hard cut. */
+  sectorProfile?: SectorProfile;
+  /** Annex I §8: a light past its luminous range (`lightRangesNm`, by
+   *  lightId) at `range` fades out. 3D only. */
+  rangeDropout?: boolean;
+  lightRangesNm?: Record<string, number>;
   labels?: BenchyLabels;
 }): ReactElement {
   const [modelFailed, setModelFailed] = useState(false);
+  const lightIntensity = useMemo((): LightIntensity | undefined => {
+    if (!sectorProfile && !rangeDropout) return undefined;
+    return (light, at) =>
+      (sectorProfile
+        ? sectorIntensity(at, light.arc, sectorProfile)
+        : Number(bearingInArc(at, light.arc))) *
+      (rangeDropout ? rangeVisibility(lightRangesNm?.[light.lightId], range) : 1);
+  }, [sectorProfile, rangeDropout, lightRangesNm, range]);
 
   const flat = (
     <BearingView
@@ -98,7 +119,9 @@ export function BearingModelView({
     />
   );
   const blank = <div className="scene-3d" style={{ background }} aria-hidden="true" />;
-  const noneInView = lightsInView(placed, theta).length === 0;
+  const noneInView = lightIntensity
+    ? placed.every((l) => lightIntensity(l, theta) === 0)
+    : lightsInView(placed, theta).length === 0;
 
   return (
     <ModelErrorBoundary fallback={flat} onError={() => setModelFailed(true)}>
@@ -125,6 +148,7 @@ export function BearingModelView({
               background={background}
               night
               sea={seaColor(sea)}
+              lightIntensity={lightIntensity}
               label={labels.bearingAlt(Math.round(theta))}
               fallback={blank}
               loading={standIn}

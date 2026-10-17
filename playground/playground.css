@@ -37,6 +37,15 @@ body {
   max-width: 1000px;
   margin: 0 auto 16px;
 }
+.primary.compare {
+  max-width: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px;
+}
+.primary figure {
+  margin: 0;
+}
 .controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
