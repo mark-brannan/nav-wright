@@ -41,6 +41,7 @@ function Scenes() {
           <a href="./scenes.html" aria-current="page">
             Scenes
           </a>
+          <a href="./vessels.html">Vessels</a>
         </nav>
       </header>
       <section className="controls">

@@ -32,6 +32,15 @@ describe('placeHullModel', () => {
     expect(placeHullModel(benchyish, 30).scale).toBeCloseTo(0.5, 10);
   });
 
+  it('floats a mesh on its own waterline when it names one, keel below', () => {
+    const keeled: ModelBox = { min: { x: -1, y: -0.2, z: -0.1 }, max: { x: 1, y: 0.2, z: 0.4 } };
+    // Default: the lowest point rests on the water.
+    expect(placeHullModel(keeled, 20).position[1]).toBeCloseTo(1, 10);
+    // Named: z = 0 lands on the water, so the keel sits 1 m under it.
+    expect(placeHullModel(keeled, 20, undefined, 0).position[1]).toBeCloseTo(0, 10);
+    expect(placeHullModel(keeled, 20, undefined, NaN).position[1]).toBeCloseTo(1, 10);
+  });
+
   it('rotates the source model’s up-axis onto three.js’s', () => {
     expect(placeHullModel(benchyish, 12).rotationX).toBe(-Math.PI / 2);
     expect(MODEL_ROTATION_X).toBe(-Math.PI / 2);

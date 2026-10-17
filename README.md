@@ -193,6 +193,8 @@ and the seascape; the sky and the lights are the exam view's.
 
 The playground's gallery page (`npm run dev`, then `/gallery.html`; also on
 the published playground) shows every hull in every style in all three views.
+Its vessels page (`/vessels.html`) shows real sailing vessels traced from
+published drawings, each lofted into 3D (see `MODELS.md`).
 
 ## Development
 

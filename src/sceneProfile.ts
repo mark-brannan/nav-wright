@@ -50,11 +50,23 @@ function worldMesh(root: THREE.Object3D): { xyz: Float32Array; index: number[] }
   return { xyz, index };
 }
 
+/** The model's own waterline height, when a node's glTF extras name one
+ * (`waterlineZ`, as scripts/sailboat-lines.mjs writes); else undefined. */
+export function modelWaterline(scene: THREE.Object3D): number | undefined {
+  let z: number | undefined;
+  scene.traverse((o) => {
+    const w = (o.userData as { waterlineZ?: unknown }).waterlineZ;
+    if (z === undefined && typeof w === 'number') z = w;
+  });
+  return z;
+}
+
 /**
  * A clone of `scene`, placed as a vessel of `lengthMeters` the way
- * placeHullModel() defines: bow on +X, keel on the waterline, fitted to the
- * hull `span` if one is given (else centred fore-aft over the full length).
- * The clone leaves `scene` itself untouched.
+ * placeHullModel() defines: bow on +X, afloat on the waterline (the keel on
+ * it unless the model names its own waterline, see modelWaterline), fitted
+ * to the hull `span` if one is given (else centred fore-aft over the full
+ * length). The clone leaves `scene` itself untouched.
  */
 export function placeScene(
   scene: THREE.Object3D,
@@ -67,6 +79,7 @@ export function placeScene(
     { min: { ...raw.min }, max: { ...raw.max } },
     lengthMeters,
     span,
+    modelWaterline(scene),
   );
 
   g.rotation.x = rotationX;

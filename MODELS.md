@@ -35,6 +35,41 @@ hull, size or mode of propulsion (see
   React in it and is unit-tested against three.js's own bounding-box
   result.
 
+## `models/<vessel-id>-lines.glb`
+
+One mesh per real sailing vessel traced in
+[docs/research/sailboat-lines](docs/research/sailboat-lines/README.md),
+lofted by [scripts/sailboat-lines.mjs](scripts/sailboat-lines.mjs) from the
+hand trace of a published drawing. Unlike the hull lofts above these are to
+true aspect, feet all round: the underbody down to the keel, boot-top paint,
+deck, coachroof or deckhouses, and the rig as spars and wire. Low-poly and
+faceted, five flat materials, no textures.
+
+- **Source:** the trace json; the drawings it was read from are not
+  committed, and the json names each one. Where the trace has no body plan
+  the sections are an assumed canoe body (the research README's method).
+- **License:** the trace's, this package's.
+- **Orientation:** the Benchy convention, Z up, bow on local `+X`,
+  half-length units. The root node's glTF extras carry `waterlineZ: 0`, the
+  model's own waterline, which `placeHullModel` floats her on; a mesh
+  without one rests its lowest point on the water, as the lofts above
+  (drawn down to the waterline) want.
+- **Regenerate** after changing a trace: `node scripts/sailboat-lines.mjs`.
+  Deterministic.
+- **Shipped in the package** under `./models/*`, e.g.
+  `nav-wright/models/westsail-32-lines.glb`. The playground's vessels page
+  shows each one lit as a sailing vessel of her own length.
+
+| File                                      | Trace                                                                                                 |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `com-pac-16-lines.glb`                    | [com-pac-16.json](docs/research/sailboat-lines/com-pac-16.json)                                       |
+| `catalina-30-mkii-lines.glb`              | [catalina-30-mkii.json](docs/research/sailboat-lines/catalina-30-mkii.json)                           |
+| `westsail-32-lines.glb`                   | [westsail-32.json](docs/research/sailboat-lines/westsail-32.json)                                     |
+| `hans-christian-38t-lines.glb`            | [hans-christian-38t.json](docs/research/sailboat-lines/hans-christian-38t.json)                       |
+| `cheoy-lee-clipper-48-schooner-lines.glb` | [cheoy-lee-clipper-48-schooner.json](docs/research/sailboat-lines/cheoy-lee-clipper-48-schooner.json) |
+| `wyoming-lines.glb`                       | [wyoming.json](docs/research/sailboat-lines/wyoming.json)                                             |
+| `thomas-w-lawson-lines.glb`               | [thomas-w-lawson.json](docs/research/sailboat-lines/thomas-w-lawson.json)                             |
+
 ## `models/<hull-id>-loft.glb`
 
 One base mesh per hull in `allHulls`, twenty-four in all (plus three variants each, below), lofted from that hull's
