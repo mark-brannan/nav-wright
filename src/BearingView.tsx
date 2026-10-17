@@ -49,12 +49,20 @@ type BearingSceneProps = {
   style?: HullStyle;
 };
 
-export function BearingView(props: BearingSceneProps): ReactElement {
+export function BearingView({
+  controls = true,
+  ...props
+}: BearingSceneProps & {
+  /** Draw the dial under the picture. False when the page places one itself. */
+  controls?: boolean;
+}): ReactElement {
   const { hull, theta, onTheta, labels = defaultSceneLabels } = props;
   return (
     <div className="bearing-view">
       <BearingScene {...props} />
-      <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
+      {controls && (
+        <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
+      )}
     </div>
   );
 }
@@ -140,6 +148,19 @@ export const SKY_LIGHT: readonly [number, number, number] = [0x3a, 0x65, 0x93];
 export function skyColor(brightness: number): string {
   const t = Number.isFinite(brightness) ? Math.min(1, Math.max(0, brightness)) : 0;
   return `#${SKY_LIGHT.map((c) =>
+    Math.round(c * t)
+      .toString(16)
+      .padStart(2, '0'),
+  ).join('')}`;
+}
+
+/** The sea at full brightness: a deep navy. Black is brightness 0. */
+export const SEA_LIGHT: readonly [number, number, number] = [0x16, 0x38, 0x78];
+
+/** Sea colour for a brightness 0..1 (clamped): black to SEA_LIGHT. */
+export function seaColor(brightness: number): string {
+  const t = Number.isFinite(brightness) ? Math.min(1, Math.max(0, brightness)) : 0;
+  return `#${SEA_LIGHT.map((c) =>
     Math.round(c * t)
       .toString(16)
       .padStart(2, '0'),

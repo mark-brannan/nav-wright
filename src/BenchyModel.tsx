@@ -44,8 +44,8 @@ import { placeScene, profileHullModel } from './sceneProfile.js';
 import { blockTriangles, growPrism, specBlock } from './specBlock.js';
 import type { BlockSpec } from './specBlock.js';
 import type { SilhouetteVariant } from './silhouette.js';
-import { SILHOUETTE_COLOR, SEA_COLOR } from './silhouette.js';
-import { DEFAULT_TILT, MAX_TILT } from './tilt.js';
+import { SILHOUETTE_COLOR } from './silhouette.js';
+import { DEFAULT_TILT } from './tilt.js';
 
 const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN, bowX: NaN };
 
@@ -65,7 +65,7 @@ function Hull({
   inViewAt,
   opacity,
   flat = false,
-  sea = false,
+  sea,
   onReady,
 }: {
   modelUrl: string;
@@ -79,8 +79,8 @@ function Hull({
   opacity: number;
   /** One unlit colour on every face: the silhouette's mesh variant. */
   flat?: boolean;
-  /** A sea at the waterline. */
-  sea?: boolean;
+  /** The sea's colour; undefined draws no sea. */
+  sea?: string;
   /** Called once the model has loaded and the lights are on it. */
   onReady: () => void;
 }): ReactElement {
@@ -141,13 +141,14 @@ function Hull({
 
   return (
     <group scale={fit.scale} position={fit.position}>
+      {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
       <primitive object={depth} visible={faded && opacity > 0} />
       <primitive object={group} visible={opacity > 0} />
       {seen.map(({ light, position }) => (
         <SceneLight key={light.key} light={light} lengthMeters={lengthMeters} position={position} />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
-      {sea && <Sea radius={SEA_RADIUS / fit.scale} />}
+      {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
     </group>
   );
 }
@@ -177,7 +178,7 @@ function BlockHull({
   inViewAt?: number;
   opacity: number;
   soft: boolean;
-  sea: boolean;
+  sea?: string;
   onReady: () => void;
 }): ReactElement {
   useLayoutEffect(onReady, [onReady]);
@@ -233,7 +234,7 @@ function BlockHull({
         <SceneLight key={light.key} light={light} lengthMeters={lengthMeters} position={position} />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
-      {sea && <Sea radius={SEA_RADIUS / fit.scale} />}
+      {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
     </group>
   );
 }
@@ -243,16 +244,23 @@ function BlockHull({
 const SOFT_LAYERS = 8;
 const SOFT_REACH = 0.08;
 
-/** The sea's radius in view units: inside the camera's far plane. */
-const SEA_RADIUS = 30;
-
-/** A flat sea at the waterline, drawn before the hull so it hides her
- * underwater body. */
-function Sea({ radius }: { radius: number }): ReactElement {
+/** The sea: one wide plane at the waterline, drawn from above only, so a
+ * camera below it sees no water: the surface is clipped, not looked through.
+ * Translucent, so the hull and her lights still read from above; it writes no
+ * depth, so it never hides what the faded hull's prepass has drawn. */
+function Sea({ color, lengthMeters }: { color: string; lengthMeters: number }): ReactElement {
+  const size = lengthMeters * 200;
   return (
-    <mesh rotation-x={-Math.PI / 2} renderOrder={-1}>
-      <circleGeometry args={[radius, 96]} />
-      <meshBasicMaterial color={SEA_COLOR} toneMapped={false} />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+      <planeGeometry args={[size, size]} />
+      <meshBasicMaterial
+        color={color}
+        side={THREE.FrontSide}
+        transparent
+        opacity={0.9}
+        depthWrite={false}
+        toneMapped={false}
+      />
     </mesh>
   );
 }
@@ -391,8 +399,9 @@ function Pending({ onPending }: { onPending: (p: boolean) => void }): null {
 const DAY_BACKGROUND = '#0a1622';
 
 const DEG = Math.PI / 180;
-const MIN_POLAR = (90 - MAX_TILT) * DEG;
-const MAX_POLAR = 90 * DEG;
+// Straight down to straight up: tilt runs -90..90 (see tilt.ts).
+const MIN_POLAR = 0;
+const MAX_POLAR = 180 * DEG;
 
 /** Drives the camera from `theta` (relative bearing of the viewer, the
  * same angle the bearing view's slider carries) and `tilt` (elevation
@@ -468,9 +477,9 @@ export function BenchyModel({
   hullOpacity = 1,
   background = DAY_BACKGROUND,
   night = false,
+  sea,
   silhouette,
   blockSpec,
-  seascape = false,
   label,
   fallback = <div className="scene-3d" />,
   loading,
@@ -508,6 +517,8 @@ export function BenchyModel({
    * orbit centre pinned to the vessel, the camera's azimuth is the viewer's
    * relative bearing and nothing else. */
   night?: boolean;
+  /** The sea's colour: a plane at the waterline, visible from below as well. Undefined draws none. */
+  sea?: string;
   /** Draw her flat, in one unlit colour, from the waterline's level (tilt
    * 0): her own mesh, or a block built from her spec (`blockSpec`). See
    * SilhouetteVariant. Undefined draws the shaded, orbitable model. */
@@ -515,8 +526,6 @@ export function BenchyModel({
   /** The spec the block variants are built from; a HullSpec fits. Without
    * it they draw the mesh. */
   blockSpec?: BlockSpec;
-  /** A sea at the waterline, hiding what lies under it. */
-  seascape?: boolean;
   /** Accessible name for the canvas. Comes from the caller's SceneLabels —
    * these views render without an IntlProvider, by design (searoom#20). */
   label?: string;
@@ -583,7 +592,7 @@ export function BenchyModel({
               inViewAt={seenAt}
               opacity={opacity}
               soft={silhouette === 'soft'}
-              sea={seascape}
+              sea={sea}
               onReady={ready}
             />
           ) : (
@@ -596,7 +605,7 @@ export function BenchyModel({
               inViewAt={seenAt}
               opacity={opacity}
               flat={level}
-              sea={seascape}
+              sea={sea}
               onReady={ready}
             />
           )}

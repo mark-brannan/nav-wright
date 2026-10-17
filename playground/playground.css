@@ -33,6 +33,88 @@ body {
   color: #ff8a80;
   font-size: 12px;
 }
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: stretch;
+}
+/* The side column adds nothing to the row's height: the main view sets it,
+   and Benchy and the arc view split it between them. */
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  contain: size;
+  min-width: 0;
+}
+.side figure {
+  margin: 0;
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.stage figcaption {
+  color: #9fc7bd;
+  margin-bottom: 4px;
+}
+.side .model-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+.side .scene-3d-stack {
+  height: 100%;
+  aspect-ratio: auto;
+  flex: 1;
+}
+.arc-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.arc-body .plan-svg {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  aspect-ratio: 1;
+  flex: none;
+}
+.arc-readout {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.arc-readout strong {
+  font-size: 28px;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 800px) {
+  .stage {
+    grid-template-columns: 1fr;
+  }
+  .side {
+    contain: none;
+  }
+  .side figure {
+    flex: none;
+    height: 240px;
+  }
+}
+.tabs {
+  display: flex;
+  gap: 12px;
+}
+.tabs a[aria-current='page'] {
+  color: #d8e1ee;
+  font-weight: 600;
+  text-decoration: none;
+}
 .controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -130,6 +212,13 @@ legend {
   .gallery-views {
     grid-template-columns: 1fr;
   }
+}
+.radio {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  margin: 4px 0;
+  font-size: 13px;
 }
 
 /* The primary pane: the 3D model by default, the silhouette and 2D views a

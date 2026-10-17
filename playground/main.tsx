@@ -9,7 +9,7 @@ import { createRoot } from 'react-dom/client';
 import { evaluateDisplay } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
-import type { ShapesData } from '../src/index.js';
+import type { PlacedLight, PlacedShape, ShapesData } from '../src/index.js';
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
 import shapesJson from 'colregs/data/shapes.json' with { type: 'json' };
@@ -17,20 +17,22 @@ import {
   BearingView,
   declaredFlashRate,
   lightRangesFor,
-  bearingTheta,
   PlanView,
   ProfileView,
-  SceneView,
   allHulls,
+  bearingLabel,
   defaultSceneLabels,
   placeLights,
   placeShapes,
   selectHull,
+  wrapDegrees,
 } from '../src/index.js';
 import {
   BearingModelView,
   BenchyView,
   DEFAULT_TILT,
+  MAX_TILT,
+  MIN_TILT,
   SILHOUETTE_VARIANTS,
   defaultBenchyLabels,
 } from '../src/benchy.js';
@@ -192,8 +194,11 @@ function Range({
 function Playground() {
   const [hullKey, setHullKey] = useState<HullKey>('powerSmall');
   const [facts, setFacts] = useState<FactRecord>(hullFacts.powerSmall);
-  const [displayIndex, setDisplayIndex] = useState(0);
-  const [additionsOn, setAdditionsOn] = useState<string[]>([]);
+  // The rule line last picked; the lights it calls for are drawn until one is toggled.
+  const [lineIndex, setLineIndex] = useState(0);
+  // The drawn lights once one is toggled by hand (null: follow the picked line).
+  // Drawing a set no rule calls for is unlawful: no line matches it.
+  const [drawnOverride, setDrawnOverride] = useState<string[] | null>(null);
   const [model, setModel] = useState(defaultModel(allHulls.powerSmall.spec.id));
   const [theta, setTheta] = useState(initialTheta);
   const [view, setView] = useState<ViewKey>(initialView);
@@ -201,10 +206,10 @@ function Playground() {
   useUrlState(view, variant, theta);
   const [tilt, setTilt] = useState(DEFAULT_TILT);
   const [hullHint, setHullHint] = useState(0.5);
-  const [rangeOn, setRangeOn] = useState(false);
-  const [range, setRange] = useState(1);
+  // Range to her in nm; fades the hull hint (full strength at 0.5 nm and nearer)
+  const [range, setRange] = useState(0.5);
   const [sky, setSky] = useState(0);
-  const [seascape, setSeascape] = useState(false);
+  const [sea, setSea] = useState(0.1);
   const lightRangesNm = useMemo(
     () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
     [facts],
@@ -218,11 +223,15 @@ function Playground() {
 
   const hull = allHulls[hullKey];
 
+  const resetRule = () => {
+    setLineIndex(0);
+    setDrawnOverride(null);
+  };
+
   const pickHull = (k: HullKey) => {
     setHullKey(k);
     setFacts(hullFacts[k]);
-    setDisplayIndex(0);
-    setAdditionsOn([]);
+    resetRule();
     setModel(defaultModel(allHulls[k].spec.id));
   };
 
@@ -233,8 +242,7 @@ function Playground() {
     else if (next['fact:making_way'] === undefined) next['fact:making_way'] = true;
     for (const k of Object.keys(next)) if (next[k] === undefined) delete next[k];
     setFacts(next as FactRecord);
-    setDisplayIndex(0);
-    setAdditionsOn([]);
+    resetRule();
   };
 
   // Day states fact:time, which is what makes the engine return shapes.
@@ -252,27 +260,69 @@ function Playground() {
 
   const displays = evaln.ok?.displays ?? [];
   const additions = evaln.ok?.optionalAdditions ?? [];
-  const current = Math.min(displayIndex, Math.max(0, displays.length - 1));
-  const display = displays[current];
 
-  const placed = useMemo(() => {
-    if (!display) return [];
-    const extra = additions.filter((a) => additionsOn.includes(a.id)).flatMap((a) => a.lights);
-    return placeLights([...display.lights, ...extra], hull.spec, facts, lightsData, geometryData);
-  }, [display, additions, additionsOn, hull, facts]);
+  // One line per rule set that could apply: each display, and each display
+  // with any combination of its optional additions. Placed per line, because
+  // a light's position depends on what else is on the mast.
+  const lines = useMemo(() => {
+    const out: {
+      label: string;
+      placed: PlacedLight[];
+      shapes: PlacedShape[];
+      keys: Set<string>;
+    }[] = [];
+    for (const d of displays) {
+      for (let mask = 0; mask < 1 << additions.length; mask++) {
+        const extra = additions.filter((_, i) => mask & (1 << i));
+        const placed = placeLights(
+          [...d.lights, ...extra.flatMap((a) => a.lights)],
+          hull.spec,
+          facts,
+          lightsData,
+          geometryData,
+        );
+        const shapes = placeShapes(
+          [...d.shapes, ...extra.flatMap((a) => a.shapes)],
+          hull.spec,
+          dayFacts,
+          shapesData,
+          geometryData,
+        );
+        const rules = [...d.entries, ...extra.map((a) => a.id)].join(' + ');
+        out.push({
+          label: `${rules}${d.chosen.length > 0 ? ` (${d.chosen.join(', ')})` : ''}${extra.length > 0 ? ' (optional)' : ''}`,
+          placed,
+          shapes,
+          keys: new Set(placed.map((l) => l.key)),
+        });
+      }
+    }
+    return out;
+  }, [displays, additions, hull, facts, dayFacts]);
 
-  const placedShapes = useMemo(() => {
-    if (!display) return [];
-    // a 'may' shape (Rule 28's cylinder) is an optional addition, like a 'may' light
-    const extra = additions.filter((a) => additionsOn.includes(a.id)).flatMap((a) => a.shapes);
-    return placeShapes(
-      [...display.shapes, ...extra],
-      hull.spec,
-      dayFacts,
-      shapesData,
-      geometryData,
-    );
-  }, [display, additions, additionsOn, hull, dayFacts]);
+  const picked = lines[Math.min(lineIndex, Math.max(0, lines.length - 1))];
+  // Every light any rule draws, the picked line's first, in its own placement.
+  const allLights = useMemo(() => {
+    const byKey = new Map<string, PlacedLight>();
+    for (const l of [...(picked ? [picked] : []), ...lines].flatMap((line) => line.placed))
+      if (!byKey.has(l.key)) byKey.set(l.key, l);
+    return [...byKey.values()];
+  }, [picked, lines]);
+  const drawnKeys = useMemo(
+    () => new Set(drawnOverride ?? (picked ? [...picked.keys] : [])),
+    [drawnOverride, picked],
+  );
+  const placed = useMemo(
+    () => allLights.filter((l) => drawnKeys.has(l.key)),
+    [allLights, drawnKeys],
+  );
+  // The line whose lights are exactly the ones drawn; none means unlawful.
+  const matched = lines.findIndex(
+    (line) => line.keys.size === drawnKeys.size && [...line.keys].every((k) => drawnKeys.has(k)),
+  );
+  const unlawful = matched < 0;
+  const inEffect = matched >= 0 ? lines[matched]! : picked;
+  const placedShapes = inEffect?.shapes ?? [];
 
   // "Labels off" blanks every label string, to see the views without text.
   const labels = useMemo(() => {
@@ -299,37 +349,131 @@ function Playground() {
       <header>
         <h1>nav-wright playground</h1>
         <span className="muted">selectHull(facts) → {selectHull(facts).spec.id}</span>
-        <a href="./gallery.html">Gallery: every hull in every style</a>
+        <nav className="tabs">
+          <a href="./index.html" aria-current="page">
+            Playground
+          </a>
+          <a href="./gallery.html">Gallery</a>
+          <a href="./scenes.html">Scenes</a>
+        </nav>
       </header>
 
-      <section className="primary">
-        <div className="tabs" role="group" aria-label="View">
-          {(Object.keys(VIEWS) as ViewKey[]).map((v) => (
-            <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
-              {VIEWS[v]}
-            </button>
-          ))}
-        </div>
-        {view === 'silhouette' && (
-          <div className="tabs tabs-sub" role="group" aria-label="Silhouette variant">
-            {VARIANTS.map((v) => (
-              <button
-                key={v}
-                type="button"
-                aria-pressed={variant === v}
-                onClick={() => setVariant(v)}
-              >
-                {VARIANT_LABELS[v]}
+      <section className="stage">
+        <div className="primary">
+          <div className="tabs" role="group" aria-label="View">
+            {(Object.keys(VIEWS) as ViewKey[]).map((v) => (
+              <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
+                {VIEWS[v]}
               </button>
             ))}
           </div>
-        )}
-        {view === '3d' && (
+          {view === 'silhouette' && (
+            <div className="tabs tabs-sub" role="group" aria-label="Silhouette variant">
+              {VARIANTS.map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  aria-pressed={variant === v}
+                  onClick={() => setVariant(v)}
+                >
+                  {VARIANT_LABELS[v]}
+                </button>
+              ))}
+            </div>
+          )}
+          {view === '3d' && (
+            <figure>
+              <figcaption>BearingModelView ({model})</figcaption>
+              <BearingModelView
+                key={model}
+                modelUrl={models[model]!}
+                hull={hull}
+                placed={placed}
+                facts={facts}
+                theta={theta}
+                onTheta={setTheta}
+                tilt={tilt}
+                onTilt={setTilt}
+                hullHint={hullHint}
+                range={range}
+                sky={sky}
+                sea={sea}
+                labels={labels}
+                controls={false}
+              />
+            </figure>
+          )}
+          {view === 'silhouette' && (
+            <div className={variant === 'all' ? 'silhouettes' : undefined}>
+              {(variant === 'all' ? SILHOUETTE_VARIANTS : [variant as SilhouetteVariant]).map(
+                (v) => (
+                  <figure key={v}>
+                    <figcaption>
+                      Silhouette {VARIANT_LABELS[v]}
+                      {v === 'mesh' && ` (${model})`}
+                    </figcaption>
+                    <BearingModelView
+                      key={v === 'mesh' ? model : v}
+                      modelUrl={models[model]!}
+                      hull={hull}
+                      placed={placed}
+                      facts={facts}
+                      theta={theta}
+                      onTheta={setTheta}
+                      hullHint={hullHint}
+                      range={range}
+                      sky={sky}
+                      sea={sea}
+                      silhouette={v}
+                      labels={labels}
+                      controls={false}
+                    />
+                  </figure>
+                ),
+              )}
+            </div>
+          )}
+          {view === 'profile' && (
+            <figure>
+              <figcaption>ProfileView</figcaption>
+              <ProfileView
+                hull={hull}
+                placed={placed}
+                facts={dayFacts}
+                labels={labels}
+                time={day ? 'day' : 'night'}
+                shapes={placedShapes}
+              />
+            </figure>
+          )}
+          {view === 'bearing' && (
+            <figure>
+              <figcaption>BearingView</figcaption>
+              <BearingView
+                hull={hull}
+                placed={placed}
+                theta={theta}
+                onTheta={setTheta}
+                hullHint={hullHint}
+                range={range}
+                sky={sky}
+                seascape={false}
+                singleLantern={singleLantern}
+                rangeGlow={rangeGlow}
+                lightRangesNm={lightRangesNm}
+                flashesPerMinute={
+                  flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
+                }
+                labels={labels}
+              />
+            </figure>
+          )}
+        </div>
+        <aside className="side">
           <figure>
-            <figcaption>BearingModelView ({model})</figcaption>
-            <BearingModelView
-              key={model}
-              modelUrl={models[model]!}
+            <figcaption>Benchy</figcaption>
+            <BenchyView
+              modelUrl={models['3dbenchy-lowpoly.glb']!}
               hull={hull}
               placed={placed}
               facts={facts}
@@ -337,76 +481,30 @@ function Playground() {
               onTheta={setTheta}
               tilt={tilt}
               onTilt={setTilt}
-              hullHint={hullHint}
-              range={rangeOn ? range : undefined}
-              sky={sky}
-              seascape={seascape}
               labels={labels}
+              controls={false}
             />
           </figure>
-        )}
-        {view === 'silhouette' && (
-          <div className={variant === 'all' ? 'silhouettes' : undefined}>
-            {(variant === 'all' ? SILHOUETTE_VARIANTS : [variant as SilhouetteVariant]).map((v) => (
-              <figure key={v}>
-                <figcaption>
-                  Silhouette {VARIANT_LABELS[v]}
-                  {v === 'mesh' && ` (${model})`}
-                </figcaption>
-                <BearingModelView
-                  key={v === 'mesh' ? model : v}
-                  modelUrl={models[model]!}
-                  hull={hull}
-                  placed={placed}
-                  facts={facts}
-                  theta={theta}
-                  onTheta={setTheta}
-                  hullHint={hullHint}
-                  range={rangeOn ? range : undefined}
-                  sky={sky}
-                  seascape={seascape}
-                  silhouette={v}
-                  labels={labels}
-                />
-              </figure>
-            ))}
-          </div>
-        )}
-        {view === 'profile' && (
           <figure>
-            <figcaption>ProfileView</figcaption>
-            <ProfileView
-              hull={hull}
-              placed={placed}
-              facts={dayFacts}
-              labels={labels}
-              time={day ? 'day' : 'night'}
-              shapes={placedShapes}
-            />
+            <figcaption>Arc/Bearing View</figcaption>
+            <div className="arc-body">
+              <PlanView
+                hull={hull}
+                placed={placed}
+                theta={theta}
+                onTheta={setTheta}
+                labels={labels}
+                time={day ? 'day' : 'night'}
+                shapes={placedShapes}
+              />
+              <p className="arc-readout" aria-live="polite">
+                <span className="muted">{labels.bearingThetaLabel}</span>
+                <strong>{Math.round(wrapDegrees(theta)) % 360}°</strong>
+                <span>{labels.aspect[bearingLabel(Math.round(wrapDegrees(theta)) % 360)]}</span>
+              </p>
+            </div>
           </figure>
-        )}
-        {view === 'bearing' && (
-          <figure>
-            <figcaption>BearingView</figcaption>
-            <BearingView
-              hull={hull}
-              placed={placed}
-              theta={theta}
-              onTheta={setTheta}
-              hullHint={hullHint}
-              range={rangeOn ? range : undefined}
-              sky={sky}
-              seascape={seascape}
-              singleLantern={singleLantern}
-              rangeGlow={rangeGlow}
-              lightRangesNm={lightRangesNm}
-              flashesPerMinute={
-                flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
-              }
-              labels={labels}
-            />
-          </figure>
-        )}
+        </aside>
       </section>
 
       <section className="controls">
@@ -417,6 +515,15 @@ function Playground() {
           </Field>
           <Field label="3D model">
             <Select value={model} options={modelNames} onChange={setModel} />
+          </Field>
+          <Field label="camera elevation">
+            <Range value={tilt} min={MIN_TILT} max={MAX_TILT} onChange={setTilt} />
+          </Field>
+          <Field label="hullHint">
+            <Range value={hullHint} min={0} max={1} step={0.05} onChange={setHullHint} />
+          </Field>
+          <Field label="range nm (fades hull)">
+            <Range value={range} min={0} max={5} step={0.1} onChange={setRange} />
           </Field>
         </fieldset>
 
@@ -470,71 +577,35 @@ function Playground() {
         <fieldset>
           <legend>Display</legend>
           {evaln.err && <p className="err">{evaln.err}</p>}
-          {displays.length > 1 && (
-            <Field label="lawful display">
-              <Select
-                value={String(current)}
-                options={displays.map((_, i) => String(i))}
-                onChange={(v) => setDisplayIndex(Number(v))}
-              />
-            </Field>
-          )}
-          {display && (
-            <p className="muted">
-              {display.entries.join(', ')}
-              {display.chosen.length > 0 && ` (${display.chosen.join(', ')})`}
-            </p>
-          )}
-          {additions.map((a) => (
-            <Field key={a.id} label={`+ ${a.id}`}>
+          {lines.map((line, i) => (
+            <label key={line.label} className="radio">
               <input
-                type="checkbox"
-                checked={additionsOn.includes(a.id)}
-                onChange={(e) =>
-                  setAdditionsOn(
-                    e.target.checked
-                      ? [...additionsOn, a.id]
-                      : additionsOn.filter((x) => x !== a.id),
-                  )
-                }
+                type="radio"
+                name="rule-in-effect"
+                checked={i === matched}
+                onChange={() => {
+                  setLineIndex(i);
+                  setDrawnOverride(null);
+                }}
               />
-            </Field>
+              <span>{line.label}</span>
+            </label>
           ))}
-          <p className="muted">{placed.length} lights placed</p>
+          <label className="radio">
+            <input type="radio" name="rule-in-effect" checked={unlawful} onChange={() => {}} />
+            <span>unlawful / unconstrained</span>
+          </label>
+          <p className="muted">
+            {unlawful
+              ? 'Selected: the lights drawn match no rule. Toggle them under Lights drawn.'
+              : 'Picking a rule draws its lights.'}
+          </p>
         </fieldset>
 
         <fieldset>
           <legend>View</legend>
           <Field label="theta">
             <Range value={theta} min={0} max={359} onChange={setTheta} />
-          </Field>
-          <Field label="tilt (3D)">
-            <Range value={tilt} min={0} max={85} onChange={setTilt} />
-          </Field>
-          <Field label="hullHint">
-            <Range value={hullHint} min={0} max={1} step={0.05} onChange={setHullHint} />
-          </Field>
-          <Field label="range set">
-            <input
-              type="checkbox"
-              checked={rangeOn}
-              onChange={(e) => setRangeOn(e.target.checked)}
-            />
-          </Field>
-          {rangeOn && (
-            <Field label="range nm">
-              <Range value={range} min={0} max={5} step={0.1} onChange={setRange} />
-            </Field>
-          )}
-          <Field label="sky">
-            <Range value={sky} min={0} max={1} step={0.05} onChange={setSky} />
-          </Field>
-          <Field label="seascape">
-            <input
-              type="checkbox"
-              checked={seascape}
-              onChange={(e) => setSeascape(e.target.checked)}
-            />
           </Field>
           <Field label="single lantern">
             <input
@@ -557,9 +628,6 @@ function Playground() {
               onChange={(e) => setFlashRateOn(e.target.checked)}
             />
           </Field>
-          <Field label="day">
-            <input type="checkbox" checked={day} onChange={(e) => setDay(e.target.checked)} />
-          </Field>
           <Field label="labels">
             <input
               type="checkbox"
@@ -568,21 +636,63 @@ function Playground() {
             />
           </Field>
         </fieldset>
+
+        <fieldset>
+          <legend>Sky, sea and day</legend>
+          <Field label="sky">
+            <Range value={sky} min={0} max={1} step={0.05} onChange={setSky} />
+          </Field>
+          <Field label="sea">
+            <Range value={sea} min={0} max={1} step={0.05} onChange={setSea} />
+          </Field>
+          <Field label="day">
+            <input type="checkbox" checked={day} onChange={(e) => setDay(e.target.checked)} />
+          </Field>
+        </fieldset>
+
+        <fieldset>
+          <legend>Lights drawn</legend>
+          {allLights.length === 0 && <p className="muted">no lights</p>}
+          {allLights.map((l) => (
+            <Field
+              key={l.key}
+              label={`${l.lightId.replace('light:', '')} · ${l.sourceEntry}${l.color ? ` · ${l.color}` : ''}`}
+            >
+              <input
+                type="checkbox"
+                checked={drawnKeys.has(l.key)}
+                onChange={(e) =>
+                  setDrawnOverride(
+                    e.target.checked
+                      ? [...drawnKeys, l.key]
+                      : [...drawnKeys].filter((k) => k !== l.key),
+                  )
+                }
+              />
+            </Field>
+          ))}
+          <p className="muted">
+            {placed.length} of {allLights.length} drawn
+          </p>
+        </fieldset>
       </section>
 
       <h2 className="views-heading">Every view</h2>
       <section className="views">
-        <figure>
-          <figcaption>ProfileView</figcaption>
-          <ProfileView
-            hull={hull}
-            placed={placed}
-            facts={dayFacts}
-            labels={labels}
-            time={day ? 'day' : 'night'}
-            shapes={placedShapes}
-          />
-        </figure>
+        {(['starboard', 'port'] as const).map((side) => (
+          <figure key={side}>
+            <figcaption>Profile, {side}</figcaption>
+            <ProfileView
+              hull={hull}
+              placed={placed}
+              facts={dayFacts}
+              labels={labels}
+              time={day ? 'day' : 'night'}
+              shapes={placedShapes}
+              side={side}
+            />
+          </figure>
+        ))}
         <figure>
           <figcaption>BearingView</figcaption>
           <BearingView
@@ -591,9 +701,9 @@ function Playground() {
             theta={theta}
             onTheta={setTheta}
             hullHint={hullHint}
-            range={rangeOn ? range : undefined}
+            range={range}
             sky={sky}
-            seascape={seascape}
+            seascape
             singleLantern={singleLantern}
             rangeGlow={rangeGlow}
             lightRangesNm={lightRangesNm}
@@ -601,73 +711,7 @@ function Playground() {
               flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
             }
             labels={labels}
-          />
-        </figure>
-        <figure>
-          <figcaption>PlanView</figcaption>
-          <PlanView
-            hull={hull}
-            placed={placed}
-            theta={theta}
-            onTheta={setTheta}
-            labels={labels}
-            time={day ? 'day' : 'night'}
-            shapes={placedShapes}
-          />
-        </figure>
-        <figure>
-          <figcaption>SceneView (crossing: target 045° relative, heading 270°, 1500 m)</figcaption>
-          <SceneView
-            own={{ hull, placed, heading: 0, speedMps: 5 }}
-            target={{ hull, placed, heading: 270, speedMps: 5 }}
-            relativeBearing={45}
-            rangeM={1500}
-            cpa={{ cpaM: 0, tcpaS: 212 }}
-            labels={labels}
-          />
-        </figure>
-        <figure>
-          <figcaption>SceneView with env: narrow channel and traffic lane</figcaption>
-          <SceneView
-            own={{ hull, placed, heading: 0, speedMps: 5 }}
-            target={{ hull, placed, heading: 270, speedMps: 5 }}
-            relativeBearing={45}
-            rangeM={1500}
-            env={{ narrowChannel: true, trafficLane: true }}
-            labels={labels}
-          />
-        </figure>
-        <figure>
-          <figcaption>
-            BearingView derived from the pair (what own ship sees of the target)
-          </figcaption>
-          <BearingView
-            hull={hull}
-            placed={placed}
-            theta={bearingTheta({
-              ownHeading: 0,
-              targetHeading: 270,
-              relativeBearing: 45,
-              rangeM: 1500,
-            })}
-            onTheta={() => {}}
-            hullHint={hullHint}
-            labels={labels}
-          />
-        </figure>
-        <figure>
-          <figcaption>BenchyView ({model})</figcaption>
-          <BenchyView
-            key={model}
-            modelUrl={models[model]!}
-            hull={hull}
-            placed={placed}
-            facts={facts}
-            theta={theta}
-            onTheta={setTheta}
-            tilt={tilt}
-            onTilt={setTilt}
-            labels={labels}
+            controls={false}
           />
         </figure>
       </section>

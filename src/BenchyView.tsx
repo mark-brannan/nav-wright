@@ -27,6 +27,7 @@ export function BenchyView({
   tilt = DEFAULT_TILT,
   onTilt,
   labels = defaultBenchyLabels,
+  controls = true,
 }: {
   /** URL of the .glb to render. This package ships one at
    * `nav-wright/models/3dbenchy-lowpoly.glb`; resolve it the way your
@@ -41,6 +42,8 @@ export function BenchyView({
   tilt?: number;
   onTilt?: (t: number) => void;
   labels?: BenchyLabels;
+  /** Draw the dial and elevation slider under the picture. False when the page places its own. */
+  controls?: boolean;
 }): ReactElement {
   // A failed model load degrades to the 2D profile rather than to a blank
   // pane: the lights are the subject of this app, so losing them is worse
@@ -75,8 +78,10 @@ export function BenchyView({
             />
           </Suspense>
         </div>
-        <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
-        {onTilt && <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />}
+        {controls && (
+          <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
+        )}
+        {controls && onTilt && <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />}
       </div>
     </ModelErrorBoundary>
   );
