@@ -1,0 +1,28 @@
+{
+  "file": "loft-sail-small-sheered.glb",
+  "name": "Sloop (sheered)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "sailing yacht, single mast",
+  "rig": "bermudan sloop",
+  "propulsion": [
+    "sail",
+    "power"
+  ],
+  "shows": [
+    "masts"
+  ],
+  "loaM": 12,
+  "beamM": 2.5,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    5,
+    20
+  ],
+  "aisType": 36
+}

@@ -1,0 +1,27 @@
+{
+  "file": "loft-dive-support-sheered.glb",
+  "name": "Dive-support vessel (sheered)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "dive-support vessel, wheelhouse forward, low working deck, A-frame over the stern",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "wheelhouse",
+    "a-frame"
+  ],
+  "loaM": 15,
+  "beamM": 3.5,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    10,
+    25
+  ],
+  "aisType": 34
+}

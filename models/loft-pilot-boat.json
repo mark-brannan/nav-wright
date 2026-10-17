@@ -1,0 +1,26 @@
+{
+  "file": "loft-pilot-boat.glb",
+  "name": "Pilot boat",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "fine-lined fast pilot boat, wheelhouse amidships",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "wheelhouse"
+  ],
+  "loaM": 18,
+  "beamM": 3.6,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    12,
+    25
+  ],
+  "aisType": 50
+}

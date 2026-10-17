@@ -1,0 +1,21 @@
+{
+  "file": "kenney-boat-fishing-small.glb",
+  "name": "Small stern trawler",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "boat-fishing-small.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "displacement fishing hull, wheelhouse forward, working deck aft",
+  "propulsion": ["power"],
+  "shows": ["wheelhouse", "fishing-gear"],
+  "loaM": 12,
+  "beamM": 4.5,
+  "draftM": 2,
+  "nominal": true,
+  "fitLengthM": [8, 18],
+  "aisType": 30
+}

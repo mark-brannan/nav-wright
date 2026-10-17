@@ -1,0 +1,30 @@
+{
+  "file": "hans-christian-38t.glb",
+  "name": "Hans Christian 38T",
+  "kind": "traced",
+  "fidelity": "traced",
+  "source": {
+    "trace": "docs/research/sailboat-lines/hans-christian-38t.json",
+    "url": "https://sailboatdata.com/sailboat/hans-christian-38t/",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "cutter, long keel",
+  "rig": "cutter",
+  "propulsion": [
+    "sail",
+    "power"
+  ],
+  "shows": [
+    "sails",
+    "bowsprit"
+  ],
+  "loaM": 11.56,
+  "beamM": 3.76,
+  "draftM": 1.83,
+  "nominal": false,
+  "fitLengthM": [
+    9,
+    14
+  ],
+  "aisType": 36
+}

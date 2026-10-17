@@ -1,0 +1,28 @@
+{
+  "file": "loft-sail-large-slender.glb",
+  "name": "Ketch (slender)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "sailing yacht, two masts",
+  "rig": "ketch",
+  "propulsion": [
+    "sail",
+    "power"
+  ],
+  "shows": [
+    "masts"
+  ],
+  "loaM": 30,
+  "beamM": 5.3,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    20,
+    40
+  ],
+  "aisType": 36
+}

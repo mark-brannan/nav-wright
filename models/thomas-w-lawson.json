@@ -1,0 +1,29 @@
+{
+  "file": "thomas-w-lawson.glb",
+  "name": "Thomas W. Lawson",
+  "kind": "traced",
+  "fidelity": "traced",
+  "source": {
+    "trace": "docs/research/sailboat-lines/thomas-w-lawson.json",
+    "url": "https://archive.org/details/sim_nautical-research-journal_1953-04_5_4",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "seven-masted gaff schooner, steel full-bodied cargo",
+  "rig": "seven-masted gaff schooner",
+  "propulsion": [
+    "sail"
+  ],
+  "shows": [
+    "sails",
+    "bowsprit"
+  ],
+  "loaM": 122.93,
+  "beamM": 15.24,
+  "draftM": 8.08,
+  "nominal": false,
+  "fitLengthM": [
+    98,
+    154
+  ],
+  "aisType": 36
+}

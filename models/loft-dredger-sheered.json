@@ -1,0 +1,26 @@
+{
+  "file": "loft-dredger-sheered.glb",
+  "name": "Dredger (sheered)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "pontoon-hulled dredger with a bow, crane amidships",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "cranes"
+  ],
+  "loaM": 60,
+  "beamM": 16.4,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    30,
+    100
+  ],
+  "aisType": 33
+}

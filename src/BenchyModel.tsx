@@ -33,6 +33,7 @@ import type { LightIntensity } from './sectorProfile.js';
 import {
   VIEW_FRAME,
   anchorLights,
+  framedTo,
   lightPosition,
   lightRadius,
   orbitAngles,
@@ -68,6 +69,7 @@ function Hull({
   flat = false,
   sea,
   lightIntensity,
+  topZ,
   onReady,
 }: {
   modelUrl: string;
@@ -86,6 +88,7 @@ function Hull({
   /** See BenchyModel. */
   lightIntensity?: LightIntensity;
   /** Called once the model has loaded and the lights are on it. */
+  topZ?: number;
   onReady: () => void;
 }): ReactElement {
   const { scene } = useGLTF(modelUrl);
@@ -120,7 +123,10 @@ function Hull({
       m.needsUpdate = true;
     }
   }, [materials, opacity, faded]);
-  const fit = useMemo(() => viewFrame(lengthMeters, hull, placed), [lengthMeters, hull, placed]);
+  const fit = useMemo(
+    () => viewFrame(lengthMeters, framedTo(hull, topZ), placed),
+    [lengthMeters, hull, topZ, placed],
+  );
   const profile = useMemo(
     () => profileHullModel(scene, lengthMeters, { sternX, bowX }),
     [scene, lengthMeters, sternX, bowX],
@@ -188,6 +194,7 @@ function BlockHull({
   soft,
   sea,
   lightIntensity,
+  topZ,
   onReady,
 }: {
   lengthMeters: number;
@@ -200,10 +207,14 @@ function BlockHull({
   soft: boolean;
   sea?: string;
   lightIntensity?: LightIntensity;
+  topZ?: number;
   onReady: () => void;
 }): ReactElement {
   useLayoutEffect(onReady, [onReady]);
-  const fit = useMemo(() => viewFrame(lengthMeters, hull, placed), [lengthMeters, hull, placed]);
+  const fit = useMemo(
+    () => viewFrame(lengthMeters, framedTo(hull, topZ), placed),
+    [lengthMeters, hull, topZ, placed],
+  );
   const geometries = useMemo(() => {
     const prisms = specBlock(spec, placed, lengthMeters);
     const reach = (SOFT_REACH * lengthMeters) / 2;
@@ -520,6 +531,7 @@ export function BenchyModel({
   tilt = DEFAULT_TILT,
   onTilt,
   hull = NO_HULL,
+  topZ,
   inViewAt,
   hullOpacity = 1,
   background = DAY_BACKGROUND,
@@ -553,6 +565,10 @@ export function BenchyModel({
    * span, and the view framed on her (mast heights too: pass the HullSpec). The default seats everything on the centreline and
    * fits the mesh to the full length. */
   hull?: HullStations;
+  /** The mesh's top above the waterline in z units (meshTopZ, from her
+   * catalog record), when she stands taller than the spec's masts: the
+   * frame holds her rig instead of cropping it. */
+  topZ?: number;
   /** Draw only the lights a viewer at this relative bearing can see (their
    * arc holds it), as the bearing view does. Undefined draws every light,
    * as the profile does. Pass `theta` here to keep the exam's meaning. */
@@ -645,6 +661,7 @@ export function BenchyModel({
               soft={silhouette === 'soft'}
               sea={sea}
               lightIntensity={lightIntensity}
+              topZ={topZ}
               onReady={ready}
             />
           ) : (
@@ -659,6 +676,7 @@ export function BenchyModel({
               flat={level}
               sea={sea}
               lightIntensity={lightIntensity}
+              topZ={topZ}
               onReady={ready}
             />
           )}

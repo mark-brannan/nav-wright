@@ -1,0 +1,29 @@
+{
+  "file": "catalina-30-mkii.glb",
+  "name": "Catalina 30 Mk II",
+  "kind": "traced",
+  "fidelity": "traced",
+  "source": {
+    "trace": "docs/research/sailboat-lines/catalina-30-mkii.json",
+    "url": "https://sailboatdata.com/sailboat/catalina-30-mkii/",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "masthead sloop, fin keel, spade rudder",
+  "rig": "masthead sloop",
+  "propulsion": [
+    "sail",
+    "power"
+  ],
+  "shows": [
+    "sails"
+  ],
+  "loaM": 9.12,
+  "beamM": 3.3,
+  "draftM": 1.6,
+  "nominal": false,
+  "fitLengthM": [
+    7,
+    11
+  ],
+  "aisType": 36
+}

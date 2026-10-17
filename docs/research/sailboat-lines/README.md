@@ -2,7 +2,7 @@
 
 Realistic sailing-vessel outlines, traced by hand from a published sail-plan
 drawing and lofted into 3D. The trace is the data; everything else, these
-SVGs and the shipped mesh `models/<id>-lines.glb` (MODELS.md), is
+SVGs and the shipped mesh `models/<id>.glb` (MODELS.md), is
 regenerated from it:
 
 ```bash

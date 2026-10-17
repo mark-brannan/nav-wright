@@ -1,0 +1,20 @@
+{
+  "file": "kenney-boat-row-large.glb",
+  "name": "Rowing skiff",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "boat-row-large.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "open clinker rowing hull, thwarts",
+  "propulsion": ["oars"],
+  "shows": ["oars"],
+  "loaM": 4.5,
+  "beamM": 1.5,
+  "draftM": 0.3,
+  "nominal": true,
+  "fitLengthM": [3.2, 6.8]
+}

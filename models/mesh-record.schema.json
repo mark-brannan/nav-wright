@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "file": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*\\.glb$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "traced",
+        "loft",
+        "kit",
+        "calibration"
+      ]
+    },
+    "fidelity": {
+      "type": "string",
+      "enum": [
+        "traced",
+        "typical",
+        "stylised",
+        "calibration"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "trace": {
+          "type": "string"
+        },
+        "kit": {
+          "type": "string"
+        },
+        "kitFile": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "url",
+        "license"
+      ],
+      "additionalProperties": false
+    },
+    "hullForm": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rig": {
+      "type": "string"
+    },
+    "propulsion": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "sail",
+          "power",
+          "oars",
+          "none"
+        ]
+      }
+    },
+    "shows": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*$"
+      }
+    },
+    "loaM": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "beamM": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "draftM": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nominal": {
+      "type": "boolean"
+    },
+    "fitLengthM": {
+      "anyOf": [
+        {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "aisType": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 99
+    },
+    "proportions": {
+      "type": "object",
+      "properties": {
+        "lengthBeam": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "lengthHeight": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "lengthBeam",
+        "lengthHeight"
+      ],
+      "additionalProperties": false
+    },
+    "frame": {
+      "type": "object",
+      "properties": {
+        "waterlineZ": {
+          "type": "number"
+        },
+        "hullX": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "waterlineZ",
+        "hullX"
+      ],
+      "additionalProperties": false
+    },
+    "lights": {
+      "type": "object",
+      "properties": {
+        "masthead": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "sidelight": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "stern": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "masthead",
+        "sidelight",
+        "stern"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "file",
+    "name",
+    "kind",
+    "fidelity",
+    "source",
+    "hullForm",
+    "propulsion",
+    "shows",
+    "loaM",
+    "beamM",
+    "draftM",
+    "nominal",
+    "fitLengthM",
+    "proportions",
+    "frame",
+    "lights"
+  ],
+  "additionalProperties": false
+}

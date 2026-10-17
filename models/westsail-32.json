@@ -1,0 +1,30 @@
+{
+  "file": "westsail-32.glb",
+  "name": "Westsail 32",
+  "kind": "traced",
+  "fidelity": "traced",
+  "source": {
+    "trace": "docs/research/sailboat-lines/westsail-32.json",
+    "url": "https://sailboatdata.com/sailboat/westsail-32/",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "cutter, long keel, transom-hung rudder",
+  "rig": "cutter",
+  "propulsion": [
+    "sail",
+    "power"
+  ],
+  "shows": [
+    "sails",
+    "bowsprit"
+  ],
+  "loaM": 9.75,
+  "beamM": 3.35,
+  "draftM": 1.52,
+  "nominal": false,
+  "fitLengthM": [
+    8,
+    12
+  ],
+  "aisType": 36
+}

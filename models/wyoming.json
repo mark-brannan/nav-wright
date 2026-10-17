@@ -1,0 +1,29 @@
+{
+  "file": "wyoming.glb",
+  "name": "Wyoming",
+  "kind": "traced",
+  "fidelity": "traced",
+  "source": {
+    "trace": "docs/research/sailboat-lines/wyoming.json",
+    "url": "https://maine-maritime-museum-store.myshopify.com/products/wyoming",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "six-masted gaff schooner, wooden full-bodied cargo",
+  "rig": "six-masted gaff schooner",
+  "propulsion": [
+    "sail"
+  ],
+  "shows": [
+    "sails",
+    "bowsprit"
+  ],
+  "loaM": 106.68,
+  "beamM": 15.24,
+  "draftM": 8.38,
+  "nominal": false,
+  "fitLengthM": [
+    85,
+    133
+  ],
+  "aisType": 36
+}

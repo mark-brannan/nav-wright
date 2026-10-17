@@ -1,0 +1,20 @@
+{
+  "file": "kenney-boat-tow-b.glb",
+  "name": "Towing launch",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "boat-tow-b.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "displacement workboat hull, wheelhouse forward, towing hook aft",
+  "propulsion": ["power"],
+  "shows": ["wheelhouse", "towing-gear"],
+  "loaM": 14,
+  "beamM": 5,
+  "draftM": 1.8,
+  "nominal": true,
+  "fitLengthM": [10, 21]
+}

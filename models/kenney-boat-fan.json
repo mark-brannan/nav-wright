@@ -1,0 +1,20 @@
+{
+  "file": "kenney-boat-fan.glb",
+  "name": "Airboat",
+  "kind": "kit",
+  "fidelity": "stylised",
+  "source": {
+    "kit": "Kenney Watercraft Kit",
+    "kitFile": "boat-fan.glb",
+    "url": "https://kenney.nl/assets/watercraft-kit",
+    "license": "CC0-1.0"
+  },
+  "hullForm": "flat-bottomed punt hull, caged air propeller aft",
+  "propulsion": ["power"],
+  "shows": ["fan"],
+  "loaM": 5.5,
+  "beamM": 2.4,
+  "draftM": 0.2,
+  "nominal": true,
+  "fitLengthM": [3.9, 6.9]
+}

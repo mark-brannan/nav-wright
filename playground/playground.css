@@ -307,3 +307,21 @@ legend {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* The vessels page's catalog record beside the 3D view. */
+.mesh-record {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+}
+.mesh-record th {
+  text-align: left;
+  white-space: nowrap;
+  padding: 2px 8px 2px 0;
+  vertical-align: top;
+  font-weight: 600;
+}
+.mesh-record td {
+  padding: 2px 0;
+  word-break: break-word;
+}

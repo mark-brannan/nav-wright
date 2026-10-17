@@ -1,0 +1,28 @@
+{
+  "file": "loft-mine-clearance-highside.glb",
+  "name": "Minehunter (highside)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "mine countermeasures vessel, bridge forward, sweep gear aft",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "bridge",
+    "masts",
+    "sweep-gear"
+  ],
+  "loaM": 50,
+  "beamM": 9.8,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    35,
+    70
+  ],
+  "aisType": 35
+}

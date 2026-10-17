@@ -1,0 +1,28 @@
+{
+  "file": "loft-bulker-highside.glb",
+  "name": "Bulk carrier (highside)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "full-bodied bulk carrier, bridge aft, hatch covers on deck",
+  "propulsion": [
+    "power"
+  ],
+  "shows": [
+    "bridge",
+    "funnel",
+    "hatches"
+  ],
+  "loaM": 200,
+  "beamM": 59.8,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    120,
+    300
+  ],
+  "aisType": 70
+}

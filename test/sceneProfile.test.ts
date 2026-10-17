@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { modelFrame, placeScene } from '../src/sceneProfile.js';
 
-const FILE = new URL('../models/westsail-32-lines.glb', import.meta.url);
+const FILE = new URL('../models/westsail-32.glb', import.meta.url);
 const L = 9.75;
 const span = { sternX: -0.88, bowX: 0.92 };
 
