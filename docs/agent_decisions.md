@@ -18,3 +18,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261016t204456z
 - nav-wright#54 slice 3 resume: wip commit 6ae3d14 was the styles slice, already merged with more as #106, so slice 3 started fresh from origin/main and did not build on it Undo: cherry-pick 6ae3d14 onto the branch (no PR, branch claude/nw54-s3-1016p2)
+
+### 20261017t034912z
+- Silhouette colour is the 2D hull hint fill #3a4a60, readable on a black sky. Undo: change SILHOUETTE_COLOR in src/silhouette.ts ([#120](https://github.com/mark-brannan/nav-wright/pull/120))
