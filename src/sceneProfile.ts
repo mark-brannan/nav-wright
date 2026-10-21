@@ -13,15 +13,25 @@ import * as THREE from 'three';
 import { PROFILE_STATIONS, placeHullModel, sampleEdges, stationProfile } from './modelTransform.js';
 import type { HullSpan, StationProfile } from './modelTransform.js';
 
-/** Every mesh under `root` as one world-space triangle list: flat xyz
- * vertices and a merged index. */
+/**
+ * The material a mesh's sails are drawn in (scripts/sailboat-lines.mjs).
+ * Cloth carries no light, so the profile lights are seated on leaves it out:
+ * a mainsail's leech over the transom is not where her sternlight goes.
+ */
+export const SAIL_MATERIAL = 'sails';
+
+const isSail = (o: THREE.Mesh): boolean =>
+  (Array.isArray(o.material) ? o.material : [o.material]).every((m) => m?.name === SAIL_MATERIAL);
+
+/** Every mesh under `root` but its sails as one world-space triangle list:
+ * flat xyz vertices and a merged index. */
 function worldMesh(root: THREE.Object3D): { xyz: Float32Array; index: number[] } {
   const chunks: Float32Array[] = [];
   const index: number[] = [];
   let total = 0;
   const v = new THREE.Vector3();
   root.traverse((o) => {
-    if (!(o instanceof THREE.Mesh)) return;
+    if (!(o instanceof THREE.Mesh) || isSail(o)) return;
     const geom = o.geometry as THREE.BufferGeometry;
     const pos = geom.getAttribute('position');
     if (!pos) return;

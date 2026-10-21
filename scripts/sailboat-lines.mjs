@@ -488,7 +488,54 @@ const MESH = {
   deck: [0.85, 0.81, 0.72],
   house: [0.94, 0.91, 0.86],
   rig: [0.35, 0.39, 0.44],
+  sails: [0.9, 0.89, 0.85],
 };
+
+/**
+ * The sails a traced rig sets, as polygons of [x, z] in feet on the
+ * centreline: what the catalog's `shows: ['sails']` promises. A boom's sail
+ * runs from its forward end (the tack, at a mast) to its after end (the
+ * clew), and up to its gaff when the rig has one, else to that mast's head.
+ * A headsail hangs from a stay whose foot is on deck forward of the foremost
+ * mast and whose head is aloft; its clew sits low, just forward of the mast.
+ * Bobstays, springstays and backstays carry nothing.
+ */
+function sails(m) {
+  const rig = m.rig;
+  const masts = Object.entries(rig).filter(([k]) => MAST.test(k));
+  if (!masts.length) return [];
+  const head = ([, [a, b]]) => (a[1] > b[1] ? a : b);
+  const reach = 0.05 * m.loa;
+  const out = [];
+  for (const [k, [a, b]] of Object.entries(rig)) {
+    if (!/boom$/i.test(k) || /(jib|staysail)boom$/i.test(k)) continue;
+    const [tack, clew] = a[0] > b[0] ? [a, b] : [b, a];
+    const mast = masts
+      .map((e) => ({ e, d: Math.abs(e[1][0][0] - tack[0]) }))
+      .filter(({ d }) => d < reach)
+      .sort((p, q) => p.d - q.d)[0];
+    if (!mast) continue;
+    const gaff = rig[k.replace(/boom$/i, (w) => (w[0] === 'B' ? 'Gaff' : 'gaff'))];
+    if (gaff) {
+      const [throat, peak] = gaff[0][0] > gaff[1][0] ? gaff : [gaff[1], gaff[0]];
+      out.push([tack, clew, peak, throat]);
+    } else {
+      const top = head(mast.e);
+      out.push([tack, clew, [tack[0], top[1]]]);
+    }
+  }
+  const foremost = Math.max(...masts.map(([, [a]]) => a[0]));
+  const deck = (x) => m.top(Math.min(Math.max(x, 0.02), m.loa - 0.02));
+  for (const [k, [a, b]] of Object.entries(rig)) {
+    if (SPAR.test(k) || /(bob|spring|back)stay|striker|martingale/i.test(k)) continue;
+    const [lo, hi] = a[1] < b[1] ? [a, b] : [b, a];
+    if (lo[0] <= foremost || lo[1] < deck(Math.min(lo[0], m.loa)) - 2 * m.u) continue;
+    if (lo[1] > deck(Math.min(lo[0], m.loa)) + 0.15 * (hi[1] - lo[1])) continue;
+    const clew = [hi[0] + 0.15 * (lo[0] - hi[0]), lo[1] + 0.12 * (hi[1] - lo[1])];
+    out.push([hi, lo, clew]);
+  }
+  return out;
+}
 
 /** A box of half-width w along the segment A..B, both 3D points in feet. */
 function bar(part, A, B, w) {
@@ -611,6 +658,15 @@ function loftGlb(m) {
   }
   for (const [name, [a, b]] of Object.entries(m.rig))
     bar(parts.rig, [a[0], 0, a[1]], [b[0], 0, b[1]], (SPAR.test(name) ? 0.18 : 0.04) * m.u);
+  // Each sail is wound both ways, so either side is a front face: a faded
+  // hull's depth prepass draws front faces only, and a sail it missed would
+  // sit under the sea drawn after it.
+  for (const poly of sails(m))
+    for (let i = 1; i + 1 < poly.length; i++) {
+      const [a, b, c] = [poly[0], poly[i], poly[i + 1]].map(([x, z]) => [x, 0, z]);
+      parts.sails.tri(a, b, c);
+      parts.sails.tri(a, c, b);
+    }
   return glb(parts, m.trace.name, {
     generator: 'nav-wright scripts/sailboat-lines.mjs',
     colours: MESH,
