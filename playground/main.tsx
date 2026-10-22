@@ -291,6 +291,7 @@ function Playground() {
   const look = lookProps(
     urlState,
     flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined,
+    dropout,
   );
   const [copied, setCopied] = useState(false);
   const copyLook = () => {

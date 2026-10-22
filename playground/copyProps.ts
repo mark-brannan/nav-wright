@@ -40,8 +40,14 @@ const BEARING_DEFAULTS = { sky: 0 } as const;
 /**
  * @param flashesPerMinute the flash rate the playground passes when its flash
  *   toggle is on (declaredFlashRate); only BearingView takes it.
+ * @param rangeDropout the playground's range dropout toggle, which is not in
+ *   the URL; only the 3D view passes it, and without it K changes nothing.
  */
-export function lookProps(state: UrlState, flashesPerMinute?: number): Look | null {
+export function lookProps(
+  state: UrlState,
+  flashesPerMinute?: number,
+  rangeDropout = false,
+): Look | null {
   const component = lookComponent(state.view);
   if (component === null) return null;
   const props: Look['props'] = {
@@ -57,6 +63,7 @@ export function lookProps(state: UrlState, flashesPerMinute?: number): Look | nu
       if (state[k] !== MODEL_DEFAULTS[k]) props[k] = state[k];
     }
     if (state.rangeGlow) props.rangeGlow = true;
+    if (rangeDropout && state.view === '3d') props.rangeDropout = true;
     // the silhouette is drawn at tilt 0, so it carries none; 'all' is the playground's side-by-side of the three, not one look
     if (state.view === 'silhouette' && state.variant !== 'all') props.silhouette = state.variant;
   } else {

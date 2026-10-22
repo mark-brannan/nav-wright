@@ -95,6 +95,21 @@ describe('lookProps', () => {
     });
   });
 
+  it('carries rangeDropout when the dropout toggle is on, on the 3D view only', () => {
+    expect(lookProps(at({ transmissivity: 0.5 }), undefined, true)?.props).toEqual({
+      theta: 45,
+      hullHint: 0.5,
+      range: 0.5,
+      transmissivity: 0.5,
+      rangeDropout: true,
+    });
+    expect(lookProps(at({}), undefined, false)?.props).not.toHaveProperty('rangeDropout');
+    expect(lookProps(at({}))?.props).not.toHaveProperty('rangeDropout');
+    for (const view of ['silhouette', 'bearing']) {
+      expect(lookProps(at({ view }), undefined, true)?.props).not.toHaveProperty('rangeDropout');
+    }
+  });
+
   it('the profile view has no component', () => {
     expect(lookComponent('profile')).toBeNull();
     expect(lookProps(at({ view: 'profile' }))).toBeNull();
