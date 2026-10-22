@@ -69,6 +69,32 @@ describe('lookProps', () => {
     });
   });
 
+  it('the 3D view carries glow, falloff, range glow, K and haze off their defaults', () => {
+    const bare = lookProps(at({ glowSize: 1, glowFalloff: 0, transmissivity: 0.8, haze: 0 }));
+    expect(bare?.props).toEqual({ theta: 45, hullHint: 0.5, range: 0.5 });
+    const look = lookProps(
+      at({ glowSize: 1.5, glowFalloff: 0.4, rangeGlow: true, transmissivity: 0.5, haze: 0.3 }),
+    );
+    expect(look).toEqual({
+      component: 'BearingModelView',
+      props: {
+        theta: 45,
+        hullHint: 0.5,
+        range: 0.5,
+        glowSize: 1.5,
+        glowFalloff: 0.4,
+        transmissivity: 0.5,
+        haze: 0.3,
+        rangeGlow: true,
+      },
+    });
+    expect(lookProps(at({ view: 'bearing', haze: 0.3, glowSize: 2 }))?.props).toEqual({
+      theta: 45,
+      hullHint: 0.5,
+      range: 0.5,
+    });
+  });
+
   it('the profile view has no component', () => {
     expect(lookComponent('profile')).toBeNull();
     expect(lookProps(at({ view: 'profile' }))).toBeNull();
