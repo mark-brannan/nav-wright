@@ -25,6 +25,7 @@ import { K_PRESCRIBED, rangeVisibility, sectorIntensity } from './sectorProfile.
 import type { LightGlow } from './halo.js';
 import { haloProfile } from './halo.js';
 import { glowProfile } from './svg.js';
+import { FLASH_ON_S, mergeLanterns } from './lantern.js';
 import type { BenchyLabels } from './benchyLabels.js';
 import { defaultBenchyLabels } from './benchyLabels.js';
 import type { SilhouetteVariant } from './silhouette.js';
@@ -61,6 +62,9 @@ export function BearingModelView({
   glowFalloff = 0,
   rangeGlow = false,
   haze = 0,
+  singleLantern = false,
+  flashesPerMinute,
+  flashOnSeconds = FLASH_ON_S,
   labels = defaultBenchyLabels,
   controls = true,
 }: {
@@ -119,19 +123,37 @@ export function BearingModelView({
   /** Haze in the air, 0 (clear, the original) .. 1: widens each halo, up to
    *  three times, and softens it towards a full falloff. 3D only. */
   haze?: number;
+  /** Draw a combined fixture (tricolor) as one lantern, in the colour facing
+   *  the viewer, as BearingView does. Default off: one dot per sector. */
+  singleLantern?: boolean;
+  /** Flash rate in flashes per minute for flashing lights (see declaredFlashRate), as BearingView. Default: a 1.2 s period. */
+  flashesPerMinute?: number;
+  /** Seconds each flash stays lit, from the start of its period. 3D only. Default 0.35. */
+  flashOnSeconds?: number;
   labels?: BenchyLabels;
   /** Draw the dial and elevation slider under the picture. False when the page places its own. */
   controls?: boolean;
 }): ReactElement {
   const [modelFailed, setModelFailed] = useState(false);
   const lightIntensity = useMemo((): LightIntensity | undefined => {
-    if (!sectorProfile && !rangeDropout) return undefined;
-    return (light, at) =>
+    if (!sectorProfile && !rangeDropout && !singleLantern) return undefined;
+    const base: LightIntensity = (light, at) =>
       (sectorProfile
         ? sectorIntensity(at, light.arc, sectorProfile)
         : Number(bearingInArc(at, light.arc))) *
       (rangeDropout ? rangeVisibility(lightRangesNm?.[light.lightId], range, transmissivity) : 1);
-  }, [sectorProfile, rangeDropout, lightRangesNm, range, transmissivity]);
+    if (!singleLantern) return base;
+    // One lantern per combined fixture: of the members that show at this
+    // bearing, only the one facing the viewer keeps its intensity.
+    let kept: { at: number; keys: Set<string> } | undefined;
+    return (light, at) => {
+      if (kept?.at !== at) {
+        const shown = placed.filter((l) => base(l, at) > 0);
+        kept = { at, keys: new Set(mergeLanterns(shown, at).map((l) => l.key)) };
+      }
+      return kept.keys.has(light.key) ? base(light, at) : 0;
+    };
+  }, [sectorProfile, rangeDropout, lightRangesNm, range, transmissivity, singleLantern, placed]);
   const lightGlow = useMemo((): LightGlow | undefined => {
     if (glowSize === 1 && glowFalloff === 0 && !rangeGlow && haze === 0) return undefined;
     return (light) =>
@@ -154,6 +176,8 @@ export function BearingModelView({
       sky={sky}
       rangeGlow={rangeGlow}
       lightRangesNm={lightRangesNm}
+      singleLantern={singleLantern}
+      flashesPerMinute={flashesPerMinute}
       labels={labels}
       controls={controls}
     />
@@ -173,6 +197,8 @@ export function BearingModelView({
       sky={sky}
       rangeGlow={rangeGlow}
       lightRangesNm={lightRangesNm}
+      singleLantern={singleLantern}
+      flashesPerMinute={flashesPerMinute}
       labels={labels}
     />
   );
@@ -209,6 +235,8 @@ export function BearingModelView({
               sea={seaColor(sea)}
               lightIntensity={lightIntensity}
               lightGlow={lightGlow}
+              flashesPerMinute={flashesPerMinute}
+              flashOnSeconds={flashOnSeconds}
               silhouette={silhouette}
               blockSpec={hull.spec}
               label={labels.bearingAlt(Math.round(theta))}

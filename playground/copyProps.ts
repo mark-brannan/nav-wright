@@ -6,6 +6,7 @@
 // handlers are the consumer's own and are not here.
 
 import { K_PRESCRIBED } from '../src/sectorProfile.js';
+import { FLASH_ON_S } from '../src/lantern.js';
 import { DEFAULT_TILT } from '../src/tilt.js';
 import type { UrlState } from './urlState.js';
 
@@ -39,7 +40,7 @@ const BEARING_DEFAULTS = { sky: 0 } as const;
 
 /**
  * @param flashesPerMinute the flash rate the playground passes when its flash
- *   toggle is on (declaredFlashRate); only BearingView takes it.
+ *   toggle is on (declaredFlashRate); both components take it.
  * @param rangeDropout the playground's range dropout toggle, which is not in
  *   the URL; only the 3D view passes it, and without it K changes nothing.
  */
@@ -66,6 +67,11 @@ export function lookProps(
     if (rangeDropout && state.view === '3d') props.rangeDropout = true;
     // the silhouette is drawn at tilt 0, so it carries none; 'all' is the playground's side-by-side of the three, not one look
     if (state.view === 'silhouette' && state.variant !== 'all') props.silhouette = state.variant;
+    if (state.singleLantern) props.singleLantern = true;
+    if (state.flashRateOn && flashesPerMinute !== undefined) {
+      props.flashesPerMinute = flashesPerMinute;
+    }
+    if (state.flashOnSeconds !== FLASH_ON_S) props.flashOnSeconds = state.flashOnSeconds;
   } else {
     if (state.sky !== BEARING_DEFAULTS.sky) props.sky = state.sky;
     if (state.singleLantern) props.singleLantern = true;

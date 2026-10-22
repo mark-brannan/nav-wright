@@ -110,6 +110,26 @@ describe('lookProps', () => {
     }
   });
 
+  it('the 3d view carries single lantern, flash rate and flash on-time, at their defaults left out', () => {
+    expect(
+      lookProps(at({ singleLantern: true, flashRateOn: true, flashOnSeconds: 0.2 }), 120)?.props,
+    ).toEqual({
+      theta: 45,
+      hullHint: 0.5,
+      range: 0.5,
+      singleLantern: true,
+      flashesPerMinute: 120,
+      flashOnSeconds: 0.2,
+    });
+    const bare = lookProps(at({}), undefined)?.props;
+    expect(bare).not.toHaveProperty('singleLantern');
+    expect(bare).not.toHaveProperty('flashesPerMinute');
+    expect(bare).not.toHaveProperty('flashOnSeconds');
+    expect(lookProps(at({ view: 'bearing', flashOnSeconds: 0.2 }))?.props).not.toHaveProperty(
+      'flashOnSeconds',
+    );
+  });
+
   it('the profile view has no component', () => {
     expect(lookComponent('profile')).toBeNull();
     expect(lookProps(at({ view: 'profile' }))).toBeNull();

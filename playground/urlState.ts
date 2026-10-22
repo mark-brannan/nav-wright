@@ -4,6 +4,7 @@
 // as they are.
 
 import { K_PRESCRIBED } from '../src/sectorProfile.js';
+import { FLASH_ON_S } from '../src/lantern.js';
 import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from '../src/tilt.js';
 
 export interface UrlState {
@@ -23,6 +24,8 @@ export interface UrlState {
   singleLantern: boolean;
   rangeGlow: boolean;
   flashRateOn: boolean;
+  /** Seconds each flash stays lit on the 3D view. */
+  flashOnSeconds: number;
 }
 
 export const URL_DEFAULTS: UrlState = {
@@ -42,6 +45,7 @@ export const URL_DEFAULTS: UrlState = {
   singleLantern: false,
   rangeGlow: false,
   flashRateOn: false,
+  flashOnSeconds: FLASH_ON_S,
 };
 
 /** Which values a view or variant may take. */
@@ -61,6 +65,7 @@ const NUMBERS = {
   glowFalloff: 'falloff',
   transmissivity: 'k',
   haze: 'haze',
+  flashOnSeconds: 'flashon',
 } as const;
 const FLAGS = {
   day: 'day',
@@ -82,6 +87,7 @@ const NUMBER_BOUNDS: Record<keyof typeof NUMBERS, (n: number) => number> = {
   glowFalloff: (n) => clamp(n, 0, 1),
   transmissivity: (n) => clamp(n, 0.05, 1),
   haze: (n) => clamp(n, 0, 1),
+  flashOnSeconds: (n) => clamp(n, 0.05, 2),
 };
 
 /** Read the playground state out of a query string; anything missing or

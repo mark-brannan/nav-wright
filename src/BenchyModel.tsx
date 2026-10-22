@@ -28,6 +28,7 @@ import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import { lightFill } from './svg.js';
+import { flashLit } from './lantern.js';
 import type { PlacedLight } from './placement.js';
 import type { LightIntensity } from './sectorProfile.js';
 import type { HaloProfile, LightGlow } from './halo.js';
@@ -72,6 +73,8 @@ function Hull({
   sea,
   lightIntensity,
   lightGlow,
+  flashesPerMinute,
+  flashOnSeconds,
   topZ,
   onReady,
 }: {
@@ -91,6 +94,8 @@ function Hull({
   /** See BenchyModel. */
   lightIntensity?: LightIntensity;
   lightGlow?: LightGlow;
+  flashesPerMinute?: number;
+  flashOnSeconds?: number;
   /** Called once the model has loaded and the lights are on it. */
   topZ?: number;
   onReady: () => void;
@@ -175,6 +180,8 @@ function Hull({
           position={position}
           intensity={intensity}
           glow={lightGlow?.(light)}
+          flashesPerMinute={flashesPerMinute}
+          flashOnSeconds={flashOnSeconds}
         />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
@@ -200,6 +207,8 @@ function BlockHull({
   sea,
   lightIntensity,
   lightGlow,
+  flashesPerMinute,
+  flashOnSeconds,
   topZ,
   onReady,
 }: {
@@ -214,6 +223,8 @@ function BlockHull({
   sea?: string;
   lightIntensity?: LightIntensity;
   lightGlow?: LightGlow;
+  flashesPerMinute?: number;
+  flashOnSeconds?: number;
   topZ?: number;
   onReady: () => void;
 }): ReactElement {
@@ -286,6 +297,8 @@ function BlockHull({
           position={position}
           intensity={intensity}
           glow={lightGlow?.(light)}
+          flashesPerMinute={flashesPerMinute}
+          flashOnSeconds={flashOnSeconds}
         />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
@@ -365,6 +378,8 @@ function SceneLight({
   position,
   intensity = 1,
   glow = FLAT_HALO,
+  flashesPerMinute,
+  flashOnSeconds,
 }: {
   light: PlacedLight;
   lengthMeters: number;
@@ -375,6 +390,9 @@ function SceneLight({
   intensity?: number;
   /** The halo's size and falloff (see halo.ts). Default: the flat original. */
   glow?: HaloProfile;
+  /** See BenchyModel. */
+  flashesPerMinute?: number;
+  flashOnSeconds?: number;
 }): ReactElement {
   const halo = useRef<THREE.Group>(null);
   const r = lightRadius(lengthMeters);
@@ -382,7 +400,9 @@ function SceneLight({
 
   useFrame(({ clock }) => {
     if (!halo.current) return;
-    const on = light.character !== 'flashing' || clock.elapsedTime % 1.2 < 0.35;
+    const on =
+      light.character !== 'flashing' ||
+      flashLit(clock.elapsedTime, flashesPerMinute, flashOnSeconds);
     halo.current.visible = on;
   });
 
@@ -556,6 +576,8 @@ export function BenchyModel({
   blockSpec,
   lightIntensity,
   lightGlow,
+  flashesPerMinute,
+  flashOnSeconds,
   label,
   fallback = <div className="scene-3d" />,
   loading,
@@ -605,6 +627,10 @@ export function BenchyModel({
   /** Each light's halo: size, brightness and falloff (see halo.ts).
    *  Undefined draws the flat original on every light. */
   lightGlow?: LightGlow;
+  /** Flash rate for flashing lights, flashes per minute. Default: a 1.2 s period. */
+  flashesPerMinute?: number;
+  /** Seconds each flash stays lit, from the start of the period. Default 0.35. */
+  flashOnSeconds?: number;
   /** Draw her flat, in one unlit colour, from the waterline's level (tilt
    * 0): her own mesh, or a block built from her spec (`blockSpec`). See
    * SilhouetteVariant. Undefined draws the shaded, orbitable model. */
@@ -681,6 +707,8 @@ export function BenchyModel({
               sea={sea}
               lightIntensity={lightIntensity}
               lightGlow={lightGlow}
+              flashesPerMinute={flashesPerMinute}
+              flashOnSeconds={flashOnSeconds}
               topZ={topZ}
               onReady={ready}
             />
@@ -697,6 +725,8 @@ export function BenchyModel({
               sea={sea}
               lightIntensity={lightIntensity}
               lightGlow={lightGlow}
+              flashesPerMinute={flashesPerMinute}
+              flashOnSeconds={flashOnSeconds}
               topZ={topZ}
               onReady={ready}
             />
