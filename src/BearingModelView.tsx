@@ -21,7 +21,11 @@ import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import type { PlacedLight } from './placement.js';
 import { bearingInArc, lightsInView } from './placement.js';
 import type { LightIntensity, SectorProfile } from './sectorProfile.js';
-import { rangeVisibility, sectorIntensity } from './sectorProfile.js';
+import { K_PRESCRIBED, rangeVisibility, sectorIntensity } from './sectorProfile.js';
+import type { LightGlow } from './halo.js';
+import { haloProfile } from './halo.js';
+import { glowProfile } from './svg.js';
+import { FLASH_ON_S, mergeLanterns } from './lantern.js';
 import type { BenchyLabels } from './benchyLabels.js';
 import { defaultBenchyLabels } from './benchyLabels.js';
 import type { SilhouetteVariant } from './silhouette.js';
@@ -53,6 +57,14 @@ export function BearingModelView({
   sectorProfile,
   rangeDropout = false,
   lightRangesNm,
+  transmissivity = K_PRESCRIBED,
+  glowSize = 1,
+  glowFalloff = 0,
+  rangeGlow = false,
+  haze = 0,
+  singleLantern = false,
+  flashesPerMinute,
+  flashOnSeconds = FLASH_ON_S,
   labels = defaultBenchyLabels,
   controls = true,
 }: {
@@ -91,20 +103,67 @@ export function BearingModelView({
   /** Annex I §8: a light past its luminous range (`lightRangesNm`, by
    *  lightId) at `range` fades out. 3D only. */
   rangeDropout?: boolean;
+  /** Rule 22 range in nautical miles by lightId, from lights.json
+   *  visibility. Used by rangeDropout and rangeGlow. */
   lightRangesNm?: Record<string, number>;
+  /** Annex I §8's atmospheric transmissivity K, 0..1, per nautical mile:
+   *  lower is thicker air, and rangeDropout loses a light sooner. Default
+   *  K_PRESCRIBED, the value the luminous ranges are prescribed at. 3D only. */
+  transmissivity?: number;
+  /** The halo round each light, as a multiple of its original size
+   *  (2.6 bead radii). Default 1. 3D only. */
+  glowSize?: number;
+  /** How the halo fades towards its edge: 0 (a flat disc, the original)
+   *  .. 1 (fading from the centre out). Default 0. 3D only. */
+  glowFalloff?: number;
+  /** Scale each halo by the light's range (`lightRangesNm`, by lightId) and
+   *  the viewing `range`, as BearingView's rangeGlow does. Default off:
+   *  every halo alike. */
+  rangeGlow?: boolean;
+  /** Haze in the air, 0 (clear, the original) .. 1: widens each halo, up to
+   *  three times, and softens it towards a full falloff. 3D only. */
+  haze?: number;
+  /** Draw a combined fixture (tricolor) as one lantern, in the colour facing
+   *  the viewer, as BearingView does. Default off: one dot per sector. */
+  singleLantern?: boolean;
+  /** Flash rate in flashes per minute for flashing lights (see declaredFlashRate), as BearingView. Default: a 1.2 s period. */
+  flashesPerMinute?: number;
+  /** Seconds each flash stays lit, from the start of its period. 3D only. Default 0.35. */
+  flashOnSeconds?: number;
   labels?: BenchyLabels;
   /** Draw the dial and elevation slider under the picture. False when the page places its own. */
   controls?: boolean;
 }): ReactElement {
   const [modelFailed, setModelFailed] = useState(false);
   const lightIntensity = useMemo((): LightIntensity | undefined => {
-    if (!sectorProfile && !rangeDropout) return undefined;
-    return (light, at) =>
+    if (!sectorProfile && !rangeDropout && !singleLantern) return undefined;
+    const base: LightIntensity = (light, at) =>
       (sectorProfile
         ? sectorIntensity(at, light.arc, sectorProfile)
         : Number(bearingInArc(at, light.arc))) *
-      (rangeDropout ? rangeVisibility(lightRangesNm?.[light.lightId], range) : 1);
-  }, [sectorProfile, rangeDropout, lightRangesNm, range]);
+      (rangeDropout ? rangeVisibility(lightRangesNm?.[light.lightId], range, transmissivity) : 1);
+    if (!singleLantern) return base;
+    // One lantern per combined fixture: of the members that show at this
+    // bearing, only the one facing the viewer keeps its intensity.
+    let kept: { at: number; keys: Set<string> } | undefined;
+    return (light, at) => {
+      if (kept?.at !== at) {
+        const shown = placed.filter((l) => base(l, at) > 0);
+        kept = { at, keys: new Set(mergeLanterns(shown, at).map((l) => l.key)) };
+      }
+      return kept.keys.has(light.key) ? base(light, at) : 0;
+    };
+  }, [sectorProfile, rangeDropout, lightRangesNm, range, transmissivity, singleLantern, placed]);
+  const lightGlow = useMemo((): LightGlow | undefined => {
+    if (glowSize === 1 && glowFalloff === 0 && !rangeGlow && haze === 0) return undefined;
+    return (light) =>
+      haloProfile({
+        glowSize,
+        glowFalloff,
+        haze,
+        glow: rangeGlow ? glowProfile(lightRangesNm?.[light.lightId], range) : undefined,
+      });
+  }, [glowSize, glowFalloff, rangeGlow, haze, lightRangesNm, range]);
 
   const flat = (
     <BearingView
@@ -115,6 +174,10 @@ export function BearingModelView({
       hullHint={hullHint}
       range={range}
       sky={sky}
+      rangeGlow={rangeGlow}
+      lightRangesNm={lightRangesNm}
+      singleLantern={singleLantern}
+      flashesPerMinute={flashesPerMinute}
       labels={labels}
       controls={controls}
     />
@@ -132,6 +195,10 @@ export function BearingModelView({
       hullHint={hullHint}
       range={range}
       sky={sky}
+      rangeGlow={rangeGlow}
+      lightRangesNm={lightRangesNm}
+      singleLantern={singleLantern}
+      flashesPerMinute={flashesPerMinute}
       labels={labels}
     />
   );
@@ -167,6 +234,9 @@ export function BearingModelView({
               night
               sea={seaColor(sea)}
               lightIntensity={lightIntensity}
+              lightGlow={lightGlow}
+              flashesPerMinute={flashesPerMinute}
+              flashOnSeconds={flashOnSeconds}
               silhouette={silhouette}
               blockSpec={hull.spec}
               label={labels.bearingAlt(Math.round(theta))}

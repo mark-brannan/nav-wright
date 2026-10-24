@@ -4,6 +4,7 @@
 // viewer, instead of a cluster of dots. Pure; placement is untouched.
 
 import type { Arc } from 'colregs-engine/schema';
+import { flashPeriodSeconds } from './svg.js';
 
 export interface LanternMember {
   color: string;
@@ -47,4 +48,19 @@ export function mergeLanterns<T extends LanternMember>(inView: readonly T[], the
     if (gap(l) < gap(out[at]!)) out[at] = l;
   }
   return out;
+}
+
+/** Today's 3D flash: a 1.2 s period, on for the first 0.35 s. */
+export const FLASH_PERIOD_S = 1.2;
+export const FLASH_ON_S = 0.35;
+
+/** Whether a flashing light is lit at `t` seconds: on for the first
+ * `onSeconds` of each period, the period being 60 / `flashesPerMinute`
+ * (FLASH_PERIOD_S without a rate). */
+export function flashLit(t: number, flashesPerMinute?: number, onSeconds = FLASH_ON_S): boolean {
+  const period =
+    flashesPerMinute !== undefined && flashesPerMinute > 0
+      ? flashPeriodSeconds(flashesPerMinute)
+      : FLASH_PERIOD_S;
+  return t % period < onSeconds;
 }

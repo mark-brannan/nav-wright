@@ -91,6 +91,48 @@ describe('BearingModelView', () => {
     expect(render(0, underway, 1)).toContain('background:#3a6593');
   });
 
+  it('feeds its visibility K to the range dropout', () => {
+    const at = (transmissivity?: number) =>
+      renderToStaticMarkup(
+        <BearingModelView
+          modelUrl="/nowhere.glb"
+          hull={hull}
+          placed={[masthead]}
+          facts={{}}
+          theta={0}
+          onTheta={noop}
+          hullHint={0}
+          range={2.5}
+          rangeDropout
+          lightRangesNm={{ 'light:masthead': 2 }}
+          transmissivity={transmissivity}
+        />,
+      );
+    expect(at()).not.toContain('bearing-empty-overlay');
+    expect(at(0.8)).toBe(at());
+    expect(at(0.05)).toContain('bearing-empty-overlay');
+  });
+
+  it('draws the same markup with every glow and haze prop at its default', () => {
+    const given = renderToStaticMarkup(
+      <BearingModelView
+        modelUrl="/nowhere.glb"
+        hull={hull}
+        placed={underway}
+        facts={{}}
+        theta={45}
+        onTheta={noop}
+        hullHint={0.3}
+        glowSize={1}
+        glowFalloff={0}
+        rangeGlow={false}
+        haze={0}
+        transmissivity={0.8}
+      />,
+    );
+    expect(given).toBe(render(45));
+  });
+
   it('names the bearing it is seen from', () => {
     expect(render(135)).toContain('135');
   });
