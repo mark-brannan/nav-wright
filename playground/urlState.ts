@@ -3,6 +3,7 @@
 // out of the URL, so a bare link is unchanged. Keys it does not own are left
 // as they are.
 
+import { K_PRESCRIBED } from '../src/sectorProfile.js';
 import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from '../src/tilt.js';
 
 export interface UrlState {
@@ -14,6 +15,10 @@ export interface UrlState {
   range: number;
   sky: number;
   sea: number;
+  glowSize: number;
+  glowFalloff: number;
+  transmissivity: number;
+  haze: number;
   day: boolean;
   singleLantern: boolean;
   rangeGlow: boolean;
@@ -29,6 +34,10 @@ export const URL_DEFAULTS: UrlState = {
   range: 0.5,
   sky: 0,
   sea: 0.1,
+  glowSize: 1,
+  glowFalloff: 0,
+  transmissivity: K_PRESCRIBED,
+  haze: 0,
   day: false,
   singleLantern: false,
   rangeGlow: false,
@@ -48,6 +57,10 @@ const NUMBERS = {
   range: 'range',
   sky: 'sky',
   sea: 'sea',
+  glowSize: 'halo',
+  glowFalloff: 'falloff',
+  transmissivity: 'k',
+  haze: 'haze',
 } as const;
 const FLAGS = {
   day: 'day',
@@ -65,6 +78,10 @@ const NUMBER_BOUNDS: Record<keyof typeof NUMBERS, (n: number) => number> = {
   range: (n) => clamp(n, 0, 5),
   sky: (n) => clamp(n, 0, 1),
   sea: (n) => clamp(n, 0, 1),
+  glowSize: (n) => clamp(n, 0, 4),
+  glowFalloff: (n) => clamp(n, 0, 1),
+  transmissivity: (n) => clamp(n, 0.05, 1),
+  haze: (n) => clamp(n, 0, 1),
 };
 
 /** Read the playground state out of a query string; anything missing or

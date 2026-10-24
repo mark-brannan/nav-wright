@@ -30,6 +30,8 @@ import { ModelErrorBoundary } from './ModelErrorBoundary.js';
 import { lightFill } from './svg.js';
 import type { PlacedLight } from './placement.js';
 import type { LightIntensity } from './sectorProfile.js';
+import type { HaloProfile, LightGlow } from './halo.js';
+import { FLAT_HALO, haloShells } from './halo.js';
 import {
   VIEW_FRAME,
   anchorLights,
@@ -69,6 +71,7 @@ function Hull({
   flat = false,
   sea,
   lightIntensity,
+  lightGlow,
   topZ,
   onReady,
 }: {
@@ -87,6 +90,7 @@ function Hull({
   sea?: string;
   /** See BenchyModel. */
   lightIntensity?: LightIntensity;
+  lightGlow?: LightGlow;
   /** Called once the model has loaded and the lights are on it. */
   topZ?: number;
   onReady: () => void;
@@ -170,6 +174,7 @@ function Hull({
           lengthMeters={lengthMeters}
           position={position}
           intensity={intensity}
+          glow={lightGlow?.(light)}
         />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
@@ -194,6 +199,7 @@ function BlockHull({
   soft,
   sea,
   lightIntensity,
+  lightGlow,
   topZ,
   onReady,
 }: {
@@ -207,6 +213,7 @@ function BlockHull({
   soft: boolean;
   sea?: string;
   lightIntensity?: LightIntensity;
+  lightGlow?: LightGlow;
   topZ?: number;
   onReady: () => void;
 }): ReactElement {
@@ -278,6 +285,7 @@ function BlockHull({
           lengthMeters={lengthMeters}
           position={position}
           intensity={intensity}
+          glow={lightGlow?.(light)}
         />
       ))}
       {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
@@ -356,6 +364,7 @@ function SceneLight({
   lengthMeters,
   position,
   intensity = 1,
+  glow = FLAT_HALO,
 }: {
   light: PlacedLight;
   lengthMeters: number;
@@ -364,8 +373,10 @@ function SceneLight({
   position?: [number, number, number];
   /** 0..1, dims the bead and the halo together. */
   intensity?: number;
+  /** The halo's size and falloff (see halo.ts). Default: the flat original. */
+  glow?: HaloProfile;
 }): ReactElement {
-  const halo = useRef<THREE.Mesh>(null);
+  const halo = useRef<THREE.Group>(null);
   const r = lightRadius(lengthMeters);
   const at = position ?? lightPosition(light, lengthMeters);
 
@@ -390,18 +401,22 @@ function SceneLight({
         />
       </mesh>
       {/* after the core (2), or the core paints over the glow */}
-      <mesh ref={halo} renderOrder={3}>
-        <sphereGeometry args={[r * 2.6, 12, 12]} />
-        <meshBasicMaterial
-          color={lightFill(light.color)}
-          transparent
-          opacity={0.35 * intensity}
-          blending={THREE.AdditiveBlending}
-          depthTest={false}
-          depthWrite={false}
-          toneMapped={false}
-        />
-      </mesh>
+      <group ref={halo}>
+        {haloShells(glow).map((shell, i) => (
+          <mesh key={i} renderOrder={3}>
+            <sphereGeometry args={[r * shell.radius, 12, 12]} />
+            <meshBasicMaterial
+              color={lightFill(light.color)}
+              transparent
+              opacity={shell.opacity * intensity}
+              blending={THREE.AdditiveBlending}
+              depthTest={false}
+              depthWrite={false}
+              toneMapped={false}
+            />
+          </mesh>
+        ))}
+      </group>
     </group>
   );
 }
@@ -540,6 +555,7 @@ export function BenchyModel({
   silhouette,
   blockSpec,
   lightIntensity,
+  lightGlow,
   label,
   fallback = <div className="scene-3d" />,
   loading,
@@ -586,6 +602,9 @@ export function BenchyModel({
   /** With `inViewAt`: how bright each light reads, 0..1, from a bearing,
    *  in place of the hard in-arc cut. A light at 0 is not drawn. */
   lightIntensity?: LightIntensity;
+  /** Each light's halo: size, brightness and falloff (see halo.ts).
+   *  Undefined draws the flat original on every light. */
+  lightGlow?: LightGlow;
   /** Draw her flat, in one unlit colour, from the waterline's level (tilt
    * 0): her own mesh, or a block built from her spec (`blockSpec`). See
    * SilhouetteVariant. Undefined draws the shaded, orbitable model. */
@@ -661,6 +680,7 @@ export function BenchyModel({
               soft={silhouette === 'soft'}
               sea={sea}
               lightIntensity={lightIntensity}
+              lightGlow={lightGlow}
               topZ={topZ}
               onReady={ready}
             />
@@ -676,6 +696,7 @@ export function BenchyModel({
               flat={level}
               sea={sea}
               lightIntensity={lightIntensity}
+              lightGlow={lightGlow}
               topZ={topZ}
               onReady={ready}
             />
