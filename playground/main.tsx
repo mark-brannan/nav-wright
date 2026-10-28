@@ -252,6 +252,10 @@ function Playground() {
   const [range, setRange] = useState(initial.range);
   const [sky, setSky] = useState(initial.sky);
   const [sea, setSea] = useState(initial.sea);
+  const [glowSize, setGlowSize] = useState(initial.glowSize);
+  const [glowFalloff, setGlowFalloff] = useState(initial.glowFalloff);
+  const [transmissivity, setTransmissivity] = useState(initial.transmissivity);
+  const [haze, setHaze] = useState(initial.haze);
   const lightRangesNm = useMemo(
     () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
     [facts],
@@ -259,6 +263,8 @@ function Playground() {
   const [singleLantern, setSingleLantern] = useState(initial.singleLantern);
   const [rangeGlow, setRangeGlow] = useState(initial.rangeGlow);
   const [flashRateOn, setFlashRateOn] = useState(initial.flashRateOn);
+  // URL only (?flashon=0.2): a visible slider would change every render's page chrome
+  const [flashOnSeconds] = useState(initial.flashOnSeconds);
   const [labelsOn, setLabelsOn] = useState(true);
   // every control above is in the URL (see urlState.ts), ?day included
   const [day, setDay] = useState(initial.day);
@@ -271,10 +277,15 @@ function Playground() {
     range,
     sky,
     sea,
+    glowSize,
+    glowFalloff,
+    transmissivity,
+    haze,
     day,
     singleLantern,
     rangeGlow,
     flashRateOn,
+    flashOnSeconds,
   };
   useUrlState(urlState);
 
@@ -283,6 +294,7 @@ function Playground() {
   const look = lookProps(
     urlState,
     flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined,
+    dropout,
   );
   const [copied, setCopied] = useState(false);
   const copyLook = () => {
@@ -519,6 +531,16 @@ function Playground() {
                   sectorProfile={sectorProfile}
                   rangeDropout={dropout}
                   lightRangesNm={lightRangesNm}
+                  transmissivity={transmissivity}
+                  glowSize={glowSize}
+                  glowFalloff={glowFalloff}
+                  rangeGlow={rangeGlow}
+                  haze={haze}
+                  singleLantern={singleLantern}
+                  flashesPerMinute={
+                    flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
+                  }
+                  flashOnSeconds={flashOnSeconds}
                   labels={labels}
                   controls={false}
                 />
@@ -547,6 +569,16 @@ function Playground() {
                       sky={sky}
                       sea={sea}
                       silhouette={v}
+                      lightRangesNm={lightRangesNm}
+                      glowSize={glowSize}
+                      glowFalloff={glowFalloff}
+                      rangeGlow={rangeGlow}
+                      haze={haze}
+                      singleLantern={singleLantern}
+                      flashesPerMinute={
+                        flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
+                      }
+                      flashOnSeconds={flashOnSeconds}
                       labels={labels}
                       controls={false}
                     />
@@ -842,6 +874,31 @@ function Playground() {
           ))}
           <p className="muted">
             {placed.length} of {allLights.length} drawn
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Glow and haze, 3D (#118)</legend>
+          <Field label="glow size">
+            <Range value={glowSize} min={0} max={4} step={0.05} onChange={setGlowSize} />
+          </Field>
+          <Field label="glow falloff">
+            <Range value={glowFalloff} min={0} max={1} step={0.05} onChange={setGlowFalloff} />
+          </Field>
+          <Field label="haze">
+            <Range value={haze} min={0} max={1} step={0.05} onChange={setHaze} />
+          </Field>
+          <Field label="visibility K">
+            <Range
+              value={transmissivity}
+              min={0.05}
+              max={1}
+              step={0.05}
+              onChange={setTransmissivity}
+            />
+          </Field>
+          <p className="muted">
+            K drives range dropout; range glow (under View) drives both views.
           </p>
         </fieldset>
       </section>

@@ -21,10 +21,15 @@ const changed: UrlState = {
   range: 2.4,
   sky: 0.6,
   sea: 0.35,
+  glowSize: 1.5,
+  glowFalloff: 0.4,
+  transmissivity: 0.5,
+  haze: 0.3,
   day: true,
   singleLantern: true,
   rangeGlow: true,
   flashRateOn: true,
+  flashOnSeconds: 0.8,
 };
 
 describe('playground url state', () => {
@@ -64,5 +69,12 @@ describe('playground url state', () => {
     );
     expect(s).toEqual({ ...URL_DEFAULTS, tilt: 90, range: 0, hullHint: 1 });
     expect(decodeUrlState('?theta=-90', options).theta).toBe(270);
+    expect(decodeUrlState('?halo=9&falloff=-1&k=0&haze=2', options)).toEqual({
+      ...URL_DEFAULTS,
+      glowSize: 4,
+      glowFalloff: 0,
+      transmissivity: 0.05,
+      haze: 1,
+    });
   });
 });

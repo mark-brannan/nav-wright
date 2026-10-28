@@ -5,6 +5,8 @@
 // no React) so a test can pin it. The hull, placed lights, model URL and
 // handlers are the consumer's own and are not here.
 
+import { K_PRESCRIBED } from '../src/sectorProfile.js';
+import { FLASH_ON_S } from '../src/lantern.js';
 import { DEFAULT_TILT } from '../src/tilt.js';
 import type { UrlState } from './urlState.js';
 
@@ -25,14 +27,28 @@ export function lookComponent(view: string): LookComponent | null {
 // The components' own defaults. theta, hullHint and range are always given:
 // the first two are required, and the playground always passes a range, where
 // the component's default is none.
-const MODEL_DEFAULTS = { tilt: DEFAULT_TILT, sky: 0, sea: 0.1 } as const;
+const MODEL_DEFAULTS = {
+  tilt: DEFAULT_TILT,
+  sky: 0,
+  sea: 0.1,
+  glowSize: 1,
+  glowFalloff: 0,
+  transmissivity: K_PRESCRIBED,
+  haze: 0,
+} as const;
 const BEARING_DEFAULTS = { sky: 0 } as const;
 
 /**
  * @param flashesPerMinute the flash rate the playground passes when its flash
- *   toggle is on (declaredFlashRate); only BearingView takes it.
+ *   toggle is on (declaredFlashRate); both components take it.
+ * @param rangeDropout the playground's range dropout toggle, which is not in
+ *   the URL; only the 3D view passes it, and without it K changes nothing.
  */
-export function lookProps(state: UrlState, flashesPerMinute?: number): Look | null {
+export function lookProps(
+  state: UrlState,
+  flashesPerMinute?: number,
+  rangeDropout = false,
+): Look | null {
   const component = lookComponent(state.view);
   if (component === null) return null;
   const props: Look['props'] = {
@@ -44,8 +60,18 @@ export function lookProps(state: UrlState, flashesPerMinute?: number): Look | nu
     if (state.tilt !== MODEL_DEFAULTS.tilt) props.tilt = state.tilt;
     if (state.sky !== MODEL_DEFAULTS.sky) props.sky = state.sky;
     if (state.sea !== MODEL_DEFAULTS.sea) props.sea = state.sea;
+    for (const k of ['glowSize', 'glowFalloff', 'transmissivity', 'haze'] as const) {
+      if (state[k] !== MODEL_DEFAULTS[k]) props[k] = state[k];
+    }
+    if (state.rangeGlow) props.rangeGlow = true;
+    if (rangeDropout && state.view === '3d') props.rangeDropout = true;
     // the silhouette is drawn at tilt 0, so it carries none; 'all' is the playground's side-by-side of the three, not one look
     if (state.view === 'silhouette' && state.variant !== 'all') props.silhouette = state.variant;
+    if (state.singleLantern) props.singleLantern = true;
+    if (state.flashRateOn && flashesPerMinute !== undefined) {
+      props.flashesPerMinute = flashesPerMinute;
+    }
+    if (state.flashOnSeconds !== FLASH_ON_S) props.flashOnSeconds = state.flashOnSeconds;
   } else {
     if (state.sky !== BEARING_DEFAULTS.sky) props.sky = state.sky;
     if (state.singleLantern) props.singleLantern = true;
