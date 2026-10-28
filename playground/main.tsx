@@ -8,7 +8,7 @@ import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { formatLook, lookProps } from './copyProps.js';
 import { decodeUrlState, encodeUrlState, type UrlState } from './urlState.js';
-import { evaluateDisplay } from 'colregs-engine';
+import { evaluateSignals } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import type { PlacedLight, PlacedShape, SectorProfile, ShapesData } from '../src/index.js';
@@ -334,7 +334,7 @@ function Playground() {
   );
   const evaln = useMemo((): { ok?: DisplayEvaluation; err?: string } => {
     try {
-      return { ok: evaluateDisplay(dayFacts) };
+      return { ok: evaluateSignals(dayFacts) };
     } catch (e) {
       return { err: String(e) };
     }

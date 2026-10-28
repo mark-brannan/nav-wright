@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { evaluateDisplay } from 'colregs-engine';
+import { evaluateSignals } from 'colregs-engine';
 import type { FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
@@ -27,7 +27,7 @@ const facts: FactRecord = {
   'fact:making_way': true,
   'fact:length_m': 30,
 };
-const lights = evaluateDisplay(facts).displays[0]!.lights;
+const lights = evaluateSignals(facts).displays[0]!.lights;
 
 const pairs = Object.entries(allHulls).flatMap(([name, hull]) =>
   hullStyleIds.map((id) => [name, id, hull, hullStyles[id]] as const),

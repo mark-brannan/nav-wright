@@ -6,7 +6,7 @@
 
 import { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { evaluateDisplay } from 'colregs-engine';
+import { evaluateSignals } from 'colregs-engine';
 import type { FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
@@ -115,7 +115,7 @@ function Viewer({ r }: { r: MeshRecord }) {
   const facts = useMemo(() => factsOf(r), [r]);
   const hull = useMemo(() => hullOf(r, facts), [r, facts]);
   const placed = useMemo(() => {
-    const display = evaluateDisplay(facts).displays[0];
+    const display = evaluateSignals(facts).displays[0];
     return display ? placeLights(display.lights, hull.spec, facts, lightsData, geometryData) : [];
   }, [facts, hull]);
   const [theta, setTheta] = useState(300);
