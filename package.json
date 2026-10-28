@@ -51,7 +51,7 @@
     "catalog": "npm run build && node scripts/mesh-catalog.mjs"
   },
   "dependencies": {
-    "colregs-engine": "^0.1.9",
+    "colregs-engine": "github:mark-brannan/colregs-engine#main",
     "zod": "^4.6.7"
   },
   "peerDependencies": {
