@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { evaluateDisplay } from 'colregs-engine';
+import { evaluateSignals } from 'colregs-engine';
 import type { Display, DisplayLight, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import applicabilityJson from 'colregs/data/applicability.json' with { type: 'json' };
@@ -32,7 +32,7 @@ const threshold = towThreshold(applicability)!;
 const underway = { 'fact:position': 'position:underway', 'fact:making_way': true } as const;
 const record = (facts: Record<string, unknown>): TowRecord => {
   const f = facts as FactRecord;
-  return { facts: f, display: evaluateDisplay(f).displays[0]! };
+  return { facts: f, display: evaluateSignals(f).displays[0]! };
 };
 /**
  * colregs-engine 0.1.9's fact vocabulary predates fact:tow_rigidity, so it
