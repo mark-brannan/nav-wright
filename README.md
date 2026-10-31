@@ -106,6 +106,33 @@ A failed model load — offline, a blocked CDN, no WebGL context — falls back
 to `ProfileView`, on the reasoning that the lights are the subject and
 losing them is worse than losing the hull rendering.
 
+## The station profile
+
+`nav-wright/profile` is a separate entry point for the maths that seats the
+lights on the 3D mesh. Nothing in it touches React or `@react-three/fiber`;
+the only import that takes a three.js value is `profileHullModel`, so a
+consumer can run it under a plain Node test environment. Build a
+`StationProfile` from a loaded scene the way `BenchyView` does, then compare
+`anchorLights()`'s seats against a `HullSpec` without copying the pipeline.
+
+```ts
+import { anchorLights, profileHullModel } from 'nav-wright/profile';
+
+const profile = profileHullModel(scene, lengthMeters, span); // StationProfile | null
+```
+
+| Export                                                                                                                                                    | What it is                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `profileHullModel(scene, lengthMeters, span?)`                                                                                                            | places a glTF scene as a vessel of that length and reads its shape back as a `StationProfile` |
+| `placeHullModel`, `sampleEdges`, `stationProfile`, `stationAt`                                                                                            | the steps behind it: placement, edge sampling, the per-station profile, a lookup at one x     |
+| `anchorLights(lights, lengthMeters, hull, profile, clearance?)`, `lightPosition`                                                                          | seats the spec's lights on the profile                                                        |
+| `PROFILE_STATIONS`, `DECK_EDGE_BAND`, `MAST_BAND`, `SIDE_LIGHT_BAND`, `BOW_SHOULDER`, `bowShoulder`                                                       | the sampling and seating constants                                                            |
+| `MODEL_ROTATION_X`, `LIGHT_Z_TO_X`                                                                                                                        | the model's rotation and the light-height scale                                               |
+| `specBlock`, `BLOCK_MAST`, `growPrism`, `insidePrism`, `blockTriangles`                                                                                   | a blocky hull built from the spec, with every light inside it                                 |
+| types `HullSpan`, `HullStations`, `LightSeat`, `ModelBox`, `ModelPlacement`, `Station`, `StationProfile`, `Vec3`, `BlockLight`, `BlockPrism`, `BlockSpec` | the shapes the functions take and return                                                      |
+
+`profileHullModel` returns `null` when the mesh yields no profile.
+
 ## Tows and pushed groups
 
 A `TowGroup` is a lead vessel and the hulls she tows or pushes, each a
