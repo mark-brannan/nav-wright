@@ -21,7 +21,7 @@ export interface PlacedLight {
   sourceEntry: string;
   combined?: boolean;
   ifPracticable?: boolean;
-  /** Height in metres above the hull datum (the drawn deck line), when Annex I placed it. */
+  /** Height in metres above the hull datum (the drawn deck line), whenever geometry.json and a length are known; absent for a light drawn below that datum. */
   heightM?: number;
   /** Annex I paragraphs behind this light's height, e.g. `AnxI.2(a)(i)`. Absent where hand anchors stand. */
   basis?: string[];
@@ -42,9 +42,9 @@ function characterOf(lightsData: LightsData, dl: DisplayLight): 'steady' | 'flas
  * Place every light of a display on the given hull. Deterministic; the
  * same display always renders the same scene. With colregs'
  * `geometry.json` (and `fact:length_m`) the heights and vertical
- * separations come from Annex I and each moved light carries `heightM`
- * and `basis`; without, or where Annex I is silent, the hull's hand
- * anchors stand.
+ * separations come from Annex I, every light carries `heightM` and each
+ * light Annex I places carries `basis`; without, or where Annex I is
+ * silent, the hull's hand anchors stand.
  */
 export function placeLights(
   displayLights: DisplayLight[],

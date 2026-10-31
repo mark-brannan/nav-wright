@@ -51,10 +51,13 @@ so nothing here depends on a particular app's copy of the COLREGS data.
 Give it colregs' `geometry.json` as the fifth argument and, for a vessel with
 a `fact:length_m`, light heights and vertical separations follow Annex I
 (masthead height by length band, the after masthead 4.5 m higher, sidelights
-under three quarters of the masthead, vertical lights 2 m or 1 m apart). Each
-light it places that way carries `heightM` and `basis` (the Annex I paragraphs,
-e.g. `AnxI.2(a)(i)`) so a consumer can label it; anywhere the geometry is silent
-the hull's hand anchors stand.
+under three quarters of the masthead, vertical lights 2 m or 1 m apart, the
+towing light over the sternlight, the forward anchor light over the after one,
+the 27(d) pairs under the 27(b)(i) column, the 27(f) lights clear below the
+masthead, the fishing-gear light between the sidelights and the white). Each
+light carries `heightM`, its height above the hull, and the lights Annex I
+places carry `basis` (the paragraphs, e.g. `AnxI.2(a)(i)`) so a consumer can
+label them; anywhere the geometry is silent the hull's hand anchors stand.
 
 ## The 3D view
 
