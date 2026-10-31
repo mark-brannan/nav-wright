@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.11](https://github.com/mark-brannan/nav-wright/compare/v0.1.10...v0.1.11) (2026-10-31)
+
+
+### Added
+
+* **bearing-model:** glow, falloff, rangeGlow, visibility K and haze on the 3D view ([#154](https://github.com/mark-brannan/nav-wright/issues/154)) ([cf7ee7f](https://github.com/mark-brannan/nav-wright/commit/cf7ee7fb4a3530ba8421a882849bce8586cbaf4b))
+
 ## [0.1.10](https://github.com/mark-brannan/nav-wright/compare/v0.1.9...v0.1.10) (2026-10-17)
 
 
