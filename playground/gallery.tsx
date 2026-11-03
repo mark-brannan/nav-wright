@@ -52,27 +52,25 @@ interface TowCase {
   members: object[];
 }
 const tows: TowCase[] = [150, 250]
-  .map(
-    (towM): TowCase => ({
-      id: `tow-${towM}`,
-      name: `Tug and barge, ${towM} m tow`,
-      lead: {
+  .map((towM): TowCase => ({
+    id: `tow-${towM}`,
+    name: `Tug and barge, ${towM} m tow`,
+    lead: {
+      ...underwayFacts,
+      'fact:propulsion': 'propulsion:power',
+      'fact:activity': 'activity:towing',
+      'fact:length_m': 30,
+      'fact:tow_length_m': towM,
+    },
+    members: [
+      {
         ...underwayFacts,
-        'fact:propulsion': 'propulsion:power',
-        'fact:activity': 'activity:towing',
-        'fact:length_m': 30,
+        'fact:activity': 'activity:being_towed',
+        'fact:length_m': 40,
         'fact:tow_length_m': towM,
       },
-      members: [
-        {
-          ...underwayFacts,
-          'fact:activity': 'activity:being_towed',
-          'fact:length_m': 40,
-          'fact:tow_length_m': towM,
-        },
-      ],
-    }),
-  )
+    ],
+  }))
   .concat([
     {
       id: 'tow-composite',

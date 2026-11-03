@@ -11,3 +11,6 @@ tsconfig.tsbuildinfo
 _site
 # CI workflows are not reformatted by this tool
 .github
+
+# Other agents' worktrees live here; `npm run format` would rewrite them
+.claude
