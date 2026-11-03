@@ -4,7 +4,7 @@
 
 import { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { evaluateDisplay } from 'colregs-engine';
+import { evaluateSignals } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
@@ -25,7 +25,7 @@ function Scenes() {
   const hull = allHulls[hullKey];
   const facts = hullFacts[hullKey];
   const placed = useMemo(() => {
-    const display = evaluateDisplay(facts).displays[0];
+    const display = evaluateSignals(facts).displays[0];
     return display ? placeLights(display.lights, hull.spec, facts, lightsData, geometryData) : [];
   }, [facts, hull]);
   const own = { hull, placed, heading: 0, speedMps: 5 };

@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { evaluateDisplay } from 'colregs-engine';
+import { evaluateSignals } from 'colregs-engine';
 import type { Display, DisplayShape, FactRecord } from 'colregs-engine';
 import type { GeometryData } from 'colregs-engine/schema';
 import geometryJson from 'colregs/data/geometry.json' with { type: 'json' };
@@ -27,7 +27,7 @@ const lightsData = lightsJson as unknown as LightsData;
 const SPACING = geometry.shapes.vertical_spacing_min_m!;
 
 const day = (f: Record<string, unknown>) => ({ ...f, 'fact:time': 'time:day' }) as FactRecord;
-const displayOf = (facts: FactRecord): Display => evaluateDisplay(facts).displays[0]!;
+const displayOf = (facts: FactRecord): Display => evaluateSignals(facts).displays[0]!;
 const run = (facts: FactRecord) => {
   const hull = selectHull(facts);
   return {
@@ -181,7 +181,7 @@ describe('placement per rule', () => {
     // a 'may' component: the engine returns it as an optional addition
     const facts = day(power(200, { 'fact:activity': 'activity:cbd' }));
     const hull = selectHull(facts);
-    const adds = evaluateDisplay(facts).optionalAdditions as { shapes: DisplayShape[] }[];
+    const adds = evaluateSignals(facts).optionalAdditions as { shapes: DisplayShape[] }[];
     const add = adds.find((a) => a.shapes.length > 0)!;
     const shapes = placeShapes(add.shapes, hull.spec, facts, shapesData, geometry);
     expect(shapes.map((s) => s.shapeId)).toEqual(['shape:cylinder']);
@@ -240,7 +240,7 @@ describe('every day fixture, every shape', () => {
     for (const c of cases) {
       let displays: Display[];
       try {
-        displays = evaluateDisplay(c.facts as FactRecord).displays;
+        displays = evaluateSignals(c.facts as FactRecord).displays;
       } catch {
         continue; // a fixture newer than the installed engine's fact keys
       }

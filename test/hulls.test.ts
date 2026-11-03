@@ -6,7 +6,7 @@
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { describe, expect, it } from 'vitest';
-import { evaluateDisplay, type FactRecord } from 'colregs-engine';
+import { evaluateSignals, type FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import { allHulls, PZ, selectHull } from '../src/hulls.js';
 import { placeLights } from '../src/placement.js';
@@ -235,7 +235,7 @@ describe('gallery lights in the profile frame', () => {
   const geometry = json('colregs/data/geometry.json') as GeometryData;
   it.each(hulls)('%s puts every gallery light inside the profile', (name, hull) => {
     const facts = hullFacts[name as keyof typeof hullFacts];
-    const display = evaluateDisplay(facts).displays[0];
+    const display = evaluateSignals(facts).displays[0];
     const placed = placeLights(display.lights, hull.spec, facts, lightsData, geometry);
     for (const l of placed) expect(PZ(l.z), l.key).toBeGreaterThanOrEqual(0);
   });

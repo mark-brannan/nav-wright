@@ -5,7 +5,7 @@
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { describe, expect, it } from 'vitest';
-import { evaluateDisplay } from 'colregs-engine';
+import { evaluateSignals } from 'colregs-engine';
 import type { DisplayEvaluation } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import { allHulls } from '../src/hulls.js';
@@ -30,7 +30,7 @@ function everyLight(name: keyof typeof allHulls): {
 } {
   const hull = allHulls[name];
   const facts = hullFacts[name];
-  const evaln: DisplayEvaluation = evaluateDisplay(facts);
+  const evaln: DisplayEvaluation = evaluateSignals(facts);
   const extra = evaln.optionalAdditions.flatMap((a) => a.lights);
   return {
     hull,

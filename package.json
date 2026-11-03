@@ -51,7 +51,7 @@
     "catalog": "npm run build && node scripts/mesh-catalog.mjs"
   },
   "dependencies": {
-    "colregs-engine": "^0.1.9",
+    "colregs-engine": "github:mark-brannan/colregs-engine#main",
     "zod": "^4.6.7"
   },
   "peerDependencies": {
@@ -68,7 +68,7 @@
     "@types/react-dom": "^19.3.0",
     "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^6.1.2",
-    "colregs": "github:mark-brannan/colregs#v0.3.6",
+    "colregs": "github:mark-brannan/colregs#v0.3.9",
     "playwright": "^1.63.0",
     "prettier": "3.9.10",
     "react": "~19.3.0",

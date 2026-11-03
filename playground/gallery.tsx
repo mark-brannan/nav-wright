@@ -4,7 +4,7 @@
 
 import { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { evaluateDisplay } from 'colregs-engine';
+import { evaluateSignals } from 'colregs-engine';
 import type { FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
 import shapesJson from 'colregs/data/shapes.json' with { type: 'json' };
@@ -52,27 +52,25 @@ interface TowCase {
   members: object[];
 }
 const tows: TowCase[] = [150, 250]
-  .map(
-    (towM): TowCase => ({
-      id: `tow-${towM}`,
-      name: `Tug and barge, ${towM} m tow`,
-      lead: {
+  .map((towM): TowCase => ({
+    id: `tow-${towM}`,
+    name: `Tug and barge, ${towM} m tow`,
+    lead: {
+      ...underwayFacts,
+      'fact:propulsion': 'propulsion:power',
+      'fact:activity': 'activity:towing',
+      'fact:length_m': 30,
+      'fact:tow_length_m': towM,
+    },
+    members: [
+      {
         ...underwayFacts,
-        'fact:propulsion': 'propulsion:power',
-        'fact:activity': 'activity:towing',
-        'fact:length_m': 30,
+        'fact:activity': 'activity:being_towed',
+        'fact:length_m': 40,
         'fact:tow_length_m': towM,
       },
-      members: [
-        {
-          ...underwayFacts,
-          'fact:activity': 'activity:being_towed',
-          'fact:length_m': 40,
-          'fact:tow_length_m': towM,
-        },
-      ],
-    }),
-  )
+    ],
+  }))
   .concat([
     {
       id: 'tow-composite',
@@ -113,7 +111,7 @@ function TowRow({ tow, time }: { tow: TowCase; time: 'day' | 'night' }) {
   const group = useMemo(() => {
     const rec = (f: object) => {
       const facts = (time === 'day' ? { ...f, 'fact:time': 'time:day' } : f) as FactRecord;
-      return { facts, display: evaluateDisplay(facts).displays[0]! };
+      return { facts, display: evaluateSignals(facts).displays[0]! };
     };
     return towGroupFromRecords(
       { ...rec(tow.lead), lengthM: tow.leadLengthM },
@@ -163,7 +161,7 @@ function Row({
   );
   const [theta, setTheta] = useState(60);
   const { placed, shapes } = useMemo(() => {
-    const display = evaluateDisplay(facts).displays[0];
+    const display = evaluateSignals(facts).displays[0];
     return {
       placed: display
         ? placeLights(display.lights, hull.spec, facts, lightsData, geometryData)
