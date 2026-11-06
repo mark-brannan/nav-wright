@@ -54,6 +54,13 @@ import { DEFAULT_TILT } from './tilt.js';
 
 const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN, bowX: NaN };
 
+/** Her heel as a rotation about her fore-and-aft axis (+x, the bow):
+ * positive heels her to starboard (+z), the starboard side down. The sea
+ * stays level. */
+function heelRotation(heel: number): [number, number, number] {
+  return [Number.isFinite(heel) ? heel * DEG : 0, 0, 0];
+}
+
 /** The placed hull and her lights, seated on it. One component because
  * the lights need the mesh's profile, which only exists once the model
  * has loaded — so they arrive together, on the hull, rather than the
@@ -75,6 +82,7 @@ function Hull({
   lightGlow,
   flashesPerMinute,
   flashOnSeconds,
+  heel = 0,
   topZ,
   onReady,
 }: {
@@ -96,6 +104,7 @@ function Hull({
   lightGlow?: LightGlow;
   flashesPerMinute?: number;
   flashOnSeconds?: number;
+  heel?: number;
   /** Called once the model has loaded and the lights are on it. */
   topZ?: number;
   onReady: () => void;
@@ -170,21 +179,23 @@ function Hull({
   return (
     <group scale={fit.scale} position={fit.position}>
       {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
-      <primitive object={depth} visible={faded && opacity > 0} />
-      <primitive object={group} visible={opacity > 0} />
-      {seen.map(({ light, position, intensity }) => (
-        <SceneLight
-          key={light.key}
-          light={light}
-          lengthMeters={lengthMeters}
-          position={position}
-          intensity={intensity}
-          glow={lightGlow?.(light)}
-          flashesPerMinute={flashesPerMinute}
-          flashOnSeconds={flashOnSeconds}
-        />
-      ))}
-      {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
+      <group rotation={heelRotation(heel)}>
+        <primitive object={depth} visible={faded && opacity > 0} />
+        <primitive object={group} visible={opacity > 0} />
+        {seen.map(({ light, position, intensity }) => (
+          <SceneLight
+            key={light.key}
+            light={light}
+            lengthMeters={lengthMeters}
+            position={position}
+            intensity={intensity}
+            glow={lightGlow?.(light)}
+            flashesPerMinute={flashesPerMinute}
+            flashOnSeconds={flashOnSeconds}
+          />
+        ))}
+        {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
+      </group>
       {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
     </group>
   );
@@ -209,6 +220,7 @@ function BlockHull({
   lightGlow,
   flashesPerMinute,
   flashOnSeconds,
+  heel = 0,
   topZ,
   onReady,
 }: {
@@ -225,6 +237,7 @@ function BlockHull({
   lightGlow?: LightGlow;
   flashesPerMinute?: number;
   flashOnSeconds?: number;
+  heel?: number;
   topZ?: number;
   onReady: () => void;
 }): ReactElement {
@@ -276,32 +289,34 @@ function BlockHull({
   const alpha = soft ? 1 - Math.pow(1 - Math.min(opacity, 0.999), 1 / SOFT_LAYERS) : opacity;
   return (
     <group scale={fit.scale} position={fit.position}>
-      {!soft && faded && opacity > 0 && <mesh geometry={geometries[0]} material={DEPTH_ONLY} />}
-      {opacity > 0 &&
-        geometries.map((g, i) => (
-          <mesh key={i} geometry={g}>
-            <meshBasicMaterial
-              color={SILHOUETTE_COLOR}
-              transparent={soft || faded}
-              opacity={alpha}
-              depthWrite={!soft && !faded}
-              toneMapped={false}
-            />
-          </mesh>
+      <group rotation={heelRotation(heel)}>
+        {!soft && faded && opacity > 0 && <mesh geometry={geometries[0]} material={DEPTH_ONLY} />}
+        {opacity > 0 &&
+          geometries.map((g, i) => (
+            <mesh key={i} geometry={g}>
+              <meshBasicMaterial
+                color={SILHOUETTE_COLOR}
+                transparent={soft || faded}
+                opacity={alpha}
+                depthWrite={!soft && !faded}
+                toneMapped={false}
+              />
+            </mesh>
+          ))}
+        {seen.map(({ light, position, intensity }) => (
+          <SceneLight
+            key={light.key}
+            light={light}
+            lengthMeters={lengthMeters}
+            position={position}
+            intensity={intensity}
+            glow={lightGlow?.(light)}
+            flashesPerMinute={flashesPerMinute}
+            flashOnSeconds={flashOnSeconds}
+          />
         ))}
-      {seen.map(({ light, position, intensity }) => (
-        <SceneLight
-          key={light.key}
-          light={light}
-          lengthMeters={lengthMeters}
-          position={position}
-          intensity={intensity}
-          glow={lightGlow?.(light)}
-          flashesPerMinute={flashesPerMinute}
-          flashOnSeconds={flashOnSeconds}
-        />
-      ))}
-      {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
+        {anchored && opacity > 0 && <AnchorCable lengthMeters={lengthMeters} />}
+      </group>
       {sea && <Sea color={sea} lengthMeters={lengthMeters} />}
     </group>
   );
@@ -578,6 +593,7 @@ export function BenchyModel({
   lightGlow,
   flashesPerMinute,
   flashOnSeconds,
+  heel = 0,
   label,
   fallback = <div className="scene-3d" />,
   loading,
@@ -631,6 +647,10 @@ export function BenchyModel({
   flashesPerMinute?: number;
   /** Seconds each flash stays lit, from the start of the period. Default 0.35. */
   flashOnSeconds?: number;
+  /** Her heel, degrees: positive to starboard (the starboard side down),
+   *  about her fore-and-aft axis at the waterline. The sea stays level, and
+   *  the camera's tilt stays from the sea. Default 0, upright. */
+  heel?: number;
   /** Draw her flat, in one unlit colour, from the waterline's level (tilt
    * 0): her own mesh, or a block built from her spec (`blockSpec`). See
    * SilhouetteVariant. Undefined draws the shaded, orbitable model. */
@@ -709,6 +729,7 @@ export function BenchyModel({
               lightGlow={lightGlow}
               flashesPerMinute={flashesPerMinute}
               flashOnSeconds={flashOnSeconds}
+              heel={heel}
               topZ={topZ}
               onReady={ready}
             />
@@ -727,6 +748,7 @@ export function BenchyModel({
               lightGlow={lightGlow}
               flashesPerMinute={flashesPerMinute}
               flashOnSeconds={flashOnSeconds}
+              heel={heel}
               topZ={topZ}
               onReady={ready}
             />

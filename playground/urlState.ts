@@ -6,6 +6,7 @@
 import { K_PRESCRIBED } from '../src/sectorProfile.js';
 import { FLASH_ON_S } from '../src/lantern.js';
 import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from '../src/tilt.js';
+import { MAX_FILAMENT_BLEED } from '../src/filament.js';
 
 export interface UrlState {
   view: string;
@@ -20,12 +21,15 @@ export interface UrlState {
   glowFalloff: number;
   transmissivity: number;
   haze: number;
+  heel: number;
+  filamentBleed: number;
   day: boolean;
   singleLantern: boolean;
   rangeGlow: boolean;
   flashRateOn: boolean;
   /** Seconds each flash stays lit on the 3D view. */
   flashOnSeconds: number;
+  verticalSector: boolean;
 }
 
 export const URL_DEFAULTS: UrlState = {
@@ -41,11 +45,14 @@ export const URL_DEFAULTS: UrlState = {
   glowFalloff: 0,
   transmissivity: K_PRESCRIBED,
   haze: 0,
+  heel: 0,
+  filamentBleed: 0,
   day: false,
   singleLantern: false,
   rangeGlow: false,
   flashRateOn: false,
   flashOnSeconds: FLASH_ON_S,
+  verticalSector: false,
 };
 
 /** Which values a view or variant may take. */
@@ -66,13 +73,19 @@ const NUMBERS = {
   transmissivity: 'k',
   haze: 'haze',
   flashOnSeconds: 'flashon',
+  heel: 'heel',
+  filamentBleed: 'bleed',
 } as const;
 const FLAGS = {
   day: 'day',
   singleLantern: 'lantern',
   rangeGlow: 'glow',
   flashRateOn: 'flash',
+  verticalSector: 'vsector',
 } as const;
+
+/** The heel slider's reach either way, degrees. */
+export const MAX_HEEL = 45;
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 const wrap360 = (n: number) => (((Math.round(n * 2) / 2) % 360) + 360) % 360;
@@ -88,6 +101,8 @@ const NUMBER_BOUNDS: Record<keyof typeof NUMBERS, (n: number) => number> = {
   transmissivity: (n) => clamp(n, 0.05, 1),
   haze: (n) => clamp(n, 0, 1),
   flashOnSeconds: (n) => clamp(n, 0.05, 2),
+  heel: (n) => clamp(n, -MAX_HEEL, MAX_HEEL),
+  filamentBleed: (n) => clamp(n, 0, MAX_FILAMENT_BLEED),
 };
 
 /** Read the playground state out of a query string; anything missing or

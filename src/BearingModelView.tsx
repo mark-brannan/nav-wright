@@ -30,6 +30,8 @@ import type { BenchyLabels } from './benchyLabels.js';
 import { defaultBenchyLabels } from './benchyLabels.js';
 import type { SilhouetteVariant } from './silhouette.js';
 import { DEFAULT_TILT } from './tilt.js';
+import { lightElevation, verticalIntensity, verticalSectorFor } from './verticalSector.js';
+import { filamentDivisions, filamentIntensity } from './filament.js';
 import { ThetaControl } from './ThetaControl.js';
 import { TiltControl } from './TiltControl.js';
 
@@ -65,6 +67,9 @@ export function BearingModelView({
   singleLantern = false,
   flashesPerMinute,
   flashOnSeconds = FLASH_ON_S,
+  verticalSector = false,
+  heel = 0,
+  filamentBleed = 0,
   labels = defaultBenchyLabels,
   controls = true,
 }: {
@@ -81,7 +86,7 @@ export function BearingModelView({
   theta: number;
   onTheta: (t: number) => void;
   /** Camera elevation above the waterline, degrees. Never changes which
-   *  lights show: arcs are horizontal. */
+   *  lights show: arcs are horizontal. With `verticalSector` it dims them. */
   tilt?: number;
   onTilt?: (t: number) => void;
   /** Hull visibility, 0 (lights only) .. 1 (plain to see); range fades it further. */
@@ -130,18 +135,41 @@ export function BearingModelView({
   flashesPerMinute?: number;
   /** Seconds each flash stays lit, from the start of its period. 3D only. Default 0.35. */
   flashOnSeconds?: number;
+  /** Annex I §10 vertical sectors (see verticalSector.ts): each light dims
+   *  as the viewer's elevation above her lights' horizontal plane (from
+   *  `tilt` and `heel`) grows, by the paragraph her facts call for. Default
+   *  off: elevation never dims a light. 3D only. */
+  verticalSector?: boolean;
+  /** Her heel, degrees, positive to starboard (the starboard side down);
+   *  tips the model and, with `verticalSector`, her lights' horizontal
+   *  plane. Default 0, upright. 3D only; the 2D fallback is drawn upright. */
+  heel?: number;
+  /** Annex I §5 (see filament.ts): degrees of bearing across each division
+   *  of a combined lantern (a tricolour) over which its colours bleed into
+   *  each other, the filament seen partly through each filter. At a
+   *  division it stands in for `sectorProfile`. Default 0: the colours meet
+   *  as they do today. 3D only. */
+  filamentBleed?: number;
   labels?: BenchyLabels;
   /** Draw the dial and elevation slider under the picture. False when the page places its own. */
   controls?: boolean;
 }): ReactElement {
   const [modelFailed, setModelFailed] = useState(false);
+  // The silhouette is drawn from the waterline's level, so its elevation is 0.
+  const viewTilt = silhouette ? 0 : tilt;
+  const vertical = verticalSector ? verticalSectorFor(facts) : undefined;
+  const bleed = filamentBleed > 0 ? filamentBleed : 0;
+  const divisions = useMemo(() => (bleed ? filamentDivisions(placed) : undefined), [bleed, placed]);
   const lightIntensity = useMemo((): LightIntensity | undefined => {
-    if (!sectorProfile && !rangeDropout && !singleLantern) return undefined;
+    if (!sectorProfile && !rangeDropout && !singleLantern && !vertical && !divisions?.size)
+      return undefined;
     const base: LightIntensity = (light, at) =>
-      (sectorProfile
-        ? sectorIntensity(at, light.arc, sectorProfile)
-        : Number(bearingInArc(at, light.arc))) *
-      (rangeDropout ? rangeVisibility(lightRangesNm?.[light.lightId], range, transmissivity) : 1);
+      (filamentIntensity(divisions?.get(light.key), light.arc, at, bleed) ??
+        (sectorProfile
+          ? sectorIntensity(at, light.arc, sectorProfile)
+          : Number(bearingInArc(at, light.arc)))) *
+      (rangeDropout ? rangeVisibility(lightRangesNm?.[light.lightId], range, transmissivity) : 1) *
+      (vertical ? verticalIntensity(lightElevation(at, viewTilt, heel), vertical) : 1);
     if (!singleLantern) return base;
     // One lantern per combined fixture: of the members that show at this
     // bearing, only the one facing the viewer keeps its intensity.
@@ -153,7 +181,20 @@ export function BearingModelView({
       }
       return kept.keys.has(light.key) ? base(light, at) : 0;
     };
-  }, [sectorProfile, rangeDropout, lightRangesNm, range, transmissivity, singleLantern, placed]);
+  }, [
+    sectorProfile,
+    rangeDropout,
+    lightRangesNm,
+    range,
+    transmissivity,
+    singleLantern,
+    placed,
+    vertical,
+    viewTilt,
+    heel,
+    divisions,
+    bleed,
+  ]);
   const lightGlow = useMemo((): LightGlow | undefined => {
     if (glowSize === 1 && glowFalloff === 0 && !rangeGlow && haze === 0) return undefined;
     return (light) =>
@@ -237,6 +278,7 @@ export function BearingModelView({
               lightGlow={lightGlow}
               flashesPerMinute={flashesPerMinute}
               flashOnSeconds={flashOnSeconds}
+              heel={heel}
               silhouette={silhouette}
               blockSpec={hull.spec}
               label={labels.bearingAlt(Math.round(theta))}
