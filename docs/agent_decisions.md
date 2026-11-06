@@ -66,3 +66,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t085214z
 - Filament bleed: the share runs linearly across a band centred on the division and the two sides sum to one. Undo: change filamentShare ([#169](https://github.com/mark-brannan/nav-wright/pull/169))
+
+### 20261106t085231z
+- Filament bleed: at a division the bleed replaces the Annex I 9(a) edge profile, a hard cut beyond the band; an edge no other member shares keeps the profile. Undo: drop the hard-cut branch in filamentIntensity ([#169](https://github.com/mark-brannan/nav-wright/pull/169))
