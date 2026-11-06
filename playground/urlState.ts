@@ -5,6 +5,7 @@
 
 import { K_PRESCRIBED } from '../src/sectorProfile.js';
 import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from '../src/tilt.js';
+import { MAX_FILAMENT_BLEED } from '../src/filament.js';
 
 export interface UrlState {
   view: string;
@@ -20,6 +21,7 @@ export interface UrlState {
   transmissivity: number;
   haze: number;
   heel: number;
+  filamentBleed: number;
   day: boolean;
   singleLantern: boolean;
   rangeGlow: boolean;
@@ -41,6 +43,7 @@ export const URL_DEFAULTS: UrlState = {
   transmissivity: K_PRESCRIBED,
   haze: 0,
   heel: 0,
+  filamentBleed: 0,
   day: false,
   singleLantern: false,
   rangeGlow: false,
@@ -66,6 +69,7 @@ const NUMBERS = {
   transmissivity: 'k',
   haze: 'haze',
   heel: 'heel',
+  filamentBleed: 'bleed',
 } as const;
 const FLAGS = {
   day: 'day',
@@ -92,6 +96,7 @@ const NUMBER_BOUNDS: Record<keyof typeof NUMBERS, (n: number) => number> = {
   transmissivity: (n) => clamp(n, 0.05, 1),
   haze: (n) => clamp(n, 0, 1),
   heel: (n) => clamp(n, -MAX_HEEL, MAX_HEEL),
+  filamentBleed: (n) => clamp(n, 0, MAX_FILAMENT_BLEED),
 };
 
 /** Read the playground state out of a query string; anything missing or

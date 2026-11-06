@@ -30,6 +30,7 @@ import { defaultBenchyLabels } from './benchyLabels.js';
 import type { SilhouetteVariant } from './silhouette.js';
 import { DEFAULT_TILT } from './tilt.js';
 import { lightElevation, verticalIntensity, verticalSectorFor } from './verticalSector.js';
+import { filamentDivisions, filamentIntensity } from './filament.js';
 import { ThetaControl } from './ThetaControl.js';
 import { TiltControl } from './TiltControl.js';
 
@@ -64,6 +65,7 @@ export function BearingModelView({
   haze = 0,
   verticalSector = false,
   heel = 0,
+  filamentBleed = 0,
   labels = defaultBenchyLabels,
   controls = true,
 }: {
@@ -131,6 +133,12 @@ export function BearingModelView({
    *  tips the model and, with `verticalSector`, her lights' horizontal
    *  plane. Default 0, upright. 3D only; the 2D fallback is drawn upright. */
   heel?: number;
+  /** Annex I §5 (see filament.ts): degrees of bearing across each division
+   *  of a combined lantern (a tricolour) over which its colours bleed into
+   *  each other, the filament seen partly through each filter. At a
+   *  division it stands in for `sectorProfile`. Default 0: the colours meet
+   *  as they do today. 3D only. */
+  filamentBleed?: number;
   labels?: BenchyLabels;
   /** Draw the dial and elevation slider under the picture. False when the page places its own. */
   controls?: boolean;
@@ -139,15 +147,29 @@ export function BearingModelView({
   // The silhouette is drawn from the waterline's level, so its elevation is 0.
   const viewTilt = silhouette ? 0 : tilt;
   const vertical = verticalSector ? verticalSectorFor(facts) : undefined;
+  const bleed = filamentBleed > 0 ? filamentBleed : 0;
+  const divisions = useMemo(() => (bleed ? filamentDivisions(placed) : undefined), [bleed, placed]);
   const lightIntensity = useMemo((): LightIntensity | undefined => {
-    if (!sectorProfile && !rangeDropout && !vertical) return undefined;
+    if (!sectorProfile && !rangeDropout && !vertical && !divisions?.size) return undefined;
     return (light, at) =>
-      (sectorProfile
-        ? sectorIntensity(at, light.arc, sectorProfile)
-        : Number(bearingInArc(at, light.arc))) *
+      (filamentIntensity(divisions?.get(light.key), light.arc, at, bleed) ??
+        (sectorProfile
+          ? sectorIntensity(at, light.arc, sectorProfile)
+          : Number(bearingInArc(at, light.arc)))) *
       (rangeDropout ? rangeVisibility(lightRangesNm?.[light.lightId], range, transmissivity) : 1) *
       (vertical ? verticalIntensity(lightElevation(at, viewTilt, heel), vertical) : 1);
-  }, [sectorProfile, rangeDropout, lightRangesNm, range, transmissivity, vertical, viewTilt, heel]);
+  }, [
+    sectorProfile,
+    rangeDropout,
+    lightRangesNm,
+    range,
+    transmissivity,
+    vertical,
+    viewTilt,
+    heel,
+    divisions,
+    bleed,
+  ]);
   const lightGlow = useMemo((): LightGlow | undefined => {
     if (glowSize === 1 && glowFalloff === 0 && !rangeGlow && haze === 0) return undefined;
     return (light) =>

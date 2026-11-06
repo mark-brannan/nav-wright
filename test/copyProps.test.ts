@@ -122,6 +122,14 @@ describe('lookProps', () => {
     expect(flat).not.toHaveProperty('verticalSector');
   });
 
+  it('the 3D view carries the filament bleed off zero', () => {
+    expect(lookProps(URL_DEFAULTS)?.props).not.toHaveProperty('filamentBleed');
+    expect(lookProps(at({ filamentBleed: 3 }))?.props).toMatchObject({ filamentBleed: 3 });
+    expect(lookProps(at({ view: 'bearing', filamentBleed: 3 }))?.props).not.toHaveProperty(
+      'filamentBleed',
+    );
+  });
+
   it('the profile view has no component', () => {
     expect(lookComponent('profile')).toBeNull();
     expect(lookProps(at({ view: 'profile' }))).toBeNull();

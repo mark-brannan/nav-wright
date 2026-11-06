@@ -35,6 +35,7 @@ const MODEL_DEFAULTS = {
   transmissivity: K_PRESCRIBED,
   haze: 0,
   heel: 0,
+  filamentBleed: 0,
 } as const;
 const BEARING_DEFAULTS = { sky: 0 } as const;
 
@@ -60,7 +61,14 @@ export function lookProps(
     if (state.tilt !== MODEL_DEFAULTS.tilt) props.tilt = state.tilt;
     if (state.sky !== MODEL_DEFAULTS.sky) props.sky = state.sky;
     if (state.sea !== MODEL_DEFAULTS.sea) props.sea = state.sea;
-    for (const k of ['glowSize', 'glowFalloff', 'transmissivity', 'haze', 'heel'] as const) {
+    for (const k of [
+      'glowSize',
+      'glowFalloff',
+      'transmissivity',
+      'haze',
+      'heel',
+      'filamentBleed',
+    ] as const) {
       if (state[k] !== MODEL_DEFAULTS[k]) props[k] = state[k];
     }
     if (state.rangeGlow) props.rangeGlow = true;

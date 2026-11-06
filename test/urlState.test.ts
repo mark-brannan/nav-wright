@@ -26,6 +26,7 @@ const changed: UrlState = {
   transmissivity: 0.5,
   haze: 0.3,
   heel: -15,
+  filamentBleed: 4.5,
   day: true,
   singleLantern: true,
   rangeGlow: true,
@@ -57,6 +58,11 @@ describe('playground url state', () => {
   it('clamps heel to the slider', () => {
     expect(decodeUrlState('?heel=80', options).heel).toBe(45);
     expect(decodeUrlState('?heel=-80', options).heel).toBe(-45);
+  });
+
+  it('clamps the filament bleed to the slider', () => {
+    expect(decodeUrlState('?bleed=40', options).filamentBleed).toBe(10);
+    expect(decodeUrlState('?bleed=-1', options).filamentBleed).toBe(0);
   });
 
   it('writes the switches as bare flags, so ?day still works', () => {
