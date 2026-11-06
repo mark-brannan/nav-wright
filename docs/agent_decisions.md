@@ -45,3 +45,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t081857z
 - nav-wright B5: between §10 bands the vertical fall is linear, from 100% at ±5° to the band's minimum at its edge (a lantern that just meets §10). Undo: change verticalIntensity ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
+
+### 20261106t081908z
+- nav-wright B5: past the last §10 band a light falls linearly to nothing over 6.5° (§10(a), gone at 14°) and 15° (§10(b), gone at 40°), the research note's panel 5 end points. Undo: change VERTICAL_TAIL_DEG ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
