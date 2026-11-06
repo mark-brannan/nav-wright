@@ -102,3 +102,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t093717z
 - Light colour override carried on HaloProfile.color ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
+
+### 20261106t093735z
+- Defects fieldset last in the panel ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
