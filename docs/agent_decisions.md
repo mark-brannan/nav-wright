@@ -78,3 +78,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t085330z
 - Filament bleed: tricolour members keep their placed seats, so close up the bleed reads as two beads under shared halos. Undo: co-locate a fixture's members in placement ([#169](https://github.com/mark-brannan/nav-wright/pull/169))
+
+### 20261106t085343z
+- Filament bleed: the new playground fieldset sits last in the panel so renders stay byte-identical. Undo: move the fieldset ([#169](https://github.com/mark-brannan/nav-wright/pull/169))
