@@ -60,3 +60,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t081953z
 - nav-wright B5: §10 figures hand-typed rather than bumping the colregs pin from v0.3.9, which could move goldens. Undo: bump colregs to v0.3.10+ and read sectors.vertical ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
+
+### 20261106t082004z
+- nav-wright B5: the vertical-sector fieldset sits last in the playground panel so the 12 renders stay byte-identical. Undo: move the fieldset ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
