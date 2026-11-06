@@ -1,0 +1,12 @@
+name: Comment event probe
+on:
+  pull_request_review_comment:
+  issue_comment:
+  pull_request_review:
+permissions: {}
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "PROBE event=${{ github.event_name }} actor=${{ github.actor }} sender_type=${{ github.event.sender.type }} comment_user=${{ github.event.comment.user.login }}"
