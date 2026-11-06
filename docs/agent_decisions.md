@@ -96,3 +96,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t093638z
 - Tired bulb applies to white lights only ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
+
+### 20261106t093659z
+- Defect figures are look judgement: 0.6 dims, x2.5 salt halo, #ffb000 tired white ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
