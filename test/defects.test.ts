@@ -12,6 +12,7 @@ import {
 } from '../src/defects.js';
 import { FLAT_HALO } from '../src/halo.js';
 import { bearingInArc } from '../src/placement.js';
+import { ANNEX_I_PROFILE, sectorIntensity } from '../src/sectorProfile.js';
 import type { PlacedLight } from '../src/placement.js';
 import { LIGHT_COLORS } from '../src/svg.js';
 
@@ -55,10 +56,26 @@ describe('misaligned screen', () => {
 
   it('carries the port light across the bow to starboard for a negative skew', () => {
     const arc = screenArc(red, -6);
-    expect(arc).toEqual({ from_deg: 247.5, to_deg: 366 });
+    expect(arc).toEqual({ from_deg: 247.5, to_deg: 6 });
     expect(bearingInArc(5, arc)).toBe(true);
     expect(bearingInArc(7, arc)).toBe(false);
     expect(screenArc(green, -6)).toBe(green.arc);
+  });
+
+  it.each([
+    ['starboard, +6', green, 6, 354],
+    ['port, −6', red, -6, 6],
+  ] as const)('draws the moved edge with the forward profile (%s)', (_, light, skew, edge) => {
+    const arc = screenArc(light, skew);
+    const inward = skew > 0 ? 1 : -1;
+    const fitted = (b: number) => sectorIntensity(b, arc, ANNEX_I_PROFILE, light.arc!);
+    // Forward: full to the edge, a 2° tail outside it.
+    expect(fitted(edge + inward * 0.5)).toBe(1);
+    expect(fitted(edge)).toBe(1);
+    expect(fitted(edge - inward * 1)).toBeCloseTo(0.5);
+    expect(fitted(edge - inward * 2.5)).toBe(0);
+    // Judged from the moved arc alone, it would take the aft taper.
+    expect(sectorIntensity(edge + inward * 0.5, arc, ANNEX_I_PROFILE)).toBeLessThan(1);
   });
 
   it('keeps the aft edge where it was', () => {

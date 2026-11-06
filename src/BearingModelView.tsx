@@ -172,7 +172,7 @@ export function BearingModelView({
       return (
         (filamentIntensity(divisions?.get(light.key), arc, at, bleed) ??
           (sectorProfile
-            ? sectorIntensity(at, arc, sectorProfile)
+            ? sectorIntensity(at, arc, sectorProfile, light.arc ?? undefined)
             : Number(bearingInArc(at, arc)))) *
         (rangeDropout
           ? rangeVisibility(lightRangesNm?.[light.lightId], range, transmissivity)

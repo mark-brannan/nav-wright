@@ -52,7 +52,8 @@ export function screenArc(light: PlacedLight, skewDeg: number): Arc | null {
   if (!arc || skew === 0 || light.combined) return arc;
   if (skew > 0 && light.lightId === STARBOARD)
     return { ...arc, from_deg: (((arc.from_deg - skew) % 360) + 360) % 360 };
-  if (skew < 0 && light.lightId === PORT) return { ...arc, to_deg: arc.to_deg - skew };
+  if (skew < 0 && light.lightId === PORT)
+    return { ...arc, to_deg: (((arc.to_deg - skew) % 360) + 360) % 360 };
   return arc;
 }
 
