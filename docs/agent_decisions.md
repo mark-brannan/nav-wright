@@ -84,3 +84,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t093526z
 - Screen skew moves only the sidelight's bow edge ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
+
+### 20261106t093544z
+- Screen skew is one signed knob: one sidelight at a time ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
