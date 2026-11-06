@@ -51,3 +51,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t081919z
 - nav-wright B5: every light takes one elevation, from the orbit centre (tilt and heel), not from its own height. Undo: compute elevation per light in lightIntensity ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
+
+### 20261106t081931z
+- nav-wright B5: heel is positive to starboard, slider ±45 step 1, tips the whole model; arcs stay judged on theta, not re-projected into the heeled frame. Undo: change heelRotation or MAX_HEEL ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
