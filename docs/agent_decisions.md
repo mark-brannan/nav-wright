@@ -48,3 +48,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t081908z
 - nav-wright B5: past the last §10 band a light falls linearly to nothing over 6.5° (§10(a), gone at 14°) and 15° (§10(b), gone at 40°), the research note's panel 5 end points. Undo: change VERTICAL_TAIL_DEG ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
+
+### 20261106t081919z
+- nav-wright B5: every light takes one elevation, from the orbit centre (tilt and heel), not from its own height. Undo: compute elevation per light in lightIntensity ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
