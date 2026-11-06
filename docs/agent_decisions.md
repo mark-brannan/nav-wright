@@ -63,3 +63,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t082004z
 - nav-wright B5: the vertical-sector fieldset sits last in the playground panel so the 12 renders stay byte-identical. Undo: move the fieldset ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
+
+### 20261106t085214z
+- Filament bleed: the share runs linearly across a band centred on the division and the two sides sum to one. Undo: change filamentShare ([#169](https://github.com/mark-brannan/nav-wright/pull/169))
