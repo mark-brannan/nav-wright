@@ -54,3 +54,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t081931z
 - nav-wright B5: heel is positive to starboard, slider ±45 step 1, tips the whole model; arcs stay judged on theta, not re-projected into the heeled frame. Undo: change heelRotation or MAX_HEEL ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
+
+### 20261106t081941z
+- nav-wright B5: §10(b) covers every light of a sailing vessel underway; §10(a) everything else, a sailing vessel at anchor included. Undo: change when/except_when in VERTICAL_SECTORS ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
