@@ -75,3 +75,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t085312z
 - Filament bleed: the slider runs 0 to 10 degrees in steps of 0.5, with no recommended on value. Undo: change MAX_FILAMENT_BLEED or the step ([#169](https://github.com/mark-brannan/nav-wright/pull/169))
+
+### 20261106t085330z
+- Filament bleed: tricolour members keep their placed seats, so close up the bleed reads as two beads under shared halos. Undo: co-locate a fixture's members in placement ([#169](https://github.com/mark-brannan/nav-wright/pull/169))
