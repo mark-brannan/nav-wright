@@ -9,6 +9,7 @@ import { createRoot } from 'react-dom/client';
 import { formatLook, lookProps } from './copyProps.js';
 import { decodeUrlState, encodeUrlState, MAX_HEEL, type UrlState } from './urlState.js';
 import { lightElevation, verticalIntensity, verticalSectorFor } from '../src/verticalSector.js';
+import { filamentDivisions, filamentShare, MAX_FILAMENT_BLEED } from '../src/filament.js';
 import { evaluateSignals } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
@@ -171,6 +172,25 @@ function verticalReadout(
   return `${entry.cite.replace('AnxI.', 'Annex I §')}: ${bands}. Seen ${e.toFixed(1)}° off her lights' plane: ${reads}. Figures hand-typed until colregs#228 reaches nav-wright.`;
 }
 
+/** What the filament bleed does here and now: each combined lantern's
+ *  colours and the share of the filament each shows from `theta`. */
+function bleedReadout(placed: PlacedLight[], theta: number, bleed: number): string {
+  const divisions = filamentDivisions(placed);
+  if (divisions.size === 0) return 'No combined lantern (a tricolour, Rule 25(b)) on this line.';
+  if (bleed === 0) return 'Off: the colours cut at each division.';
+  const near = placed.filter(
+    (l) => filamentShare(divisions.get(l.key), theta, bleed) !== undefined,
+  );
+  if (near.length === 0)
+    return `Seen from ${theta}°, no division within ±${bleed / 2}°: one colour, as without bleed.`;
+  const shares = near
+    .map(
+      (l) => `${l.color} ${Math.round(filamentShare(divisions.get(l.key), theta, bleed)! * 100)}%`,
+    )
+    .join(', ');
+  return `Seen from ${theta}°, the filament shows ${shares}.`;
+}
+
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="field">
@@ -279,6 +299,7 @@ function Playground() {
   const [haze, setHaze] = useState(initial.haze);
   const [heel, setHeel] = useState(initial.heel);
   const [verticalSector, setVerticalSector] = useState(initial.verticalSector);
+  const [filamentBleed, setFilamentBleed] = useState(initial.filamentBleed);
   const lightRangesNm = useMemo(
     () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
     [facts],
@@ -303,6 +324,7 @@ function Playground() {
     transmissivity,
     haze,
     heel,
+    filamentBleed,
     day,
     singleLantern,
     rangeGlow,
@@ -560,6 +582,7 @@ function Playground() {
                   haze={haze}
                   verticalSector={verticalSector}
                   heel={heel}
+                  filamentBleed={filamentBleed}
                   labels={labels}
                   controls={false}
                 />
@@ -595,6 +618,7 @@ function Playground() {
                       haze={haze}
                       verticalSector={verticalSector}
                       heel={heel}
+                      filamentBleed={filamentBleed}
                       labels={labels}
                       controls={false}
                     />
@@ -932,6 +956,25 @@ function Playground() {
           </Field>
           <p className="muted">
             {verticalReadout(verticalSector, facts, shownTheta, view === '3d' ? tilt : 0, heel)}
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Filament bleed, tricolour, 3D (#118)</legend>
+          <Field label="bleed ° across a division">
+            <Range
+              value={filamentBleed}
+              min={0}
+              max={MAX_FILAMENT_BLEED}
+              step={0.5}
+              onChange={setFilamentBleed}
+            />
+          </Field>
+          <p className="muted">{bleedReadout(placed, shownTheta, filamentBleed)}</p>
+          <p className="muted">
+            Annex I §5: a combined lantern has a single vertical filament and a very narrow
+            division, so near 0°, 112.5° and 247.5° it shows both colours at once. At a division the
+            bleed stands in for the sector profile above.
           </p>
         </fieldset>
       </section>

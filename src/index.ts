@@ -51,6 +51,13 @@ export {
   verticalSectorFor,
 } from './verticalSector.js';
 export type { VerticalBand, VerticalSectorEntry } from './verticalSector.js';
+export {
+  filamentDivisions,
+  filamentIntensity,
+  filamentShare,
+  MAX_FILAMENT_BLEED,
+} from './filament.js';
+export type { Division } from './filament.js';
 export type { PlacedLight } from './placement.js';
 
 // Day shapes (Rule 20(d), Annex I 6): placement from colregs' shapes.json and

@@ -170,6 +170,22 @@ describe('BearingModelView', () => {
     expect(at(60, false)).not.toContain('bearing-empty-overlay');
   });
 
+  it('draws the same markup with no filament bleed', () => {
+    const given = renderToStaticMarkup(
+      <BearingModelView
+        modelUrl="/nowhere.glb"
+        hull={hull}
+        placed={underway}
+        facts={{}}
+        theta={45}
+        onTheta={noop}
+        hullHint={0.3}
+        filamentBleed={0}
+      />,
+    );
+    expect(given).toBe(render(45));
+  });
+
   it('names the bearing it is seen from', () => {
     expect(render(135)).toContain('135');
   });
