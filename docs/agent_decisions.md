@@ -90,3 +90,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t093602z
 - Combined lanterns are not skewed; no screen ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
+
+### 20261106t093620z
+- Salt applies to every sidelight incl. combined members ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
