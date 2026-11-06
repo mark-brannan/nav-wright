@@ -57,3 +57,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t081941z
 - nav-wright B5: §10(b) covers every light of a sailing vessel underway; §10(a) everything else, a sailing vessel at anchor included. Undo: change when/except_when in VERTICAL_SECTORS ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
+
+### 20261106t081953z
+- nav-wright B5: §10 figures hand-typed rather than bumping the colregs pin from v0.3.9, which could move goldens. Undo: bump colregs to v0.3.10+ and read sectors.vertical ([#168](https://github.com/mark-brannan/nav-wright/pull/168))
