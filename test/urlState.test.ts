@@ -27,6 +27,9 @@ const changed: UrlState = {
   haze: 0.3,
   heel: -15,
   filamentBleed: 4.5,
+  screenSkew: -6.5,
+  saltedLens: 0.4,
+  tiredBulb: 0.7,
   day: true,
   singleLantern: true,
   rangeGlow: true,
@@ -58,6 +61,15 @@ describe('playground url state', () => {
   it('clamps heel to the slider', () => {
     expect(decodeUrlState('?heel=80', options).heel).toBe(45);
     expect(decodeUrlState('?heel=-80', options).heel).toBe(-45);
+  });
+
+  it('clamps the defect knobs to their sliders', () => {
+    expect(decodeUrlState('?screen=40', options).screenSkew).toBe(10);
+    expect(decodeUrlState('?screen=-40', options).screenSkew).toBe(-10);
+    expect(decodeUrlState('?salt=2&bulb=-1', options)).toMatchObject({
+      saltedLens: 1,
+      tiredBulb: 0,
+    });
   });
 
   it('clamps the filament bleed to the slider', () => {

@@ -31,6 +31,7 @@ import type { SilhouetteVariant } from './silhouette.js';
 import { DEFAULT_TILT } from './tilt.js';
 import { lightElevation, verticalIntensity, verticalSectorFor } from './verticalSector.js';
 import { filamentDivisions, filamentIntensity } from './filament.js';
+import { defectHalo, defectIntensity, screenArc } from './defects.js';
 import { ThetaControl } from './ThetaControl.js';
 import { TiltControl } from './TiltControl.js';
 
@@ -66,6 +67,9 @@ export function BearingModelView({
   verticalSector = false,
   heel = 0,
   filamentBleed = 0,
+  screenSkew = 0,
+  saltedLens = 0,
+  tiredBulb = 0,
   labels = defaultBenchyLabels,
   controls = true,
 }: {
@@ -139,6 +143,16 @@ export function BearingModelView({
    *  division it stands in for `sectorProfile`. Default 0: the colours meet
    *  as they do today. 3D only. */
   filamentBleed?: number;
+  /** A misaligned sidelight screen (see defects.ts): degrees the bow edge
+   *  shows across the bow, positive the starboard light to port, negative
+   *  the port light to starboard. Default 0. 3D only. */
+  screenSkew?: number;
+  /** Salt on the sidelights' lenses, 0..1: dimmer, with a wider, softer
+   *  halo. Default 0. 3D only. */
+  saltedLens?: number;
+  /** A tired bulb in every white light, 0..1: dimmer and yellower.
+   *  Default 0. 3D only. */
+  tiredBulb?: number;
   labels?: BenchyLabels;
   /** Draw the dial and elevation slider under the picture. False when the page places its own. */
   controls?: boolean;
@@ -150,14 +164,23 @@ export function BearingModelView({
   const bleed = filamentBleed > 0 ? filamentBleed : 0;
   const divisions = useMemo(() => (bleed ? filamentDivisions(placed) : undefined), [bleed, placed]);
   const lightIntensity = useMemo((): LightIntensity | undefined => {
-    if (!sectorProfile && !rangeDropout && !vertical && !divisions?.size) return undefined;
-    return (light, at) =>
-      (filamentIntensity(divisions?.get(light.key), light.arc, at, bleed) ??
-        (sectorProfile
-          ? sectorIntensity(at, light.arc, sectorProfile)
-          : Number(bearingInArc(at, light.arc)))) *
-      (rangeDropout ? rangeVisibility(lightRangesNm?.[light.lightId], range, transmissivity) : 1) *
-      (vertical ? verticalIntensity(lightElevation(at, viewTilt, heel), vertical) : 1);
+    const defects = screenSkew !== 0 || saltedLens > 0 || tiredBulb > 0;
+    if (!sectorProfile && !rangeDropout && !vertical && !divisions?.size && !defects)
+      return undefined;
+    return (light, at) => {
+      const arc = screenArc(light, screenSkew);
+      return (
+        (filamentIntensity(divisions?.get(light.key), arc, at, bleed) ??
+          (sectorProfile
+            ? sectorIntensity(at, arc, sectorProfile)
+            : Number(bearingInArc(at, arc)))) *
+        (rangeDropout
+          ? rangeVisibility(lightRangesNm?.[light.lightId], range, transmissivity)
+          : 1) *
+        (vertical ? verticalIntensity(lightElevation(at, viewTilt, heel), vertical) : 1) *
+        defectIntensity(light, saltedLens, tiredBulb)
+      );
+    };
   }, [
     sectorProfile,
     rangeDropout,
@@ -169,17 +192,33 @@ export function BearingModelView({
     heel,
     divisions,
     bleed,
+    screenSkew,
+    saltedLens,
+    tiredBulb,
   ]);
   const lightGlow = useMemo((): LightGlow | undefined => {
-    if (glowSize === 1 && glowFalloff === 0 && !rangeGlow && haze === 0) return undefined;
+    if (
+      glowSize === 1 &&
+      glowFalloff === 0 &&
+      !rangeGlow &&
+      haze === 0 &&
+      !(saltedLens > 0) &&
+      !(tiredBulb > 0)
+    )
+      return undefined;
     return (light) =>
-      haloProfile({
-        glowSize,
-        glowFalloff,
-        haze,
-        glow: rangeGlow ? glowProfile(lightRangesNm?.[light.lightId], range) : undefined,
-      });
-  }, [glowSize, glowFalloff, rangeGlow, haze, lightRangesNm, range]);
+      defectHalo(
+        light,
+        haloProfile({
+          glowSize,
+          glowFalloff,
+          haze,
+          glow: rangeGlow ? glowProfile(lightRangesNm?.[light.lightId], range) : undefined,
+        }),
+        saltedLens,
+        tiredBulb,
+      );
+  }, [glowSize, glowFalloff, rangeGlow, haze, lightRangesNm, range, saltedLens, tiredBulb]);
 
   const flat = (
     <BearingView

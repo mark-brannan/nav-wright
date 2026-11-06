@@ -10,6 +10,7 @@ import { formatLook, lookProps } from './copyProps.js';
 import { decodeUrlState, encodeUrlState, MAX_HEEL, type UrlState } from './urlState.js';
 import { lightElevation, verticalIntensity, verticalSectorFor } from '../src/verticalSector.js';
 import { filamentDivisions, filamentShare, MAX_FILAMENT_BLEED } from '../src/filament.js';
+import { isSidelight, MAX_SCREEN_SKEW, SALT_DIM, TIRED_DIM } from '../src/defects.js';
 import { evaluateSignals } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
@@ -191,6 +192,42 @@ function bleedReadout(placed: PlacedLight[], theta: number, bleed: number): stri
   return `Seen from ${theta}°, the filament shows ${shares}.`;
 }
 
+/** What the defect knobs do to this line's lights. */
+function defectReadout(
+  placed: PlacedLight[],
+  screenSkew: number,
+  saltedLens: number,
+  tiredBulb: number,
+): string {
+  const parts: string[] = [];
+  const own = (id: string) => placed.some((l) => l.lightId === id && !l.combined);
+  if (screenSkew > 0)
+    parts.push(
+      own('light:sidelight_starboard')
+        ? `green shows ${screenSkew}° across the bow, to port`
+        : 'no starboard sidelight in its own lantern to skew',
+    );
+  if (screenSkew < 0)
+    parts.push(
+      own('light:sidelight_port')
+        ? `red shows ${-screenSkew}° across the bow, to starboard`
+        : 'no port sidelight in its own lantern to skew',
+    );
+  if (saltedLens > 0)
+    parts.push(
+      placed.some(isSidelight)
+        ? `sidelights at ${Math.round((1 - SALT_DIM * saltedLens) * 100)}%, halo spread`
+        : 'no sidelight to salt',
+    );
+  if (tiredBulb > 0)
+    parts.push(
+      placed.some((l) => l.color === 'white')
+        ? `white lights at ${Math.round((1 - TIRED_DIM * tiredBulb) * 100)}%, yellowed`
+        : 'no white light to tire',
+    );
+  return parts.length ? `${parts.join('; ')}.` : 'Off: every light as fitted.';
+}
+
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="field">
@@ -300,6 +337,9 @@ function Playground() {
   const [heel, setHeel] = useState(initial.heel);
   const [verticalSector, setVerticalSector] = useState(initial.verticalSector);
   const [filamentBleed, setFilamentBleed] = useState(initial.filamentBleed);
+  const [screenSkew, setScreenSkew] = useState(initial.screenSkew);
+  const [saltedLens, setSaltedLens] = useState(initial.saltedLens);
+  const [tiredBulb, setTiredBulb] = useState(initial.tiredBulb);
   const lightRangesNm = useMemo(
     () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
     [facts],
@@ -325,6 +365,9 @@ function Playground() {
     haze,
     heel,
     filamentBleed,
+    screenSkew,
+    saltedLens,
+    tiredBulb,
     day,
     singleLantern,
     rangeGlow,
@@ -583,6 +626,9 @@ function Playground() {
                   verticalSector={verticalSector}
                   heel={heel}
                   filamentBleed={filamentBleed}
+                  screenSkew={screenSkew}
+                  saltedLens={saltedLens}
+                  tiredBulb={tiredBulb}
                   labels={labels}
                   controls={false}
                 />
@@ -619,6 +665,9 @@ function Playground() {
                       verticalSector={verticalSector}
                       heel={heel}
                       filamentBleed={filamentBleed}
+                      screenSkew={screenSkew}
+                      saltedLens={saltedLens}
+                      tiredBulb={tiredBulb}
                       labels={labels}
                       controls={false}
                     />
@@ -975,6 +1024,30 @@ function Playground() {
             Annex I §5: a combined lantern has a single vertical filament and a very narrow
             division, so near 0°, 112.5° and 247.5° it shows both colours at once. At a division the
             bleed stands in for the sector profile above.
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Defects, 3D (#117)</legend>
+          <Field label="screen ° across the bow (+ green, − red)">
+            <Range
+              value={screenSkew}
+              min={-MAX_SCREEN_SKEW}
+              max={MAX_SCREEN_SKEW}
+              step={0.5}
+              onChange={setScreenSkew}
+            />
+          </Field>
+          <Field label="salted lens, sidelights">
+            <Range value={saltedLens} min={0} max={1} step={0.05} onChange={setSaltedLens} />
+          </Field>
+          <Field label="tired bulb, white lights">
+            <Range value={tiredBulb} min={0} max={1} step={0.05} onChange={setTiredBulb} />
+          </Field>
+          <p className="muted">{defectReadout(placed, screenSkew, saltedLens, tiredBulb)}</p>
+          <p className="muted">
+            Unlawful, but common: a bent sidelight screen, spray dried on a lens, an incandescent
+            run down. Looks, not Annex I.
           </p>
         </fieldset>
       </section>
