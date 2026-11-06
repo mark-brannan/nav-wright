@@ -81,3 +81,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t085343z
 - Filament bleed: the new playground fieldset sits last in the panel so renders stay byte-identical. Undo: move the fieldset ([#169](https://github.com/mark-brannan/nav-wright/pull/169))
+
+### 20261106t093526z
+- Screen skew moves only the sidelight's bow edge ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
