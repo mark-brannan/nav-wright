@@ -34,6 +34,7 @@ const MODEL_DEFAULTS = {
   glowFalloff: 0,
   transmissivity: K_PRESCRIBED,
   haze: 0,
+  heel: 0,
 } as const;
 const BEARING_DEFAULTS = { sky: 0 } as const;
 
@@ -59,10 +60,11 @@ export function lookProps(
     if (state.tilt !== MODEL_DEFAULTS.tilt) props.tilt = state.tilt;
     if (state.sky !== MODEL_DEFAULTS.sky) props.sky = state.sky;
     if (state.sea !== MODEL_DEFAULTS.sea) props.sea = state.sea;
-    for (const k of ['glowSize', 'glowFalloff', 'transmissivity', 'haze'] as const) {
+    for (const k of ['glowSize', 'glowFalloff', 'transmissivity', 'haze', 'heel'] as const) {
       if (state[k] !== MODEL_DEFAULTS[k]) props[k] = state[k];
     }
     if (state.rangeGlow) props.rangeGlow = true;
+    if (state.verticalSector) props.verticalSector = true;
     if (rangeDropout && state.view === '3d') props.rangeDropout = true;
     // the silhouette is drawn at tilt 0, so it carries none; 'all' is the playground's side-by-side of the three, not one look
     if (state.view === 'silhouette' && state.variant !== 'all') props.silhouette = state.variant;

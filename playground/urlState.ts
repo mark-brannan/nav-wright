@@ -19,10 +19,12 @@ export interface UrlState {
   glowFalloff: number;
   transmissivity: number;
   haze: number;
+  heel: number;
   day: boolean;
   singleLantern: boolean;
   rangeGlow: boolean;
   flashRateOn: boolean;
+  verticalSector: boolean;
 }
 
 export const URL_DEFAULTS: UrlState = {
@@ -38,10 +40,12 @@ export const URL_DEFAULTS: UrlState = {
   glowFalloff: 0,
   transmissivity: K_PRESCRIBED,
   haze: 0,
+  heel: 0,
   day: false,
   singleLantern: false,
   rangeGlow: false,
   flashRateOn: false,
+  verticalSector: false,
 };
 
 /** Which values a view or variant may take. */
@@ -61,13 +65,18 @@ const NUMBERS = {
   glowFalloff: 'falloff',
   transmissivity: 'k',
   haze: 'haze',
+  heel: 'heel',
 } as const;
 const FLAGS = {
   day: 'day',
   singleLantern: 'lantern',
   rangeGlow: 'glow',
   flashRateOn: 'flash',
+  verticalSector: 'vsector',
 } as const;
+
+/** The heel slider's reach either way, degrees. */
+export const MAX_HEEL = 45;
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 const wrap360 = (n: number) => (((Math.round(n * 2) / 2) % 360) + 360) % 360;
@@ -82,6 +91,7 @@ const NUMBER_BOUNDS: Record<keyof typeof NUMBERS, (n: number) => number> = {
   glowFalloff: (n) => clamp(n, 0, 1),
   transmissivity: (n) => clamp(n, 0.05, 1),
   haze: (n) => clamp(n, 0, 1),
+  heel: (n) => clamp(n, -MAX_HEEL, MAX_HEEL),
 };
 
 /** Read the playground state out of a query string; anything missing or

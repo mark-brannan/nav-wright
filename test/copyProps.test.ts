@@ -110,6 +110,18 @@ describe('lookProps', () => {
     }
   });
 
+  it('the 3D view carries heel off upright and the vertical sector when on', () => {
+    expect(lookProps(URL_DEFAULTS)?.props).not.toHaveProperty('heel');
+    expect(lookProps(URL_DEFAULTS)?.props).not.toHaveProperty('verticalSector');
+    expect(lookProps(at({ heel: 20, verticalSector: true }))?.props).toMatchObject({
+      heel: 20,
+      verticalSector: true,
+    });
+    const flat = lookProps(at({ view: 'bearing', heel: 20, verticalSector: true }))?.props;
+    expect(flat).not.toHaveProperty('heel');
+    expect(flat).not.toHaveProperty('verticalSector');
+  });
+
   it('the profile view has no component', () => {
     expect(lookComponent('profile')).toBeNull();
     expect(lookProps(at({ view: 'profile' }))).toBeNull();

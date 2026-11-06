@@ -43,6 +43,14 @@ export {
 export type { EdgeProfile, LightIntensity, SectorProfile } from './sectorProfile.js';
 export { FLAT_HALO, HALO_OPACITY, HALO_RADIUS, haloProfile, haloShells } from './halo.js';
 export type { HaloProfile, LightGlow } from './halo.js';
+export {
+  lightElevation,
+  VERTICAL_SECTORS,
+  VERTICAL_TAIL_DEG,
+  verticalIntensity,
+  verticalSectorFor,
+} from './verticalSector.js';
+export type { VerticalBand, VerticalSectorEntry } from './verticalSector.js';
 export type { PlacedLight } from './placement.js';
 
 // Day shapes (Rule 20(d), Annex I 6): placement from colregs' shapes.json and

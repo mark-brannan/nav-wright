@@ -133,6 +133,43 @@ describe('BearingModelView', () => {
     expect(given).toBe(render(45));
   });
 
+  it('draws the same markup with the vertical sector off and no heel', () => {
+    const given = renderToStaticMarkup(
+      <BearingModelView
+        modelUrl="/nowhere.glb"
+        hull={hull}
+        placed={underway}
+        facts={{}}
+        theta={45}
+        onTheta={noop}
+        hullHint={0.3}
+        verticalSector={false}
+        heel={0}
+      />,
+    );
+    expect(given).toBe(render(45));
+  });
+
+  it('loses the lights from overhead with the vertical sector on, and only then', () => {
+    const at = (tilt: number, verticalSector: boolean) =>
+      renderToStaticMarkup(
+        <BearingModelView
+          modelUrl="/nowhere.glb"
+          hull={hull}
+          placed={[masthead]}
+          facts={{ 'fact:propulsion': 'propulsion:power' }}
+          theta={0}
+          onTheta={noop}
+          tilt={tilt}
+          hullHint={0}
+          verticalSector={verticalSector}
+        />,
+      );
+    expect(at(10, true)).not.toContain('bearing-empty-overlay');
+    expect(at(60, true)).toContain('bearing-empty-overlay');
+    expect(at(60, false)).not.toContain('bearing-empty-overlay');
+  });
+
   it('names the bearing it is seen from', () => {
     expect(render(135)).toContain('135');
   });

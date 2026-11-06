@@ -25,10 +25,12 @@ const changed: UrlState = {
   glowFalloff: 0.4,
   transmissivity: 0.5,
   haze: 0.3,
+  heel: -15,
   day: true,
   singleLantern: true,
   rangeGlow: true,
   flashRateOn: true,
+  verticalSector: true,
 };
 
 describe('playground url state', () => {
@@ -50,6 +52,11 @@ describe('playground url state', () => {
       expect(search).not.toBe('');
       expect(decodeUrlState(search, options)).toEqual(state);
     }
+  });
+
+  it('clamps heel to the slider', () => {
+    expect(decodeUrlState('?heel=80', options).heel).toBe(45);
+    expect(decodeUrlState('?heel=-80', options).heel).toBe(-45);
   });
 
   it('writes the switches as bare flags, so ?day still works', () => {
