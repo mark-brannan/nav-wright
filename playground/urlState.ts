@@ -4,6 +4,7 @@
 // as they are.
 
 import { K_PRESCRIBED } from '../src/sectorProfile.js';
+import { FLASH_ON_S } from '../src/lantern.js';
 import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from '../src/tilt.js';
 import { MAX_FILAMENT_BLEED } from '../src/filament.js';
 
@@ -26,6 +27,8 @@ export interface UrlState {
   singleLantern: boolean;
   rangeGlow: boolean;
   flashRateOn: boolean;
+  /** Seconds each flash stays lit on the 3D view. */
+  flashOnSeconds: number;
   verticalSector: boolean;
 }
 
@@ -48,6 +51,7 @@ export const URL_DEFAULTS: UrlState = {
   singleLantern: false,
   rangeGlow: false,
   flashRateOn: false,
+  flashOnSeconds: FLASH_ON_S,
   verticalSector: false,
 };
 
@@ -68,6 +72,7 @@ const NUMBERS = {
   glowFalloff: 'falloff',
   transmissivity: 'k',
   haze: 'haze',
+  flashOnSeconds: 'flashon',
   heel: 'heel',
   filamentBleed: 'bleed',
 } as const;
@@ -95,6 +100,7 @@ const NUMBER_BOUNDS: Record<keyof typeof NUMBERS, (n: number) => number> = {
   glowFalloff: (n) => clamp(n, 0, 1),
   transmissivity: (n) => clamp(n, 0.05, 1),
   haze: (n) => clamp(n, 0, 1),
+  flashOnSeconds: (n) => clamp(n, 0.05, 2),
   heel: (n) => clamp(n, -MAX_HEEL, MAX_HEEL),
   filamentBleed: (n) => clamp(n, 0, MAX_FILAMENT_BLEED),
 };
