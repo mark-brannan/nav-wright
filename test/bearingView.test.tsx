@@ -14,6 +14,9 @@ import {
   skyColor,
 } from '../src/BearingView.js';
 import { selectHull } from '../src/hulls.js';
+import type { PlacedLight } from '../src/placement.js';
+import type { SectorProfile } from '../src/sectorProfile.js';
+import { ANNEX_I_PROFILE } from '../src/sectorProfile.js';
 import type { FactRecord } from 'colregs-engine';
 
 const facts: FactRecord = {};
@@ -196,5 +199,79 @@ describe('hull silhouette aspect', () => {
     expect(br90[0] - tr90[0]).toBeGreaterThan(tl90[0] - bl90[0]);
     const [bl270, tl270, tr270, br270] = hullSilhouette(hull, 270);
     expect(tl270[0] - bl270[0]).toBeGreaterThan(br270[0] - tr270[0]);
+  });
+});
+
+// Annex I §9(a) in the flat view: with a sectorProfile each light's whole
+// glow fades across its arc limits (sectorIntensity); without one the cut is
+// hard, in arc or not.
+describe('BearingView sector softening', () => {
+  const lamp = (key: string, color: string, from_deg: number, to_deg: number): PlacedLight => ({
+    key,
+    lightId: `light:${key}`,
+    color,
+    character: 'steady',
+    arc: { from_deg, to_deg },
+    fx: 0.1,
+    py: 0.2,
+    z: 0.5,
+    sourceEntry: 'test',
+  });
+  const starboard = lamp('starboard', 'green', 0, 112.5);
+  const lightOpacities = (theta: number, sectorProfile?: SectorProfile): number[] =>
+    [
+      ...renderToStaticMarkup(
+        <BearingView
+          hull={hull}
+          placed={[starboard]}
+          theta={theta}
+          onTheta={noop}
+          hullHint={0}
+          sectorProfile={sectorProfile}
+          controls={false}
+        />,
+      ).matchAll(/<g opacity="([^"]*)">(?:<g opacity="1">)?<circle/g),
+    ].map((m) => Number(m[1]));
+
+  it('without a profile, the hard cut', () => {
+    expect(lightOpacities(112.5)).toEqual([1]);
+    expect(lightOpacities(113)).toEqual([]);
+    expect(lightOpacities(359)).toEqual([]);
+  });
+
+  it.each([
+    // aft edge: full 5 degrees inside, half at the limit, gone 5 outside
+    [100, 1],
+    [110, 0.75],
+    [112.5, 0.5],
+    [115, 0.25],
+    [117.5, 0],
+    // forward edge (on the bow): full to the limit, gone 2 outside
+    [10, 1],
+    [0, 1],
+    [359, 0.5],
+    [358, 0],
+  ])('at %s the starboard light reads %s', (theta, want) => {
+    const got = lightOpacities(theta, ANNEX_I_PROFILE);
+    if (want === 0) expect(got).toEqual([]);
+    else {
+      expect(got).toHaveLength(1);
+      expect(got[0]).toBeCloseTo(want, 6);
+    }
+  });
+
+  it('a light faded to nothing leaves the empty-scene note', () => {
+    expect(
+      renderToStaticMarkup(
+        <BearingView
+          hull={hull}
+          placed={[starboard]}
+          theta={180}
+          onTheta={noop}
+          hullHint={0}
+          sectorProfile={ANNEX_I_PROFILE}
+        />,
+      ),
+    ).toContain('bearing-empty');
   });
 });

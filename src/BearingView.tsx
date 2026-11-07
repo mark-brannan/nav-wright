@@ -1,6 +1,8 @@
 // The exam-critical view: lights only, on black, seen from relative
 // bearing theta. Sidelight cutoffs and masthead arc edges happen live as
-// theta sweeps — arcs come straight from lights.json via placement.
+// theta sweeps — arcs come straight from lights.json via placement. With a
+// sectorProfile the edges soften per Annex I §9(a) (sectorProfile.ts), the
+// same profile the 3D view draws; without one, the exam's hard cut.
 // The night seascape (horizon, sea, hull hint) is an opt-in extra, kept in
 // its own block at the bottom of this file.
 
@@ -15,6 +17,8 @@ import { ThetaControl } from './ThetaControl.js';
 import { useDragRotate } from './rotate.js';
 import { mergeLanterns } from './lantern.js';
 import { Glow, glowProfile } from './svg.js';
+import type { SectorProfile } from './sectorProfile.js';
+import { sectorIntensity } from './sectorProfile.js';
 import type { HullStyle } from './hullStyles.js';
 import { useHullStylePaint } from './hullStyles.js';
 
@@ -42,6 +46,10 @@ type BearingSceneProps = {
   rangeGlow?: boolean;
   /** Rule 22 range in nautical miles by lightId, from lights.json visibility. Used by rangeGlow. */
   lightRangesNm?: Record<string, number>;
+  /** Annex I §9(a) edge profiles (see sectorProfile.ts, ANNEX_I_PROFILE): each
+   *  light fades across its arc limits instead of cutting hard. Default: the
+   *  hard cut, in arc or not. */
+  sectorProfile?: SectorProfile;
   /** Flash rate in flashes per minute for flashing lights (see declaredFlashRate). Default: the stylesheet's cycle. */
   flashesPerMinute?: number;
   labels?: SceneLabels;
@@ -81,6 +89,7 @@ export function BearingScene({
   singleLantern = false,
   rangeGlow = false,
   lightRangesNm,
+  sectorProfile,
   flashesPerMinute,
   labels = defaultSceneLabels,
   style,
@@ -91,11 +100,16 @@ export function BearingScene({
   const sin = Math.sin(rad);
   const cos = Math.cos(rad);
 
-  const visible = lightsInView(placed, theta);
+  const intensity = (l: PlacedLight) =>
+    sectorProfile ? sectorIntensity(theta, l.arc, sectorProfile) : 1;
+  const visible = sectorProfile
+    ? placed.filter((l) => intensity(l) > 0)
+    : lightsInView(placed, theta);
   const projected = (singleLantern ? mergeLanterns(visible, theta) : visible).map((l) => ({
     light: l,
     x: CX + (l.fx * sin - l.py * cos) * SCALE,
     y: HORIZON - l.z * ZSCALE,
+    intensity: intensity(l),
   }));
 
   return (
@@ -122,6 +136,7 @@ export function BearingScene({
           flashing={p.light.character === 'flashing'}
           flashesPerMinute={flashesPerMinute}
           glow={rangeGlow ? glowProfile(lightRangesNm?.[p.light.lightId], range) : undefined}
+          intensity={p.intensity}
           r={5.5}
         />
       ))}
