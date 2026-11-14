@@ -103,16 +103,7 @@ function Vessel({
   );
 }
 
-export function SceneView({
-  own,
-  target,
-  relativeBearing,
-  rangeM,
-  vectorMinutes = 6,
-  cpa,
-  env,
-  labels = defaultSceneLabels,
-}: {
+export interface SceneViewProps {
   own: SceneVessel;
   target: SceneVessel;
   /** target's bearing from own ship, relative to own bow, deg */
@@ -134,7 +125,18 @@ export function SceneView({
    */
   env?: SceneEnv;
   labels?: SceneLabels;
-}): ReactElement {
+}
+
+export function SceneView({
+  own,
+  target,
+  relativeBearing,
+  rangeM,
+  vectorMinutes = 6,
+  cpa,
+  env,
+  labels = defaultSceneLabels,
+}: SceneViewProps): ReactElement {
   const lay = pairLayout({
     ownHeading: own.heading,
     targetHeading: target.heading,
