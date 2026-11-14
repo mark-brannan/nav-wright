@@ -8,7 +8,7 @@ import type { LightsData } from 'colregs-engine/schema';
 import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
 import { BearingView } from '../src/BearingView.js';
 import { selectHull } from '../src/hulls.js';
-import { mergeLanterns } from '../src/lantern.js';
+import { flashLit, mergeLanterns } from '../src/lantern.js';
 import type { PlacedLight } from '../src/placement.js';
 import { declaredFlashRate, flashPeriodSeconds, glowProfile, lightRangesFor } from '../src/svg.js';
 
@@ -122,5 +122,25 @@ describe('flash rate', () => {
   it('sets the cycle only when asked', () => {
     expect(view([fl], 0)).not.toContain('animation-duration');
     expect(view([fl], 0, { flashesPerMinute: 60 })).toContain('animation-duration:1s');
+  });
+});
+
+describe('flashLit (the 3D flash)', () => {
+  it('with no rate and the default on-time, is today: 1.2 s period, lit for 0.35 s', () => {
+    for (let t = 0; t < 12; t += 0.01) expect(flashLit(t)).toBe(t % 1.2 < 0.35);
+    expect([flashLit(0.3), flashLit(0.4), flashLit(1.19), flashLit(1.3)]).toEqual([
+      true,
+      false,
+      false,
+      true,
+    ]);
+  });
+
+  it('takes its period from flashes per minute and its on-time from the argument', () => {
+    expect(flashLit(0.4, 120, 0.2)).toBe(false); // 0.5 s period, on 0.2
+    expect(flashLit(0.1, 120, 0.2)).toBe(true);
+    expect(flashLit(0.55, 120, 0.2)).toBe(true);
+    expect(flashLit(0.5, 30, 1)).toBe(true); // 2 s period
+    expect(flashLit(1.5, 30, 1)).toBe(false);
   });
 });
