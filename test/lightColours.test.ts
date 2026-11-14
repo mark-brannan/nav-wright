@@ -79,6 +79,8 @@ describe('Annex I §7 light chromaticity', () => {
   it('the 3D view draws lights through lightFill, not CSS names', () => {
     const src = readFileSync(new URL('../src/BenchyModel.tsx', import.meta.url), 'utf8');
     expect(src).not.toMatch(/color=\{light\.color\}/);
-    expect(src.match(/color=\{lightFill\(light\.color\)\}/g)).toHaveLength(2);
+    // A defect may hand a colour through the halo (defects.ts); the fallback is lightFill.
+    expect(src).toMatch(/const fill = glow\.color \?\? lightFill\(light\.color\);/);
+    expect(src.match(/color=\{fill\}/g)).toHaveLength(2);
   });
 });
