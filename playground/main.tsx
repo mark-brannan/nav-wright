@@ -655,6 +655,7 @@ function Playground() {
                 singleLantern={singleLantern}
                 rangeGlow={rangeGlow}
                 lightRangesNm={lightRangesNm}
+                sectorProfile={sectorProfile}
                 flashesPerMinute={
                   flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
                 }
@@ -1009,6 +1010,7 @@ function Playground() {
             singleLantern={singleLantern}
             rangeGlow={rangeGlow}
             lightRangesNm={lightRangesNm}
+            sectorProfile={sectorProfile}
             flashesPerMinute={
               flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
             }

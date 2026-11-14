@@ -98,8 +98,8 @@ export function BearingModelView({
    * sky and sea apply alike. Default: the model. */
   silhouette?: SilhouetteVariant;
   /** Annex I §9(a) edge profiles (see sectorProfile.ts): each light fades
-   *  across its arc limits instead of cutting hard. 3D only; the 2D
-   *  fallback keeps the hard cut. */
+   *  across its arc limits instead of cutting hard, in the 3D view and in
+   *  the 2D fallback and stand-in alike. */
   sectorProfile?: SectorProfile;
   /** Annex I §8: a light past its luminous range (`lightRangesNm`, by
    *  lightId) at `range` fades out. 3D only. */
@@ -192,6 +192,7 @@ export function BearingModelView({
       sky={sky}
       rangeGlow={rangeGlow}
       lightRangesNm={lightRangesNm}
+      sectorProfile={sectorProfile}
       labels={labels}
       controls={controls}
     />
@@ -211,6 +212,7 @@ export function BearingModelView({
       sky={sky}
       rangeGlow={rangeGlow}
       lightRangesNm={lightRangesNm}
+      sectorProfile={sectorProfile}
       labels={labels}
     />
   );
