@@ -55,9 +55,10 @@ under three quarters of the masthead, vertical lights 2 m or 1 m apart, the
 towing light over the sternlight, the forward anchor light over the after one,
 the 27(d) pairs under the 27(b)(i) column, the 27(f) lights clear below the
 masthead, the fishing-gear light between the sidelights and the white). Each
-light carries `heightM`, its height above the hull, and the lights Annex I
-places carry `basis` (the paragraphs, e.g. `AnxI.2(a)(i)`) so a consumer can
-label them; anywhere the geometry is silent the hull's hand anchors stand.
+light at or above the deck line carries `heightM`, its height above the hull,
+and the lights Annex I places carry `basis` (the paragraphs, e.g.
+`AnxI.2(a)(i)`) so a consumer can label them; anywhere the geometry is silent
+the hull's hand anchors stand.
 
 ## The 3D view
 

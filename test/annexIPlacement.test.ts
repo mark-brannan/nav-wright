@@ -255,8 +255,11 @@ describe('Annex I placement of every light group, every hull', () => {
     expect(yards).toHaveLength(2);
     for (const y of yards) {
       const handYard = hand.find((l) => l.key === y.key)!;
-      // the yard keeps its drawn drop below the head
-      expect(head.z - y.z).toBeCloseTo(handHead.z - handYard.z, 9);
+      const floor = Math.min(handYard.z, hull.spec.sideLightZ);
+      // the yard keeps its drawn drop below the head, down to the sidelights
+      expect(y.z).toBeGreaterThanOrEqual(floor - 1e-12);
+      if (y.z > floor + 1e-12) expect(head.z - y.z).toBeCloseTo(handHead.z - handYard.z, 9);
+      else expect(head.z - y.z).toBeLessThanOrEqual(handHead.z - handYard.z + 1e-12);
     }
     if (head.z !== handHead.z) expect(head.basis).toContain('AnxI.2(f)(i)');
   });
@@ -281,6 +284,28 @@ describe('Annex I placement of every light group, every hull', () => {
       expect(white.basis).toContain('AnxI.2(j)');
     },
   );
+
+  it.each(cases)('%s: 26(c)(ii) gear light, stopped with no sidelights lit', (_n, hull, len) => {
+    const f = facts(len, {
+      'fact:activity': 'activity:fishing',
+      'fact:gear_extent_m': 200,
+      'fact:making_way': false,
+    });
+    const stopped = fishingGear.filter(
+      (d) => !['light:sidelights', 'light:sternlight'].includes(d.spec.light),
+    );
+    const ls = placeLights(stopped, hull.spec, f, lightsData, geometry);
+    const gear = only(ls, (l) => l.sourceEntry === 'rule:26c_ii')[0];
+    const white = only(ls, (l) => l.sourceEntry === 'rule:26c_i' && l.color === 'white')[0];
+    const under = placeLights(fishingGear, hull.spec, f, lightsData, geometry);
+    const gearUnder = only(under, (l) => l.sourceEntry === 'rule:26c_ii')[0];
+    // the same fitted light, the same height, lit sidelights or not
+    expect(gear.z).toBeCloseTo(gearUnder.z, 12);
+    expect(gear.z).toBeGreaterThanOrEqual(hull.spec.sideLightZ - 1e-12);
+    expect(gear.z).toBeLessThanOrEqual(white.z + 1e-12);
+    expect(gear.basis).toContain('AnxI.4(a)');
+    expect(white.basis).toContain('AnxI.2(j)');
+  });
 
   const displays = { underway, withColumn, towing, anchored, dredging, mineClearing, fishingGear };
   it.each(cases)('%s: heightM is the drawn height, never below the hull', (_n, hull, len) => {

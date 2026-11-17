@@ -42,9 +42,9 @@ function characterOf(lightsData: LightsData, dl: DisplayLight): 'steady' | 'flas
  * Place every light of a display on the given hull. Deterministic; the
  * same display always renders the same scene. With colregs'
  * `geometry.json` (and `fact:length_m`) the heights and vertical
- * separations come from Annex I, every light carries `heightM` and each
- * light Annex I places carries `basis`; without, or where Annex I is
- * silent, the hull's hand anchors stand.
+ * separations come from Annex I, every light at or above the hull datum
+ * carries `heightM` and each light Annex I places carries `basis`;
+ * without, or where Annex I is silent, the hull's hand anchors stand.
  */
 export function placeLights(
   displayLights: DisplayLight[],

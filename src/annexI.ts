@@ -105,6 +105,9 @@ export function applyAnnexI(
   const sidelights = out.filter((l) => l.lightId.startsWith('light:sidelight') && !l.combined);
   const combinedSides = out.filter((l) => l.lightId.startsWith('light:sidelight') && l.combined);
   const towingLit = out.some((l) => l.lightId === 'light:towing');
+  // where the sidelights are fitted, lit or not (26(c)(iii) lights them only
+  // when making way): the floor 2(j) and 4(a) measure from
+  const sideFitZ = () => (sidelights.length ? Math.max(...sidelights.map((l) => l.z)) : deckZ);
 
   // vertical line spacing (2(i)): applies by length, to every vessel
   const spacingRule = rule('AnxI.2(i)(i)') ?? rule('AnxI.2(i)(ii)');
@@ -152,9 +155,8 @@ export function applyAnnexI(
     // above the sidelights (hand anchors: the 2(g) cap only lowers them)
     const fishing = fishingRule?.applies_to_entries?.includes(column[0].sourceEntry);
     const fishingFloor =
-      fishing && sidelights.length && fishingRule?.min_multiple_of_pair_spacing !== undefined
-        ? Math.max(...sidelights.map((l) => toM(l.z))) +
-          fishingRule.min_multiple_of_pair_spacing * s
+      fishing && fishingRule?.min_multiple_of_pair_spacing !== undefined
+        ? toM(sideFitZ()) + fishingRule.min_multiple_of_pair_spacing * s
         : null;
     if (fishingFloor !== null) topM = Math.max(topM, fishingFloor + below);
     const moved = topM !== toM(column[0].z);
@@ -264,7 +266,7 @@ export function applyAnnexI(
   // 4(a): the gear light no higher than the 26(c)(i) white (the column's
   // lower light) and no lower than the sidelights
   if (gearRule && gearLights.length) {
-    const lo = sidelights.length ? Math.max(...sidelights.map((l) => l.z)) : -Infinity;
+    const lo = sideFitZ();
     const hi = column.length ? column[column.length - 1].z : Infinity;
     for (const l of gearLights) {
       l.z = clamp(l.z, lo, Math.max(lo, hi));
@@ -273,7 +275,8 @@ export function applyAnnexI(
   }
 
   // 27(f): the foremast-head light stays below and clear of the forward
-  // masthead light (2(f)(i)); the fore-yard lights keep their drop below it
+  // masthead light (2(f)(i)); the fore-yard lights keep their drop below it,
+  // down to the sidelights' height and no further
   const mastLowZ = Math.min(...fwdMast.map((l) => l.z));
   if (fwdMast.length && s !== undefined) {
     for (const head of mineHeads) {
@@ -283,7 +286,7 @@ export function applyAnnexI(
       for (const l of out.filter(
         (y) => y === head || (y.sourceEntry === head.sourceEntry && y.key.includes(':yard-')),
       )) {
-        l.z += dz;
+        l.z = l === head ? l.z + dz : Math.min(l.z, Math.max(l.z + dz, sideFitZ()));
         addBasis(l, 'AnxI.2(f)(i)');
       }
     }
