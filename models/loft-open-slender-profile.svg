@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.08 -0.305 2.16 0.385" width="432" height="77" data-view="profile" data-bearing="90" data-u="-1 1" data-v="0 0.225">
+<title>Open boat (slender), profile from starboard</title>
+<path d="M-0.853 0L0.804 0L0.853 -0.01L0.861 -0.015L0.998 -0.065L1 -0.066L1 -0.071L0.95 -0.145L0.901 -0.156L0.552 -0.146L0.2 -0.141L0.2 -0.225L-0.1 -0.225L-0.1 -0.139L-0.031 -0.138L-0.549 -0.136L-1 -0.141L-1 -0.085L-0.924 -0.031L-0.916 -0.024L-0.91 -0.021L-0.902 -0.014Z" fill="#3a4a60" fill-rule="evenodd"/>
+<path d="M-0.853 0L0.804 0L0.853 -0.01L0.861 -0.015L0.998 -0.065L1 -0.066L1 -0.071L0.95 -0.145L0.901 -0.156L0.492 -0.145L-0.031 -0.138L-0.549 -0.136L-1 -0.141L-1 -0.085L-0.924 -0.031L-0.916 -0.024L-0.91 -0.021L-0.902 -0.014Z" fill="#6f8499" fill-rule="evenodd" stroke="#6f8499" stroke-width="0.75" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<path d="M-0.1 -0.139L0.198 -0.14L0.2 -0.141L0.2 -0.225L-0.1 -0.225Z" fill="#eff0ed" fill-rule="evenodd" stroke="#eff0ed" stroke-width="0.75" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<path d="M-0.853 0L0.804 0L0.853 -0.01L0.861 -0.015L0.998 -0.065L1 -0.066L1 -0.071L0.95 -0.145L0.901 -0.156L0.552 -0.146L0.2 -0.141L0.2 -0.225L-0.1 -0.225L-0.1 -0.139L-0.031 -0.138L-0.549 -0.136L-1 -0.141L-1 -0.085L-0.924 -0.031L-0.916 -0.024L-0.91 -0.021L-0.902 -0.014Z" fill="none" stroke="#0a1424" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<line x1="-1.08" y1="0" x2="1.08" y2="0" stroke="#3d7fb0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+</svg>

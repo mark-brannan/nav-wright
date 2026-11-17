@@ -45,10 +45,11 @@
     "build": "tsc -p tsconfig.build.json && cp src/style.css dist/style.css",
     "prepublishOnly": "npm run build",
     "prepare": "npm run build",
-    "models": "npm run build && node scripts/loft-hulls.mjs && node scripts/sailboat-lines.mjs && node scripts/mesh-catalog.mjs",
+    "models": "npm run build && node scripts/loft-hulls.mjs && node scripts/sailboat-lines.mjs && node scripts/mesh-catalog.mjs && node scripts/mesh-projections.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "catalog": "npm run build && node scripts/mesh-catalog.mjs"
+    "catalog": "npm run build && node scripts/mesh-catalog.mjs",
+    "projections": "npm run build && node scripts/mesh-projections.mjs"
   },
   "dependencies": {
     "colregs-engine": "github:mark-brannan/colregs-engine#main",

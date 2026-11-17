@@ -36,6 +36,10 @@ export type {
 
 export { profileHullModel } from './sceneProfile.js';
 
+// Mesh -> 2D views: a placed mesh projected to profile at any bearing, or plan
+export { loopArea, loopsPath, projectTriangles, viewAxes } from './meshProjection.js';
+export type { Loop, MeshView, Projection, ProjectionOptions } from './meshProjection.js';
+
 // The spec block: a blocky hull built from the spec, which every light sits on
 export { BLOCK_MAST, blockTriangles, growPrism, insidePrism, specBlock } from './specBlock.js';
 export type { BlockLight, BlockPrism, BlockSpec } from './specBlock.js';
