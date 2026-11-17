@@ -12,6 +12,9 @@ export interface LanternMember {
   combined?: boolean;
   fx: number;
   z: number;
+  /** How bright the member reads at the viewer's bearing, 0..1 (see
+   *  sectorIntensity). Unset: the hard cut, every member in view at full. */
+  intensity?: number;
 }
 
 function arcMid(arc: Arc | null): number | null {
@@ -27,7 +30,10 @@ function angularGap(a: number, b: number): number {
 
 /** Collapse the in-view members of each combined fixture into one, keeping
  *  the member whose sector centre is nearest the viewer's bearing (first
- *  listed on a tie). Uncombined lights pass through in order. */
+ *  listed on a tie). Uncombined lights pass through in order. Where members
+ *  carry an `intensity` (soft sector edges), the lantern takes its brightest
+ *  member's colour and the members' sum, capped at 1: one lamp behind every
+ *  sector, so the lantern does not dip across a division. */
 export function mergeLanterns<T extends LanternMember>(inView: readonly T[], theta: number): T[] {
   const out: T[] = [];
   const seat = new Map<string, number>();
@@ -43,8 +49,16 @@ export function mergeLanterns<T extends LanternMember>(inView: readonly T[], the
       out.push(l);
       continue;
     }
+    const kept = out[at]!;
     const gap = (m: T) => angularGap(theta, arcMid(m.arc) ?? theta);
-    if (gap(l) < gap(out[at]!)) out[at] = l;
+    if (l.intensity === undefined && kept.intensity === undefined) {
+      if (gap(l) < gap(kept)) out[at] = l;
+      continue;
+    }
+    const a = kept.intensity ?? 1;
+    const b = l.intensity ?? 1;
+    const winner = b > a || (b === a && gap(l) < gap(kept)) ? l : kept;
+    out[at] = { ...winner, intensity: Math.min(1, a + b) };
   }
   return out;
 }

@@ -1,8 +1,8 @@
-// Rule 21's four light colours as text on the night ground: each reaches
-// WCAG 2.x AA for normal text (4.5:1) against the grounds text sits on at
-// night — the stylesheet's --sea-night (the profile, plan, scene and tow
-// views, whose labels sit on it) and the bearing view's black sky, where its
-// empty-scene note sits. Chromaticity is lightColours.test.ts's job.
+// Rule 21's four exported light colours used as a text colour: each reaches
+// WCAG 2.x AA for normal text (4.5:1) against the two night grounds, the
+// stylesheet's --sea-night and the bearing view's black sky. The library
+// sets no text in a light colour itself; this holds the pairing for a
+// consumer that does. Chromaticity is lightColours.test.ts's job.
 
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';

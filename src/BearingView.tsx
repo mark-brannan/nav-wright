@@ -100,16 +100,16 @@ export function BearingScene({
   const sin = Math.sin(rad);
   const cos = Math.cos(rad);
 
-  const intensity = (l: PlacedLight) =>
-    sectorProfile ? sectorIntensity(theta, l.arc, sectorProfile) : 1;
-  const visible = sectorProfile
-    ? placed.filter((l) => intensity(l) > 0)
+  const visible: (PlacedLight & { intensity?: number })[] = sectorProfile
+    ? placed
+        .map((l) => ({ ...l, intensity: sectorIntensity(theta, l.arc, sectorProfile) }))
+        .filter((l) => l.intensity > 0)
     : lightsInView(placed, theta);
   const projected = (singleLantern ? mergeLanterns(visible, theta) : visible).map((l) => ({
     light: l,
     x: CX + (l.fx * sin - l.py * cos) * SCALE,
     y: HORIZON - l.z * ZSCALE,
-    intensity: intensity(l),
+    intensity: l.intensity ?? 1,
   }));
 
   return (
