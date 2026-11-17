@@ -394,6 +394,7 @@ function SceneLight({
   const halo = useRef<THREE.Group>(null);
   const r = lightRadius(lengthMeters);
   const at = position ?? lightPosition(light, lengthMeters);
+  const fill = glow.color ?? lightFill(light.color);
 
   useFrame(({ clock }) => {
     if (!halo.current) return;
@@ -407,7 +408,7 @@ function SceneLight({
         <sphereGeometry args={[r, 12, 12]} />
         {/* transparent so it joins the faded hull's pass and renderOrder puts it after */}
         <meshBasicMaterial
-          color={lightFill(light.color)}
+          color={fill}
           transparent
           opacity={intensity}
           depthTest={false}
@@ -421,7 +422,7 @@ function SceneLight({
           <mesh key={i} renderOrder={3}>
             <sphereGeometry args={[r * shell.radius, 12, 12]} />
             <meshBasicMaterial
-              color={lightFill(light.color)}
+              color={fill}
               transparent
               opacity={shell.opacity * intensity}
               blending={THREE.AdditiveBlending}

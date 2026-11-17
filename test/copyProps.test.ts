@@ -122,6 +122,13 @@ describe('lookProps', () => {
     expect(flat).not.toHaveProperty('verticalSector');
   });
 
+  it('the 3D view carries the defect knobs off zero', () => {
+    expect(lookProps(URL_DEFAULTS)?.props).not.toHaveProperty('screenSkew');
+    expect(
+      lookProps(at({ screenSkew: -4, saltedLens: 0.5, tiredBulb: 0.25 }))?.props,
+    ).toMatchObject({ screenSkew: -4, saltedLens: 0.5, tiredBulb: 0.25 });
+  });
+
   it('the 3D view carries the filament bleed off zero', () => {
     expect(lookProps(URL_DEFAULTS)?.props).not.toHaveProperty('filamentBleed');
     expect(lookProps(at({ filamentBleed: 3 }))?.props).toMatchObject({ filamentBleed: 3 });

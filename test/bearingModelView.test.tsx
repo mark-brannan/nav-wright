@@ -186,6 +186,24 @@ describe('BearingModelView', () => {
     expect(given).toBe(render(45));
   });
 
+  it('draws the same markup with every defect at zero', () => {
+    const given = renderToStaticMarkup(
+      <BearingModelView
+        modelUrl="/nowhere.glb"
+        hull={hull}
+        placed={underway}
+        facts={{}}
+        theta={45}
+        onTheta={noop}
+        hullHint={0.3}
+        screenSkew={0}
+        saltedLens={0}
+        tiredBulb={0}
+      />,
+    );
+    expect(given).toBe(render(45));
+  });
+
   it('names the bearing it is seen from', () => {
     expect(render(135)).toContain('135');
   });

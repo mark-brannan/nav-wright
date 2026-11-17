@@ -58,6 +58,18 @@ export {
   MAX_FILAMENT_BLEED,
 } from './filament.js';
 export type { Division } from './filament.js';
+export {
+  defectHalo,
+  defectIntensity,
+  isSidelight,
+  MAX_SCREEN_SKEW,
+  mixHex,
+  SALT_DIM,
+  SALT_SPREAD,
+  screenArc,
+  TIRED_DIM,
+  TIRED_WHITE,
+} from './defects.js';
 export type { PlacedLight } from './placement.js';
 
 // Day shapes (Rule 20(d), Annex I 6): placement from colregs' shapes.json and

@@ -36,6 +36,9 @@ const MODEL_DEFAULTS = {
   haze: 0,
   heel: 0,
   filamentBleed: 0,
+  screenSkew: 0,
+  saltedLens: 0,
+  tiredBulb: 0,
 } as const;
 const BEARING_DEFAULTS = { sky: 0 } as const;
 
@@ -68,6 +71,9 @@ export function lookProps(
       'haze',
       'heel',
       'filamentBleed',
+      'screenSkew',
+      'saltedLens',
+      'tiredBulb',
     ] as const) {
       if (state[k] !== MODEL_DEFAULTS[k]) props[k] = state[k];
     }
