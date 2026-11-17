@@ -117,3 +117,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261117t095543z
 - 27(f) fore-yard lights follow the foremast-head light down but stop at the sidelights' height, so none is drawn under the deck line Undo: lift the masthead over the 27(f) lights, reading 2(a)(i)'s 12 m as a permission, as the column block does ([#162](https://github.com/mark-brannan/nav-wright/pull/162))
+
+### 20261117t210917z
+- Oar hulls by length band: open <10 m or no length, dragon boat 10-18, longship 18-34, trireme 34-70, tessarakonteres 70+; dragon boat counted as oars; tessarakonteres as twin hulls; longship under oars without shields; dragon-boat loft variants carry a drum fitting Undo: edit selectHull bands ([#180](https://github.com/mark-brannan/nav-wright/pull/180))
