@@ -9,7 +9,7 @@
 
 import type { PlacedLight } from './placement.js';
 import { lightsInView } from './placement.js';
-import { MAX_TILT, MIN_TILT } from './tilt.js';
+import { MAX_TILT, MIN_TILT, viewerAt } from './tilt.js';
 
 export interface Vec3 {
   x: number;
@@ -677,6 +677,33 @@ export function orbitPosition(
     distance * Math.cos(polar),
     distance * Math.sin(polar) * Math.sin(rad),
   ];
+}
+
+/** The camera's up for an orbit at heading `theta` and wrapping `tilt`
+ * (degrees, see tilt.ts): the way tilt grows, along the great circle
+ * through both poles. Never parallel to the line of sight, so it holds at a
+ * pole, and past one it points down: the picture turns over as the camera
+ * goes over her. Within the poles it is three's default up, tipped. */
+export function orbitUp(theta: number, tilt: number): [number, number, number] {
+  const DEG = Math.PI / 180;
+  const t = tilt * DEG;
+  const rad = theta * DEG;
+  return [-Math.sin(t) * Math.cos(rad), Math.cos(t), -Math.sin(t) * Math.sin(rad)];
+}
+
+/** The camera, looking at the origin, for an orbit at heading `theta` and
+ * wrapping `tilt` (the bearing view's, PoleOrbitRig): where it stands
+ * (viewerAt's bearing and elevation) and its up. */
+export function orbitCamera(
+  theta: number,
+  tilt: number,
+  distance: number = VIEW_FRAME.distance,
+): { position: [number, number, number]; up: [number, number, number] } {
+  const view = viewerAt(theta, tilt);
+  return {
+    position: orbitPosition(view.bearing, view.elevation, distance),
+    up: orbitUp(theta, tilt),
+  };
 }
 
 /** The inverse of orbitPosition, from OrbitControls' angles (radians) to

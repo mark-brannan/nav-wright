@@ -28,7 +28,7 @@ import { glowProfile } from './svg.js';
 import type { BenchyLabels } from './benchyLabels.js';
 import { defaultBenchyLabels } from './benchyLabels.js';
 import type { SilhouetteVariant } from './silhouette.js';
-import { DEFAULT_TILT } from './tilt.js';
+import { DEFAULT_TILT, thetaFor, viewerAt } from './tilt.js';
 import { lightElevation, verticalIntensity, verticalSectorFor } from './verticalSector.js';
 import { filamentDivisions, filamentIntensity } from './filament.js';
 import { defectHalo, defectIntensity, screenArc } from './defects.js';
@@ -82,10 +82,15 @@ export function BearingModelView({
   mesh?: MeshRecord;
   placed: PlacedLight[];
   facts: FactRecord;
-  /** Relative bearing of the viewer, degrees. Decides which lights show. */
+  /** Relative bearing of the viewer, degrees. Decides which lights show,
+   *  with `tilt` within the poles; past one the viewer stands at theta +
+   *  180 (viewerAt), and that is the bearing the lights, the dial and the
+   *  2D fallback read. */
   theta: number;
   onTheta: (t: number) => void;
-  /** Camera elevation above the waterline, degrees. Never changes which
+  /** Camera elevation, degrees, wrapping like theta (tilt.ts): 0 at the
+   *  waterline, 90 straight down, and past it on over her, upside down,
+   *  to 180 at the far waterline. Only past a pole does it change which
    *  lights show: arcs are horizontal. With `verticalSector` it dims them. */
   tilt?: number;
   onTilt?: (t: number) => void;
@@ -160,6 +165,12 @@ export function BearingModelView({
   const [modelFailed, setModelFailed] = useState(false);
   // The silhouette is drawn from the waterline's level, so its elevation is 0.
   const viewTilt = silhouette ? 0 : tilt;
+  const view = viewerAt(theta, viewTilt);
+  const bearing = view.bearing;
+  // The dial and the 2D views read where the viewer stands; past a pole that
+  // is the far side of the orbit's own heading.
+  const onBearing = view.inverted ? (b: number) => onTheta(thetaFor(b, viewTilt)) : onTheta;
+  const elevation = view.elevation;
   const vertical = verticalSector ? verticalSectorFor(facts) : undefined;
   const bleed = filamentBleed > 0 ? filamentBleed : 0;
   const divisions = useMemo(() => (bleed ? filamentDivisions(placed) : undefined), [bleed, placed]);
@@ -177,7 +188,7 @@ export function BearingModelView({
         (rangeDropout
           ? rangeVisibility(lightRangesNm?.[light.lightId], range, transmissivity)
           : 1) *
-        (vertical ? verticalIntensity(lightElevation(at, viewTilt, heel), vertical) : 1) *
+        (vertical ? verticalIntensity(lightElevation(at, elevation, heel), vertical) : 1) *
         defectIntensity(light, saltedLens, tiredBulb)
       );
     };
@@ -188,7 +199,7 @@ export function BearingModelView({
     range,
     transmissivity,
     vertical,
-    viewTilt,
+    elevation,
     heel,
     divisions,
     bleed,
@@ -224,8 +235,8 @@ export function BearingModelView({
     <BearingView
       hull={hull}
       placed={placed}
-      theta={theta}
-      onTheta={onTheta}
+      theta={bearing}
+      onTheta={onBearing}
       hullHint={hullHint}
       range={range}
       sky={sky}
@@ -244,8 +255,8 @@ export function BearingModelView({
     <BearingScene
       hull={hull}
       placed={placed}
-      theta={theta}
-      onTheta={onTheta}
+      theta={bearing}
+      onTheta={onBearing}
       hullHint={hullHint}
       range={range}
       sky={sky}
@@ -257,8 +268,8 @@ export function BearingModelView({
   );
   const blank = <div className="scene-3d" style={{ background }} aria-hidden="true" />;
   const noneInView = lightIntensity
-    ? placed.every((l) => lightIntensity(l, theta) === 0)
-    : lightsInView(placed, theta).length === 0;
+    ? placed.every((l) => lightIntensity(l, bearing) === 0)
+    : lightsInView(placed, bearing).length === 0;
 
   return (
     <ModelErrorBoundary fallback={flat} onError={() => setModelFailed(true)}>
@@ -266,7 +277,7 @@ export function BearingModelView({
         <div
           className="scene-3d-stack scene-3d-night"
           role="img"
-          aria-label={labels.bearingAlt(Math.round(theta))}
+          aria-label={labels.bearingAlt(Math.round(bearing))}
           style={{ background }}
         >
           <Suspense fallback={standIn}>
@@ -281,7 +292,8 @@ export function BearingModelView({
               onTilt={onTilt}
               hull={hull.spec}
               topZ={mesh ? meshTopZ(mesh.proportions.lengthHeight) : undefined}
-              inViewAt={theta}
+              inViewAt={bearing}
+              overPole
               hullOpacity={bearingHullOpacity(hullHint, range)}
               background={background}
               night
@@ -291,7 +303,7 @@ export function BearingModelView({
               heel={heel}
               silhouette={silhouette}
               blockSpec={hull.spec}
-              label={labels.bearingAlt(Math.round(theta))}
+              label={labels.bearingAlt(Math.round(bearing))}
               fallback={blank}
               loading={standIn}
               onError={() => setModelFailed(true)}
@@ -300,10 +312,10 @@ export function BearingModelView({
           {noneInView && <p className="bearing-empty-overlay">{labels.bearingNoLights}</p>}
         </div>
         {controls && (
-          <ThetaControl theta={theta} onTheta={onTheta} labels={labels} plan={hull.plan} />
+          <ThetaControl theta={bearing} onTheta={onBearing} labels={labels} plan={hull.plan} />
         )}
         {controls && onTilt && !silhouette && (
-          <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} />
+          <TiltControl tilt={tilt} onTilt={onTilt} labels={labels} wrap />
         )}
       </div>
     </ModelErrorBoundary>

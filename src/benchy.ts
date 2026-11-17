@@ -19,8 +19,17 @@ export { SILHOUETTE_VARIANTS } from './silhouette.js';
 export type { SilhouetteVariant } from './silhouette.js';
 
 // Camera elevation: the range TiltControl and a consumer's URL state
-// clamp against
-export { DEFAULT_TILT, MAX_TILT, MIN_TILT } from './tilt.js';
+// clamp against, and the bearing view's tilt that wraps past the poles
+export {
+  DEFAULT_TILT,
+  MAX_TILT,
+  MIN_TILT,
+  WRAP_TILT,
+  thetaFor,
+  viewerAt,
+  wrapTilt,
+} from './tilt.js';
+export type { ViewerAt } from './tilt.js';
 
 // The controls, for a consumer laying out its own chrome
 export { TiltControl } from './TiltControl.js';

@@ -49,7 +49,8 @@ import { blockTriangles, growPrism, specBlock } from './specBlock.js';
 import type { BlockSpec } from './specBlock.js';
 import type { SilhouetteVariant } from './silhouette.js';
 import { SILHOUETTE_COLOR } from './silhouette.js';
-import { DEFAULT_TILT } from './tilt.js';
+import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from './tilt.js';
+import { PoleOrbitRig } from './PoleOrbitRig.js';
 
 const NO_HULL: HullStations = { beam: 0, mastX: NaN, aftMastX: NaN, sternX: NaN, bowX: NaN };
 
@@ -519,7 +520,10 @@ function OrbitRig({
   useEffect(() => {
     const r = reported.current;
     if (r && !r.seat && near(r.theta, theta) && near(r.tilt, tilt)) return;
-    reported.current = { theta, tilt, seat: true };
+    // Seated where the camera can go, so a wrapped tilt from the bearing
+    // view does not echo back clamped and pull that view in with it.
+    const seated = Math.min(MAX_TILT, Math.max(MIN_TILT, tilt));
+    reported.current = { theta, tilt: seated, seat: true };
     // At theta 90 the bow falls to the right of the frame, as it does in
     // the 2D profile.
     camera.position.set(...orbitPosition(theta, tilt));
@@ -573,6 +577,7 @@ export function BenchyModel({
   lightIntensity,
   lightGlow,
   heel = 0,
+  overPole = false,
   label,
   fallback = <div className="scene-3d" />,
   loading,
@@ -626,6 +631,11 @@ export function BenchyModel({
    *  about her fore-and-aft axis at the waterline. The sea stays level, and
    *  the camera's tilt stays from the sea. Default 0, upright. */
   heel?: number;
+  /** Let `tilt` wrap past the poles (tilt.ts): the camera goes over her
+   * and on, upside down, in the bearing view's own orbit (PoleOrbitRig)
+   * rather than OrbitControls. `inViewAt` is then where the viewer stands:
+   * pass viewerAt(theta, tilt).bearing. Default off: -90..90. */
+  overPole?: boolean;
   /** Draw her flat, in one unlit colour, from the waterline's level (tilt
    * 0): her own mesh, or a block built from her spec (`blockSpec`). See
    * SilhouetteVariant. Undefined draws the shaded, orbitable model. */
@@ -677,17 +687,30 @@ export function BenchyModel({
           color={night ? '#8aa2c8' : '#ffffff'}
         />
         <directionalLight position={[-4, 3, -3]} intensity={night ? 0.06 : 0.3} />
-        <OrbitRig
-          theta={theta}
-          onTheta={(t) => {
-            if (inViewAt !== undefined) setSeenFrom(t);
-            onTheta?.(t);
-          }}
-          tilt={level ? 0 : tilt}
-          onTilt={level ? undefined : onTilt}
-          pan={!night && !level}
-          level={level}
-        />
+        {overPole ? (
+          <PoleOrbitRig
+            theta={theta}
+            onTheta={onTheta}
+            tilt={level ? 0 : tilt}
+            onTilt={level ? undefined : onTilt}
+            onSeen={(b) => {
+              if (inViewAt !== undefined) setSeenFrom(b);
+            }}
+            level={level}
+          />
+        ) : (
+          <OrbitRig
+            theta={theta}
+            onTheta={(t) => {
+              if (inViewAt !== undefined) setSeenFrom(t);
+              onTheta?.(t);
+            }}
+            tilt={level ? 0 : tilt}
+            onTilt={level ? undefined : onTilt}
+            pan={!night && !level}
+            level={level}
+          />
+        )}
         <Suspense fallback={<Pending onPending={setPending} />}>
           {block ? (
             <BlockHull

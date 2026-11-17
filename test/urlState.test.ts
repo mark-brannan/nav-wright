@@ -86,12 +86,12 @@ describe('playground url state', () => {
     expect(encodeUrlState(URL_DEFAULTS, '?yaw&compare&theta=90&day')).toBe('yaw&compare');
   });
 
-  it('falls back on junk and clamps out-of-range numbers', () => {
+  it('falls back on junk, clamps out-of-range numbers and wraps tilt like theta', () => {
     const s = decodeUrlState(
       '?view=nope&variant=x&theta=abc&tilt=500&range=-3&sky=&hint=9',
       options,
     );
-    expect(s).toEqual({ ...URL_DEFAULTS, tilt: 90, range: 0, hullHint: 1 });
+    expect(s).toEqual({ ...URL_DEFAULTS, tilt: 140, range: 0, hullHint: 1 });
     expect(decodeUrlState('?theta=-90', options).theta).toBe(270);
     expect(decodeUrlState('?halo=9&falloff=-1&k=0&haze=2', options)).toEqual({
       ...URL_DEFAULTS,

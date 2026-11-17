@@ -19,5 +19,11 @@ export const defaultBenchyLabels: BenchyLabels = {
   benchyAlt: 'Benchy view: the vessel as a 3D model with her lights, free to orbit',
   benchyTiltLabel: 'Elevation',
   benchyTiltValue: (tilt) =>
-    tilt < 0 ? `${-tilt} degrees below the waterline` : `${tilt} degrees above the waterline`,
+    tilt > 90
+      ? `${180 - tilt} degrees above the waterline, over the top, upside down`
+      : tilt < -90
+        ? `${180 + tilt} degrees below the waterline, under her, upside down`
+        : tilt < 0
+          ? `${-tilt} degrees below the waterline`
+          : `${tilt} degrees above the waterline`,
 };

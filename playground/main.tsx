@@ -35,10 +35,10 @@ import {
 import {
   BearingModelView,
   BenchyView,
-  MAX_TILT,
-  MIN_TILT,
   SILHOUETTE_VARIANTS,
+  WRAP_TILT,
   defaultBenchyLabels,
+  viewerAt,
 } from '../src/benchy.js';
 import type { SilhouetteVariant } from '../src/benchy.js';
 import '../src/style.css';
@@ -325,6 +325,8 @@ function Playground() {
     [profileOn, fwdTail, aftInside, aftAtLimit, aftTail],
   );
   const [tilt, setTilt] = useState(initial.tilt);
+  // Where the 3D viewer stands: past a pole, the far side of the orbit.
+  const seen = view === '3d' ? viewerAt(shownTheta, tilt) : { bearing: shownTheta, elevation: 0 };
   const [hullHint, setHullHint] = useState(initial.hullHint);
   // Range to her in nm; fades the hull hint (full strength at 0.5 nm and nearer)
   const [range, setRange] = useState(initial.range);
@@ -761,7 +763,7 @@ function Playground() {
             <Select value={model} options={modelNames} onChange={setModel} />
           </Field>
           <Field label="camera elevation">
-            <Range value={tilt} min={MIN_TILT} max={MAX_TILT} onChange={setTilt} />
+            <Range value={tilt} min={-WRAP_TILT} max={WRAP_TILT} onChange={setTilt} />
           </Field>
           <Field label="hullHint">
             <Range value={hullHint} min={0} max={1} step={0.05} onChange={setHullHint} />
@@ -890,7 +892,7 @@ function Playground() {
               onChange={(e) => setCompare(e.target.checked)}
             />
           </Field>
-          <p className="muted">bearing shown {shownTheta.toFixed(1)}°</p>
+          <p className="muted">bearing shown {seen.bearing.toFixed(1)}°</p>
         </fieldset>
 
         <fieldset>
@@ -1005,7 +1007,7 @@ function Playground() {
             <Range value={heel} min={-MAX_HEEL} max={MAX_HEEL} step={1} onChange={setHeel} />
           </Field>
           <p className="muted">
-            {verticalReadout(verticalSector, facts, shownTheta, view === '3d' ? tilt : 0, heel)}
+            {verticalReadout(verticalSector, facts, seen.bearing, seen.elevation, heel)}
           </p>
         </fieldset>
 
@@ -1020,7 +1022,7 @@ function Playground() {
               onChange={setFilamentBleed}
             />
           </Field>
-          <p className="muted">{bleedReadout(placed, shownTheta, filamentBleed)}</p>
+          <p className="muted">{bleedReadout(placed, seen.bearing, filamentBleed)}</p>
           <p className="muted">
             Annex I §5: a combined lantern has a single vertical filament and a very narrow
             division, so near 0°, 112.5° and 247.5° it shows both colours at once. At a division the

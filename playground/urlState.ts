@@ -4,7 +4,7 @@
 // as they are.
 
 import { K_PRESCRIBED } from '../src/sectorProfile.js';
-import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from '../src/tilt.js';
+import { DEFAULT_TILT, wrapTilt } from '../src/tilt.js';
 import { MAX_FILAMENT_BLEED } from '../src/filament.js';
 import { MAX_SCREEN_SKEW } from '../src/defects.js';
 
@@ -96,7 +96,7 @@ const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n
 const wrap360 = (n: number) => (((Math.round(n * 2) / 2) % 360) + 360) % 360;
 const NUMBER_BOUNDS: Record<keyof typeof NUMBERS, (n: number) => number> = {
   theta: wrap360,
-  tilt: (n) => clamp(n, MIN_TILT, MAX_TILT),
+  tilt: wrapTilt,
   hullHint: (n) => clamp(n, 0, 1),
   range: (n) => clamp(n, 0, 5),
   sky: (n) => clamp(n, 0, 1),
