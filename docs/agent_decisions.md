@@ -105,3 +105,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261106t093735z
 - Defects fieldset last in the panel ([#170](https://github.com/mark-brannan/nav-wright/pull/170))
+
+### 20261117t094157z
+- situationToScene leaves the CPA marker out when geo:tcpa_s is negative (a CPA already past) Undo: drop tcpaS >= 0 in situationToScene and word the label for a past CPA ([#163](https://github.com/mark-brannan/nav-wright/pull/163#discussion_r4597771757)) ([#163](https://github.com/mark-brannan/nav-wright/pull/163))
