@@ -1,8 +1,8 @@
 // Scene views: two vessels, a relative bearing and a range, with optional
-// narrow-channel and traffic-lane backdrops. Both vessels wear the picked
+// narrow-channel and traffic-lane backdrops. The dial views wear the picked
 // hull's lawful display. The presets are colregs situation fixtures read
-// through situationToScene, with the bearing view showing what own ship sees
-// of the target.
+// through situationToScene, each vessel in the display her own facts call
+// for, with the bearing view showing what own ship sees of the target.
 
 import { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -18,6 +18,7 @@ import {
   bearingTheta,
   defaultSceneLabels,
   placeLights,
+  selectHull,
   situationPair,
   situationToScene,
 } from '../src/index.js';
@@ -55,10 +56,19 @@ function Scenes() {
   }, [facts, hull]);
   const [preset, setPreset] = useState<PresetKey>('crossing');
   const situation = presets[preset];
-  const fromSituation = situationToScene(situation, {
-    own: { hull, placed },
-    target: { hull, placed },
-  });
+  // each preset vessel wears the display her own facts call for
+  const seen = useMemo(() => {
+    const dress = (facts: Situation['self']['fact']) => {
+      const h = selectHull(facts);
+      const display = evaluateSignals(facts).displays[0];
+      return {
+        hull: h,
+        placed: display ? placeLights(display.lights, h.spec, facts, lightsData, geometryData) : [],
+      };
+    };
+    return { own: dress(situation.self.fact), target: dress(situation.other!.fact) };
+  }, [situation]);
+  const fromSituation = situationToScene(situation, seen);
   const theta = bearingTheta(situationPair(situation));
   const own = { hull, placed, heading: 0, speedMps: 5 };
   const target = { hull, placed, heading: 270, speedMps: 5 };
@@ -127,16 +137,14 @@ function Scenes() {
       </section>
       <section className="views">
         <figure>
-          <figcaption>
-            situationToScene: {preset}, both vessels in the picked hull's display
-          </figcaption>
+          <figcaption>situationToScene: {preset}</figcaption>
           <SceneView {...fromSituation} labels={defaultSceneLabels} />
         </figure>
         <figure>
           <figcaption>BearingView: own ship sees the target at θ {theta.toFixed(1)}°</figcaption>
           <BearingView
-            hull={hull}
-            placed={placed}
+            hull={seen.target.hull}
+            placed={seen.target.placed}
             theta={theta}
             onTheta={() => {}}
             hullHint={0.4}
