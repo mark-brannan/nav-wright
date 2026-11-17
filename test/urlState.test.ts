@@ -15,6 +15,7 @@ const options = {
 const changed: UrlState = {
   view: 'silhouette',
   variant: 'soft',
+  unlawful: 'reversed-sidelights',
   theta: 112.5,
   tilt: -20,
   hullHint: 0.25,
@@ -88,7 +89,7 @@ describe('playground url state', () => {
 
   it('falls back on junk and clamps out-of-range numbers', () => {
     const s = decodeUrlState(
-      '?view=nope&variant=x&theta=abc&tilt=500&range=-3&sky=&hint=9',
+      '?view=nope&variant=x&unlawful=x&theta=abc&tilt=500&range=-3&sky=&hint=9',
       options,
     );
     expect(s).toEqual({ ...URL_DEFAULTS, tilt: 90, range: 0, hullHint: 1 });

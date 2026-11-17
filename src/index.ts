@@ -70,6 +70,8 @@ export {
   TIRED_DIM,
   TIRED_WHITE,
 } from './defects.js';
+export { applyUnlawful, UNLAWFUL_PRESETS, unlawfulPreset } from './unlawful.js';
+export type { UnlawfulPreset } from './unlawful.js';
 export type { PlacedLight } from './placement.js';
 
 // Day shapes (Rule 20(d), Annex I 6): placement from colregs' shapes.json and

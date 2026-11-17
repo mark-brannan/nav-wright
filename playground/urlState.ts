@@ -7,10 +7,13 @@ import { K_PRESCRIBED } from '../src/sectorProfile.js';
 import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from '../src/tilt.js';
 import { MAX_FILAMENT_BLEED } from '../src/filament.js';
 import { MAX_SCREEN_SKEW } from '../src/defects.js';
+import { unlawfulPreset } from '../src/unlawful.js';
 
 export interface UrlState {
   view: string;
   variant: string;
+  /** An UNLAWFUL_PRESETS id. */
+  unlawful: string;
   theta: number;
   tilt: number;
   hullHint: number;
@@ -36,6 +39,7 @@ export interface UrlState {
 export const URL_DEFAULTS: UrlState = {
   view: '3d',
   variant: 'all',
+  unlawful: 'none',
   theta: 45,
   tilt: DEFAULT_TILT,
   hullHint: 0.5,
@@ -121,6 +125,8 @@ export function decodeUrlState(search: string, options: UrlOptions): UrlState {
   if (view !== null && options.views.includes(view)) state.view = view;
   const variant = q.get('variant');
   if (variant !== null && options.variants.includes(variant)) state.variant = variant;
+  const unlawful = q.get('unlawful');
+  if (unlawful !== null && unlawfulPreset(unlawful)) state.unlawful = unlawful;
   for (const k of Object.keys(NUMBERS) as (keyof typeof NUMBERS)[]) {
     const raw = q.get(NUMBERS[k]);
     if (raw === null || raw.trim() === '') continue;
@@ -139,6 +145,7 @@ export function encodeUrlState(state: UrlState, search = ''): string {
     v === fallback ? q.delete(key) : q.set(key, v);
   text('view', state.view, URL_DEFAULTS.view);
   text('variant', state.variant, URL_DEFAULTS.variant);
+  text('unlawful', state.unlawful, URL_DEFAULTS.unlawful);
   for (const k of Object.keys(NUMBERS) as (keyof typeof NUMBERS)[]) {
     text(NUMBERS[k], String(state[k]), String(URL_DEFAULTS[k]));
   }

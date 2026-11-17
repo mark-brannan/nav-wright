@@ -11,6 +11,7 @@ import { decodeUrlState, encodeUrlState, MAX_HEEL, type UrlState } from './urlSt
 import { lightElevation, verticalIntensity, verticalSectorFor } from '../src/verticalSector.js';
 import { filamentDivisions, filamentShare, MAX_FILAMENT_BLEED } from '../src/filament.js';
 import { isSidelight, MAX_SCREEN_SKEW, SALT_DIM, TIRED_DIM } from '../src/defects.js';
+import { applyUnlawful, UNLAWFUL_PRESETS } from '../src/unlawful.js';
 import { evaluateSignals } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
@@ -228,6 +229,19 @@ function defectReadout(
   return parts.length ? `${parts.join('; ')}.` : 'Off: every light as fitted.';
 }
 
+/** What the unlawful preset did to the lights the rule calls for. */
+function unlawfulReadout(drawn: PlacedLight[], shown: PlacedLight[], presetId: string): string {
+  if (presetId === 'none') return 'Off: the lights the rule calls for.';
+  if (shown === drawn) return 'Changes nothing on this line.';
+  const out = drawn.filter((l) => !shown.some((s) => s.key === l.key));
+  const recoloured = shown.filter((s) => drawn.some((l) => l.key === s.key && l.color !== s.color));
+  const parts = [
+    ...out.map((l) => `${l.lightId.replace('light:', '')} (${l.color}) out`),
+    ...recoloured.map((l) => `${l.lightId.replace('light:', '')} shows ${l.color}`),
+  ];
+  return `${parts.join('; ')}.`;
+}
+
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="field">
@@ -340,6 +354,7 @@ function Playground() {
   const [screenSkew, setScreenSkew] = useState(initial.screenSkew);
   const [saltedLens, setSaltedLens] = useState(initial.saltedLens);
   const [tiredBulb, setTiredBulb] = useState(initial.tiredBulb);
+  const [unlawfulId, setUnlawfulId] = useState(initial.unlawful);
   const lightRangesNm = useMemo(
     () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
     [facts],
@@ -353,6 +368,7 @@ function Playground() {
   const urlState: UrlState = {
     view,
     variant,
+    unlawful: unlawfulId,
     theta,
     tilt,
     hullHint,
@@ -484,15 +500,17 @@ function Playground() {
     () => new Set(drawnOverride ?? (picked ? [...picked.keys] : [])),
     [drawnOverride, picked],
   );
-  const placed = useMemo(
+  const drawn = useMemo(
     () => allLights.filter((l) => drawnKeys.has(l.key)),
     [allLights, drawnKeys],
   );
+  // What every view draws: the drawn lights under the unlawful preset.
+  const placed = useMemo(() => applyUnlawful(drawn, unlawfulId), [drawn, unlawfulId]);
   // The line whose lights are exactly the ones drawn; none means unlawful.
   const matched = lines.findIndex(
     (line) => line.keys.size === drawnKeys.size && [...line.keys].every((k) => drawnKeys.has(k)),
   );
-  const unlawful = matched < 0;
+  const unlawful = matched < 0 || placed !== drawn;
   const inEffect = matched >= 0 ? lines[matched]! : picked;
   const placedShapes = inEffect?.shapes ?? [];
 
@@ -826,7 +844,7 @@ function Playground() {
               <input
                 type="radio"
                 name="rule-in-effect"
-                checked={i === matched}
+                checked={!unlawful && i === matched}
                 onChange={() => {
                   setLineIndex(i);
                   setDrawnOverride(null);
@@ -841,7 +859,7 @@ function Playground() {
           </label>
           <p className="muted">
             {unlawful
-              ? 'Selected: the lights drawn match no rule. Toggle them under Lights drawn.'
+              ? 'Selected: the lights drawn match no rule. Toggle them under Lights drawn, or pick an unlawful preset.'
               : 'Picking a rule draws its lights.'}
           </p>
         </fieldset>
@@ -963,7 +981,7 @@ function Playground() {
             </Field>
           ))}
           <p className="muted">
-            {placed.length} of {allLights.length} drawn
+            {drawn.length} of {allLights.length} drawn
           </p>
         </fieldset>
 
@@ -1049,6 +1067,24 @@ function Playground() {
           <p className="muted">
             Unlawful, but common: a bent sidelight screen, spray dried on a lens, an incandescent
             run down. Looks, not Annex I.
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Unlawful displays (#117)</legend>
+          <Field label="preset">
+            <select value={unlawfulId} onChange={(e) => setUnlawfulId(e.target.value)}>
+              {UNLAWFUL_PRESETS.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.label}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <p className="muted">{unlawfulReadout(drawn, placed, unlawfulId)}</p>
+          <p className="muted">
+            Applied to the lights drawn above, in every view. Looks, not a rule: no line under
+            Display matches.
           </p>
         </fieldset>
       </section>
