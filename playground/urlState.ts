@@ -5,6 +5,8 @@
 
 import { K_PRESCRIBED } from '../src/sectorProfile.js';
 import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from '../src/tilt.js';
+import { MAX_FILAMENT_BLEED } from '../src/filament.js';
+import { MAX_SCREEN_SKEW } from '../src/defects.js';
 
 export interface UrlState {
   view: string;
@@ -19,10 +21,16 @@ export interface UrlState {
   glowFalloff: number;
   transmissivity: number;
   haze: number;
+  heel: number;
+  filamentBleed: number;
+  screenSkew: number;
+  saltedLens: number;
+  tiredBulb: number;
   day: boolean;
   singleLantern: boolean;
   rangeGlow: boolean;
   flashRateOn: boolean;
+  verticalSector: boolean;
 }
 
 export const URL_DEFAULTS: UrlState = {
@@ -38,10 +46,16 @@ export const URL_DEFAULTS: UrlState = {
   glowFalloff: 0,
   transmissivity: K_PRESCRIBED,
   haze: 0,
+  heel: 0,
+  filamentBleed: 0,
+  screenSkew: 0,
+  saltedLens: 0,
+  tiredBulb: 0,
   day: false,
   singleLantern: false,
   rangeGlow: false,
   flashRateOn: false,
+  verticalSector: false,
 };
 
 /** Which values a view or variant may take. */
@@ -61,13 +75,22 @@ const NUMBERS = {
   glowFalloff: 'falloff',
   transmissivity: 'k',
   haze: 'haze',
+  heel: 'heel',
+  filamentBleed: 'bleed',
+  screenSkew: 'screen',
+  saltedLens: 'salt',
+  tiredBulb: 'bulb',
 } as const;
 const FLAGS = {
   day: 'day',
   singleLantern: 'lantern',
   rangeGlow: 'glow',
   flashRateOn: 'flash',
+  verticalSector: 'vsector',
 } as const;
+
+/** The heel slider's reach either way, degrees. */
+export const MAX_HEEL = 45;
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 const wrap360 = (n: number) => (((Math.round(n * 2) / 2) % 360) + 360) % 360;
@@ -82,6 +105,11 @@ const NUMBER_BOUNDS: Record<keyof typeof NUMBERS, (n: number) => number> = {
   glowFalloff: (n) => clamp(n, 0, 1),
   transmissivity: (n) => clamp(n, 0.05, 1),
   haze: (n) => clamp(n, 0, 1),
+  heel: (n) => clamp(n, -MAX_HEEL, MAX_HEEL),
+  filamentBleed: (n) => clamp(n, 0, MAX_FILAMENT_BLEED),
+  screenSkew: (n) => clamp(n, -MAX_SCREEN_SKEW, MAX_SCREEN_SKEW),
+  saltedLens: (n) => clamp(n, 0, 1),
+  tiredBulb: (n) => clamp(n, 0, 1),
 };
 
 /** Read the playground state out of a query string; anything missing or

@@ -26,6 +26,9 @@ export interface HaloProfile {
   scale: number;
   opacity: number;
   falloff: number;
+  /** The light's drawn colour, bead and halo, when something has changed it
+   *  (defects.ts); its own colour otherwise. */
+  color?: string;
 }
 
 export const FLAT_HALO: HaloProfile = { scale: 1, opacity: 1, falloff: 0 };
