@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.11](https://github.com/mark-brannan/nav-wright/compare/v0.1.10...v0.1.11) (2026-11-17)
+
+
+### Added
+
+* **bearing-model:** Annex I §10 vertical sectors tied to tilt, and a heel slider ([#168](https://github.com/mark-brannan/nav-wright/issues/168)) ([26a89cb](https://github.com/mark-brannan/nav-wright/commit/26a89cb6a7994816366c44a54080ac05eeb73a4b)), closes [#118](https://github.com/mark-brannan/nav-wright/issues/118)
+* **bearing-model:** Annex I §5 filament bleed on a combined lantern ([#169](https://github.com/mark-brannan/nav-wright/issues/169)) ([f346e61](https://github.com/mark-brannan/nav-wright/commit/f346e618125e1bea897a55db8a5de93b354fb287)), closes [#118](https://github.com/mark-brannan/nav-wright/issues/118)
+* **bearing-model:** defect knobs for a misaligned screen, salted lens and tired bulb ([#170](https://github.com/mark-brannan/nav-wright/issues/170)) ([ed814d3](https://github.com/mark-brannan/nav-wright/commit/ed814d3e192aa9975cbe071f82efac25181c1bcc))
+* **bearing-model:** glow, falloff, rangeGlow, visibility K and haze on the 3D view ([#154](https://github.com/mark-brannan/nav-wright/issues/154)) ([cf7ee7f](https://github.com/mark-brannan/nav-wright/commit/cf7ee7fb4a3530ba8421a882849bce8586cbaf4b))
+* **bearing-view:** soften sector edges per Annex I §9(a); AA check of the light colours ([#164](https://github.com/mark-brannan/nav-wright/issues/164)) ([170ecee](https://github.com/mark-brannan/nav-wright/commit/170eceec8871e77ec06262f7e45a3b7a0c5d54ff))
+* **placement:** Annex I heights for every light group ([#162](https://github.com/mark-brannan/nav-wright/issues/162)) ([3f88c63](https://github.com/mark-brannan/nav-wright/commit/3f88c63271635c263ac2d30f5e26c706eb5611bc))
+* **scene:** situationToScene reads a colregs situation record as SceneView props ([#163](https://github.com/mark-brannan/nav-wright/issues/163)) ([bb4b57f](https://github.com/mark-brannan/nav-wright/commit/bb4b57fcddd4aa8b6500f4ac479edc6eea23f999))
+
 ## [0.1.10](https://github.com/mark-brannan/nav-wright/compare/v0.1.9...v0.1.10) (2026-10-17)
 
 
