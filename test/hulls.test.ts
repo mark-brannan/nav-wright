@@ -15,9 +15,9 @@ import { hullFacts } from '../playground/hullFacts.js';
 const hulls = Object.entries(allHulls);
 
 describe('hull roster', () => {
-  it('has the agreed twenty-six hulls with distinct ids', () => {
-    expect(hulls).toHaveLength(26);
-    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(26);
+  it('has the agreed thirty hulls with distinct ids', () => {
+    expect(hulls).toHaveLength(30);
+    expect(new Set(hulls.map(([, h]) => h.spec.id)).size).toBe(30);
   });
 
   it.each(hulls)('%s keeps its light stations inside the hull', (_name, hull) => {
@@ -128,7 +128,20 @@ describe('selectHull', () => {
     ['constrained by draught', { 'fact:activity': 'activity:cbd' }, 'tanker'],
     ['mineclearance', { 'fact:activity': 'activity:mine' }, 'mineClearance'],
     ['underwater operations', { 'fact:activity': 'activity:ram_underwater' }, 'dredger'],
-    ['oars', { 'fact:propulsion': 'propulsion:oars' }, 'openBoat'],
+    ['oars, no length', { 'fact:propulsion': 'propulsion:oars' }, 'openBoat'],
+    ['oars 5 m', { 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 5 }, 'openBoat'],
+    ['oars 10 m', { 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 10 }, 'dragonBoat'],
+    ['oars 12.5 m', { 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 12.5 }, 'dragonBoat'],
+    ['oars 18 m', { 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 18 }, 'longship'],
+    ['oars 30 m', { 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 30 }, 'longship'],
+    ['oars 34 m', { 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 34 }, 'trireme'],
+    ['oars 70 m', { 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 70 }, 'tessarakonteres'],
+    ['oars 37 m', { 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 37 }, 'trireme'],
+    [
+      'oars 128 m',
+      { 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 128 },
+      'tessarakonteres',
+    ],
     ['sail 12 m', { 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 12 }, 'sailSmall'],
     ['sail 30 m', { 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 30 }, 'sailLarge'],
     ['sail 60 m', { 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 60 }, 'squareRigger'],

@@ -210,6 +210,489 @@ const openBoat: Hull = {
   ),
 };
 
+// Oar-powered hulls past the open boat's length, picked by length band in
+// selectHull. Oars, paddles and ornaments are drawn in the hull stroke with
+// no hull fill, so the loft (scripts/loft-hulls.mjs) reads neither as a
+// solid nor as a spar: they stay 2D detail.
+
+/** A bank of oars seen from abeam: from the port at height `z` down to the
+ * blade just under the waterline, `lead` forward of the port. */
+function oarBank(xs: number[], z: number, lead: number, width = 1): ReactElement[] {
+  return xs.map((x) => (
+    <line
+      key={`${x}:${z}`}
+      x1={PX(x)}
+      y1={PZ(z)}
+      x2={PX(x + lead)}
+      y2={PZ(-0.03)}
+      stroke={hullStroke}
+      strokeWidth={width}
+    />
+  ));
+}
+
+/** Evenly spaced stations from `from` down to `to`, inclusive. */
+function stations(from: number, to: number, n: number): number[] {
+  return Array.from({ length: n }, (_, i) => from + ((to - from) * i) / (n - 1));
+}
+
+/** A steering oar on the quarter, loom over the gunwale, blade below. */
+function steeringOar(fx: number, z: number, dx: number, width: number): ReactElement {
+  return (
+    <line
+      x1={PX(fx)}
+      y1={PZ(z)}
+      x2={PX(fx + dx)}
+      y2={PZ(-0.05)}
+      stroke={hullStroke}
+      strokeWidth={width}
+    />
+  );
+}
+
+/** Dragon boat after the IDBF standard boat: 12.5 m, 1.1 m beam, ten
+ * benches of paddlers, a drummer forward, a steerer on a sweep aft, the
+ * head and tail fitted for racing. Paddled, which COLREGs reads as oars. */
+const dragonBoat: Hull = {
+  spec: {
+    id: 'dragon-boat',
+    beam: 0.12,
+    mastX: 0.0,
+    mastTopZ: 0.4,
+    aftMastX: -0.3,
+    aftMastTopZ: 0.35,
+    sideLightX: 0.3,
+    sideLightZ: 0.1,
+    bowX: 0.88,
+    sternX: -0.86,
+    sternZ: 0.1,
+  },
+  plan: [
+    [1, 0],
+    [0.8, 0.07],
+    [0.4, 0.115],
+    [-0.2, 0.12],
+    [-0.7, 0.09],
+    [-0.9, 0.04],
+    [-0.9, -0.04],
+    [-0.7, -0.09],
+    [-0.2, -0.12],
+    [0.4, -0.115],
+    [0.8, -0.07],
+  ],
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.88, 0.1],
+          [0.9, 0.07],
+          [0.78, 0.02],
+          [-0.78, 0.02],
+          [-0.88, 0.06],
+          [-0.88, 0.1],
+          [0, 0.085],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* dragon head */}
+      <path
+        d={d([
+          [0.86, 0.1],
+          [0.9, 0.18],
+          [0.93, 0.25],
+          [0.99, 0.26],
+          [1.02, 0.23],
+          [0.97, 0.21],
+          [0.94, 0.19],
+          [0.92, 0.11],
+        ])}
+        fill={hullStroke}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* tail */}
+      <path
+        d={d([
+          [-0.86, 0.1],
+          [-0.92, 0.17],
+          [-0.97, 0.22],
+          [-0.95, 0.16],
+          [-0.9, 0.1],
+        ])}
+        fill={hullStroke}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* drum */}
+      <circle cx={PX(0.72)} cy={PZ(0.13)} r={3} fill="none" stroke={hullStroke} strokeWidth={1} />
+      {/* paddles, ten benches, blade entering ahead of the paddler */}
+      {oarBank(stations(0.6, -0.57, 10), 0.15, 0.06)}
+      {/* steerer's sweep */}
+      {steeringOar(-0.78, 0.2, -0.24, 1.5)}
+    </g>
+  ),
+};
+
+/** Viking longship after Skuldelev 2 (Roskilde): about 30 m and 3.8 m
+ * beam, clinker built, double-ended, thirty oars a side, one mast and a
+ * square sail, a side rudder on the starboard quarter. Under oars the
+ * shield rack would close the oar ports, so no shields are hung. */
+const longship: Hull = {
+  spec: {
+    id: 'longship',
+    beam: 0.14,
+    mastX: 0.0,
+    mastTopZ: 0.85,
+    aftMastX: -0.4,
+    aftMastTopZ: 0.5,
+    sideLightX: 0.35,
+    sideLightZ: 0.17,
+    bowX: 0.9,
+    sternX: -0.88,
+    sternZ: 0.2,
+  },
+  plan: [
+    [1, 0],
+    [0.8, 0.08],
+    [0.4, 0.13],
+    [-0.1, 0.14],
+    [-0.55, 0.12],
+    [-0.85, 0.06],
+    [-0.98, 0],
+    [-0.85, -0.06],
+    [-0.55, -0.12],
+    [-0.1, -0.14],
+    [0.4, -0.13],
+    [0.8, -0.08],
+  ],
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.95, 0.34],
+          [0.93, 0.24],
+          [0.86, 0.1],
+          [0.7, 0.03],
+          [-0.7, 0.03],
+          [-0.85, 0.1],
+          [-0.92, 0.24],
+          [-0.94, 0.32],
+          [-0.88, 0.26],
+          [-0.6, 0.17],
+          [0, 0.15],
+          [0.6, 0.17],
+          [0.88, 0.26],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* figurehead on the stem */}
+      <path
+        d={d([
+          [0.95, 0.34],
+          [0.97, 0.4],
+          [1.02, 0.42],
+          [1.04, 0.39],
+          [1.0, 0.38],
+          [0.97, 0.33],
+        ])}
+        fill={hullStroke}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* sternpost curl */}
+      <path
+        d={`M${PX(-0.94).toFixed(1)},${PZ(0.32).toFixed(1)} Q${PX(-0.99).toFixed(1)},${PZ(0.4).toFixed(1)} ${PX(-0.92).toFixed(1)},${PZ(0.39).toFixed(1)}`}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* oars through the oar ports in the top strake */}
+      {oarBank(stations(0.62, -0.62, 13), 0.15, 0.05)}
+      {steeringOar(-0.72, 0.2, -0.06, 2.5)}
+      {mast(0, 0.85, 0.15)}
+      {/* yard with the sail furled on it */}
+      <line
+        x1={PX(-0.3)}
+        y1={PZ(0.76)}
+        x2={PX(0.3)}
+        y2={PZ(0.76)}
+        stroke={rigStroke}
+        strokeWidth={2.5}
+      />
+      {/* forestay and backstay */}
+      <line
+        x1={PX(0)}
+        y1={PZ(0.85) - 6}
+        x2={PX(0.88)}
+        y2={PZ(0.26)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+      <line
+        x1={PX(0)}
+        y1={PZ(0.85) - 6}
+        x2={PX(-0.86)}
+        y2={PZ(0.26)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+    </g>
+  ),
+};
+
+/** Athenian trireme after the Olympias reconstruction: 36.9 m, 5.5 m over
+ * the outriggers, 170 oars in three files (thranites through the
+ * outrigger, zygites, thalamites just above the water), a bronze ram at the
+ * waterline, the aphlaston curling forward over the stern, eyes at the bow,
+ * one mast with a square sail, two steering oars. */
+const trireme: Hull = {
+  spec: {
+    id: 'trireme',
+    beam: 0.15,
+    mastX: 0.05,
+    mastTopZ: 0.8,
+    aftMastX: -0.4,
+    aftMastTopZ: 0.5,
+    sideLightX: 0.3,
+    sideLightZ: 0.21,
+    bowX: 0.9,
+    sternX: -0.86,
+    sternZ: 0.22,
+  },
+  plan: [
+    [1, 0],
+    [0.92, 0.03],
+    [0.8, 0.1],
+    [0.5, 0.15],
+    [-0.3, 0.15],
+    [-0.7, 0.11],
+    [-0.92, 0.04],
+    [-0.92, -0.04],
+    [-0.7, -0.11],
+    [-0.3, -0.15],
+    [0.5, -0.15],
+    [0.8, -0.1],
+    [0.92, -0.03],
+  ],
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.93, 0.27],
+          [0.88, 0.2],
+          [0.9, 0.08],
+          [1.0, 0.05],
+          [0.98, 0.02],
+          [0.85, 0.01],
+          [-0.7, 0.02],
+          [-0.88, 0.12],
+          [-0.95, 0.3],
+          [-0.98, 0.45],
+          [-0.92, 0.4],
+          [-0.86, 0.26],
+          [-0.6, 0.21],
+          [0.5, 0.21],
+          [0.85, 0.24],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* aphlaston */}
+      <path
+        d={`M${PX(-0.98).toFixed(1)},${PZ(0.45).toFixed(1)} Q${PX(-0.96).toFixed(1)},${PZ(0.54).toFixed(1)} ${PX(-0.88).toFixed(1)},${PZ(0.5).toFixed(1)}`}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={2}
+      />
+      {/* bronze ram */}
+      <path
+        d={d([
+          [0.9, 0.08],
+          [1.0, 0.05],
+          [0.98, 0.02],
+          [0.9, 0.03],
+        ])}
+        fill={hullStroke}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* eye */}
+      <circle cx={PX(0.85)} cy={PZ(0.14)} r={2.5} fill={hullStroke} />
+      {/* outrigger the thranites row from */}
+      <line
+        x1={PX(-0.55)}
+        y1={PZ(0.18)}
+        x2={PX(0.6)}
+        y2={PZ(0.18)}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* three files of oars, staggered */}
+      {oarBank(stations(0.55, -0.55, 12), 0.19, 0.06)}
+      {oarBank(stations(0.58, -0.52, 12), 0.13, 0.05)}
+      {oarBank(stations(0.56, -0.54, 12), 0.08, 0.04)}
+      {steeringOar(-0.72, 0.22, -0.1, 2.5)}
+      {mast(0.05, 0.8, 0.21)}
+      <line
+        x1={PX(-0.22)}
+        y1={PZ(0.72)}
+        x2={PX(0.32)}
+        y2={PZ(0.72)}
+        stroke={rigStroke}
+        strokeWidth={2}
+      />
+      <line
+        x1={PX(0.05)}
+        y1={PZ(0.8) - 6}
+        x2={PX(0.9)}
+        y2={PZ(0.25)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+    </g>
+  ),
+};
+
+/** Ptolemy IV's tessarakonteres after Callixenus (Athenaeus 5.203e-204b):
+ * 280 cubits (about 128 m) long, 38 cubits in beam, 48 cubits to the top of
+ * the stern ornament; double-prowed and double-sterned, so taken as twin
+ * hulls under one deck; seven rams, the leading one at the waterline; 4,000
+ * rowers in tiers along the side, four steering oars, a fighting deck for
+ * the marines. Abeam the two hulls draw as one; the plan shows both bows. */
+const tessarakonteres: Hull = {
+  spec: {
+    id: 'tessarakonteres',
+    beam: 0.14,
+    mastX: 0.1,
+    mastTopZ: 0.95,
+    aftMastX: -0.5,
+    aftMastTopZ: 0.6,
+    sideLightX: 0.3,
+    sideLightZ: 0.36,
+    bowX: 0.92,
+    sternX: -0.88,
+    sternZ: 0.38,
+  },
+  plan: [
+    [1, 0.05],
+    [0.9, 0.09],
+    [0.7, 0.125],
+    [0.45, 0.14],
+    [-0.6, 0.14],
+    [-0.88, 0.135],
+    [-0.98, 0.12],
+    [-0.9, 0.03],
+    [-0.9, -0.03],
+    [-0.98, -0.12],
+    [-0.88, -0.135],
+    [-0.6, -0.14],
+    [0.45, -0.14],
+    [0.7, -0.125],
+    [0.9, -0.09],
+    [1, -0.05],
+    [0.86, -0.02],
+    [0.86, 0.02],
+  ],
+  Profile: () => (
+    <g>
+      <path
+        d={d([
+          [0.95, 0.38],
+          [0.9, 0.3],
+          [0.92, 0.12],
+          [1.0, 0.06],
+          [0.98, 0.03],
+          [0.86, 0.02],
+          [-0.8, 0.02],
+          [-0.9, 0.14],
+          [-0.95, 0.4],
+          [-0.98, 0.6],
+          [-0.92, 0.52],
+          [-0.86, 0.36],
+          [-0.6, 0.33],
+          [0.6, 0.33],
+          [0.88, 0.36],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1.5}
+      />
+      {/* fighting deck */}
+      <path
+        d={d([
+          [0.7, 0.335],
+          [0.68, 0.41],
+          [-0.68, 0.41],
+          [-0.7, 0.335],
+        ])}
+        fill={hullFill}
+        stroke={hullStroke}
+        strokeWidth={1}
+      />
+      {/* aphlaston */}
+      <path
+        d={`M${PX(-0.98).toFixed(1)},${PZ(0.6).toFixed(1)} Q${PX(-0.96).toFixed(1)},${PZ(0.7).toFixed(1)} ${PX(-0.87).toFixed(1)},${PZ(0.66).toFixed(1)}`}
+        fill="none"
+        stroke={hullStroke}
+        strokeWidth={2.5}
+      />
+      {/* the leading ram and the lesser rams stepped above it */}
+      {(
+        [
+          [
+            [0.92, 0.12],
+            [1.0, 0.06],
+            [0.98, 0.03],
+            [0.9, 0.04],
+          ],
+          [
+            [0.91, 0.17],
+            [0.97, 0.19],
+            [0.91, 0.21],
+          ],
+          [
+            [0.9, 0.25],
+            [0.95, 0.27],
+            [0.9, 0.29],
+          ],
+        ] as [number, number][][]
+      ).map((pts, i) => (
+        <path key={i} d={d(pts)} fill={hullStroke} stroke={hullStroke} strokeWidth={1} />
+      ))}
+      <circle cx={PX(0.86)} cy={PZ(0.22)} r={3} fill={hullStroke} />
+      {/* four tiers of oars */}
+      {oarBank(stations(0.74, -0.7, 17), 0.29, 0.08)}
+      {oarBank(stations(0.76, -0.68, 17), 0.23, 0.07)}
+      {oarBank(stations(0.75, -0.69, 17), 0.17, 0.06)}
+      {oarBank(stations(0.77, -0.67, 17), 0.11, 0.05)}
+      {steeringOar(-0.72, 0.34, -0.12, 3)}
+      {steeringOar(-0.78, 0.36, -0.1, 3)}
+      {mast(0.1, 0.95, 0.41)}
+      <line
+        x1={PX(-0.2)}
+        y1={PZ(0.86)}
+        x2={PX(0.4)}
+        y2={PZ(0.86)}
+        stroke={rigStroke}
+        strokeWidth={2.5}
+      />
+      <line
+        x1={PX(0.1)}
+        y1={PZ(0.95) - 6}
+        x2={PX(0.9)}
+        y2={PZ(0.37)}
+        stroke={rigStroke}
+        strokeWidth={0.75}
+      />
+    </g>
+  ),
+};
+
 const powerSmall: Hull = {
   spec: {
     id: 'power-small',
@@ -2180,7 +2663,7 @@ const restrictedAbility: Hull = {
  * trawler at any length; with gear out, the fishing hull draws it; a vessel
  * pushing draws the push tug, one towing the tug, and a tow the barge;
  * a partly submerged object of 24(g) is drawn awash ahead of all of these), then
- * propulsion, then the wing-in-ground craft (power-driven on the surface by
+ * propulsion (oars and sail each by their own length bands), then the wing-in-ground craft (power-driven on the surface by
  * Rule 3(m), so she would otherwise fall into a length band), then length
  * bands for plain power vessels. No fact separates a cruise ship from a box
  * ship, so `cruiseShip` is never chosen here; a consumer that knows picks it
@@ -2219,7 +2702,13 @@ export function selectHull(facts: FactRecord): Hull {
   if (activity === 'activity:diving') return diveSupport;
   if (activity === 'activity:ram') return restrictedAbility;
   const propulsion = facts['fact:propulsion'];
-  if (propulsion === 'propulsion:oars') return openBoat;
+  if (propulsion === 'propulsion:oars') {
+    // An oar vessel of no stated length is the rowing boat she most likely is.
+    if (typeof facts['fact:length_m'] !== 'number' || length < 10) return openBoat;
+    if (length < 18) return dragonBoat;
+    if (length < 34) return longship;
+    return length < 70 ? trireme : tessarakonteres;
+  }
   if (propulsion === 'propulsion:sail') {
     if (length < 20) return sailSmall;
     return length < 40 ? sailLarge : squareRigger;
@@ -2236,6 +2725,10 @@ export function selectHull(facts: FactRecord): Hull {
 
 export const allHulls = {
   openBoat,
+  dragonBoat,
+  longship,
+  trireme,
+  tessarakonteres,
   powerSmall,
   powerLarge,
   sailSmall,

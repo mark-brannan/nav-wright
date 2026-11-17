@@ -3551,6 +3551,206 @@
     }
   },
   {
+    "file": "loft-dragon-boat-highside.glb",
+    "name": "Dragon boat (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dragon boat, long and narrow, open, head and tail fitted",
+    "propulsion": [
+      "oars"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 12.5,
+    "beamM": 1.7,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      18
+    ],
+    "proportions": {
+      "lengthBeam": 6.464,
+      "lengthHeight": 10.53
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.88,
+        0.9
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.78,
+        0.234
+      ],
+      "sidelight": [
+        0.658,
+        0.116
+      ],
+      "stern": [
+        -1,
+        0.127
+      ]
+    }
+  },
+  {
+    "file": "loft-dragon-boat-sheered.glb",
+    "name": "Dragon boat (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dragon boat, long and narrow, open, head and tail fitted",
+    "propulsion": [
+      "oars"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 12.5,
+    "beamM": 1.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      18
+    ],
+    "proportions": {
+      "lengthBeam": 7.079,
+      "lengthHeight": 13.008
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.88,
+        0.9
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.78,
+        0.19
+      ],
+      "sidelight": [
+        0.658,
+        0.096
+      ],
+      "stern": [
+        -1,
+        0.115
+      ]
+    }
+  },
+  {
+    "file": "loft-dragon-boat-slender.glb",
+    "name": "Dragon boat (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dragon boat, long and narrow, open, head and tail fitted",
+    "propulsion": [
+      "oars"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 12.5,
+    "beamM": 1.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      18
+    ],
+    "proportions": {
+      "lengthBeam": 9.291,
+      "lengthHeight": 15.322
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.88,
+        0.9
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.78,
+        0.161
+      ],
+      "sidelight": [
+        0.658,
+        0.079
+      ],
+      "stern": [
+        -1,
+        0.088
+      ]
+    }
+  },
+  {
+    "file": "loft-dragon-boat.glb",
+    "name": "Dragon boat",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "dragon boat, long and narrow, open, head and tail fitted",
+    "propulsion": [
+      "oars"
+    ],
+    "shows": [
+      "open-cockpit"
+    ],
+    "loaM": 12.5,
+    "beamM": 1.5,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      10,
+      18
+    ],
+    "proportions": {
+      "lengthBeam": 7.433,
+      "lengthHeight": 27.442
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.88,
+        0.9
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.95,
+        0.09
+      ],
+      "sidelight": [
+        0.658,
+        0.085
+      ],
+      "stern": [
+        -1,
+        0.09
+      ]
+    }
+  },
+  {
     "file": "loft-dredger-highside.glb",
     "name": "Dredger (highside)",
     "kind": "loft",
@@ -4171,6 +4371,218 @@
       "stern": [
         -1,
         0.187
+      ]
+    }
+  },
+  {
+    "file": "loft-longship-highside.glb",
+    "name": "Viking longship (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "clinker-built longship, double-ended, high stem and sternpost",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 30,
+    "beamM": 4.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      18,
+      34
+    ],
+    "proportions": {
+      "lengthBeam": 5.879,
+      "lengthHeight": 2.56
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.94,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.072,
+        0.963
+      ],
+      "sidelight": [
+        0.593,
+        0.209
+      ],
+      "stern": [
+        -1,
+        0.42
+      ]
+    }
+  },
+  {
+    "file": "loft-longship-sheered.glb",
+    "name": "Viking longship (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "clinker-built longship, double-ended, high stem and sternpost",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 30,
+    "beamM": 4.4,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      18,
+      34
+    ],
+    "proportions": {
+      "lengthBeam": 6.439,
+      "lengthHeight": 2.67
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.94,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.072,
+        0.924
+      ],
+      "sidelight": [
+        0.593,
+        0.182
+      ],
+      "stern": [
+        -1,
+        0.386
+      ]
+    }
+  },
+  {
+    "file": "loft-longship-slender.glb",
+    "name": "Viking longship (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "clinker-built longship, double-ended, high stem and sternpost",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 30,
+    "beamM": 3.4,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      18,
+      34
+    ],
+    "proportions": {
+      "lengthBeam": 8.452,
+      "lengthHeight": 2.708
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.94,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.037,
+        0.911
+      ],
+      "sidelight": [
+        0.593,
+        0.145
+      ],
+      "stern": [
+        -1,
+        0.307
+      ]
+    }
+  },
+  {
+    "file": "loft-longship.glb",
+    "name": "Viking longship",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "clinker-built longship, double-ended, high stem and sternpost",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 30,
+    "beamM": 4.2,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      18,
+      34
+    ],
+    "proportions": {
+      "lengthBeam": 6.761,
+      "lengthHeight": 2.671
+    },
+    "frame": {
+      "waterlineZ": 0.024,
+      "hullX": [
+        -0.94,
+        0.95
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.037,
+        0.923
+      ],
+      "sidelight": [
+        0.593,
+        0.152
+      ],
+      "stern": [
+        -1,
+        0.307
       ]
     }
   },
@@ -6863,6 +7275,218 @@
     }
   },
   {
+    "file": "loft-tessarakonteres-highside.glb",
+    "name": "Tessarakonteres (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "twin-hulled galley under one deck, tiers of oars, stepped rams, fighting deck",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 128,
+    "beamM": 20.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      70,
+      140
+    ],
+    "proportions": {
+      "lengthBeam": 6.149,
+      "lengthHeight": 2.291
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.98,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.167,
+        1.076
+      ],
+      "sidelight": [
+        0.81,
+        0.461
+      ],
+      "stern": [
+        -1,
+        0.786
+      ]
+    }
+  },
+  {
+    "file": "loft-tessarakonteres-sheered.glb",
+    "name": "Tessarakonteres (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "twin-hulled galley under one deck, tiers of oars, stepped rams, fighting deck",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 128,
+    "beamM": 18.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      70,
+      140
+    ],
+    "proportions": {
+      "lengthBeam": 6.735,
+      "lengthHeight": 2.481
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.98,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.17,
+        0.994
+      ],
+      "sidelight": [
+        0.81,
+        0.429
+      ],
+      "stern": [
+        -1,
+        0.719
+      ]
+    }
+  },
+  {
+    "file": "loft-tessarakonteres-slender.glb",
+    "name": "Tessarakonteres (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "twin-hulled galley under one deck, tiers of oars, stepped rams, fighting deck",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 128,
+    "beamM": 14.3,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      70,
+      140
+    ],
+    "proportions": {
+      "lengthBeam": 8.839,
+      "lengthHeight": 2.553
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.98,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.132,
+        0.966
+      ],
+      "sidelight": [
+        0.81,
+        0.334
+      ],
+      "stern": [
+        -1,
+        0.586
+      ]
+    }
+  },
+  {
+    "file": "loft-tessarakonteres.glb",
+    "name": "Tessarakonteres",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "twin-hulled galley under one deck, tiers of oars, stepped rams, fighting deck",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 128,
+    "beamM": 17.9,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      70,
+      140
+    ],
+    "proportions": {
+      "lengthBeam": 7.071,
+      "lengthHeight": 2.485
+    },
+    "frame": {
+      "waterlineZ": 0.016,
+      "hullX": [
+        -0.98,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.132,
+        0.992
+      ],
+      "sidelight": [
+        0.81,
+        0.338
+      ],
+      "stern": [
+        -1,
+        0.586
+      ]
+    }
+  },
+  {
     "file": "loft-trawler-highside.glb",
     "name": "Stern trawler (highside)",
     "kind": "loft",
@@ -7067,6 +7691,218 @@
       "stern": [
         -1,
         0.186
+      ]
+    }
+  },
+  {
+    "file": "loft-trireme-highside.glb",
+    "name": "Trireme (highside)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "trireme, three files of oars, waterline ram, aphlaston aft",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 37,
+    "beamM": 6.4,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      34,
+      70
+    ],
+    "proportions": {
+      "lengthBeam": 5.739,
+      "lengthHeight": 2.727
+    },
+    "frame": {
+      "waterlineZ": 0.008,
+      "hullX": [
+        -0.98,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.082,
+        0.905
+      ],
+      "sidelight": [
+        0.71,
+        0.299
+      ],
+      "stern": [
+        -1,
+        0.594
+      ]
+    }
+  },
+  {
+    "file": "loft-trireme-sheered.glb",
+    "name": "Trireme (sheered)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "trireme, three files of oars, waterline ram, aphlaston aft",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 37,
+    "beamM": 5.8,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      34,
+      70
+    ],
+    "proportions": {
+      "lengthBeam": 6.286,
+      "lengthHeight": 2.896
+    },
+    "frame": {
+      "waterlineZ": 0.008,
+      "hullX": [
+        -0.98,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.083,
+        0.852
+      ],
+      "sidelight": [
+        0.71,
+        0.275
+      ],
+      "stern": [
+        -1,
+        0.544
+      ]
+    }
+  },
+  {
+    "file": "loft-trireme-slender.glb",
+    "name": "Trireme (slender)",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "trireme, three files of oars, waterline ram, aphlaston aft",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 37,
+    "beamM": 4.4,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      34,
+      70
+    ],
+    "proportions": {
+      "lengthBeam": 8.25,
+      "lengthHeight": 2.956
+    },
+    "frame": {
+      "waterlineZ": 0.008,
+      "hullX": [
+        -0.98,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.082,
+        0.834
+      ],
+      "sidelight": [
+        0.71,
+        0.218
+      ],
+      "stern": [
+        -1,
+        0.444
+      ]
+    }
+  },
+  {
+    "file": "loft-trireme.glb",
+    "name": "Trireme",
+    "kind": "loft",
+    "fidelity": "typical",
+    "source": {
+      "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+      "license": "AGPL-3.0"
+    },
+    "hullForm": "trireme, three files of oars, waterline ram, aphlaston aft",
+    "rig": "single square sail",
+    "propulsion": [
+      "oars",
+      "sail"
+    ],
+    "shows": [
+      "masts",
+      "yards"
+    ],
+    "loaM": 37,
+    "beamM": 5.6,
+    "draftM": null,
+    "nominal": true,
+    "fitLengthM": [
+      34,
+      70
+    ],
+    "proportions": {
+      "lengthBeam": 6.6,
+      "lengthHeight": 2.897
+    },
+    "frame": {
+      "waterlineZ": 0.008,
+      "hullX": [
+        -0.98,
+        1
+      ]
+    },
+    "lights": {
+      "masthead": [
+        0.082,
+        0.851
+      ],
+      "sidelight": [
+        0.71,
+        0.222
+      ],
+      "stern": [
+        -1,
+        0.444
       ]
     }
   },

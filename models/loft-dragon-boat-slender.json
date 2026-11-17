@@ -1,0 +1,25 @@
+{
+  "file": "loft-dragon-boat-slender.glb",
+  "name": "Dragon boat (slender)",
+  "kind": "loft",
+  "fidelity": "typical",
+  "source": {
+    "url": "https://github.com/mark-brannan/nav-wright/blob/main/src/hulls.tsx",
+    "license": "AGPL-3.0"
+  },
+  "hullForm": "dragon boat, long and narrow, open, head and tail fitted",
+  "propulsion": [
+    "oars"
+  ],
+  "shows": [
+    "open-cockpit"
+  ],
+  "loaM": 12.5,
+  "beamM": 1.2,
+  "draftM": null,
+  "nominal": true,
+  "fitLengthM": [
+    10,
+    18
+  ]
+}
