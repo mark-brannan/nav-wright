@@ -36,7 +36,7 @@ const fixtures = (situationJson as unknown as { cases: { name: string; situation
 const fixture = (prefix: string): Situation =>
   fixtures.find((c) => c.name.startsWith(prefix))!.situation;
 const presets = {
-  crossing: fixture('crossing: self power-driven'),
+  crossing: fixture('crossing: self power-driven, other fine on the starboard bow'),
   'head-on': fixture('narrow channel: head-on'),
   overtaking: fixture('13 over 12: self overtaking'),
 } as const;
@@ -127,7 +127,9 @@ function Scenes() {
       </section>
       <section className="views">
         <figure>
-          <figcaption>situationToScene: {preset}</figcaption>
+          <figcaption>
+            situationToScene: {preset}, both vessels in the picked hull's display
+          </figcaption>
           <SceneView {...fromSituation} labels={defaultSceneLabels} />
         </figure>
         <figure>

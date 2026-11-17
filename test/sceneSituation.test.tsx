@@ -147,6 +147,12 @@ describe('situationToScene', () => {
     expect('speedMps' in props.target).toBe(false);
   });
 
+  it('leaves out a CPA already past', () => {
+    const s = fixture('13(d) latch:');
+    expect(s.pair!.geo!['geo:tcpa_s']).toBeLessThan(0);
+    expect(situationToScene(s, vessels).cpa).toBeUndefined();
+  });
+
   it('renders through SceneView with each hull turned to her heading', () => {
     const html = renderToStaticMarkup(
       <SceneView {...situationToScene(fixture('crossing:'), vessels)} />,

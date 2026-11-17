@@ -62,7 +62,7 @@ export function situationPair(s: Situation): PairInput {
  * SceneView's props from a situation record and the two vessels' drawings.
  * Speed is `kin:sog_kn`, drawn along the heading (the record carries no
  * course over ground). The CPA marker needs both `geo:cpa_m` and
- * `geo:tcpa_s`; the backdrop is `pair:env`. `labels` and `vectorMinutes` are
+ * a `geo:tcpa_s` still ahead (not negative); the backdrop is `pair:env`. `labels` and `vectorMinutes` are
  * the caller's to add.
  */
 export function situationToScene(
@@ -82,7 +82,8 @@ export function situationToScene(
   };
   const cpaM = num(s.pair?.geo?.['geo:cpa_m']);
   const tcpaS = num(s.pair?.geo?.['geo:tcpa_s']);
-  if (cpaM !== undefined && tcpaS !== undefined) props.cpa = { cpaM, tcpaS };
+  // a negative TCPA is a CPA already past: no marker
+  if (cpaM !== undefined && tcpaS !== undefined && tcpaS >= 0) props.cpa = { cpaM, tcpaS };
   const env = s.pair?.env;
   if (env) {
     props.env = {
