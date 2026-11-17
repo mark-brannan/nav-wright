@@ -677,7 +677,7 @@ export function viewFrame(
 }
 
 /** Bead radius for a light in metres, and how far off the surface it is
- * seated: a fixed fraction of her length, so it too holds its size. */
+ * seated: a fixed fraction of her length, so it keeps its size against her. */
 export function lightRadius(lengthMeters: number): number {
   return lengthMeters * 0.012;
 }
