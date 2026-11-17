@@ -111,3 +111,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261117t094743z
 - a single lantern under soft sector edges takes its brightest member's colour and the members' sum capped at 1 Undo: drop the intensity branch in mergeLanterns (src/lantern.ts) ([#164](https://github.com/mark-brannan/nav-wright/pull/164))
+
+### 20261117t094757z
+- issue 47 item 3 is read as a consumer may set text in a light colour: the AA test holds the four exported colours to 4.5:1 as text on the two night grounds, though the library draws no such text Undo: untick item 3 in issue 47 and say which text it means ([#164](https://github.com/mark-brannan/nav-wright/pull/164))
