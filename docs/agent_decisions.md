@@ -108,3 +108,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261117t094157z
 - situationToScene leaves the CPA marker out when geo:tcpa_s is negative (a CPA already past) Undo: drop tcpaS >= 0 in situationToScene and word the label for a past CPA ([#163](https://github.com/mark-brannan/nav-wright/pull/163#discussion_r4597771757)) ([#163](https://github.com/mark-brannan/nav-wright/pull/163))
+
+### 20261117t094743z
+- a single lantern under soft sector edges takes its brightest member's colour and the members' sum capped at 1 Undo: drop the intensity branch in mergeLanterns (src/lantern.ts) ([#164](https://github.com/mark-brannan/nav-wright/pull/164))
