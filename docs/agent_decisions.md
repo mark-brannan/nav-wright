@@ -120,3 +120,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261117t210917z
 - Oar hulls by length band: open <10 m or no length, dragon boat 10-18, longship 18-34, trireme 34-70, tessarakonteres 70+; dragon boat counted as oars; tessarakonteres as twin hulls; longship under oars without shields; dragon-boat loft variants carry a drum fitting Undo: edit selectHull bands ([#180](https://github.com/mark-brannan/nav-wright/pull/180))
+
+### 20261117t211022z
+- mesh projections ship in models/, in hull half-length units, profile from starboard, plan bow up; MODELS.md section deferred to avoid #180's file Undo: move the SVGs out of models/ or change the units ([#181](https://github.com/mark-brannan/nav-wright/pull/181))
