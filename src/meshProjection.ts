@@ -134,13 +134,14 @@ export function projectTriangles(
       .map(toUnits);
 
   const painted = new Int32Array(W * H).fill(-1);
-  const paints: number[] = [];
+  const seen = new Set<number>();
   for (let at = 0; at < W * H; at++) {
     if (owner[at] < 0) continue;
     const p = paint[owner[at]];
     painted[at] = p;
-    if (!paints.includes(p)) paints.push(p);
+    seen.add(p);
   }
+  const paints = [...seen];
   return {
     bounds: { u: [u0, u1], v: [v0, v1] },
     pixel: 1 / s,

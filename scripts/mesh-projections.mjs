@@ -191,7 +191,7 @@ function svg(projection, colours, { title, view }) {
   const outline = loopsPath(projection.outline);
   const lines = [
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${box.join(' ')}" width="${Math.round(box[2] * SHOWN)}" height="${Math.round(box[3] * SHOWN)}" data-view="${view.kind}"${profile ? ` data-bearing="${view.bearing}"` : ''} data-u="${u.map(r4).join(' ')}" data-v="${v.map(r4).join(' ')}">`,
-    `<title>${title}</title>`,
+    `<title>${title.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</title>`,
     `<path d="${outline}" fill="${SILHOUETTE_COLOR}" fill-rule="evenodd"/>`,
     // Each paint is stroked in its own colour too, closing the hairline seams
     // that separately simplified neighbours leave between them.
