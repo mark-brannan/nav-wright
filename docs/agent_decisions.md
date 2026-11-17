@@ -114,3 +114,6 @@ heading is the UTC stamp, so `agent_decisions.md#<stamp>` links one entry.
 
 ### 20261117t094757z
 - issue 47 item 3 is read as a consumer may set text in a light colour: the AA test holds the four exported colours to 4.5:1 as text on the two night grounds, though the library draws no such text Undo: untick item 3 in issue 47 and say which text it means ([#164](https://github.com/mark-brannan/nav-wright/pull/164))
+
+### 20261117t095543z
+- 27(f) fore-yard lights follow the foremast-head light down but stop at the sidelights' height, so none is drawn under the deck line Undo: lift the masthead over the 27(f) lights, reading 2(a)(i)'s 12 m as a permission, as the column block does ([#162](https://github.com/mark-brannan/nav-wright/pull/162))
