@@ -8,9 +8,14 @@ import {
   BearingView,
   HULL_HINT_FAR_NM,
   HULL_HINT_NEAR_NM,
+  DAY_SEA_LIT,
+  DAY_SKY_CLEAR,
+  DAY_SKY_DULL,
+  SEA_LIGHT,
   SKY_LIGHT,
   hullHintOpacity,
   hullSilhouette,
+  seaColor,
   skyColor,
 } from '../src/BearingView.js';
 import { selectHull } from '../src/hulls.js';
@@ -132,7 +137,7 @@ describe('sky', () => {
   });
 
   it('only ever brightens as the setting rises, and stays blue', () => {
-    const steps = [0, 0.25, 0.5, 0.75, 1].map(skyColor);
+    const steps = [0, 0.25, 0.5, 0.75, 1].map((b) => skyColor(b));
     for (let i = 1; i < steps.length; i++)
       expect(luminance(steps[i])).toBeGreaterThan(luminance(steps[i - 1]));
     const n = parseInt(skyColor(0.5).slice(1), 16);
@@ -273,5 +278,106 @@ describe('BearingView sector softening', () => {
         />,
       ),
     ).toContain('bearing-empty');
+  });
+});
+
+const hex = (rgb: readonly number[]): string =>
+  `#${rgb.map((c) => c.toString(16).padStart(2, '0')).join('')}`;
+
+const masthead: PlacedLight = {
+  key: 'light:masthead',
+  lightId: 'light:masthead',
+  color: '#ffffff',
+  character: 'steady',
+  arc: { from_deg: 247.5, to_deg: 112.5 },
+  fx: 0,
+  py: 0,
+  z: 0.5,
+  sourceEntry: 'test',
+};
+
+const seaStops = (html: string): string[] =>
+  [...html.matchAll(/<stop[^>]*stop-color="([^"]*)"/g)].map((m) => m[1]!);
+
+describe('day', () => {
+  const at = (props: { time?: 'day' | 'night'; sea?: number; hullHint?: number; range?: number }) =>
+    renderToStaticMarkup(
+      <BearingView
+        hull={hull}
+        placed={[masthead]}
+        theta={0}
+        onTheta={noop}
+        hullHint={props.hullHint ?? 0}
+        range={props.range}
+        seascape
+        sea={props.sea}
+        time={props.time}
+        controls={false}
+      />,
+    );
+
+  it('draws the same picture as night when not asked for', () => {
+    expect(at({ time: 'night' })).toBe(at({}));
+  });
+
+  it('lights no light, and says nothing of lights missing', () => {
+    expect(at({})).toContain('<circle');
+    expect(at({ time: 'day' })).not.toContain('<circle');
+    expect(at({ time: 'day' })).not.toContain('bearing-empty');
+  });
+
+  it('shows the hull in full, however faint the hint and far the range', () => {
+    expect(hintOpacity(at({ time: 'day', hullHint: 0, range: HULL_HINT_FAR_NM + 5 }))).toBe(1);
+  });
+
+  it('paints a day sky from overcast to clear, brighter than any night sky', () => {
+    expect(skyColor(0, 'day')).toBe(hex(DAY_SKY_DULL));
+    expect(skyColor(1, 'day')).toBe(hex(DAY_SKY_CLEAR));
+    expect(skyFill(at({ time: 'day' }))).toBe(hex(DAY_SKY_DULL));
+    expect(luminance(skyColor(0, 'day'))).toBeGreaterThan(luminance(skyColor(1)));
+  });
+
+  it('paints a day sea darker than its sky, so the horizon reads', () => {
+    for (const b of [0, 0.5, 1])
+      expect(luminance(seaColor(b, 'day'))).toBeLessThan(luminance(skyColor(b, 'day')));
+    expect(seaStops(at({ time: 'day' }))[0]).toBe(hex(DAY_SEA_LIT));
+  });
+});
+
+describe('sea', () => {
+  const at = (sea?: number) =>
+    renderToStaticMarkup(
+      <BearingView
+        hull={hull}
+        placed={[]}
+        theta={0}
+        onTheta={noop}
+        hullHint={0}
+        seascape
+        sea={sea}
+      />,
+    );
+
+  it("keeps the style's own sea when not given", () => {
+    expect(seaStops(at())).toEqual([
+      'var(--bearing-sea-near, #0a1424)',
+      'var(--bearing-sea-far, #03060b)',
+    ]);
+  });
+
+  it("colours the sea on the 3D view's scale, darker in the foreground", () => {
+    const [near, far] = seaStops(at(1));
+    expect(near).toBe(hex(SEA_LIGHT));
+    expect(near).toBe(seaColor(1));
+    expect(luminance(far!)).toBeLessThan(luminance(near!));
+    expect(seaStops(at(0))).toEqual(['#000000', '#000000']);
+  });
+
+  it('has no effect without the seascape', () => {
+    const plain = (sea?: number) =>
+      renderToStaticMarkup(
+        <BearingView hull={hull} placed={[]} theta={0} onTheta={noop} hullHint={0} sea={sea} />,
+      );
+    expect(plain(1)).toBe(plain());
   });
 });

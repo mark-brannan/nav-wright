@@ -567,6 +567,7 @@ export function BenchyModel({
   hullOpacity = 1,
   background = DAY_BACKGROUND,
   night = false,
+  pan = !night,
   sea,
   silhouette,
   blockSpec,
@@ -614,6 +615,9 @@ export function BenchyModel({
    * orbit centre pinned to the vessel, the camera's azimuth is the viewer's
    * relative bearing and nothing else. */
   night?: boolean;
+  /** Let the viewer pan the orbit centre off the vessel. Default: by day
+   *  only. The bearing views pin it, so azimuth stays relative bearing. */
+  pan?: boolean;
   /** The sea's colour: a plane at the waterline, visible from below as well. Undefined draws none. */
   sea?: string;
   /** With `inViewAt`: how bright each light reads, 0..1, from a bearing,
@@ -685,7 +689,7 @@ export function BenchyModel({
           }}
           tilt={level ? 0 : tilt}
           onTilt={level ? undefined : onTilt}
-          pan={!night && !level}
+          pan={pan && !level}
           level={level}
         />
         <Suspense fallback={<Pending onPending={setPending} />}>

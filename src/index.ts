@@ -86,7 +86,17 @@ export type { Aspect, SceneLabels } from './labels.js';
 export { bearingLabel } from './bearing.js';
 
 // Scene views
-export { BearingView, SEA_LIGHT, SKY_LIGHT, seaColor, skyColor } from './BearingView.js';
+export {
+  BearingView,
+  DAY_SEA_DULL,
+  DAY_SEA_LIT,
+  DAY_SKY_CLEAR,
+  DAY_SKY_DULL,
+  SEA_LIGHT,
+  SKY_LIGHT,
+  seaColor,
+  skyColor,
+} from './BearingView.js';
 export { PlanView } from './PlanView.js';
 export { ProfileView } from './ProfileView.js';
 export { SceneView } from './SceneView.js';

@@ -8,6 +8,7 @@
 // the fallback keeps the exam's meaning, where the Benchy view's profile
 // fallback would not. While three.js or the model loads, the 2D bearing
 // scene stands in on the canvas, so the lights are never a blank wait.
+// `time="day"` swaps night for the day palette (see BearingView).
 
 import { Suspense, useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
@@ -41,6 +42,9 @@ export function bearingHullOpacity(hullHint: number, rangeNm?: number): number {
   return s * hullHintOpacity(rangeNm);
 }
 
+/** By day no light is lit. */
+const UNLIT: LightIntensity = () => 0;
+
 export function BearingModelView({
   modelUrl,
   hull,
@@ -55,6 +59,7 @@ export function BearingModelView({
   range,
   sky = 0,
   sea = 0.1,
+  time = 'night',
   silhouette,
   sectorProfile,
   rangeDropout = false,
@@ -93,10 +98,16 @@ export function BearingModelView({
   hullHint: number;
   /** Range to her in nautical miles; fades the hull (see hullHintOpacity). */
   range?: number;
-  /** Background, 0 (black) .. 1 (a lighter night blue). See skyColor. */
+  /** Background, 0 (black) .. 1 (a lighter night blue); by day, 0
+   *  (overcast) .. 1 (clear). See skyColor. */
   sky?: number;
-  /** The sea, always drawn above the waterline: 0 (black) .. 1 (deep navy). See seaColor. */
+  /** The sea, always drawn above the waterline: 0 (black) .. 1 (deep navy);
+   *  by day, 0 (grey) .. 1 (daylit blue). See seaColor. */
   sea?: number;
+  /** `day` draws her by daylight: a day sky and sea, daylight on the mesh,
+   *  the hull solid whatever `hullHint` and `range`, and no light lit
+   *  (Rule 20(b)). Default: night. */
+  time?: 'day' | 'night';
   /** Draw her as a flat silhouette from the waterline's level (tilt 0)
    * rather than a shaded model; see SilhouetteVariant. The hull hint, range,
    * sky and sea apply alike. Default: the model. */
@@ -158,12 +169,14 @@ export function BearingModelView({
   controls?: boolean;
 }): ReactElement {
   const [modelFailed, setModelFailed] = useState(false);
+  const day = time === 'day';
   // The silhouette is drawn from the waterline's level, so its elevation is 0.
   const viewTilt = silhouette ? 0 : tilt;
   const vertical = verticalSector ? verticalSectorFor(facts) : undefined;
   const bleed = filamentBleed > 0 ? filamentBleed : 0;
   const divisions = useMemo(() => (bleed ? filamentDivisions(placed) : undefined), [bleed, placed]);
   const lightIntensity = useMemo((): LightIntensity | undefined => {
+    if (day) return UNLIT;
     const defects = screenSkew !== 0 || saltedLens > 0 || tiredBulb > 0;
     if (!sectorProfile && !rangeDropout && !vertical && !divisions?.size && !defects)
       return undefined;
@@ -182,6 +195,7 @@ export function BearingModelView({
       );
     };
   }, [
+    day,
     sectorProfile,
     rangeDropout,
     lightRangesNm,
@@ -229,6 +243,7 @@ export function BearingModelView({
       hullHint={hullHint}
       range={range}
       sky={sky}
+      time={time}
       rangeGlow={rangeGlow}
       lightRangesNm={lightRangesNm}
       sectorProfile={sectorProfile}
@@ -239,7 +254,7 @@ export function BearingModelView({
   if (modelFailed) return flat;
 
   const lengthMeters = typeof facts['fact:length_m'] === 'number' ? facts['fact:length_m'] : 12;
-  const background = skyColor(sky);
+  const background = skyColor(sky, time);
   const standIn = (
     <BearingScene
       hull={hull}
@@ -249,6 +264,7 @@ export function BearingModelView({
       hullHint={hullHint}
       range={range}
       sky={sky}
+      time={time}
       rangeGlow={rangeGlow}
       lightRangesNm={lightRangesNm}
       sectorProfile={sectorProfile}
@@ -256,9 +272,11 @@ export function BearingModelView({
     />
   );
   const blank = <div className="scene-3d" style={{ background }} aria-hidden="true" />;
-  const noneInView = lightIntensity
-    ? placed.every((l) => lightIntensity(l, theta) === 0)
-    : lightsInView(placed, theta).length === 0;
+  const noneInView = day
+    ? false
+    : lightIntensity
+      ? placed.every((l) => lightIntensity(l, theta) === 0)
+      : lightsInView(placed, theta).length === 0;
 
   return (
     <ModelErrorBoundary fallback={flat} onError={() => setModelFailed(true)}>
@@ -282,10 +300,11 @@ export function BearingModelView({
               hull={hull.spec}
               topZ={mesh ? meshTopZ(mesh.proportions.lengthHeight) : undefined}
               inViewAt={theta}
-              hullOpacity={bearingHullOpacity(hullHint, range)}
+              hullOpacity={day ? 1 : bearingHullOpacity(hullHint, range)}
               background={background}
-              night
-              sea={seaColor(sea)}
+              night={!day}
+              pan={false}
+              sea={seaColor(sea, time)}
               lightIntensity={lightIntensity}
               lightGlow={lightGlow}
               heel={heel}

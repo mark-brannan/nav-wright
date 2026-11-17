@@ -4,7 +4,8 @@
 // sectorProfile the edges soften per Annex I §9(a) (sectorProfile.ts), the
 // same profile the 3D view draws; without one, the exam's hard cut.
 // The night seascape (horizon, sea, hull hint) is an opt-in extra, kept in
-// its own block at the bottom of this file.
+// its own block at the bottom of this file. `time="day"` swaps in the day
+// palette: a daylit sky and sea, the hull plain to see, the lights unlit.
 
 import { useId } from 'react';
 import type { ReactElement } from 'react';
@@ -36,10 +37,19 @@ type BearingSceneProps = {
   hullHint: number;
   /** Range to her in nautical miles; fades the hull hint (see hullHintOpacity). */
   range?: number;
-  /** Background, 0 (black, the exam default) .. 1 (a lighter night blue). See skyColor. */
+  /** Background, 0 (black, the exam default) .. 1 (a lighter night blue); by
+   *  day, 0 (overcast) .. 1 (clear). See skyColor. */
   sky?: number;
   /** Opt-in night seascape: a horizon and a sea under the lights. Default: lights only on black. */
   seascape?: boolean;
+  /** The seascape's sea, 0 (black) .. 1 (deep navy); by day, 0 (grey) .. 1
+   *  (daylit blue). The same scale as BearingModelView's `sea`; see seaColor.
+   *  Default: the style's own night sea, or the day sea at 1 by day. */
+  sea?: number;
+  /** `day` draws the day palette: the sky and sea by daylight, the hull at
+   *  full strength whatever `hullHint` and `range`, and no light lit
+   *  (Rule 20(b)). Default: night. */
+  time?: 'day' | 'night';
   /** Draw a combined fixture (tricolor) as one lantern in the colour facing the viewer. Default off: one dot per sector. */
   singleLantern?: boolean;
   /** Scale each glow by the light's range (`lightRangesNm`, by lightId) and the viewing `range`. Default off: every glow alike. */
@@ -86,6 +96,8 @@ export function BearingScene({
   range,
   sky = 0,
   seascape = false,
+  sea,
+  time = 'night',
   singleLantern = false,
   rangeGlow = false,
   lightRangesNm,
@@ -95,6 +107,7 @@ export function BearingScene({
   style,
 }: BearingSceneProps): ReactElement {
   const drag = useDragRotate<SVGSVGElement>(theta, onTheta);
+  const day = time === 'day';
   const paint = useHullStylePaint(style, 'bearing');
   const rad = (theta * Math.PI) / 180;
   const sin = Math.sin(rad);
@@ -105,12 +118,14 @@ export function BearingScene({
         .map((l) => ({ ...l, intensity: sectorIntensity(theta, l.arc, sectorProfile) }))
         .filter((l) => l.intensity > 0)
     : lightsInView(placed, theta);
-  const projected = (singleLantern ? mergeLanterns(visible, theta) : visible).map((l) => ({
-    light: l,
-    x: CX + (l.fx * sin - l.py * cos) * SCALE,
-    y: HORIZON - l.z * ZSCALE,
-    intensity: l.intensity ?? 1,
-  }));
+  const projected = day
+    ? []
+    : (singleLantern ? mergeLanterns(visible, theta) : visible).map((l) => ({
+        light: l,
+        x: CX + (l.fx * sin - l.py * cos) * SCALE,
+        y: HORIZON - l.z * ZSCALE,
+        intensity: l.intensity ?? 1,
+      }));
 
   return (
     <svg
@@ -122,10 +137,21 @@ export function BearingScene({
       {...drag}
     >
       {paint.defs}
-      <rect className="bearing-sky" width="440" height="240" fill={skyColor(sky)} />
-      {seascape && <Seascape />}
-      {hullHint > 0 && (
-        <HullHint hull={hull} theta={theta} range={range} strength={hullHint} styled={!!style} />
+      <rect className="bearing-sky" width="440" height="240" fill={skyColor(sky, time)} />
+      {seascape && (
+        <Seascape
+          sea={sea === undefined && !day ? undefined : seaColor(sea ?? 1, time)}
+          far={sea === undefined && !day ? undefined : seaColor((sea ?? 1) * SEA_FAR, time)}
+        />
+      )}
+      {(day || hullHint > 0) && (
+        <HullHint
+          hull={hull}
+          theta={theta}
+          range={day ? undefined : range}
+          strength={day ? 1 : hullHint}
+          styled={!!style}
+        />
       )}
       {projected.map((p) => (
         <Glow
@@ -140,7 +166,7 @@ export function BearingScene({
           r={5.5}
         />
       ))}
-      {projected.length === 0 && (
+      {!day && projected.length === 0 && (
         <text x="220" y="120" textAnchor="middle" className="bearing-empty">
           {labels.bearingNoLights}
         </text>
@@ -156,30 +182,50 @@ export function BearingScene({
 // the only spectacle by default. BearingView above only decides whether to
 // mount these.
 
-/** The sky at full brightness: a lighter night blue. Black is brightness 0. */
-export const SKY_LIGHT: readonly [number, number, number] = [0x3a, 0x65, 0x93];
+type Rgb = readonly [number, number, number];
 
-/** Background colour for a sky brightness 0..1 (clamped): black to SKY_LIGHT. */
-export function skyColor(brightness: number): string {
-  const t = Number.isFinite(brightness) ? Math.min(1, Math.max(0, brightness)) : 0;
-  return `#${SKY_LIGHT.map((c) =>
-    Math.round(c * t)
-      .toString(16)
-      .padStart(2, '0'),
-  ).join('')}`;
-}
+/** The sky at full brightness: a lighter night blue. Black is brightness 0. */
+export const SKY_LIGHT: Rgb = [0x3a, 0x65, 0x93];
+/** The day sky: overcast at brightness 0, clear at 1 (the profile view's --sky-day). */
+export const DAY_SKY_DULL: Rgb = [0x9a, 0xa6, 0xb0];
+export const DAY_SKY_CLEAR: Rgb = [0xcf, 0xe6, 0xf7];
 
 /** The sea at full brightness: a deep navy. Black is brightness 0. */
-export const SEA_LIGHT: readonly [number, number, number] = [0x16, 0x38, 0x78];
+export const SEA_LIGHT: Rgb = [0x16, 0x38, 0x78];
+/** The day sea: grey at brightness 0, daylit blue at 1 (the profile view's --sea-day). */
+export const DAY_SEA_DULL: Rgb = [0x45, 0x58, 0x63];
+export const DAY_SEA_LIT: Rgb = [0x5f, 0x93, 0xb8];
 
-/** Sea colour for a brightness 0..1 (clamped): black to SEA_LIGHT. */
-export function seaColor(brightness: number): string {
+/** The seascape's foreground sea, as a fraction of its brightness at the horizon. */
+const SEA_FAR = 0.4;
+
+const BLACK: Rgb = [0, 0, 0];
+
+function mix(from: Rgb, to: Rgb, brightness: number): string {
   const t = Number.isFinite(brightness) ? Math.min(1, Math.max(0, brightness)) : 0;
-  return `#${SEA_LIGHT.map((c) =>
-    Math.round(c * t)
-      .toString(16)
-      .padStart(2, '0'),
-  ).join('')}`;
+  return `#${from
+    .map((c, i) =>
+      Math.round(c + (to[i]! - c) * t)
+        .toString(16)
+        .padStart(2, '0'),
+    )
+    .join('')}`;
+}
+
+/** Background colour for a sky brightness 0..1 (clamped): by night black to
+ *  SKY_LIGHT, by day DAY_SKY_DULL to DAY_SKY_CLEAR. */
+export function skyColor(brightness: number, time: 'day' | 'night' = 'night'): string {
+  return time === 'day'
+    ? mix(DAY_SKY_DULL, DAY_SKY_CLEAR, brightness)
+    : mix(BLACK, SKY_LIGHT, brightness);
+}
+
+/** Sea colour for a brightness 0..1 (clamped): by night black to SEA_LIGHT,
+ *  by day DAY_SEA_DULL to DAY_SEA_LIT. */
+export function seaColor(brightness: number, time: 'day' | 'night' = 'night'): string {
+  return time === 'day'
+    ? mix(DAY_SEA_DULL, DAY_SEA_LIT, brightness)
+    : mix(BLACK, SEA_LIGHT, brightness);
 }
 
 /** Moonlight reaches this far: the hull hint is at full strength here and nearer. */
@@ -223,14 +269,16 @@ export function hullSilhouette(hull: Hull, theta: number): [number, number][] {
   ];
 }
 
-function Seascape(): ReactElement {
+/** The sea and horizon. `sea` and `far` colour it at the horizon and in the
+ *  foreground; undefined keeps the style's own night sea. */
+function Seascape({ sea, far }: { sea?: string; far?: string }): ReactElement {
   const id = `${useId()}-sea`;
   return (
     <>
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="var(--bearing-sea-near, #0a1424)" />
-          <stop offset="1" stopColor="var(--bearing-sea-far, #03060b)" />
+          <stop offset="0" stopColor={sea ?? 'var(--bearing-sea-near, #0a1424)'} />
+          <stop offset="1" stopColor={far ?? 'var(--bearing-sea-far, #03060b)'} />
         </linearGradient>
       </defs>
       <rect

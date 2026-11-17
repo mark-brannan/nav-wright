@@ -590,6 +590,7 @@ function Playground() {
                     range={range}
                     sky={sky}
                     sea={sea}
+                    time={day ? 'day' : 'night'}
                     labels={labels}
                     controls={false}
                   />
@@ -615,6 +616,7 @@ function Playground() {
                   range={range}
                   sky={sky}
                   sea={sea}
+                  time={day ? 'day' : 'night'}
                   sectorProfile={sectorProfile}
                   rangeDropout={dropout}
                   lightRangesNm={lightRangesNm}
@@ -656,6 +658,7 @@ function Playground() {
                       range={range}
                       sky={sky}
                       sea={sea}
+                      time={day ? 'day' : 'night'}
                       silhouette={v}
                       lightRangesNm={lightRangesNm}
                       glowSize={glowSize}
@@ -701,6 +704,7 @@ function Playground() {
                 range={range}
                 sky={sky}
                 seascape={false}
+                time={day ? 'day' : 'night'}
                 singleLantern={singleLantern}
                 rangeGlow={rangeGlow}
                 lightRangesNm={lightRangesNm}
@@ -1080,6 +1084,8 @@ function Playground() {
             range={range}
             sky={sky}
             seascape
+            sea={sea}
+            time={day ? 'day' : 'night'}
             singleLantern={singleLantern}
             rangeGlow={rangeGlow}
             lightRangesNm={lightRangesNm}

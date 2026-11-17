@@ -6,7 +6,7 @@
 import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { BearingModelView, bearingHullOpacity } from '../src/BearingModelView.js';
-import { BearingView } from '../src/BearingView.js';
+import { BearingView, skyColor } from '../src/BearingView.js';
 import { selectHull } from '../src/hulls.js';
 import type { PlacedLight } from '../src/placement.js';
 import { lightsInView } from '../src/placement.js';
@@ -202,6 +202,45 @@ describe('BearingModelView', () => {
       />,
     );
     expect(given).toBe(render(45));
+  });
+
+  it('draws the same markup at night as with no time given', () => {
+    const night = renderToStaticMarkup(
+      <BearingModelView
+        modelUrl="/nowhere.glb"
+        hull={hull}
+        placed={underway}
+        facts={{}}
+        theta={45}
+        onTheta={noop}
+        hullHint={0.3}
+        time="night"
+      />,
+    );
+    expect(night).toBe(render(45));
+  });
+
+  it('by day lights nothing, paints a day sky and never says lights are missing', () => {
+    const day = (theta: number) =>
+      renderToStaticMarkup(
+        <BearingModelView
+          modelUrl="/nowhere.glb"
+          hull={hull}
+          placed={underway}
+          facts={{}}
+          theta={theta}
+          onTheta={noop}
+          hullHint={0}
+          time="day"
+          controls={false}
+        />,
+      );
+    for (const theta of [0, 90, 180, 270]) {
+      expect(day(theta)).not.toContain('<circle');
+      expect(day(theta)).not.toContain('bearing-empty');
+      expect(day(theta)).toContain(`background:${skyColor(0, 'day')}`);
+      expect(day(theta)).toContain('bearing-hull-hint');
+    }
   });
 
   it('names the bearing it is seen from', () => {
