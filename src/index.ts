@@ -87,7 +87,7 @@ export { bearingLabel } from './bearing.js';
 
 // Scene views
 export { BearingView, SEA_LIGHT, SKY_LIGHT, seaColor, skyColor } from './BearingView.js';
-export { PlanView } from './PlanView.js';
+export { PlanView, planRings, planThetaForKey, PLAN_THETA_SHIFT_STEP } from './PlanView.js';
 export { ProfileView } from './ProfileView.js';
 export { SceneView } from './SceneView.js';
 export type { SceneVessel, SceneViewProps } from './SceneView.js';

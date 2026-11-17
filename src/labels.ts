@@ -27,6 +27,12 @@ export interface SceneLabels {
   envNarrowChannel?: string;
   envTrafficLane?: string;
   profileAlt: string;
+  /** PlanView's label for the 112.5° and 247.5° lines, the sidelights' and masthead light's cutoff */
+  planAbaftBeam?: string;
+  /** PlanView's rose words at ahead, the starboard beam, astern and the port beam */
+  planRose?: { ahead: string; starboard: string; astern: string; port: string };
+  /** PlanView's name for one arc sector, on hover and focus, e.g. "masthead light, 247.5° to 112.5°" */
+  planSector?: (names: string, fromDeg: number, toDeg: number) => string;
   /** PlanView's day-shape legend (day mode only) */
   planShapesAlt?: string;
   /** the tow and pushed-group views' alt text */
@@ -59,6 +65,9 @@ export const defaultSceneLabels: SceneLabels = {
   planAlt: "Plan view: each light's arc of visibility around the hull",
   profileAlt: 'Profile view: the vessel from abeam with her lights',
   planShapesAlt: 'Day shapes',
+  planAbaftBeam: '22.5° abaft the beam',
+  planRose: { ahead: 'ahead', starboard: 'stbd beam', astern: 'astern', port: 'port beam' },
+  planSector: (names, from, to) => `${names}, ${from}° to ${to}°`,
   towPlanAlt: "Tow plan: each vessel's arcs, and the tow length against Rule 24's threshold",
   towProfileAlt: 'Tow profile: the vessels of the tow from abeam, each with her own lights',
   towLength: (m, t) =>

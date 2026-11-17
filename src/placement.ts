@@ -12,6 +12,8 @@ import type { HullSpec } from './hulls.js';
 export interface PlacedLight {
   key: string;
   lightId: string;
+  /** The light's term in lights.json, e.g. `masthead light`. */
+  name?: string;
   color: string;
   character: 'steady' | 'flashing';
   arc: Arc | null;
@@ -387,7 +389,7 @@ function placeByAnchors(
       }
     }
   }
-  return placed;
+  return placed.map((l) => ({ ...l, name: lightsData.lights[l.lightId]?.term }));
 }
 
 /**
