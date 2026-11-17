@@ -256,7 +256,7 @@ function steeringOar(fx: number, z: number, dx: number, width: number): ReactEle
 const dragonBoat: Hull = {
   spec: {
     id: 'dragon-boat',
-    beam: 0.12,
+    beam: 0.09,
     mastX: 0.0,
     mastTopZ: 0.4,
     aftMastX: -0.3,
@@ -269,16 +269,16 @@ const dragonBoat: Hull = {
   },
   plan: [
     [1, 0],
-    [0.8, 0.07],
-    [0.4, 0.115],
-    [-0.2, 0.12],
-    [-0.7, 0.09],
-    [-0.9, 0.04],
-    [-0.9, -0.04],
-    [-0.7, -0.09],
-    [-0.2, -0.12],
-    [0.4, -0.115],
-    [0.8, -0.07],
+    [0.8, 0.05],
+    [0.4, 0.085],
+    [-0.2, 0.09],
+    [-0.7, 0.07],
+    [-0.9, 0.03],
+    [-0.9, -0.03],
+    [-0.7, -0.07],
+    [-0.2, -0.09],
+    [0.4, -0.085],
+    [0.8, -0.05],
   ],
   Profile: () => (
     <g>
@@ -560,8 +560,9 @@ const trireme: Hull = {
 
 /** Ptolemy IV's tessarakonteres after Callixenus (Athenaeus 5.203e-204b):
  * 280 cubits (about 128 m) long, 38 cubits in beam, 48 cubits to the top of
- * the stern ornament; double-prowed and double-sterned, so taken as twin
- * hulls under one deck; seven rams, the leading one at the waterline; 4,000
+ * the prow ornament and 53 to the top of the stern ornament;
+ * double-prowed and double-sterned, so taken as twin hulls under one deck;
+ * seven rams, the leading one at the waterline; 4,000
  * rowers in tiers along the side, four steering oars, a fighting deck for
  * the marines. Abeam the two hulls draw as one; the plan shows both bows. */
 const tessarakonteres: Hull = {
@@ -571,7 +572,7 @@ const tessarakonteres: Hull = {
     mastX: 0.1,
     mastTopZ: 0.95,
     aftMastX: -0.5,
-    aftMastTopZ: 0.6,
+    aftMastTopZ: 0.47,
     sideLightX: 0.3,
     sideLightZ: 0.36,
     bowX: 0.92,
@@ -610,10 +611,10 @@ const tessarakonteres: Hull = {
           [0.86, 0.02],
           [-0.8, 0.02],
           [-0.9, 0.14],
-          [-0.95, 0.4],
-          [-0.98, 0.6],
-          [-0.92, 0.52],
-          [-0.86, 0.36],
+          [-0.95, 0.34],
+          [-0.98, 0.47],
+          [-0.92, 0.41],
+          [-0.86, 0.34],
           [-0.6, 0.33],
           [0.6, 0.33],
           [0.88, 0.36],
@@ -636,7 +637,7 @@ const tessarakonteres: Hull = {
       />
       {/* aphlaston */}
       <path
-        d={`M${PX(-0.98).toFixed(1)},${PZ(0.6).toFixed(1)} Q${PX(-0.96).toFixed(1)},${PZ(0.7).toFixed(1)} ${PX(-0.87).toFixed(1)},${PZ(0.66).toFixed(1)}`}
+        d={`M${PX(-0.98).toFixed(1)},${PZ(0.47).toFixed(1)} Q${PX(-0.96).toFixed(1)},${PZ(0.57).toFixed(1)} ${PX(-0.87).toFixed(1)},${PZ(0.53).toFixed(1)}`}
         fill="none"
         stroke={hullStroke}
         strokeWidth={2.5}

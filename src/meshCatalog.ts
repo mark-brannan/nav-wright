@@ -2244,12 +2244,12 @@ export const meshCatalog: readonly MeshRecord[] = [
     propulsion: ['oars'],
     shows: ['open-cockpit'],
     loaM: 12.5,
-    beamM: 1.7,
+    beamM: 1.3,
     draftM: null,
     nominal: true,
     fitLengthM: [10, 18],
     proportions: {
-      lengthBeam: 6.464,
+      lengthBeam: 8.625,
       lengthHeight: 10.53,
     },
     frame: {
@@ -2258,7 +2258,7 @@ export const meshCatalog: readonly MeshRecord[] = [
     },
     lights: {
       masthead: [0.78, 0.234],
-      sidelight: [0.658, 0.116],
+      sidelight: [0.634, 0.115],
       stern: [-1, 0.127],
     },
   },
@@ -2275,12 +2275,12 @@ export const meshCatalog: readonly MeshRecord[] = [
     propulsion: ['oars'],
     shows: ['open-cockpit'],
     loaM: 12.5,
-    beamM: 1.6,
+    beamM: 1.2,
     draftM: null,
     nominal: true,
     fitLengthM: [10, 18],
     proportions: {
-      lengthBeam: 7.079,
+      lengthBeam: 9.446,
       lengthHeight: 13.008,
     },
     frame: {
@@ -2289,7 +2289,7 @@ export const meshCatalog: readonly MeshRecord[] = [
     },
     lights: {
       masthead: [0.78, 0.19],
-      sidelight: [0.658, 0.096],
+      sidelight: [0.634, 0.095],
       stern: [-1, 0.115],
     },
   },
@@ -2306,12 +2306,12 @@ export const meshCatalog: readonly MeshRecord[] = [
     propulsion: ['oars'],
     shows: ['open-cockpit'],
     loaM: 12.5,
-    beamM: 1.2,
+    beamM: 0.9,
     draftM: null,
     nominal: true,
     fitLengthM: [10, 18],
     proportions: {
-      lengthBeam: 9.291,
+      lengthBeam: 12.398,
       lengthHeight: 15.322,
     },
     frame: {
@@ -2320,7 +2320,7 @@ export const meshCatalog: readonly MeshRecord[] = [
     },
     lights: {
       masthead: [0.78, 0.161],
-      sidelight: [0.658, 0.079],
+      sidelight: [0.634, 0.079],
       stern: [-1, 0.088],
     },
   },
@@ -2337,12 +2337,12 @@ export const meshCatalog: readonly MeshRecord[] = [
     propulsion: ['oars'],
     shows: ['open-cockpit'],
     loaM: 12.5,
-    beamM: 1.5,
+    beamM: 1.1,
     draftM: null,
     nominal: true,
     fitLengthM: [10, 18],
     proportions: {
-      lengthBeam: 7.433,
+      lengthBeam: 9.918,
       lengthHeight: 27.442,
     },
     frame: {
@@ -2351,7 +2351,7 @@ export const meshCatalog: readonly MeshRecord[] = [
     },
     lights: {
       masthead: [0.95, 0.09],
-      sidelight: [0.658, 0.085],
+      sidelight: [0.634, 0.084],
       stern: [-1, 0.09],
     },
   },
@@ -4551,7 +4551,7 @@ export const meshCatalog: readonly MeshRecord[] = [
     fitLengthM: [70, 140],
     proportions: {
       lengthBeam: 6.149,
-      lengthHeight: 2.291,
+      lengthHeight: 2.292,
     },
     frame: {
       waterlineZ: 0.016,
@@ -4559,8 +4559,8 @@ export const meshCatalog: readonly MeshRecord[] = [
     },
     lights: {
       masthead: [0.167, 1.076],
-      sidelight: [0.81, 0.461],
-      stern: [-1, 0.786],
+      sidelight: [0.81, 0.454],
+      stern: [-1, 0.611],
     },
   },
   {
@@ -4583,16 +4583,16 @@ export const meshCatalog: readonly MeshRecord[] = [
     fitLengthM: [70, 140],
     proportions: {
       lengthBeam: 6.735,
-      lengthHeight: 2.481,
+      lengthHeight: 2.482,
     },
     frame: {
       waterlineZ: 0.016,
       hullX: [-0.98, 1],
     },
     lights: {
-      masthead: [0.17, 0.994],
-      sidelight: [0.81, 0.429],
-      stern: [-1, 0.719],
+      masthead: [0.167, 0.994],
+      sidelight: [0.81, 0.409],
+      stern: [-1, 0.559],
     },
   },
   {
@@ -4623,8 +4623,8 @@ export const meshCatalog: readonly MeshRecord[] = [
     },
     lights: {
       masthead: [0.132, 0.966],
-      sidelight: [0.81, 0.334],
-      stern: [-1, 0.586],
+      sidelight: [0.81, 0.329],
+      stern: [-1, 0.455],
     },
   },
   {
@@ -4656,7 +4656,7 @@ export const meshCatalog: readonly MeshRecord[] = [
     lights: {
       masthead: [0.132, 0.992],
       sidelight: [0.81, 0.338],
-      stern: [-1, 0.586],
+      stern: [-1, 0.455],
     },
   },
   {
