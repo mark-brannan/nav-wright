@@ -79,7 +79,9 @@ const LIT_TOLERANCE = 8; // per channel, against antialiasing and dither
 async function litCanvas(page) {
   const canvas = page.locator('.scene-3d-stack canvas').first();
   if ((await canvas.count()) === 0) return 'no 3D canvas (.scene-3d-stack canvas) on the page';
-  const png = await canvas.screenshot();
+  const box = await canvas.boundingBox();
+  if (!box || box.width < 1 || box.height < 1) return '3D canvas has no visible area';
+  const png = await page.screenshot({ clip: box });
   const lit = await page.evaluate(
     async ([b64, tolerance]) => {
       const img = new Image();
