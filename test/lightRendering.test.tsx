@@ -99,6 +99,16 @@ describe('single lantern', () => {
     expect(merged[0]!.color).toBe(color);
     expect(merged[0]!.intensity).toBeCloseTo(want, 6);
   });
+  it('with soft edges a third member is weighed against the brightest, not the sum', () => {
+    const [a, b, c] = [0.3, 0.25, 0.5].map((intensity, i) => ({
+      ...tricolor[i]!,
+      intensity,
+    }));
+    const merged = mergeLanterns([a!, b!, c!], 0);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]!.color).toBe('white');
+    expect(merged[0]!.intensity).toBe(1);
+  });
   it('with soft edges the view draws the lantern at full across the division', () => {
     const html = view(tricolor, 115, { singleLantern: true, sectorProfile: ANNEX_I_PROFILE });
     expect(html).not.toMatch(/<g opacity="0\.\d+"><g/);

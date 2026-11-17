@@ -37,6 +37,7 @@ function angularGap(a: number, b: number): number {
 export function mergeLanterns<T extends LanternMember>(inView: readonly T[], theta: number): T[] {
   const out: T[] = [];
   const seat = new Map<string, number>();
+  const peak = new Map<string, number>();
   for (const l of inView) {
     if (!l.combined) {
       out.push(l);
@@ -55,10 +56,12 @@ export function mergeLanterns<T extends LanternMember>(inView: readonly T[], the
       if (gap(l) < gap(kept)) out[at] = l;
       continue;
     }
-    const a = kept.intensity ?? 1;
+    // compare members by their own brightness, not the running sum
+    const a = peak.get(id) ?? kept.intensity ?? 1;
     const b = l.intensity ?? 1;
     const winner = b > a || (b === a && gap(l) < gap(kept)) ? l : kept;
-    out[at] = { ...winner, intensity: Math.min(1, a + b) };
+    peak.set(id, Math.max(a, b));
+    out[at] = { ...winner, intensity: Math.min(1, (kept.intensity ?? 1) + b) };
   }
   return out;
 }
