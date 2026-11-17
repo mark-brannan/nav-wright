@@ -95,6 +95,7 @@ export function Glow({
   flashing = false,
   dim = false,
   glow = FLAT_GLOW,
+  intensity = 1,
   flashesPerMinute,
 }: {
   x: number;
@@ -105,6 +106,9 @@ export function Glow({
   dim?: boolean;
   /** Range-scaled glow (see glowProfile). Default: the flat original. */
   glow?: GlowProfile;
+  /** How bright the light reads, 0..1 (see sectorIntensity): the whole light
+   *  fades with it. Default 1. */
+  intensity?: number;
   /** Flash at this rate instead of the stylesheet's default cycle. */
   flashesPerMinute?: number;
 }): ReactElement {
@@ -114,7 +118,7 @@ export function Glow({
     flashing && flashesPerMinute && flashesPerMinute > 0
       ? { animationDuration: `${flashPeriodSeconds(flashesPerMinute)}s` }
       : undefined;
-  return (
+  const light = (
     <g className={flashing ? 'light-flash' : undefined} style={style} opacity={dim ? 0.45 : 1}>
       <circle cx={x} cy={y} r={r * 2.6 * scale} fill={fill} opacity={0.16 * opacity} />
       <circle cx={x} cy={y} r={r * 1.5 * scale} fill={fill} opacity={0.3 * opacity} />
@@ -122,6 +126,8 @@ export function Glow({
       <circle cx={x} cy={y} r={r * 0.45} fill="#ffffff" opacity={0.85} />
     </g>
   );
+  // outside the flash's animated opacity, so a flashing light keeps its fade
+  return intensity === 1 ? light : <g opacity={intensity}>{light}</g>;
 }
 
 /** Point at bearing β (deg cw from ahead) and radius r, bow pointing up. */

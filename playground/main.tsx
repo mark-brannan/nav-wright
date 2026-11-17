@@ -7,7 +7,10 @@ import { StrictMode, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { formatLook, lookProps } from './copyProps.js';
-import { decodeUrlState, encodeUrlState, type UrlState } from './urlState.js';
+import { decodeUrlState, encodeUrlState, MAX_HEEL, type UrlState } from './urlState.js';
+import { lightElevation, verticalIntensity, verticalSectorFor } from '../src/verticalSector.js';
+import { filamentDivisions, filamentShare, MAX_FILAMENT_BLEED } from '../src/filament.js';
+import { isSidelight, MAX_SCREEN_SKEW, SALT_DIM, TIRED_DIM } from '../src/defects.js';
 import { evaluateSignals } from 'colregs-engine';
 import type { DisplayEvaluation, FactRecord } from 'colregs-engine';
 import type { GeometryData, LightsData } from 'colregs-engine/schema';
@@ -150,6 +153,81 @@ function useUrlState(state: UrlState) {
   }, Object.values(state));
 }
 
+/** What the vertical sector does here and now: the §10 paragraph her facts
+ *  call for, the viewer's elevation from her lights, and what it reads. */
+function verticalReadout(
+  on: boolean,
+  facts: FactRecord,
+  theta: number,
+  tilt: number,
+  heel: number,
+): string {
+  const entry = verticalSectorFor(facts);
+  if (!entry) return 'no §10 paragraph for these facts';
+  const bands = entry.bands
+    .map((b) => `${Math.round(b.min_fraction * 100)}% to ±${b.within_deg}°`)
+    .join(', ');
+  const e = lightElevation(theta, tilt, heel);
+  const pct = Math.round(verticalIntensity(e, entry) * 100);
+  const reads = on ? `reads ${pct}%` : `off, so 100% (on, ${pct}%)`;
+  return `${entry.cite.replace('AnxI.', 'Annex I §')}: ${bands}. Seen ${e.toFixed(1)}° off her lights' plane: ${reads}. Figures hand-typed until colregs#228 reaches nav-wright.`;
+}
+
+/** What the filament bleed does here and now: each combined lantern's
+ *  colours and the share of the filament each shows from `theta`. */
+function bleedReadout(placed: PlacedLight[], theta: number, bleed: number): string {
+  const divisions = filamentDivisions(placed);
+  if (divisions.size === 0) return 'No combined lantern (a tricolour, Rule 25(b)) on this line.';
+  if (bleed === 0) return 'Off: the colours cut at each division.';
+  const near = placed.filter(
+    (l) => filamentShare(divisions.get(l.key), theta, bleed) !== undefined,
+  );
+  if (near.length === 0)
+    return `Seen from ${theta}°, no division within ±${bleed / 2}°: one colour, as without bleed.`;
+  const shares = near
+    .map(
+      (l) => `${l.color} ${Math.round(filamentShare(divisions.get(l.key), theta, bleed)! * 100)}%`,
+    )
+    .join(', ');
+  return `Seen from ${theta}°, the filament shows ${shares}.`;
+}
+
+/** What the defect knobs do to this line's lights. */
+function defectReadout(
+  placed: PlacedLight[],
+  screenSkew: number,
+  saltedLens: number,
+  tiredBulb: number,
+): string {
+  const parts: string[] = [];
+  const own = (id: string) => placed.some((l) => l.lightId === id && !l.combined);
+  if (screenSkew > 0)
+    parts.push(
+      own('light:sidelight_starboard')
+        ? `green shows ${screenSkew}° across the bow, to port`
+        : 'no starboard sidelight in its own lantern to skew',
+    );
+  if (screenSkew < 0)
+    parts.push(
+      own('light:sidelight_port')
+        ? `red shows ${-screenSkew}° across the bow, to starboard`
+        : 'no port sidelight in its own lantern to skew',
+    );
+  if (saltedLens > 0)
+    parts.push(
+      placed.some(isSidelight)
+        ? `sidelights at ${Math.round((1 - SALT_DIM * saltedLens) * 100)}%, halo spread`
+        : 'no sidelight to salt',
+    );
+  if (tiredBulb > 0)
+    parts.push(
+      placed.some((l) => l.color === 'white')
+        ? `white lights at ${Math.round((1 - TIRED_DIM * tiredBulb) * 100)}%, yellowed`
+        : 'no white light to tire',
+    );
+  return parts.length ? `${parts.join('; ')}.` : 'Off: every light as fitted.';
+}
+
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="field">
@@ -256,6 +334,12 @@ function Playground() {
   const [glowFalloff, setGlowFalloff] = useState(initial.glowFalloff);
   const [transmissivity, setTransmissivity] = useState(initial.transmissivity);
   const [haze, setHaze] = useState(initial.haze);
+  const [heel, setHeel] = useState(initial.heel);
+  const [verticalSector, setVerticalSector] = useState(initial.verticalSector);
+  const [filamentBleed, setFilamentBleed] = useState(initial.filamentBleed);
+  const [screenSkew, setScreenSkew] = useState(initial.screenSkew);
+  const [saltedLens, setSaltedLens] = useState(initial.saltedLens);
+  const [tiredBulb, setTiredBulb] = useState(initial.tiredBulb);
   const lightRangesNm = useMemo(
     () => lightRangesFor(lightsData, Number(facts['fact:length_m'] ?? 12)),
     [facts],
@@ -279,10 +363,16 @@ function Playground() {
     glowFalloff,
     transmissivity,
     haze,
+    heel,
+    filamentBleed,
+    screenSkew,
+    saltedLens,
+    tiredBulb,
     day,
     singleLantern,
     rangeGlow,
     flashRateOn,
+    verticalSector,
   };
   useUrlState(urlState);
 
@@ -533,6 +623,12 @@ function Playground() {
                   glowFalloff={glowFalloff}
                   rangeGlow={rangeGlow}
                   haze={haze}
+                  verticalSector={verticalSector}
+                  heel={heel}
+                  filamentBleed={filamentBleed}
+                  screenSkew={screenSkew}
+                  saltedLens={saltedLens}
+                  tiredBulb={tiredBulb}
                   labels={labels}
                   controls={false}
                 />
@@ -566,6 +662,12 @@ function Playground() {
                       glowFalloff={glowFalloff}
                       rangeGlow={rangeGlow}
                       haze={haze}
+                      verticalSector={verticalSector}
+                      heel={heel}
+                      filamentBleed={filamentBleed}
+                      screenSkew={screenSkew}
+                      saltedLens={saltedLens}
+                      tiredBulb={tiredBulb}
                       labels={labels}
                       controls={false}
                     />
@@ -602,6 +704,7 @@ function Playground() {
                 singleLantern={singleLantern}
                 rangeGlow={rangeGlow}
                 lightRangesNm={lightRangesNm}
+                sectorProfile={sectorProfile}
                 flashesPerMinute={
                   flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
                 }
@@ -888,6 +991,66 @@ function Playground() {
             K drives range dropout; range glow (under View) drives both views.
           </p>
         </fieldset>
+
+        <fieldset>
+          <legend>Vertical sectors and heel, 3D (#118)</legend>
+          <Field label="vertical sectors">
+            <input
+              type="checkbox"
+              checked={verticalSector}
+              onChange={(e) => setVerticalSector(e.target.checked)}
+            />
+          </Field>
+          <Field label="heel ° (+ starboard)">
+            <Range value={heel} min={-MAX_HEEL} max={MAX_HEEL} step={1} onChange={setHeel} />
+          </Field>
+          <p className="muted">
+            {verticalReadout(verticalSector, facts, shownTheta, view === '3d' ? tilt : 0, heel)}
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Filament bleed, tricolour, 3D (#118)</legend>
+          <Field label="bleed ° across a division">
+            <Range
+              value={filamentBleed}
+              min={0}
+              max={MAX_FILAMENT_BLEED}
+              step={0.5}
+              onChange={setFilamentBleed}
+            />
+          </Field>
+          <p className="muted">{bleedReadout(placed, shownTheta, filamentBleed)}</p>
+          <p className="muted">
+            Annex I §5: a combined lantern has a single vertical filament and a very narrow
+            division, so near 0°, 112.5° and 247.5° it shows both colours at once. At a division the
+            bleed stands in for the sector profile above.
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Defects, 3D (#117)</legend>
+          <Field label="screen ° across the bow (+ green, − red)">
+            <Range
+              value={screenSkew}
+              min={-MAX_SCREEN_SKEW}
+              max={MAX_SCREEN_SKEW}
+              step={0.5}
+              onChange={setScreenSkew}
+            />
+          </Field>
+          <Field label="salted lens, sidelights">
+            <Range value={saltedLens} min={0} max={1} step={0.05} onChange={setSaltedLens} />
+          </Field>
+          <Field label="tired bulb, white lights">
+            <Range value={tiredBulb} min={0} max={1} step={0.05} onChange={setTiredBulb} />
+          </Field>
+          <p className="muted">{defectReadout(placed, screenSkew, saltedLens, tiredBulb)}</p>
+          <p className="muted">
+            Unlawful, but common: a bent sidelight screen, spray dried on a lens, an incandescent
+            run down. Looks, not Annex I.
+          </p>
+        </fieldset>
       </section>
 
       <h2 className="views-heading">Every view</h2>
@@ -920,6 +1083,7 @@ function Playground() {
             singleLantern={singleLantern}
             rangeGlow={rangeGlow}
             lightRangesNm={lightRangesNm}
+            sectorProfile={sectorProfile}
             flashesPerMinute={
               flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
             }

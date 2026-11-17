@@ -61,19 +61,22 @@ function outsideEdge(d: number, p: EdgeProfile): number {
 }
 
 /** Intensity 0..1 of a light with `arc` seen from relative `bearing`. A null
- *  arc (torch, deck lights) and a full circle are 1 everywhere. */
+ *  arc (torch, deck lights) and a full circle are 1 everywhere. `fitted` is
+ *  the arc whose edges say which is forward, when `arc` has had an edge
+ *  moved off the bow (a skewed screen, defects.ts). */
 export function sectorIntensity(
   bearing: number,
   arc: Arc | null | undefined,
   profile: SectorProfile = ANNEX_I_PROFILE,
+  fitted: Arc = arc ?? { from_deg: 0, to_deg: 360 },
 ): number {
   if (arc == null) return 1;
   const { from_deg: f, to_deg: t } = arc;
   let extent = t - f;
   if (extent <= 0) extent += 360;
   if (extent >= 360) return 1;
-  const fromEdge = onBow(f) ? profile.forward : profile.aft;
-  const toEdge = onBow(t) ? profile.forward : profile.aft;
+  const fromEdge = onBow(fitted.from_deg) ? profile.forward : profile.aft;
+  const toEdge = onBow(fitted.to_deg) ? profile.forward : profile.aft;
   const rel = norm(bearing - f);
   if (rel <= extent) return Math.min(insideEdge(rel, fromEdge), insideEdge(extent - rel, toEdge));
   return Math.max(outsideEdge(rel - extent, toEdge), outsideEdge(360 - rel, fromEdge));
