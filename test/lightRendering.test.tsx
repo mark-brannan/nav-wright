@@ -9,6 +9,7 @@ import lightsJson from 'colregs/data/lights.json' with { type: 'json' };
 import { BearingView } from '../src/BearingView.js';
 import { selectHull } from '../src/hulls.js';
 import { flashLit, mergeLanterns } from '../src/lantern.js';
+import { ANNEX_I_PROFILE, sectorIntensity } from '../src/sectorProfile.js';
 import type { PlacedLight } from '../src/placement.js';
 import { declaredFlashRate, flashPeriodSeconds, glowProfile, lightRangesFor } from '../src/svg.js';
 
@@ -80,6 +81,38 @@ describe('single lantern', () => {
     const a = mk({ key: 'a' });
     const b = mk({ key: 'b', z: 0.8 });
     expect(mergeLanterns([a, b], 0)).toEqual([a, b]);
+  });
+  it.each([
+    // across the aft division a fading sidelight never outranks the white
+    [112.5, 'green', 1],
+    [115, 'white', 1],
+    [117.4, 'white', 1],
+    [243, 'white', 1],
+    [247.5, 'red', 1],
+    [300, 'red', 1],
+  ])('with soft edges at %s the lantern reads %s at %s', (theta, color, want) => {
+    const soft = tricolor
+      .map((l) => ({ ...l, intensity: sectorIntensity(theta, l.arc, ANNEX_I_PROFILE) }))
+      .filter((l) => l.intensity > 0);
+    const merged = mergeLanterns(soft, theta);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]!.color).toBe(color);
+    expect(merged[0]!.intensity).toBeCloseTo(want, 6);
+  });
+  it('with soft edges a third member is weighed against the brightest, not the sum', () => {
+    const [a, b, c] = [0.3, 0.25, 0.5].map((intensity, i) => ({
+      ...tricolor[i]!,
+      intensity,
+    }));
+    const merged = mergeLanterns([a!, b!, c!], 0);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]!.color).toBe('white');
+    expect(merged[0]!.intensity).toBe(1);
+  });
+  it('with soft edges the view draws the lantern at full across the division', () => {
+    const html = view(tricolor, 115, { singleLantern: true, sectorProfile: ANNEX_I_PROFILE });
+    expect(html).not.toMatch(/<g opacity="0\.\d+"><g/);
+    expect(dots(html)).toBe(1);
   });
   it('is off by default and draws one glow when on', () => {
     expect(dots(view([stbd, port], 0))).toBe(2);

@@ -58,6 +58,18 @@ export {
   MAX_FILAMENT_BLEED,
 } from './filament.js';
 export type { Division } from './filament.js';
+export {
+  defectHalo,
+  defectIntensity,
+  isSidelight,
+  MAX_SCREEN_SKEW,
+  mixHex,
+  SALT_DIM,
+  SALT_SPREAD,
+  screenArc,
+  TIRED_DIM,
+  TIRED_WHITE,
+} from './defects.js';
 export type { PlacedLight } from './placement.js';
 
 // Day shapes (Rule 20(d), Annex I 6): placement from colregs' shapes.json and
@@ -78,7 +90,12 @@ export { BearingView, SEA_LIGHT, SKY_LIGHT, seaColor, skyColor } from './Bearing
 export { PlanView } from './PlanView.js';
 export { ProfileView } from './ProfileView.js';
 export { SceneView } from './SceneView.js';
-export type { SceneVessel } from './SceneView.js';
+export type { SceneVessel, SceneViewProps } from './SceneView.js';
+
+// A colregs situation record (ADR 0005 self/other/pair) read as SceneView's
+// props; θ for BearingView is bearingTheta(situationPair(s))
+export { situationPair, situationToScene } from './sceneSituation.js';
+export type { SituationVessel } from './sceneSituation.js';
 
 // Tows and pushed groups (Rule 24): several hulls on one centreline, each
 // with her own display, and 24(a)(i)'s tow-length threshold read from data

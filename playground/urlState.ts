@@ -7,6 +7,7 @@ import { K_PRESCRIBED } from '../src/sectorProfile.js';
 import { FLASH_ON_S } from '../src/lantern.js';
 import { DEFAULT_TILT, MAX_TILT, MIN_TILT } from '../src/tilt.js';
 import { MAX_FILAMENT_BLEED } from '../src/filament.js';
+import { MAX_SCREEN_SKEW } from '../src/defects.js';
 
 export interface UrlState {
   view: string;
@@ -23,6 +24,9 @@ export interface UrlState {
   haze: number;
   heel: number;
   filamentBleed: number;
+  screenSkew: number;
+  saltedLens: number;
+  tiredBulb: number;
   day: boolean;
   singleLantern: boolean;
   rangeGlow: boolean;
@@ -47,6 +51,9 @@ export const URL_DEFAULTS: UrlState = {
   haze: 0,
   heel: 0,
   filamentBleed: 0,
+  screenSkew: 0,
+  saltedLens: 0,
+  tiredBulb: 0,
   day: false,
   singleLantern: false,
   rangeGlow: false,
@@ -75,6 +82,9 @@ const NUMBERS = {
   flashOnSeconds: 'flashon',
   heel: 'heel',
   filamentBleed: 'bleed',
+  screenSkew: 'screen',
+  saltedLens: 'salt',
+  tiredBulb: 'bulb',
 } as const;
 const FLAGS = {
   day: 'day',
@@ -103,6 +113,9 @@ const NUMBER_BOUNDS: Record<keyof typeof NUMBERS, (n: number) => number> = {
   flashOnSeconds: (n) => clamp(n, 0.05, 2),
   heel: (n) => clamp(n, -MAX_HEEL, MAX_HEEL),
   filamentBleed: (n) => clamp(n, 0, MAX_FILAMENT_BLEED),
+  screenSkew: (n) => clamp(n, -MAX_SCREEN_SKEW, MAX_SCREEN_SKEW),
+  saltedLens: (n) => clamp(n, 0, 1),
+  tiredBulb: (n) => clamp(n, 0, 1),
 };
 
 /** Read the playground state out of a query string; anything missing or
