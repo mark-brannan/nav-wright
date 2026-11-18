@@ -5,7 +5,8 @@
 // The npm script builds the playground first. A scene list URL starts with the
 // list's `base`; the rest (query string, or a page and its query) is opened
 // against a local static server over distDir, so the render shows this
-// checkout, not the deployed site.
+// checkout, not the deployed site. A scene fails the run on a page error or on
+// a 3D canvas that is missing or unlit (see litCanvas).
 
 import { chromium } from 'playwright';
 import { createServer } from 'node:http';
@@ -66,6 +67,51 @@ function localUrl(scene, origin) {
   return `${origin}/${scene.url.slice(list.base.length)}`;
 }
 
+// The lit-canvas check (searoom#218, #117 item 7): a scene's primary view is
+// the 3D canvas, and a canvas that is missing, or is one flat colour, shows
+// the viewer nothing. The canvas is cropped from the page screenshot (so it is
+// what a viewer sees, not a WebGL read-back) and decoded in the page; a canvas
+// is lit when at least LIT_FRACTION of its pixels differ from its corner
+// colour, the scene background.
+const LIT_FRACTION = 0.002;
+const LIT_TOLERANCE = 8; // per channel, against antialiasing and dither
+
+async function litCanvas(page) {
+  const canvas = page.locator('.scene-3d-stack canvas').first();
+  if ((await canvas.count()) === 0) return 'no 3D canvas (.scene-3d-stack canvas) on the page';
+  const box = await canvas.boundingBox();
+  if (!box || box.width < 1 || box.height < 1) return '3D canvas has no visible area';
+  const png = await page.screenshot({ clip: box });
+  const lit = await page.evaluate(
+    async ([b64, tolerance]) => {
+      const img = new Image();
+      img.src = `data:image/png;base64,${b64}`;
+      await img.decode();
+      const c = document.createElement('canvas');
+      c.width = img.width;
+      c.height = img.height;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const { data } = ctx.getImageData(0, 0, c.width, c.height);
+      let differ = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        if (
+          Math.abs(data[i] - data[0]) > tolerance ||
+          Math.abs(data[i + 1] - data[1]) > tolerance ||
+          Math.abs(data[i + 2] - data[2]) > tolerance
+        ) {
+          differ++;
+        }
+      }
+      return { differ, total: data.length / 4 };
+    },
+    [png.toString('base64'), LIT_TOLERANCE],
+  );
+  return lit.differ / lit.total >= LIT_FRACTION
+    ? null
+    : `3D canvas is unlit: ${lit.differ} of ${lit.total} pixels differ from its background`;
+}
+
 const escape = (s) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 
 const started = performance.now();
@@ -111,9 +157,11 @@ for (const scene of list.scenes) {
   const png = await page.screenshot();
   writeFileSync(join(outDir, `${scene.name}.png`), png);
   shots.push({ scene, png });
+  const unlit = await litCanvas(page);
+  if (unlit) errors.push(unlit);
   if (errors.length) {
     failed++;
-    console.error(`render: ${scene.name}: page error: ${errors.join('; ')}`);
+    console.error(`render: ${scene.name}: ${errors.join('; ')}`);
   } else {
     console.log(`render: ${scene.name}.png`);
   }
