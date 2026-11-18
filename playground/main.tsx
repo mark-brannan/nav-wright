@@ -348,7 +348,7 @@ function Playground() {
   const [rangeGlow, setRangeGlow] = useState(initial.rangeGlow);
   const [flashRateOn, setFlashRateOn] = useState(initial.flashRateOn);
   // URL only (?flashon=0.2): a visible slider would change every render's page chrome
-  const [flashOnSeconds] = useState(initial.flashOnSeconds);
+  const flashOnSeconds = initial.flashOnSeconds;
   const [labelsOn, setLabelsOn] = useState(true);
   // every control above is in the URL (see urlState.ts), ?day included
   const [day, setDay] = useState(initial.day);

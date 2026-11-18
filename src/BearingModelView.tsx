@@ -136,7 +136,7 @@ export function BearingModelView({
    *  the viewer, as BearingView does. Default off: one dot per sector. */
   singleLantern?: boolean;
   /** Flash rate in flashes per minute for flashing lights (see declaredFlashRate), as BearingView. Default: a 1.2 s period. */
-  flashesPerMinute?: number;
+  /** Flash rate in flashes per minute for flashing lights (see declaredFlashRate), as BearingView. Default: a 1.2 s period on the 3D canvas, the stylesheet's cycle on the flat fallback. */
   /** Seconds each flash stays lit, from the start of its period. 3D only. Default 0.35. */
   flashOnSeconds?: number;
   /** Annex I §10 vertical sectors (see verticalSector.ts): each light dims
