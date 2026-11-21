@@ -1,6 +1,7 @@
 // The 3D view frames the vessel, never the mesh (searoom#174, nav-wright#85):
 // scaled and centred from her length and her spec's own heights, so she
-// holds one on-screen size whatever her length, nothing leaves the canvas
+// holds one on-screen size inside her length band and draws bigger in a
+// longer band (searoom#174's honest scale), nothing leaves the canvas
 // from any bearing or tilt, and swapping Benchy in for her own mesh changes
 // the mesh and nothing else: same length on screen, same place.
 
@@ -10,9 +11,13 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {
+  BAND_FILL,
+  LENGTH_BANDS,
   VIEW_FRAME,
   anchorLights,
+  bandFill,
   frameBox,
+  lengthBand,
   lightRadius,
   orbitAngles,
   orbitPosition,
@@ -133,7 +138,18 @@ function reach(points: THREE.Vector3[], theta: number, tilt: number): number {
 
 const TILTS = [MIN_TILT, -30, -5, 0, 10, 30, 60, MAX_TILT];
 const BEARINGS = Array.from({ length: 24 }, (_, i) => i * 15);
-const LENGTHS = [2, 5, 15, 40, 100, 400];
+/** Lengths inside each band of LENGTH_BANDS, shortest band first: each
+ * band's threshold, a middle and just short of the next. */
+const BANDS = [
+  [0.5, 3, 6.99],
+  [7, 9, 11.99],
+  [12, 15, 19.99],
+  [20, 35, 49.99],
+  [50, 75, 99.99],
+  [100, 200, 400],
+];
+/** A length in the longest band, which fills the whole frame. */
+const FULL = 150;
 
 /** A shipped mesh, the hull spec she is drawn for, and her top from the
  * catalog (meshTopZ) where she stands taller than the spec's masts. */
@@ -187,17 +203,37 @@ describe('view frame', () => {
     }
   });
 
-  it('holds her on-screen length at every length', () => {
+  it('holds her on-screen length at every length inside a band', () => {
     for (const id of ['power-small', 'power-large', 'sail-large', 'tanker']) {
       for (const file of [BENCHY, [...scenes.keys()].find((f) => own(f)?.[1].id === id)!]) {
-        const ref = screenLength(drawn(file, spec(id), 15).mesh);
-        for (const L of LENGTHS)
-          expect(
-            screenLength(drawn(file, spec(id), L).mesh),
-            `${file} on ${id} at ${L} m`,
-          ).toBeCloseTo(ref, 9);
+        for (const band of BANDS) {
+          const ref = screenLength(drawn(file, spec(id), band[0]!).mesh);
+          for (const L of band)
+            expect(
+              screenLength(drawn(file, spec(id), L).mesh),
+              `${file} on ${id} at ${L} m`,
+            ).toBeCloseTo(ref, 9);
+        }
       }
     }
+  });
+
+  it('draws her longer on screen in each longer band, the longest filling the frame', () => {
+    expect(BAND_FILL).toHaveLength(LENGTH_BANDS.length + 1);
+    expect(BANDS.map((band) => band.map(lengthBand))).toEqual(BAND_FILL.map((_, i) => [i, i, i]));
+    for (const id of ['power-small', 'sail-large', 'tanker']) {
+      const s = spec(id);
+      const lengths = BANDS.map((band) => screenLength(drawn(BENCHY, s, band[1]!).mesh));
+      for (let i = 1; i < lengths.length; i++)
+        expect(lengths[i], `${id}, band ${i}`).toBeGreaterThan(lengths[i - 1]!);
+      // Near the fill, not on it: perspective spreads the nearer, bigger hull.
+      lengths.forEach((l, i) =>
+        expect(Math.abs(l / lengths.at(-1)! - BAND_FILL[i]!), `${id}, band ${i}`).toBeLessThan(
+          0.05,
+        ),
+      );
+    }
+    expect(bandFill(FULL)).toBe(1);
   });
 
   it('draws Benchy the same length as the mesh she stands in for', () => {
@@ -220,7 +256,7 @@ describe('view frame', () => {
 
   it('keeps every mesh and her lights on the canvas from every bearing and tilt', () => {
     for (const [file, s, topZ] of pairs()) {
-      const d = drawn(file, s, 30, topZ);
+      const d = drawn(file, s, FULL, topZ);
       for (const theta of BEARINGS)
         for (const tilt of TILTS)
           expect(
@@ -235,14 +271,16 @@ describe('view frame', () => {
     // points must not slip past the canvas edge.
     for (const s of specs) {
       const lights = lightsOf(s);
-      const { scale, position } = viewFrame(1, s, lights);
+      const { scale, position } = viewFrame(FULL, s, lights);
       const box = frameBox(s, lights);
       const corners: THREE.Vector3[] = [];
       for (const x of [box.min.x, box.max.x])
         for (const y of [box.min.y, box.max.y])
           for (const z of [box.min.z, box.max.z])
             corners.push(
-              new THREE.Vector3(x, y, z).multiplyScalar(scale).add(new THREE.Vector3(...position)),
+              new THREE.Vector3(x, y, z)
+                .multiplyScalar(scale * FULL)
+                .add(new THREE.Vector3(...position)),
             );
       for (let theta = 0.5; theta < 360; theta += 7)
         for (let tilt = MIN_TILT + 0.5; tilt <= MAX_TILT; tilt += 4)
@@ -250,7 +288,7 @@ describe('view frame', () => {
     }
   });
 
-  it('keeps each light on the same spot of the hull at every length', () => {
+  it('keeps each light on the same spot of the hull at every length inside a band', () => {
     const s = spec('power-large');
     const seat = (L: number): number[][] => {
       const { scale, position } = viewFrame(L, s, lightsOf(s));
@@ -259,11 +297,15 @@ describe('view frame', () => {
         p.map((v, k) => v * scale + position[k]),
       );
     };
-    const ref = seat(12);
-    for (const L of LENGTHS)
-      seat(L).forEach((p, i) =>
-        p.forEach((v, k) => expect(v, `light ${i} axis ${k} at ${L} m`).toBeCloseTo(ref[i][k], 6)),
-      );
+    for (const band of BANDS) {
+      const ref = seat(band[0]!);
+      for (const L of band)
+        seat(L).forEach((p, i) =>
+          p.forEach((v, k) =>
+            expect(v, `light ${i} axis ${k} at ${L} m`).toBeCloseTo(ref[i][k], 6),
+          ),
+        );
+    }
   });
 
   it('draws a nonsense length as it is rather than blowing it up', () => {

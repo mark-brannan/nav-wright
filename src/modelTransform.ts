@@ -499,7 +499,9 @@ export function seatsSeenFrom(
 // whichever mesh is drawn for her (her own, or Benchy swapped in), and a mesh
 // swap changes nothing on screen but the mesh: same length, same place. The
 // camera's frame never changes either, so a camera the viewer has dragged
-// never needs re-seating.
+// never needs re-seating. Her size on screen goes by her length band
+// (bandFill), so a small boat reads small and a big ship big, and a length
+// change inside a band moves nothing (searoom#174).
 
 /** The camera's frame, in view units, looking at the origin. */
 export const VIEW_FRAME = {
@@ -629,14 +631,34 @@ export function frameDistance(box: ModelBox, target: Vec3): number {
   return need;
 }
 
+/** The lengths, in metres, the rules' lights turn on (Rules 22, 23, 25
+ * and 30: 7, 12, 20, 50 and 100 m); each band runs from one up to the next. */
+export const LENGTH_BANDS = [7, 12, 20, 50, 100] as const;
+
+/** How much of the full frame each band fills, shortest band first: one
+ * more than LENGTH_BANDS. The longest fills it; the shortest under half. */
+export const BAND_FILL = [0.45, 0.55, 0.65, 0.75, 0.875, 1] as const;
+
+/** Her band: the index into BAND_FILL. A length on a threshold is in the
+ * band above it, as the rules read "12 metres or more". */
+export function lengthBand(lengthMeters: number): number {
+  return LENGTH_BANDS.filter((t) => lengthMeters >= t).length;
+}
+
+/** The share of the full frame a vessel of `lengthMeters` fills. */
+export function bandFill(lengthMeters: number): number {
+  return BAND_FILL[lengthBand(lengthMeters)]!;
+}
+
 /**
  * How to draw a vessel of `lengthMeters` in view units: scaled so her frame
  * (frameBox: her spec's span, beam and mast and light heights, with
- * FRAME_HEADROOM above the waterline) fills the canvas from VIEW_FRAME's
- * camera without leaving it from any bearing or tilt, and centred on
- * midships, half the frame's height above the waterline — the point the
- * camera orbits. Her length on screen depends on her spec's proportions
- * and not on her length, and never on the mesh drawn for her.
+ * FRAME_HEADROOM above the waterline) fills bandFill of the canvas from
+ * VIEW_FRAME's camera, never leaving it from any bearing or tilt, and
+ * centred on midships, half the frame's height above the waterline — the
+ * point the camera orbits. Her length on screen depends on her spec's
+ * proportions and her length band, not on her length inside the band, and
+ * never on the mesh drawn for her.
  *
  * A nonsense length draws the scene as it is.
  */
@@ -649,12 +671,13 @@ export function viewFrame(
     return { scale: 1, position: [0, 0, 0] };
   const box = frameBox(spec, lights);
   const target = { x: 0, y: box.max.y / 2, z: 0 };
-  const scale = VIEW_FRAME.distance / (frameDistance(box, target) * lengthMeters);
+  const scale =
+    (bandFill(lengthMeters) * VIEW_FRAME.distance) / (frameDistance(box, target) * lengthMeters);
   return { scale, position: [0, -scale * target.y * lengthMeters, 0] };
 }
 
 /** Bead radius for a light in metres, and how far off the surface it is
- * seated: a fixed fraction of her length, so it too holds its size. */
+ * seated: a fixed fraction of her length, so it keeps its size against her. */
 export function lightRadius(lengthMeters: number): number {
   return lengthMeters * 0.012;
 }

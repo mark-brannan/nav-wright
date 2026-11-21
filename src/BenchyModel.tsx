@@ -66,7 +66,7 @@ function heelRotation(heel: number): [number, number, number] {
  * lights appearing first at their analytic positions and then jumping.
  * Everything is placed in metres and drawn in view units (viewFrame),
  * framed from her length and spec rather than the mesh, so she is the same
- * size on screen whatever her length and whichever mesh is drawn for her. */
+ * size on screen within her length band and whichever mesh is drawn for her. */
 function Hull({
   modelUrl,
   lengthMeters,
