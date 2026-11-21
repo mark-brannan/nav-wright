@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.08 -0.3728 2.16 0.4528" width="432" height="91" data-view="profile" data-bearing="90" data-u="-1 1" data-v="0 0.2928">
+<title>Barge (highside), profile from starboard</title>
+<path d="M-0.95 0L0.91 0L0.95 -0.002L0.968 -0.021L0.97 -0.021L1 -0.051L1 -0.087L0.95 -0.193L0.351 -0.181L0.316 -0.207L0.274 -0.235L0.271 -0.239L0.245 -0.255L0.242 -0.259L0.216 -0.275L0.214 -0.279L0.204 -0.284L0.201 -0.288L0.188 -0.291L-0.282 -0.293L-0.415 -0.182L-0.7 -0.186L-0.95 -0.193L-1 -0.087L-1 -0.051Z" fill="#3a4a60" fill-rule="evenodd"/>
+<path d="M-0.95 0L0.91 0L0.95 -0.002L0.968 -0.021L0.97 -0.021L1 -0.051L1 -0.087L0.95 -0.193L0.631 -0.185L0.184 -0.18L-0.354 -0.181L-0.95 -0.193L-1 -0.087L-1 -0.051Z" fill="#6f8499" fill-rule="evenodd" stroke="#6f8499" stroke-width="0.75" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<path d="M-0.184 -0.18L0.184 -0.18L0.351 -0.182L0.245 -0.255L0.242 -0.259L0.229 -0.266L0.201 -0.288L0.188 -0.291L-0.282 -0.293L-0.415 -0.182Z" fill="#eff0ed" fill-rule="evenodd" stroke="#eff0ed" stroke-width="0.75" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<path d="M-0.95 0L0.91 0L0.95 -0.002L0.968 -0.021L0.97 -0.021L1 -0.051L1 -0.087L0.95 -0.193L0.351 -0.181L0.316 -0.207L0.274 -0.235L0.271 -0.239L0.245 -0.255L0.242 -0.259L0.216 -0.275L0.214 -0.279L0.204 -0.284L0.201 -0.288L0.188 -0.291L-0.282 -0.293L-0.415 -0.182L-0.7 -0.186L-0.95 -0.193L-1 -0.087L-1 -0.051Z" fill="none" stroke="#0a1424" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<line x1="-1.08" y1="0" x2="1.08" y2="0" stroke="#3d7fb0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+</svg>

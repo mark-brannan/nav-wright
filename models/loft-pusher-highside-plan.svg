@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.3981 -1.08 0.7962 2.16" width="159" height="432" data-view="plan" data-u="-0.3181 0.3181" data-v="-1 1">
+<title>Push tug (highside), plan from above</title>
+<path d="M-0.253 1L0.253 1L0.292 0.95L0.318 0.902L0.318 -0.92L0.289 -0.968L0.201 -0.968L0.199 -0.971L0.171 -1L-0.171 -1L-0.201 -0.97L-0.201 -0.968L-0.289 -0.968L-0.318 -0.92L-0.318 0.902L-0.292 0.95Z" fill="#3a4a60" fill-rule="evenodd"/>
+<path d="M-0.253 1L0.253 1L0.292 0.95L0.318 0.902L0.318 -0.92L0.289 -0.968L0.202 -0.968L0.221 -0.948L-0.221 -0.948L-0.202 -0.968L-0.289 -0.968L-0.318 -0.92L-0.318 0.902L-0.292 0.95ZM-0.013 0.555L-0.013 0.53L0.013 0.53L0.013 0.555ZM-0.222 0.297L-0.222 -0.383L0.222 -0.383L0.222 0.297Z" fill="#6f8499" fill-rule="evenodd" stroke="#6f8499" stroke-width="0.75" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<path d="M-0.013 0.555L0.013 0.555L0.013 0.53L-0.013 0.53ZM-0.013 -0.083L0.013 -0.083L0.013 -0.109L-0.013 -0.109Z" fill="#c4c7cb" fill-rule="evenodd" stroke="#c4c7cb" stroke-width="0.75" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<path d="M-0.222 0.297L0.222 0.297L0.222 -0.383L-0.222 -0.383ZM-0.013 -0.083L-0.013 -0.109L0.013 -0.109L0.013 -0.083ZM-0.221 -0.948L0.221 -0.949L0.171 -1L-0.171 -1Z" fill="#eff0ed" fill-rule="evenodd" stroke="#eff0ed" stroke-width="0.75" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<path d="M-0.253 1L0.253 1L0.292 0.95L0.318 0.902L0.318 -0.92L0.289 -0.968L0.201 -0.968L0.199 -0.971L0.171 -1L-0.171 -1L-0.201 -0.97L-0.201 -0.968L-0.289 -0.968L-0.318 -0.92L-0.318 0.902L-0.292 0.95Z" fill="none" stroke="#0a1424" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+</svg>
