@@ -70,6 +70,8 @@ const VARIANTS = {
 const EXTRAS = {
   barge: { bowTaper: 0.7, houseSpan: 0.5 },
   open: { console: { from: 0.45, to: 0.6, height: 0.5 } },
+  // the drummer's seat and drum forward, the dragon boat's one fitting above the gunwale
+  'dragon-boat': { console: { from: 0.79, to: 0.89, height: 0.8 } },
 };
 
 const COLOURS = {
@@ -318,6 +320,41 @@ const NOMINAL = {
     shows: ['open-cockpit'],
     loaM: 5,
     fit: [3, 7],
+  },
+  'dragon-boat': {
+    name: 'Dragon boat',
+    hullForm: 'dragon boat, long and narrow, open, head and tail fitted',
+    propulsion: ['oars'],
+    shows: ['open-cockpit'],
+    loaM: 12.5,
+    fit: [10, 18],
+  },
+  longship: {
+    name: 'Viking longship',
+    hullForm: 'clinker-built longship, double-ended, high stem and sternpost',
+    rig: 'single square sail',
+    propulsion: ['oars', 'sail'],
+    shows: ['masts', 'yards'],
+    loaM: 30,
+    fit: [18, 34],
+  },
+  trireme: {
+    name: 'Trireme',
+    hullForm: 'trireme, three files of oars, waterline ram, aphlaston aft',
+    rig: 'single square sail',
+    propulsion: ['oars', 'sail'],
+    shows: ['masts', 'yards'],
+    loaM: 37,
+    fit: [34, 70],
+  },
+  tessarakonteres: {
+    name: 'Tessarakonteres',
+    hullForm: 'twin-hulled galley under one deck, tiers of oars, stepped rams, fighting deck',
+    rig: 'single square sail',
+    propulsion: ['oars', 'sail'],
+    shows: ['masts', 'yards'],
+    loaM: 128,
+    fit: [70, 140],
   },
   'power-small': {
     name: 'Small motor cruiser',

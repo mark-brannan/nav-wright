@@ -15,6 +15,20 @@ const underway = { 'fact:position': 'position:underway', 'fact:making_way': true
 const power = { 'fact:propulsion': 'propulsion:power', 'fact:activity': 'activity:none' } as const;
 export const hullFacts: Record<HullKey, FactRecord> = {
   openBoat: { ...power, ...underway, 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 5 },
+  dragonBoat: {
+    ...power,
+    ...underway,
+    'fact:propulsion': 'propulsion:oars',
+    'fact:length_m': 12.5,
+  },
+  longship: { ...power, ...underway, 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 30 },
+  trireme: { ...power, ...underway, 'fact:propulsion': 'propulsion:oars', 'fact:length_m': 37 },
+  tessarakonteres: {
+    ...power,
+    ...underway,
+    'fact:propulsion': 'propulsion:oars',
+    'fact:length_m': 128,
+  },
   powerSmall: { ...power, ...underway, 'fact:length_m': 12 },
   powerLarge: { ...power, ...underway, 'fact:length_m': 35 },
   sailSmall: { ...power, ...underway, 'fact:propulsion': 'propulsion:sail', 'fact:length_m': 12 },
