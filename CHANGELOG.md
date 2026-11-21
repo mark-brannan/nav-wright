@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.12](https://github.com/mark-brannan/nav-wright/compare/v0.1.11...v0.1.12) (2026-11-21)
+
+
+### Added
+
+* **render:** fail a scene whose 3D canvas is missing or unlit ([#179](https://github.com/mark-brannan/nav-wright/issues/179)) ([6260f2e](https://github.com/mark-brannan/nav-wright/commit/6260f2e4bc5ebdb1ec94b1410a4acb6a30c33115))
+
 ## [0.1.11](https://github.com/mark-brannan/nav-wright/compare/v0.1.10...v0.1.11) (2026-11-17)
 
 
