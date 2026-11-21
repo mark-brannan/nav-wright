@@ -25,6 +25,7 @@ import { K_PRESCRIBED, rangeVisibility, sectorIntensity } from './sectorProfile.
 import type { LightGlow } from './halo.js';
 import { haloProfile } from './halo.js';
 import { glowProfile } from './svg.js';
+import { FLASH_ON_S, mergeLanterns } from './lantern.js';
 import type { BenchyLabels } from './benchyLabels.js';
 import { defaultBenchyLabels } from './benchyLabels.js';
 import type { SilhouetteVariant } from './silhouette.js';
@@ -64,6 +65,9 @@ export function BearingModelView({
   glowFalloff = 0,
   rangeGlow = false,
   haze = 0,
+  singleLantern = false,
+  flashesPerMinute,
+  flashOnSeconds = FLASH_ON_S,
   verticalSector = false,
   heel = 0,
   filamentBleed = 0,
@@ -128,6 +132,13 @@ export function BearingModelView({
   /** Haze in the air, 0 (clear, the original) .. 1: widens each halo, up to
    *  three times, and softens it towards a full falloff. 3D only. */
   haze?: number;
+  /** Draw a combined fixture (tricolor) as one lantern, in the colour facing
+   *  the viewer, as BearingView does. Default off: one dot per sector. */
+  singleLantern?: boolean;
+  /** Flash rate in flashes per minute for flashing lights (see declaredFlashRate), as BearingView. Default: a 1.2 s period. */
+  /** Flash rate in flashes per minute for flashing lights (see declaredFlashRate), as BearingView. Default: a 1.2 s period on the 3D canvas, the stylesheet's cycle on the flat fallback. */
+  /** Seconds each flash stays lit, from the start of its period. 3D only. Default 0.35. */
+  flashOnSeconds?: number;
   /** Annex I §10 vertical sectors (see verticalSector.ts): each light dims
    *  as the viewer's elevation above her lights' horizontal plane (from
    *  `tilt` and `heel`) grows, by the paragraph her facts call for. Default
@@ -165,9 +176,16 @@ export function BearingModelView({
   const divisions = useMemo(() => (bleed ? filamentDivisions(placed) : undefined), [bleed, placed]);
   const lightIntensity = useMemo((): LightIntensity | undefined => {
     const defects = screenSkew !== 0 || saltedLens > 0 || tiredBulb > 0;
-    if (!sectorProfile && !rangeDropout && !vertical && !divisions?.size && !defects)
+    if (
+      !sectorProfile &&
+      !rangeDropout &&
+      !singleLantern &&
+      !vertical &&
+      !divisions?.size &&
+      !defects
+    )
       return undefined;
-    return (light, at) => {
+    const base: LightIntensity = (light, at) => {
       const arc = screenArc(light, screenSkew);
       return (
         (filamentIntensity(divisions?.get(light.key), arc, at, bleed) ??
@@ -181,12 +199,25 @@ export function BearingModelView({
         defectIntensity(light, saltedLens, tiredBulb)
       );
     };
+    if (!singleLantern) return base;
+    // One lantern per combined fixture: of the members that show at this
+    // bearing, only the one facing the viewer keeps its intensity.
+    let kept: { at: number; keys: Set<string> } | undefined;
+    return (light, at) => {
+      if (kept?.at !== at) {
+        const shown = placed.filter((l) => base(l, at) > 0);
+        kept = { at, keys: new Set(mergeLanterns(shown, at).map((l) => l.key)) };
+      }
+      return kept.keys.has(light.key) ? base(light, at) : 0;
+    };
   }, [
     sectorProfile,
     rangeDropout,
     lightRangesNm,
     range,
     transmissivity,
+    singleLantern,
+    placed,
     vertical,
     viewTilt,
     heel,
@@ -231,6 +262,8 @@ export function BearingModelView({
       sky={sky}
       rangeGlow={rangeGlow}
       lightRangesNm={lightRangesNm}
+      singleLantern={singleLantern}
+      flashesPerMinute={flashesPerMinute}
       sectorProfile={sectorProfile}
       labels={labels}
       controls={controls}
@@ -251,6 +284,8 @@ export function BearingModelView({
       sky={sky}
       rangeGlow={rangeGlow}
       lightRangesNm={lightRangesNm}
+      singleLantern={singleLantern}
+      flashesPerMinute={flashesPerMinute}
       sectorProfile={sectorProfile}
       labels={labels}
     />
@@ -288,6 +323,8 @@ export function BearingModelView({
               sea={seaColor(sea)}
               lightIntensity={lightIntensity}
               lightGlow={lightGlow}
+              flashesPerMinute={flashesPerMinute}
+              flashOnSeconds={flashOnSeconds}
               heel={heel}
               silhouette={silhouette}
               blockSpec={hull.spec}

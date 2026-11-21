@@ -347,6 +347,8 @@ function Playground() {
   const [singleLantern, setSingleLantern] = useState(initial.singleLantern);
   const [rangeGlow, setRangeGlow] = useState(initial.rangeGlow);
   const [flashRateOn, setFlashRateOn] = useState(initial.flashRateOn);
+  // URL only (?flashon=0.2): a visible slider would change every render's page chrome
+  const flashOnSeconds = initial.flashOnSeconds;
   const [labelsOn, setLabelsOn] = useState(true);
   // every control above is in the URL (see urlState.ts), ?day included
   const [day, setDay] = useState(initial.day);
@@ -372,6 +374,7 @@ function Playground() {
     singleLantern,
     rangeGlow,
     flashRateOn,
+    flashOnSeconds,
     verticalSector,
   };
   useUrlState(urlState);
@@ -623,6 +626,11 @@ function Playground() {
                   glowFalloff={glowFalloff}
                   rangeGlow={rangeGlow}
                   haze={haze}
+                  singleLantern={singleLantern}
+                  flashesPerMinute={
+                    flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
+                  }
+                  flashOnSeconds={flashOnSeconds}
                   verticalSector={verticalSector}
                   heel={heel}
                   filamentBleed={filamentBleed}
@@ -662,6 +670,11 @@ function Playground() {
                       glowFalloff={glowFalloff}
                       rangeGlow={rangeGlow}
                       haze={haze}
+                      singleLantern={singleLantern}
+                      flashesPerMinute={
+                        flashRateOn ? declaredFlashRate(lightsData, 'light:flashing') : undefined
+                      }
+                      flashOnSeconds={flashOnSeconds}
                       verticalSector={verticalSector}
                       heel={heel}
                       filamentBleed={filamentBleed}

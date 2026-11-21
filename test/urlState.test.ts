@@ -34,6 +34,7 @@ const changed: UrlState = {
   singleLantern: true,
   rangeGlow: true,
   flashRateOn: true,
+  flashOnSeconds: 0.8,
   verticalSector: true,
 };
 
